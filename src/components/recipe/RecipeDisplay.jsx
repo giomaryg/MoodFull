@@ -15,19 +15,31 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <Card className="overflow-hidden shadow-2xl border-0 bg-white rounded-3xl">
-        {/* Header Section */}
-        <div className="h-56 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800')] bg-cover bg-center opacity-25" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-            >
-              <ChefHat className="w-20 h-20 text-[#c17a7a] opacity-40" />
-            </motion.div>
-          </div>
+        {/* Header Section with Image */}
+        <div className="h-80 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] relative overflow-hidden">
+          {recipe.imageUrl ? (
+            <>
+              <img 
+                src={recipe.imageUrl} 
+                alt={recipe.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            </>
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                >
+                  <ChefHat className="w-20 h-20 text-[#c17a7a] opacity-40" />
+                </motion.div>
+              </div>
+            </>
+          )}
         </div>
 
         <CardHeader className="pb-6 pt-8">

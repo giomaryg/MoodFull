@@ -132,7 +132,26 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
               onClick={() => onRecipeClick(recipe)}
               className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#e8d5c4] bg-white hover:bg-[#faf6f2] group rounded-2xl overflow-hidden h-full"
             >
-              <CardContent className="p-6 space-y-4 flex flex-col h-full">
+              {/* Recipe Image */}
+              <div className="relative h-48 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] overflow-hidden">
+                {recipe.imageLoading ? (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c17a7a]"></div>
+                  </div>
+                ) : recipe.imageUrl ? (
+                  <img 
+                    src={recipe.imageUrl} 
+                    alt={recipe.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <ChefHat className="w-16 h-16 text-[#c17a7a] opacity-30" />
+                  </div>
+                )}
+              </div>
+
+              <CardContent className="p-6 space-y-4 flex flex-col">
                 {/* Recipe name */}
                 <div className="flex-1">
                   <h3 className="font-bold text-xl text-gray-900 group-hover:text-[#c17a7a] transition-colors line-clamp-2 leading-tight">

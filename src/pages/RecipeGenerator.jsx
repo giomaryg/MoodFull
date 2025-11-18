@@ -159,10 +159,34 @@ Make each recipe special and memorable!`,
 
       const recipesWithMood = response.recipes.map(recipe => ({
         ...recipe,
-        mood: selectedMoods.join(', ')
+        mood: selectedMoods.join(', '),
+        imageUrl: null,
+        imageLoading: true
       }));
       
       setGeneratedRecipes(recipesWithMood);
+
+      // Generate images for each recipe in parallel
+      Promise.all(
+        recipesWithMood.map(async (recipe, index) => {
+          try {
+            const imageResponse = await base44.integrations.Core.GenerateImage({
+              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality, detailed, delicious looking meal.`
+            });
+            return { index, url: imageResponse.url };
+          } catch (error) {
+            return { index, url: null };
+          }
+        })
+      ).then((images) => {
+        setGeneratedRecipes(prev => 
+          prev.map((recipe, i) => ({
+            ...recipe,
+            imageUrl: images[i].url,
+            imageLoading: false
+          }))
+        );
+      });
     } catch (error) {
       toast.error('Failed to generate recipe. Please try again.');
     } finally {
