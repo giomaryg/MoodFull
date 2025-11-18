@@ -53,27 +53,40 @@ const moods = [
 }];
 
 
-export default function MoodSelector({ selectedMood, onMoodSelect }) {
+export default function MoodSelector({ selectedMoods, onMoodSelect }) {
+  const handleMoodToggle = (moodId) => {
+    if (selectedMoods.includes(moodId)) {
+      onMoodSelect(selectedMoods.filter(m => m !== moodId));
+    } else {
+      onMoodSelect([...selectedMoods, moodId]);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div className="text-center space-y-3">
         <h2 className="text-[#c17a7a] text-4xl font-medium md:text-5xl">How are you feeling?
 
         </h2>
-        <p className="text-[#9b8175] text-base">Choose your mood and we'll create the perfect recipe for you</p>
+        <p className="text-[#9b8175] text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {moods.map((mood) => {
           const Icon = mood.icon;
-          const isSelected = selectedMood === mood.id;
+          const isSelected = selectedMoods.includes(mood.id);
 
           return (
             <motion.button
               key={mood.id}
-              onClick={() => onMoodSelect(mood.id)}
+              onClick={() => handleMoodToggle(mood.id)}
               whileHover={{ scale: 1.08, y: -6 }}
-              whileTap={{ scale: 0.95 }} className="bg-white p-5 rounded-3xl relative border-2 transition-all duration-300 border-[#e8d5c4] hover:border-[#c17a7a] shadow-md hover:shadow-xl">
+              whileTap={{ scale: 0.95 }} 
+              className={`p-5 rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
+                isSelected 
+                  ? 'bg-[#f5e6dc] border-[#c17a7a]' 
+                  : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+              }`}>
 
 
 

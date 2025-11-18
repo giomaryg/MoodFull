@@ -12,7 +12,7 @@ import SavedRecipes from '../components/recipe/SavedRecipes';
 import PreferenceSurvey from '../components/survey/PreferenceSurvey';
 
 export default function RecipeGenerator() {
-  const [selectedMood, setSelectedMood] = useState(null);
+  const [selectedMoods, setSelectedMoods] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [savedRecipeId, setSavedRecipeId] = useState(null);
@@ -60,7 +60,7 @@ export default function RecipeGenerator() {
   };
 
   const generateRecipe = async () => {
-    if (!selectedMood) return;
+    if (!selectedMoods.length) return;
 
     setIsGenerating(true);
     setSavedRecipeId(null);
@@ -73,6 +73,8 @@ export default function RecipeGenerator() {
       romantic: "elegant, sophisticated dishes perfect for a special dinner for two",
       adventurous: "bold, exotic flavors from around the world that excite the palate"
     };
+
+    const moodContext = selectedMoods.map(mood => moodDescriptions[mood]).join(' and ');
 
     let preferencesContext = '';
     if (userPreferences && userPreferences.survey_completed) {
@@ -101,9 +103,9 @@ export default function RecipeGenerator() {
 
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate a delicious recipe for someone feeling ${selectedMood}. 
+        prompt: `Generate a delicious recipe for someone feeling ${selectedMoods.join(' and ')}. 
         
-The recipe should match this mood: ${moodDescriptions[selectedMood]}.${preferencesContext}
+The recipe should match these moods: ${moodContext}.${preferencesContext}
 
 Create a unique, appetizing recipe with:
 - A creative and appealing name
@@ -141,7 +143,7 @@ Make it special and memorable!`,
 
       setCurrentRecipe({
         ...response,
-        mood: selectedMood
+        mood: selectedMoods.join(', ')
       });
     } catch (error) {
       toast.error('Failed to generate recipe. Please try again.');
@@ -158,7 +160,7 @@ Make it special and memorable!`,
 
   const handleSavedRecipeClick = (recipe) => {
     setCurrentRecipe(recipe);
-    setSelectedMood(recipe.mood);
+    setSelectedMoods(recipe.mood.split(', '));
     setSavedRecipeId(recipe.id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -225,14 +227,14 @@ Make it special and memorable!`,
             transition={{ delay: 0.2 }}>
 
               <MoodSelector
-              selectedMood={selectedMood}
-              onMoodSelect={setSelectedMood} />
+              selectedMoods={selectedMoods}
+              onMoodSelect={setSelectedMoods} />
 
             </motion.div>
 
         {/* Generate Button */}
         <AnimatePresence mode="wait">
-          {selectedMood && !currentRecipe &&
+          {selectedMoods.length > 0 && !currentRecipe &&
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
