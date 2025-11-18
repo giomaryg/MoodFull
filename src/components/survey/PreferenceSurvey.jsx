@@ -277,16 +277,16 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <Card className="border-0 shadow-xl">
-        <CardContent className="p-8">
+      <Card className="border-0 shadow-2xl rounded-3xl">
+        <CardContent className="p-10">
           <div className="mb-8">
             <div className="flex justify-between text-sm text-gray-500 mb-2">
               <span>Step {step} of {totalSteps}</span>
               <span>{Math.round((step / totalSteps) * 100)}%</span>
             </div>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
               <motion.div
-                className="h-full bg-gradient-to-r from-orange-500 to-rose-500"
+                className="h-full bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 shadow-md"
                 initial={{ width: 0 }}
                 animate={{ width: `${(step / totalSteps) * 100}%` }}
                 transition={{ duration: 0.3 }}
@@ -320,7 +320,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
             <Button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600"
+              className="bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 hover:from-orange-600 hover:via-rose-600 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all rounded-xl px-6"
             >
               {step === totalSteps ? (
                 <>

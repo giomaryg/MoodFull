@@ -55,15 +55,15 @@ const moods = [
 
 export default function MoodSelector({ selectedMood, onMoodSelect }) {
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-rose-600 bg-clip-text text-transparent">
+    <div className="space-y-8">
+      <div className="text-center space-y-3">
+        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 bg-clip-text text-transparent">
           How are you feeling?
         </h2>
-        <p className="text-gray-500 text-sm">Choose your mood and we'll suggest the perfect recipe</p>
+        <p className="text-gray-600 text-base">Choose your mood and we'll create the perfect recipe for you</p>
       </div>
       
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {moods.map((mood) => {
           const Icon = mood.icon;
           const isSelected = selectedMood === mood.id;
@@ -72,26 +72,26 @@ export default function MoodSelector({ selectedMood, onMoodSelect }) {
             <motion.button
               key={mood.id}
               onClick={() => onMoodSelect(mood.id)}
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.08, y: -6 }}
+              whileTap={{ scale: 0.95 }}
               className={`
-                relative p-4 rounded-2xl border-2 transition-all duration-300
+                relative p-5 rounded-3xl border-2 transition-all duration-300
                 ${isSelected 
-                  ? `${mood.bg} ${mood.border} shadow-lg` 
-                  : 'bg-white border-gray-200 hover:border-gray-300 shadow-sm'
+                  ? `${mood.bg} ${mood.border} shadow-2xl ring-4 ring-${mood.border.split('-')[1]}-100` 
+                  : 'bg-white border-gray-200 hover:border-gray-300 shadow-md hover:shadow-xl'
                 }
               `}
             >
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-3">
                 <div className={`
-                  p-3 rounded-xl bg-gradient-to-br ${mood.color}
-                  ${isSelected ? 'shadow-md' : 'shadow-sm'}
+                  p-4 rounded-2xl bg-gradient-to-br ${mood.color} transform transition-transform
+                  ${isSelected ? 'shadow-lg scale-110' : 'shadow-md'}
                 `}>
-                  <Icon className="w-6 h-6 text-white" />
+                  <Icon className="w-7 h-7 text-white" />
                 </div>
                 <span className={`
-                  text-sm font-medium
-                  ${isSelected ? 'text-gray-800' : 'text-gray-600'}
+                  text-sm font-semibold tracking-wide
+                  ${isSelected ? 'text-gray-900' : 'text-gray-700'}
                 `}>
                   {mood.label}
                 </span>
@@ -100,7 +100,7 @@ export default function MoodSelector({ selectedMood, onMoodSelect }) {
               {isSelected && (
                 <motion.div
                   layoutId="mood-indicator"
-                  className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-orange-500 to-rose-500 rounded-full"
+                  className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1.5 bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 rounded-full shadow-md"
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
               )}

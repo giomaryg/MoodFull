@@ -244,7 +244,7 @@ Make it special and memorable!`,
                 onClick={generateRecipe}
                 disabled={isGenerating}
                 size="lg"
-                className="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-6 rounded-2xl"
+                className="bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 hover:from-orange-600 hover:via-rose-600 hover:to-pink-600 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 text-lg px-10 py-7 rounded-3xl font-semibold"
               >
                 {isGenerating ? (
                   <>
@@ -281,7 +281,7 @@ Make it special and memorable!`,
                     }}
                     variant="outline"
                     size="lg"
-                    className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 rounded-xl"
+                    className="border-2 border-orange-300 hover:border-orange-400 hover:bg-orange-50 rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all"
                   >
                     Generate Another Recipe
                   </Button>
