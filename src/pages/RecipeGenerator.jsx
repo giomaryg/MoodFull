@@ -174,13 +174,12 @@ Make it special and memorable!`,
             className="text-center space-y-4"
           >
             <div className="flex justify-center">
-              <div className="p-4 bg-gradient-to-br from-orange-400 to-rose-500 rounded-3xl shadow-xl">
-                <UtensilsCrossed className="w-12 h-12 text-white" />
-              </div>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/7a2c7fa2a_ChatGPTImageNov182025at04_54_21PM.png"
+                alt="MoodFull Logo"
+                className="w-64 h-auto"
+              />
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 via-rose-600 to-amber-600 bg-clip-text text-transparent leading-tight">
-              Mood Food
-            </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Discover recipes that match your mood. Let your feelings guide your next delicious meal.
             </p>
