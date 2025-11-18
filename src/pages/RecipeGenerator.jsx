@@ -10,9 +10,11 @@ import MoodSelector from '../components/recipe/MoodSelector';
 import RecipeDisplay from '../components/recipe/RecipeDisplay';
 import SavedRecipes from '../components/recipe/SavedRecipes';
 import PreferenceSurvey from '../components/survey/PreferenceSurvey';
+import RecipeGrid from '../components/recipe/RecipeGrid';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
+  const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [savedRecipeId, setSavedRecipeId] = useState(null);
@@ -103,48 +105,64 @@ export default function RecipeGenerator() {
 
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate a delicious recipe for someone feeling ${selectedMoods.join(' and ')}. 
+        prompt: `Generate 8 diverse and delicious recipes for someone feeling ${selectedMoods.join(' and ')}. 
         
-The recipe should match these moods: ${moodContext}.${preferencesContext}
+The recipes should match these moods: ${moodContext}.${preferencesContext}
 
-Create a unique, appetizing recipe with:
+Create 8 unique, appetizing recipes with variety in:
+- Cuisine types (different cultures and cooking styles)
+- Difficulty levels (mix of easy, medium, and hard)
+- Preparation times (some quick, some more involved)
+- Meal types (appetizers, mains, desserts)
+
+Each recipe must have:
 - A creative and appealing name
 - A brief, enticing description (2-3 sentences)
 - Complete list of ingredients with measurements
 - Step-by-step cooking instructions
-- Preparation and cooking times
+- Preparation and cooking times (be realistic)
 - Number of servings
 - Difficulty level (easy, medium, or hard)
 
-Make it special and memorable!`,
+Make each recipe special and memorable!`,
         response_json_schema: {
           type: "object",
           properties: {
-            name: { type: "string" },
-            description: { type: "string" },
-            ingredients: {
+            recipes: {
               type: "array",
-              items: { type: "string" }
-            },
-            instructions: {
-              type: "array",
-              items: { type: "string" }
-            },
-            prep_time: { type: "string" },
-            cook_time: { type: "string" },
-            servings: { type: "number" },
-            difficulty: {
-              type: "string",
-              enum: ["easy", "medium", "hard"]
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  ingredients: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  instructions: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  prep_time: { type: "string" },
+                  cook_time: { type: "string" },
+                  servings: { type: "number" },
+                  difficulty: {
+                    type: "string",
+                    enum: ["easy", "medium", "hard"]
+                  }
+                }
+              }
             }
           }
         }
       });
 
-      setCurrentRecipe({
-        ...response,
+      const recipesWithMood = response.recipes.map(recipe => ({
+        ...recipe,
         mood: selectedMoods.join(', ')
-      });
+      }));
+      
+      setGeneratedRecipes(recipesWithMood);
     } catch (error) {
       toast.error('Failed to generate recipe. Please try again.');
     } finally {
@@ -234,7 +252,7 @@ Make it special and memorable!`,
 
         {/* Generate Button */}
         <AnimatePresence mode="wait">
-          {selectedMoods.length > 0 && !currentRecipe &&
+          {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 &&
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -250,17 +268,40 @@ Make it special and memorable!`,
                 {isGenerating ?
                 <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Creating your perfect recipe...
+                    Creating your perfect recipes...
                   </> :
 
                 <>
                     <Sparkles className="w-5 h-5 mr-2" />
-                    Generate Recipe
+                    Generate Recipes
                   </>
                 }
               </Button>
             </motion.div>
             }
+        </AnimatePresence>
+
+        {/* Recipe Grid */}
+        <AnimatePresence mode="wait">
+          {generatedRecipes.length > 0 && !currentRecipe &&
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <RecipeGrid
+                recipes={generatedRecipes}
+                onRecipeClick={(recipe) => {
+                  setCurrentRecipe(recipe);
+                  setSavedRecipeId(null);
+                }}
+                onStartOver={() => {
+                  setGeneratedRecipes([]);
+                  setSelectedMoods([]);
+                }}
+              />
+            </motion.div>
+          }
         </AnimatePresence>
 
         {/* Recipe Display */}
@@ -274,7 +315,7 @@ Make it special and memorable!`,
 
               
               {!isGenerating &&
-              <div className="flex justify-center">
+              <div className="flex justify-center gap-4">
                   <Button
                   onClick={() => {
                     setCurrentRecipe(null);
@@ -284,7 +325,7 @@ Make it special and memorable!`,
                   size="lg"
                   className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all">
 
-                    Generate Another Recipe
+                    Back to Results
                   </Button>
                 </div>
               }
