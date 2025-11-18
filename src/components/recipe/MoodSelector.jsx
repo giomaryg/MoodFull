@@ -87,7 +87,7 @@ export default function MoodSelector({ selectedMood, onMoodSelect }) {
 
 
 
-                  <Icon className="bg-[#a17272] text-[#f0e0e0] lucide lucide-smile w-7 h-7" />
+                  <Icon className="bg-transparent text-[#f0e0e0] lucide lucide-smile w-7 h-7" />
                 </div>
                 <span className={`
                   text-sm font-semibold tracking-wide
