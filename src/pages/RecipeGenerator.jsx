@@ -97,6 +97,9 @@ export default function RecipeGenerator() {
         const complexity = userPreferences.meals_per_week.includes('1-3') ? 'Keep it simple and easy' : 'Can be more involved';
         prefs.push(`User cooks ${userPreferences.meals_per_week}. ${complexity}`);
       }
+      if (userPreferences.blood_sugar_friendly === true) {
+        prefs.push(`CRITICAL - Blood sugar friendly: Low glycemic index foods, complex carbs, balanced macros, diabetic-friendly ingredients`);
+      }
 
       if (prefs.length > 0) {
         preferencesContext = `\n\nUSER PREFERENCES:\n${prefs.join('\n')}`;
@@ -123,6 +126,7 @@ Each recipe must have:
 - Preparation and cooking times (be realistic)
 - Number of servings
 - Difficulty level (easy, medium, or hard)
+- Nutritional information per serving (calories, protein, carbs, fat, fiber, sodium)
 
 Make each recipe special and memorable!`,
         response_json_schema: {
@@ -149,6 +153,17 @@ Make each recipe special and memorable!`,
                   difficulty: {
                     type: "string",
                     enum: ["easy", "medium", "hard"]
+                  },
+                  nutrition: {
+                    type: "object",
+                    properties: {
+                      calories: { type: "number" },
+                      protein: { type: "string" },
+                      carbs: { type: "string" },
+                      fat: { type: "string" },
+                      fiber: { type: "string" },
+                      sodium: { type: "string" }
+                    }
                   }
                 }
               }

@@ -32,10 +32,11 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
     priorities: initialData.priorities || [],
     open_to_new_cuisines: initialData.open_to_new_cuisines ?? null,
     preferred_cuisines: initialData.preferred_cuisines || [],
-    meals_per_week: initialData.meals_per_week || ''
+    meals_per_week: initialData.meals_per_week || '',
+    blood_sugar_friendly: initialData.blood_sugar_friendly ?? null
   });
 
-  const totalSteps = 6;
+  const totalSteps = 7;
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -66,6 +67,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
       case 4: return formData.open_to_new_cuisines !== null;
       case 5: return formData.preferred_cuisines.length > 0;
       case 6: return formData.meals_per_week !== '';
+      case 7: return formData.blood_sugar_friendly !== null;
       default: return false;
     }
   };
@@ -265,6 +267,60 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                     </motion.button>
                   );
                 })}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="space-y-4">
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">
+                Do you need recipes that are blood sugar friendly?
+              </Label>
+              <p className="text-sm text-gray-500">For diabetics or those managing blood sugar levels</p>
+              <div className="grid grid-cols-1 gap-3 mt-4">
+                <motion.button
+                  onClick={() => setFormData({ ...formData, blood_sugar_friendly: true })}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`p-5 rounded-xl border-2 transition-all ${
+                    formData.blood_sugar_friendly === true
+                      ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                      : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="text-left">
+                      <div className="font-semibold text-base">Yes, blood sugar friendly recipes</div>
+                      <div className="text-sm text-gray-500 mt-1">Low glycemic index, balanced meals 🩺</div>
+                    </div>
+                    {formData.blood_sugar_friendly === true && (
+                      <Check className="w-6 h-6 text-[#c17a7a] ml-2" />
+                    )}
+                  </div>
+                </motion.button>
+                <motion.button
+                  onClick={() => setFormData({ ...formData, blood_sugar_friendly: false })}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`p-5 rounded-xl border-2 transition-all ${
+                    formData.blood_sugar_friendly === false
+                      ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                      : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="text-left">
+                      <div className="font-semibold text-base">No special requirements</div>
+                      <div className="text-sm text-gray-500 mt-1">Any recipes work for me 👍</div>
+                    </div>
+                    {formData.blood_sugar_friendly === false && (
+                      <Check className="w-6 h-6 text-[#c17a7a] ml-2" />
+                    )}
+                  </div>
+                </motion.button>
               </div>
             </div>
           </div>
