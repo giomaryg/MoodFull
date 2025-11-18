@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import MoodSelector from '../components/recipe/MoodSelector';
 import RecipeDisplay from '../components/recipe/RecipeDisplay';
 import SavedRecipes from '../components/recipe/SavedRecipes';
-import PreferenceSurvey from '../components/recipe/PreferenceSurvey';
+import PreferenceSurvey from '../components/survey/PreferenceSurvey';
 
 export default function RecipeGenerator() {
   const [selectedMood, setSelectedMood] = useState(null);
@@ -18,30 +18,24 @@ export default function RecipeGenerator() {
   const [savedRecipeId, setSavedRecipeId] = useState(null);
   const [showSurvey, setShowSurvey] = useState(false);
   const [userPreferences, setUserPreferences] = useState(null);
-  const [user, setUser] = useState(null);
 
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        if (currentUser.preferences) {
-          setUserPreferences(currentUser.preferences);
-        } else {
-          setShowSurvey(true);
-        }
-      } catch (error) {
-        console.error('Error loading user:', error);
-      }
-    };
-    loadUser();
-  }, []);
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
     queryFn: () => base44.entities.Recipe.list('-created_date', 20),
+  });
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      setUserPreferences(user);
+      if (!user.survey_completed) {
+        setShowSurvey(true);
+      }
+      return user;
+    },
   });
 
   const saveRecipeMutation = useMutation({
@@ -55,9 +49,10 @@ export default function RecipeGenerator() {
 
   const handleSurveyComplete = async (preferences) => {
     try {
-      await base44.auth.updateMe({ preferences });
-      setUserPreferences(preferences);
+      await base44.auth.updateMe(preferences);
+      setUserPreferences({ ...userPreferences, ...preferences });
       setShowSurvey(false);
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       toast.success('Preferences saved!');
     } catch (error) {
       toast.error('Failed to save preferences');
@@ -79,12 +74,11 @@ export default function RecipeGenerator() {
       adventurous: "bold, exotic flavors from around the world that excite the palate"
     };
 
-    // Build personalized prompt based on user preferences
     let preferencesContext = '';
-    if (userPreferences) {
+    if (userPreferences && userPreferences.survey_completed) {
       const prefs = [];
       if (userPreferences.allergies) {
-        prefs.push(`AVOID these allergens: ${userPreferences.allergies}`);
+        prefs.push(`CRITICAL - AVOID these allergens: ${userPreferences.allergies}`);
       }
       if (userPreferences.diet_preferences) {
         prefs.push(`Follow these dietary preferences: ${userPreferences.diet_preferences}`);
@@ -93,14 +87,15 @@ export default function RecipeGenerator() {
         prefs.push(`Prioritize: ${userPreferences.priorities.join(', ')}`);
       }
       if (userPreferences.preferred_cuisines?.length > 0) {
-        prefs.push(`Preferred cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+        prefs.push(`Preferred cuisines to draw inspiration from: ${userPreferences.preferred_cuisines.join(', ')}`);
       }
       if (userPreferences.meals_per_week) {
-        prefs.push(`User cooks ${userPreferences.meals_per_week} meals per week`);
+        const complexity = userPreferences.meals_per_week.includes('1-3') ? 'Keep it simple and easy' : 'Can be more involved';
+        prefs.push(`User cooks ${userPreferences.meals_per_week}. ${complexity}`);
       }
       
       if (prefs.length > 0) {
-        preferencesContext = `\n\nIMPORTANT USER PREFERENCES:\n${prefs.join('\n')}`;
+        preferencesContext = `\n\nUSER PREFERENCES:\n${prefs.join('\n')}`;
       }
     }
 
@@ -184,7 +179,7 @@ Make it special and memorable!`,
               </div>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 via-rose-600 to-amber-600 bg-clip-text text-transparent leading-tight">
-              MoodFull
+              Mood Food
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Discover recipes that match your mood. Let your feelings guide your next delicious meal.
@@ -208,19 +203,22 @@ Make it special and memorable!`,
           </motion.div>
         )}
 
-        {!showSurvey && userPreferences && (
+        {!showSurvey && (
           <>
-            {/* Show Update Preferences Button */}
-            <div className="flex justify-end">
-              <Button
-                onClick={() => setShowSurvey(true)}
-                variant="outline"
-                size="sm"
-                className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50"
-              >
-                Update Preferences
-              </Button>
-            </div>
+            {/* Update Preferences Button */}
+            {userPreferences?.survey_completed && (
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => setShowSurvey(true)}
+                  variant="outline"
+                  size="sm"
+                  className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50"
+                >
+                  Update Preferences
+                </Button>
+              </div>
+            )}
+
             {/* Mood Selector */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -233,65 +231,65 @@ Make it special and memorable!`,
               />
             </motion.div>
 
-            {/* Generate Button */}
-            <AnimatePresence mode="wait">
-              {selectedMood && !currentRecipe && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="flex justify-center"
-                >
-                  <Button
-                    onClick={generateRecipe}
-                    disabled={isGenerating}
-                    size="lg"
-                    className="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-6 rounded-2xl"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Creating your perfect recipe...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-5 h-5 mr-2" />
-                        Generate Recipe
-                      </>
-                    )}
-                  </Button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+        {/* Generate Button */}
+        <AnimatePresence mode="wait">
+          {selectedMood && !currentRecipe && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex justify-center"
+            >
+              <Button
+                onClick={generateRecipe}
+                disabled={isGenerating}
+                size="lg"
+                className="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-6 rounded-2xl"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Creating your perfect recipe...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Generate Recipe
+                  </>
+                )}
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-            {/* Recipe Display */}
-            <AnimatePresence mode="wait">
-              {currentRecipe && (
-                <div className="space-y-6">
-                  <RecipeDisplay
-                    recipe={currentRecipe}
-                    onSave={handleSaveRecipe}
-                    isSaved={!!savedRecipeId}
-                  />
-                  
-                  {!isGenerating && (
-                    <div className="flex justify-center">
-                      <Button
-                        onClick={() => {
-                          setCurrentRecipe(null);
-                          setSavedRecipeId(null);
-                        }}
-                        variant="outline"
-                        size="lg"
-                        className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 rounded-xl"
-                      >
-                        Generate Another Recipe
-                      </Button>
-                    </div>
-                  )}
+        {/* Recipe Display */}
+        <AnimatePresence mode="wait">
+          {currentRecipe && (
+            <div className="space-y-6">
+              <RecipeDisplay
+                recipe={currentRecipe}
+                onSave={handleSaveRecipe}
+                isSaved={!!savedRecipeId}
+              />
+              
+              {!isGenerating && (
+                <div className="flex justify-center">
+                  <Button
+                    onClick={() => {
+                      setCurrentRecipe(null);
+                      setSavedRecipeId(null);
+                    }}
+                    variant="outline"
+                    size="lg"
+                    className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 rounded-xl"
+                  >
+                    Generate Another Recipe
+                  </Button>
                 </div>
               )}
-            </AnimatePresence>
+            </div>
+          )}
+        </AnimatePresence>
 
             {/* Saved Recipes */}
             {!currentRecipe && savedRecipes.length > 0 && (
