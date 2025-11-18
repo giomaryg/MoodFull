@@ -9,14 +9,35 @@ import { toast } from 'sonner';
 import MoodSelector from '../components/recipe/MoodSelector';
 import RecipeDisplay from '../components/recipe/RecipeDisplay';
 import SavedRecipes from '../components/recipe/SavedRecipes';
+import PreferenceSurvey from '../components/recipe/PreferenceSurvey';
 
 export default function RecipeGenerator() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [currentRecipe, setCurrentRecipe] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [savedRecipeId, setSavedRecipeId] = useState(null);
+  const [showSurvey, setShowSurvey] = useState(false);
+  const [userPreferences, setUserPreferences] = useState(null);
+  const [user, setUser] = useState(null);
 
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+        if (currentUser.preferences) {
+          setUserPreferences(currentUser.preferences);
+        } else {
+          setShowSurvey(true);
+        }
+      } catch (error) {
+        console.error('Error loading user:', error);
+      }
+    };
+    loadUser();
+  }, []);
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
@@ -31,6 +52,17 @@ export default function RecipeGenerator() {
       toast.success('Recipe saved to your collection!');
     },
   });
+
+  const handleSurveyComplete = async (preferences) => {
+    try {
+      await base44.auth.updateMe({ preferences });
+      setUserPreferences(preferences);
+      setShowSurvey(false);
+      toast.success('Preferences saved!');
+    } catch (error) {
+      toast.error('Failed to save preferences');
+    }
+  };
 
   const generateRecipe = async () => {
     if (!selectedMood) return;
@@ -47,11 +79,36 @@ export default function RecipeGenerator() {
       adventurous: "bold, exotic flavors from around the world that excite the palate"
     };
 
+    // Build personalized prompt based on user preferences
+    let preferencesContext = '';
+    if (userPreferences) {
+      const prefs = [];
+      if (userPreferences.allergies) {
+        prefs.push(`AVOID these allergens: ${userPreferences.allergies}`);
+      }
+      if (userPreferences.diet_preferences) {
+        prefs.push(`Follow these dietary preferences: ${userPreferences.diet_preferences}`);
+      }
+      if (userPreferences.priorities?.length > 0) {
+        prefs.push(`Prioritize: ${userPreferences.priorities.join(', ')}`);
+      }
+      if (userPreferences.preferred_cuisines?.length > 0) {
+        prefs.push(`Preferred cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+      }
+      if (userPreferences.meals_per_week) {
+        prefs.push(`User cooks ${userPreferences.meals_per_week} meals per week`);
+      }
+      
+      if (prefs.length > 0) {
+        preferencesContext = `\n\nIMPORTANT USER PREFERENCES:\n${prefs.join('\n')}`;
+      }
+    }
+
     try {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Generate a delicious recipe for someone feeling ${selectedMood}. 
         
-The recipe should match this mood: ${moodDescriptions[selectedMood]}.
+The recipe should match this mood: ${moodDescriptions[selectedMood]}.${preferencesContext}
 
 Create a unique, appetizing recipe with:
 - A creative and appealing name
@@ -127,7 +184,7 @@ Make it special and memorable!`,
               </div>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 via-rose-600 to-amber-600 bg-clip-text text-transparent leading-tight">
-              Mood Food
+              MoodFull
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Discover recipes that match your mood. Let your feelings guide your next delicious meal.
@@ -138,90 +195,118 @@ Make it special and memorable!`,
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
-        {/* Mood Selector */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <MoodSelector
-            selectedMood={selectedMood}
-            onMoodSelect={setSelectedMood}
-          />
-        </motion.div>
-
-        {/* Generate Button */}
-        <AnimatePresence mode="wait">
-          {selectedMood && !currentRecipe && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="flex justify-center"
-            >
-              <Button
-                onClick={generateRecipe}
-                disabled={isGenerating}
-                size="lg"
-                className="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-6 rounded-2xl"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Creating your perfect recipe...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Generate Recipe
-                  </>
-                )}
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Recipe Display */}
-        <AnimatePresence mode="wait">
-          {currentRecipe && (
-            <div className="space-y-6">
-              <RecipeDisplay
-                recipe={currentRecipe}
-                onSave={handleSaveRecipe}
-                isSaved={!!savedRecipeId}
-              />
-              
-              {!isGenerating && (
-                <div className="flex justify-center">
-                  <Button
-                    onClick={() => {
-                      setCurrentRecipe(null);
-                      setSavedRecipeId(null);
-                    }}
-                    variant="outline"
-                    size="lg"
-                    className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 rounded-xl"
-                  >
-                    Generate Another Recipe
-                  </Button>
-                </div>
-              )}
-            </div>
-          )}
-        </AnimatePresence>
-
-        {/* Saved Recipes */}
-        {!currentRecipe && savedRecipes.length > 0 && (
+        {/* Survey */}
+        {showSurvey && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            <SavedRecipes
-              recipes={savedRecipes}
-              onRecipeClick={handleSavedRecipeClick}
+            <PreferenceSurvey 
+              onComplete={handleSurveyComplete}
+              initialData={userPreferences || {}}
             />
           </motion.div>
+        )}
+
+        {!showSurvey && userPreferences && (
+          <>
+            {/* Show Update Preferences Button */}
+            <div className="flex justify-end">
+              <Button
+                onClick={() => setShowSurvey(true)}
+                variant="outline"
+                size="sm"
+                className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50"
+              >
+                Update Preferences
+              </Button>
+            </div>
+            {/* Mood Selector */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <MoodSelector
+                selectedMood={selectedMood}
+                onMoodSelect={setSelectedMood}
+              />
+            </motion.div>
+
+            {/* Generate Button */}
+            <AnimatePresence mode="wait">
+              {selectedMood && !currentRecipe && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="flex justify-center"
+                >
+                  <Button
+                    onClick={generateRecipe}
+                    disabled={isGenerating}
+                    size="lg"
+                    className="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-6 rounded-2xl"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Creating your perfect recipe...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        Generate Recipe
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Recipe Display */}
+            <AnimatePresence mode="wait">
+              {currentRecipe && (
+                <div className="space-y-6">
+                  <RecipeDisplay
+                    recipe={currentRecipe}
+                    onSave={handleSaveRecipe}
+                    isSaved={!!savedRecipeId}
+                  />
+                  
+                  {!isGenerating && (
+                    <div className="flex justify-center">
+                      <Button
+                        onClick={() => {
+                          setCurrentRecipe(null);
+                          setSavedRecipeId(null);
+                        }}
+                        variant="outline"
+                        size="lg"
+                        className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50 rounded-xl"
+                      >
+                        Generate Another Recipe
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </AnimatePresence>
+
+            {/* Saved Recipes */}
+            {!currentRecipe && savedRecipes.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <SavedRecipes
+                  recipes={savedRecipes}
+                  onRecipeClick={handleSavedRecipeClick}
+                />
+              </motion.div>
+            )}
+          </>
         )}
       </div>
     </div>
