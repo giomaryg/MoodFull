@@ -76,7 +76,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
         return (
           <div className="space-y-4">
             <div className="text-center space-y-2 mb-6">
-              <div className="inline-block p-3 bg-gradient-to-br from-orange-400 to-rose-500 rounded-2xl mb-3">
+              <div className="inline-block p-3 bg-[#c17a7a] rounded-2xl mb-3">
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">Welcome to MoodFull! 🍽️</h2>
@@ -136,13 +136,13 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                       whileTap={{ scale: 0.98 }}
                       className={`p-4 rounded-xl border-2 text-left transition-all ${
                         isSelected
-                          ? 'bg-orange-50 border-orange-400 shadow-md'
-                          : 'bg-white border-gray-200 hover:border-gray-300'
+                          ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                          : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-sm">{priority}</span>
-                        {isSelected && <Check className="w-5 h-5 text-orange-600" />}
+                        {isSelected && <Check className="w-5 h-5 text-[#c17a7a]" />}
                       </div>
                     </motion.button>
                   );
@@ -166,8 +166,8 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                   whileTap={{ scale: 0.98 }}
                   className={`p-5 rounded-xl border-2 transition-all ${
                     formData.open_to_new_cuisines === true
-                      ? 'bg-orange-50 border-orange-400 shadow-md'
-                      : 'bg-white border-gray-200 hover:border-gray-300'
+                      ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                      : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -176,7 +176,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                       <div className="text-sm text-gray-500 mt-1">Bring on the culinary adventure ✨</div>
                     </div>
                     {formData.open_to_new_cuisines === true && (
-                      <Check className="w-6 h-6 text-orange-600 ml-2" />
+                      <Check className="w-6 h-6 text-[#c17a7a] ml-2" />
                     )}
                   </div>
                 </motion.button>
@@ -186,8 +186,8 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                   whileTap={{ scale: 0.98 }}
                   className={`p-5 rounded-xl border-2 transition-all ${
                     formData.open_to_new_cuisines === false
-                      ? 'bg-orange-50 border-orange-400 shadow-md'
-                      : 'bg-white border-gray-200 hover:border-gray-300'
+                      ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                      : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -196,7 +196,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                       <div className="text-sm text-gray-500 mt-1">Comfort in the familiar 🏠</div>
                     </div>
                     {formData.open_to_new_cuisines === false && (
-                      <Check className="w-6 h-6 text-orange-600 ml-2" />
+                      <Check className="w-6 h-6 text-[#c17a7a] ml-2" />
                     )}
                   </div>
                 </motion.button>
@@ -222,7 +222,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                       onClick={() => toggleInArray('preferred_cuisines', cuisine)}
                       className={`cursor-pointer px-4 py-2 text-sm transition-all ${
                         isSelected
-                          ? 'bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white'
+                          ? 'bg-[#c17a7a] hover:bg-[#b06a6a] text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -254,13 +254,13 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                       whileTap={{ scale: 0.98 }}
                       className={`p-5 rounded-xl border-2 transition-all ${
                         isSelected
-                          ? 'bg-orange-50 border-orange-400 shadow-md'
-                          : 'bg-white border-gray-200 hover:border-gray-300'
+                          ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                          : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-base">{option}</span>
-                        {isSelected && <Check className="w-6 h-6 text-orange-600" />}
+                        {isSelected && <Check className="w-6 h-6 text-[#c17a7a]" />}
                       </div>
                     </motion.button>
                   );
@@ -286,7 +286,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
             </div>
             <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
               <motion.div
-                className="h-full bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 shadow-md"
+                className="h-full bg-[#c17a7a] shadow-md"
                 initial={{ width: 0 }}
                 animate={{ width: `${(step / totalSteps) * 100}%` }}
                 transition={{ duration: 0.3 }}
@@ -320,7 +320,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
             <Button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 hover:from-orange-600 hover:via-rose-600 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all rounded-xl px-6"
+              className="bg-[#c17a7a] hover:bg-[#b06a6a] shadow-lg hover:shadow-xl transition-all rounded-xl px-6"
             >
               {step === totalSteps ? (
                 <>

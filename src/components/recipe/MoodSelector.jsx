@@ -57,10 +57,10 @@ export default function MoodSelector({ selectedMood, onMoodSelect }) {
   return (
     <div className="space-y-8">
       <div className="text-center space-y-3">
-        <h2 className="bg-clip-text text-[#e878a7] text-4xl font-medium md:text-5xl from-orange-500 via-rose-500 to-pink-500">How are you feeling?
+        <h2 className="text-[#c17a7a] text-4xl font-medium md:text-5xl">How are you feeling?
 
         </h2>
-        <p className="text-[#a2a0a0] text-base">Choose your mood and we'll create the perfect recipe for you</p>
+        <p className="text-[#9b8175] text-base">Choose your mood and we'll create the perfect recipe for you</p>
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -73,7 +73,7 @@ export default function MoodSelector({ selectedMood, onMoodSelect }) {
               key={mood.id}
               onClick={() => onMoodSelect(mood.id)}
               whileHover={{ scale: 1.08, y: -6 }}
-              whileTap={{ scale: 0.95 }} className="bg-[#ffadad] p-5 rounded-3xl relative border-2 transition-all duration-300 border-gray-200 hover:border-gray-300 shadow-md hover:shadow-xl">
+              whileTap={{ scale: 0.95 }} className="bg-white p-5 rounded-3xl relative border-2 transition-all duration-300 border-[#e8d5c4] hover:border-[#c17a7a] shadow-md hover:shadow-xl">
 
 
 
@@ -83,15 +83,15 @@ export default function MoodSelector({ selectedMood, onMoodSelect }) {
 
 
               <div className="flex flex-col items-center gap-3">
-                <div className="bg-[#d12e2e] p-4 rounded-2xl from-yellow-400 to-orange-400 transform transition-transform shadow-md">
+                <div className="bg-[#c17a7a] p-4 rounded-2xl transform transition-transform shadow-md">
 
 
 
-                  <Icon className="bg-transparent text-[#f0e0e0] lucide lucide-smile w-7 h-7" />
+                  <Icon className="text-white w-7 h-7" />
                 </div>
                 <span className={`
                   text-sm font-semibold tracking-wide
-                  ${isSelected ? 'text-gray-900' : 'text-gray-700'}
+                  ${isSelected ? 'text-[#c17a7a]' : 'text-[#9b8175]'}
                 `}>
                   {mood.label}
                 </span>
@@ -100,7 +100,7 @@ export default function MoodSelector({ selectedMood, onMoodSelect }) {
               {isSelected &&
               <motion.div
                 layoutId="mood-indicator"
-                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1.5 bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 rounded-full shadow-md"
+                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1.5 bg-[#c17a7a] rounded-full shadow-md"
                 transition={{ type: "spring", stiffness: 500, damping: 30 }} />
 
               }

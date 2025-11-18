@@ -16,7 +16,7 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
     >
       <Card className="overflow-hidden shadow-2xl border-0 bg-white rounded-3xl">
         {/* Header Section */}
-        <div className="h-56 bg-gradient-to-br from-orange-200 via-rose-100 to-amber-100 relative overflow-hidden">
+        <div className="h-56 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800')] bg-cover bg-center opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent" />
           <div className="absolute inset-0 flex items-center justify-center">
@@ -25,7 +25,7 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
               animate={{ scale: 1 }}
               transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
             >
-              <ChefHat className="w-20 h-20 text-orange-500 opacity-40" />
+              <ChefHat className="w-20 h-20 text-[#c17a7a] opacity-40" />
             </motion.div>
           </div>
         </div>
@@ -45,8 +45,8 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
               className={`
                 shrink-0 transition-all duration-300 rounded-2xl px-6
                 ${isSaved 
-                  ? 'bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 shadow-lg' 
-                  : 'border-2 hover:border-orange-400 hover:bg-orange-50 hover:shadow-md'
+                  ? 'bg-[#c17a7a] hover:bg-[#b06a6a] shadow-lg' 
+                  : 'border-2 hover:border-[#c17a7a] hover:bg-[#f5e6dc] hover:shadow-md'
                 }
               `}
             >
@@ -96,10 +96,10 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
           {/* Ingredients */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-              <div className="w-1.5 h-8 bg-gradient-to-b from-orange-500 to-rose-500 rounded-full" />
+              <div className="w-1.5 h-8 bg-[#c17a7a] rounded-full" />
               Ingredients
             </h3>
-            <div className="bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 rounded-2xl p-6 shadow-inner border border-orange-100">
+            <div className="bg-[#faf6f2] rounded-2xl p-6 shadow-inner border border-[#e8d5c4]">
               <ul className="space-y-3">
                 {recipe.ingredients?.map((ingredient, index) => (
                   <motion.li
@@ -109,7 +109,7 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
                     transition={{ delay: index * 0.05 }}
                     className="flex items-start gap-3 text-gray-800 text-base"
                   >
-                    <div className="w-2 h-2 rounded-full bg-gradient-to-br from-orange-500 to-rose-500 mt-2 shrink-0 shadow-sm" />
+                    <div className="w-2 h-2 rounded-full bg-[#c17a7a] mt-2 shrink-0 shadow-sm" />
                     <span className="leading-relaxed">{ingredient}</span>
                   </motion.li>
                 ))}
@@ -120,7 +120,7 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
           {/* Instructions */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-              <div className="w-1.5 h-8 bg-gradient-to-b from-orange-500 to-rose-500 rounded-full" />
+              <div className="w-1.5 h-8 bg-[#c17a7a] rounded-full" />
               Instructions
             </h3>
             <div className="space-y-4">
@@ -130,9 +130,9 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.08 }}
-                  className="flex gap-4 items-start group hover:bg-orange-50/50 p-4 rounded-2xl transition-all duration-200"
-                >
-                  <div className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 via-rose-500 to-pink-500 flex items-center justify-center text-white font-bold text-base shadow-lg">
+                  className="flex gap-4 items-start group hover:bg-[#faf6f2] p-4 rounded-2xl transition-all duration-200"
+                  >
+                  <div className="shrink-0 w-10 h-10 rounded-full bg-[#c17a7a] flex items-center justify-center text-white font-bold text-base shadow-lg">
                     {index + 1}
                   </div>
                   <p className="flex-1 text-gray-800 leading-relaxed pt-2 text-base">

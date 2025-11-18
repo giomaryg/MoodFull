@@ -164,9 +164,9 @@ Make it special and memorable!`,
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50">
+    <div className="min-h-screen bg-[#f5ebe0]">
       {/* Hero Section */}
-      <div className="bg-white border-b border-gray-100">
+      <div className="bg-[#f5ebe0] border-b border-[#e8d5c4]">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -175,12 +175,12 @@ Make it special and memorable!`,
 
             <div className="flex justify-center">
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/7a2c7fa2a_ChatGPTImageNov182025at04_54_21PM.png"
-                alt="MoodFull Logo" className="bg-[#f5dbdb] w-64 h-auto" />
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/924d048e6_ChatGPTImageNov182025at05_01_45PM.png"
+                alt="MoodFull Logo" className="w-80 h-auto" />
 
 
             </div>
-            <p className="text-[#a2a0a0] mx-auto text-xl leading-relaxed max-w-2xl">Discover recipes that match your mood. Let your feelings guide your next delicious meal.
+            <p className="text-[#9b8175] mx-auto text-xl leading-relaxed max-w-2xl">Discover recipes that match your mood. Let your feelings guide your next delicious meal.
 
             </p>
           </motion.div>
@@ -188,7 +188,7 @@ Make it special and memorable!`,
       </div>
 
       {/* Main Content */}
-      <div className="bg-[#ffffff] mx-auto px-6 py-12 max-w-6xl space-y-12">
+      <div className="bg-[#f5ebe0] mx-auto px-6 py-12 max-w-6xl space-y-12">
         {/* Survey */}
         {showSurvey &&
         <motion.div
@@ -210,7 +210,7 @@ Make it special and memorable!`,
                 <Button
               onClick={() => setShowSurvey(true)}
               variant="outline"
-              size="sm" className="bg-slate-300 px-3 text-xs font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow-sm hover:text-accent-foreground h-8 border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50">
+              size="sm" className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a]">
 
 
                   Update Preferences
@@ -243,7 +243,7 @@ Make it special and memorable!`,
                 onClick={generateRecipe}
                 disabled={isGenerating}
                 size="lg"
-                className="bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 hover:from-orange-600 hover:via-rose-600 hover:to-pink-600 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 text-lg px-10 py-7 rounded-3xl font-semibold">
+                className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-10 py-7 rounded-3xl font-semibold">
 
                 {isGenerating ?
                 <>
@@ -280,7 +280,7 @@ Make it special and memorable!`,
                   }}
                   variant="outline"
                   size="lg"
-                  className="border-2 border-orange-300 hover:border-orange-400 hover:bg-orange-50 rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all">
+                  className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all">
 
                     Generate Another Recipe
                   </Button>
