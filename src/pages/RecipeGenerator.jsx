@@ -23,7 +23,7 @@ export default function RecipeGenerator() {
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
-    queryFn: () => base44.entities.Recipe.list('-created_date', 20),
+    queryFn: () => base44.entities.Recipe.list('-created_date', 20)
   });
 
   const { data: currentUser } = useQuery({
@@ -35,7 +35,7 @@ export default function RecipeGenerator() {
         setShowSurvey(true);
       }
       return user;
-    },
+    }
   });
 
   const saveRecipeMutation = useMutation({
@@ -44,7 +44,7 @@ export default function RecipeGenerator() {
       queryClient.invalidateQueries({ queryKey: ['recipes'] });
       setSavedRecipeId(data.id);
       toast.success('Recipe saved to your collection!');
-    },
+    }
   });
 
   const handleSurveyComplete = async (preferences) => {
@@ -93,7 +93,7 @@ export default function RecipeGenerator() {
         const complexity = userPreferences.meals_per_week.includes('1-3') ? 'Keep it simple and easy' : 'Can be more involved';
         prefs.push(`User cooks ${userPreferences.meals_per_week}. ${complexity}`);
       }
-      
+
       if (prefs.length > 0) {
         preferencesContext = `\n\nUSER PREFERENCES:\n${prefs.join('\n')}`;
       }
@@ -131,7 +131,7 @@ Make it special and memorable!`,
             prep_time: { type: "string" },
             cook_time: { type: "string" },
             servings: { type: "number" },
-            difficulty: { 
+            difficulty: {
               type: "string",
               enum: ["easy", "medium", "hard"]
             }
@@ -171,141 +171,141 @@ Make it special and memorable!`,
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-4"
-          >
+            className="text-center space-y-4">
+
             <div className="flex justify-center">
-              <img 
+              <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/7a2c7fa2a_ChatGPTImageNov182025at04_54_21PM.png"
-                alt="MoodFull Logo"
-                className="w-64 h-auto"
-              />
+                alt="MoodFull Logo" className="bg-[#f5dbdb] w-64 h-auto" />
+
+
             </div>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Discover recipes that match your mood. Let your feelings guide your next delicious meal.
+            <p className="text-[#a2a0a0] mx-auto text-xl leading-relaxed max-w-2xl">Discover recipes that match your mood. Let your feelings guide your next delicious meal.
+
             </p>
           </motion.div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+      <div className="bg-[#ffffff] mx-auto px-6 py-12 max-w-6xl space-y-12">
         {/* Survey */}
-        {showSurvey && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <PreferenceSurvey 
-              onComplete={handleSurveyComplete}
-              initialData={userPreferences || {}}
-            />
-          </motion.div>
-        )}
+        {showSurvey &&
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}>
 
-        {!showSurvey && (
-          <>
+            <PreferenceSurvey
+            onComplete={handleSurveyComplete}
+            initialData={userPreferences || {}} />
+
+          </motion.div>
+        }
+
+        {!showSurvey &&
+        <>
             {/* Update Preferences Button */}
-            {userPreferences?.survey_completed && (
-              <div className="flex justify-end">
+            {userPreferences?.survey_completed &&
+          <div className="flex justify-end">
                 <Button
-                  onClick={() => setShowSurvey(true)}
-                  variant="outline"
-                  size="sm"
-                  className="border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50"
-                >
+              onClick={() => setShowSurvey(true)}
+              variant="outline"
+              size="sm" className="bg-slate-300 px-3 text-xs font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow-sm hover:text-accent-foreground h-8 border-2 border-orange-200 hover:border-orange-300 hover:bg-orange-50">
+
+
                   Update Preferences
                 </Button>
               </div>
-            )}
+          }
 
             {/* Mood Selector */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}>
+
               <MoodSelector
-                selectedMood={selectedMood}
-                onMoodSelect={setSelectedMood}
-              />
+              selectedMood={selectedMood}
+              onMoodSelect={setSelectedMood} />
+
             </motion.div>
 
         {/* Generate Button */}
         <AnimatePresence mode="wait">
-          {selectedMood && !currentRecipe && (
+          {selectedMood && !currentRecipe &&
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="flex justify-center"
-            >
+              className="flex justify-center">
+
               <Button
                 onClick={generateRecipe}
                 disabled={isGenerating}
                 size="lg"
-                className="bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 hover:from-orange-600 hover:via-rose-600 hover:to-pink-600 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 text-lg px-10 py-7 rounded-3xl font-semibold"
-              >
-                {isGenerating ? (
-                  <>
+                className="bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 hover:from-orange-600 hover:via-rose-600 hover:to-pink-600 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 text-lg px-10 py-7 rounded-3xl font-semibold">
+
+                {isGenerating ?
+                <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Creating your perfect recipe...
-                  </>
-                ) : (
-                  <>
+                  </> :
+
+                <>
                     <Sparkles className="w-5 h-5 mr-2" />
                     Generate Recipe
                   </>
-                )}
+                }
               </Button>
             </motion.div>
-          )}
+            }
         </AnimatePresence>
 
         {/* Recipe Display */}
         <AnimatePresence mode="wait">
-          {currentRecipe && (
+          {currentRecipe &&
             <div className="space-y-6">
               <RecipeDisplay
                 recipe={currentRecipe}
                 onSave={handleSaveRecipe}
-                isSaved={!!savedRecipeId}
-              />
+                isSaved={!!savedRecipeId} />
+
               
-              {!isGenerating && (
-                <div className="flex justify-center">
+              {!isGenerating &&
+              <div className="flex justify-center">
                   <Button
-                    onClick={() => {
-                      setCurrentRecipe(null);
-                      setSavedRecipeId(null);
-                    }}
-                    variant="outline"
-                    size="lg"
-                    className="border-2 border-orange-300 hover:border-orange-400 hover:bg-orange-50 rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all"
-                  >
+                  onClick={() => {
+                    setCurrentRecipe(null);
+                    setSavedRecipeId(null);
+                  }}
+                  variant="outline"
+                  size="lg"
+                  className="border-2 border-orange-300 hover:border-orange-400 hover:bg-orange-50 rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all">
+
                     Generate Another Recipe
                   </Button>
                 </div>
-              )}
+              }
             </div>
-          )}
+            }
         </AnimatePresence>
 
             {/* Saved Recipes */}
-            {!currentRecipe && savedRecipes.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
+            {!currentRecipe && savedRecipes.length > 0 &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}>
+
                 <SavedRecipes
-                  recipes={savedRecipes}
-                  onRecipeClick={handleSavedRecipeClick}
-                />
+              recipes={savedRecipes}
+              onRecipeClick={handleSavedRecipeClick} />
+
               </motion.div>
-            )}
+          }
           </>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }
