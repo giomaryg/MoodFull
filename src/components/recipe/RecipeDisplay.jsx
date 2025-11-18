@@ -102,7 +102,55 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
               </Badge>
             )}
           </div>
-        </CardHeader>
+
+          {/* Nutritional Information */}
+          {recipe.nutrition && (
+            <div className="mt-6 bg-gradient-to-br from-[#faf6f2] to-[#f5e6dc] rounded-2xl p-6 border border-[#e8d5c4] shadow-inner">
+              <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="w-1 h-6 bg-[#c17a7a] rounded-full" />
+                Nutrition Facts (per serving)
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {recipe.nutrition.calories && (
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-[#e8d5c4]">
+                    <div className="text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.calories}</div>
+                    <div className="text-xs text-gray-600 mt-1">Calories</div>
+                  </div>
+                )}
+                {recipe.nutrition.protein && (
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-[#e8d5c4]">
+                    <div className="text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.protein}</div>
+                    <div className="text-xs text-gray-600 mt-1">Protein</div>
+                  </div>
+                )}
+                {recipe.nutrition.carbs && (
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-[#e8d5c4]">
+                    <div className="text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.carbs}</div>
+                    <div className="text-xs text-gray-600 mt-1">Carbs</div>
+                  </div>
+                )}
+                {recipe.nutrition.fat && (
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-[#e8d5c4]">
+                    <div className="text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.fat}</div>
+                    <div className="text-xs text-gray-600 mt-1">Fat</div>
+                  </div>
+                )}
+                {recipe.nutrition.fiber && (
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-[#e8d5c4]">
+                    <div className="text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.fiber}</div>
+                    <div className="text-xs text-gray-600 mt-1">Fiber</div>
+                  </div>
+                )}
+                {recipe.nutrition.sodium && (
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-[#e8d5c4]">
+                    <div className="text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.sodium}</div>
+                    <div className="text-xs text-gray-600 mt-1">Sodium</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          </CardHeader>
 
         <CardContent className="space-y-8 p-8">
           {/* Ingredients */}

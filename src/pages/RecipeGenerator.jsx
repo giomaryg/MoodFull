@@ -123,6 +123,7 @@ Each recipe must have:
 - Preparation and cooking times (be realistic)
 - Number of servings
 - Difficulty level (easy, medium, or hard)
+- Complete nutritional information per serving (calories, protein, carbs, fat, fiber, sodium)
 
 Make each recipe special and memorable!`,
         response_json_schema: {
@@ -149,6 +150,17 @@ Make each recipe special and memorable!`,
                   difficulty: {
                     type: "string",
                     enum: ["easy", "medium", "hard"]
+                  },
+                  nutrition: {
+                    type: "object",
+                    properties: {
+                      calories: { type: "number" },
+                      protein: { type: "string" },
+                      carbs: { type: "string" },
+                      fat: { type: "string" },
+                      fiber: { type: "string" },
+                      sodium: { type: "string" }
+                    }
                   }
                 }
               }
