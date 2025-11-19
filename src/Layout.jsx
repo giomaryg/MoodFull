@@ -1,4 +1,5 @@
 import React from 'react';
+import BottomNav from './components/BottomNav';
 
 export default function Layout({ children, currentPageName }) {
   return (
@@ -13,6 +14,7 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
       {children}
+      <BottomNav currentPage={currentPageName} />
     </>
   );
 }
