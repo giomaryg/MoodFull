@@ -26,27 +26,27 @@ export default function SavedRecipes({ recipes, onRecipeClick }) {
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-[#c17a7a] rounded-xl">
+          <div className="p-2 bg-[#9d9a8f] rounded-xl">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-bold text-[#c17a7a]">Your Saved Recipes</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-[#9d9a8f]">Your Saved Recipes</h3>
         </div>
         
         <div className="relative flex-1 sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#9b8175]" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7a7870]" />
           <Input
             type="text"
             placeholder="Search recipes..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 border-[#e8d5c4] focus:border-[#c17a7a] rounded-xl"
+            className="pl-10 border-[#d6d3cc] focus:border-[#9d9a8f] rounded-xl"
           />
         </div>
       </div>
 
       {filteredRecipes.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-[#9b8175]">No recipes found matching "{searchQuery}"</p>
+          <p className="text-[#7a7870]">No recipes found matching "{searchQuery}"</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -61,11 +61,11 @@ export default function SavedRecipes({ recipes, onRecipeClick }) {
             >
               <Card
                 onClick={() => onRecipeClick(recipe)}
-                className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#e8d5c4] bg-white hover:bg-[#faf6f2] group rounded-2xl overflow-hidden"
+                className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#d6d3cc] bg-white hover:bg-[#f5f3f0] group rounded-2xl overflow-hidden"
               >
                 <CardContent className="p-6 space-y-4">
                   <div className="space-y-2">
-                    <h4 className="font-bold text-lg text-gray-900 group-hover:text-[#c17a7a] transition-colors line-clamp-1">
+                    <h4 className="font-bold text-lg text-gray-900 group-hover:text-[#9d9a8f] transition-colors line-clamp-1">
                       {recipe.name}
                     </h4>
                     <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
@@ -76,7 +76,7 @@ export default function SavedRecipes({ recipes, onRecipeClick }) {
                   <div className="flex flex-wrap gap-2">
                     <Badge 
                       variant="secondary" 
-                      className="bg-[#f5e6dc] text-[#c17a7a] border-0 capitalize text-xs px-3 py-1 rounded-lg font-medium"
+                      className="bg-[#f0e6e6] text-[#9d9a8f] border-0 capitalize text-xs px-3 py-1 rounded-lg font-medium"
                     >
                       {recipe.mood}
                     </Badge>

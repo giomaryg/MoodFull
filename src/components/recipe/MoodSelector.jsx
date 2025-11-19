@@ -65,11 +65,11 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
   return (
     <div className="space-y-6 sm:space-y-8">
       <div className="text-center space-y-2 sm:space-y-3 px-4">
-        <h2 className="text-[#c17a7a] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
+        <h2 className="text-[#9d9a8f] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
           How are you feeling{userName ? `, ${userName}` : ''}?
         </h2>
-        <p className="text-[#9b8175] text-sm sm:text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
-        <p className="text-[#c17a7a] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
+        <p className="text-[#7a7870] text-sm sm:text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
+        <p className="text-[#9d9a8f] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
@@ -97,7 +97,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
 
 
               <div className="flex flex-col items-center gap-3">
-                <div className="bg-[#c17a7a] p-4 rounded-2xl transform transition-transform shadow-md">
+                <div className="bg-[#9d9a8f] p-4 rounded-2xl transform transition-transform shadow-md">
 
 
 
@@ -105,7 +105,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
                 </div>
                 <span className={`
                   text-sm font-semibold tracking-wide
-                  ${isSelected ? 'text-[#c17a7a]' : 'text-[#9b8175]'}
+                  ${isSelected ? 'text-[#9d9a8f]' : 'text-[#7a7870]'}
                 `}>
                   {mood.label}
                 </span>
@@ -114,7 +114,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
               {isSelected &&
               <motion.div
                 layoutId="mood-indicator"
-                className="absolute -bottom-1.5 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-12 sm:w-16 h-1 sm:h-1.5 bg-[#c17a7a] rounded-full shadow-md"
+                className="absolute -bottom-1.5 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-12 sm:w-16 h-1 sm:h-1.5 bg-[#9d9a8f] rounded-full shadow-md"
                 transition={{ type: "spring", stiffness: 500, damping: 30 }} />
 
               }
