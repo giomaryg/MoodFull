@@ -14,6 +14,8 @@ import SimilarRecipes from '../components/recipe/SimilarRecipes';
 import PreferenceSurvey from '../components/survey/PreferenceSurvey';
 import RecipeGrid from '../components/recipe/RecipeGrid';
 import IntroScreen from '../components/IntroScreen';
+import BottomNav from '../components/navigation/BottomNav';
+import AccountInfo from '../components/account/AccountInfo';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
@@ -26,6 +28,7 @@ export default function RecipeGenerator() {
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [globalSearchQuery, setGlobalSearchQuery] = useState('');
   const [showIntro, setShowIntro] = useState(true);
+  const [activeTab, setActiveTab] = useState('home');
 
   const queryClient = useQueryClient();
 
@@ -293,7 +296,7 @@ Make each recipe special and memorable!`,
       )}
 
       {/* Main Content */}
-      <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-8 sm:px-6 sm:pb-12 max-w-6xl space-y-8 sm:space-y-12">
+      <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-24 sm:px-6 max-w-6xl space-y-8 sm:space-y-12">
         {/* Survey */}
         {showSurvey &&
         <motion.div
@@ -308,7 +311,7 @@ Make each recipe special and memorable!`,
           </motion.div>
         }
 
-        {!showSurvey &&
+        {!showSurvey && activeTab === 'home' &&
         <>
             {/* Search & Preferences */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
@@ -444,23 +447,76 @@ Make each recipe special and memorable!`,
             }
         </AnimatePresence>
 
-            {/* Saved Recipes */}
-            {!currentRecipe && savedRecipes.length > 0 &&
+          </>
+        }
+
+        {/* Saved Recipes Tab */}
+        {!showSurvey && activeTab === 'saved' && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}>
+            className="space-y-6"
+          >
+            <div className="text-center space-y-2">
+              <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Your Saved Recipes</h2>
+              <p className="text-gray-600">Browse and manage your collection</p>
+            </div>
 
-                <SavedRecipes
-              recipes={globalSearchQuery ? filteredSavedRecipes : savedRecipes}
-              onRecipeClick={handleSavedRecipeClick} />
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
+              <Input
+                type="text"
+                placeholder="Search saved recipes..."
+                value={globalSearchQuery}
+                onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+              />
+              {globalSearchQuery && (
+                <button
+                  onClick={() => setGlobalSearchQuery('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
 
-              </motion.div>
-          }
-          </>
-        }
+            {savedRecipes.length > 0 ? (
+              <SavedRecipes
+                recipes={globalSearchQuery ? filteredSavedRecipes : savedRecipes}
+                onRecipeClick={(recipe) => {
+                  handleSavedRecipeClick(recipe);
+                  setActiveTab('home');
+                }}
+              />
+            ) : (
+              <div className="text-center py-12">
+                <UtensilsCrossed className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-600">No saved recipes yet. Generate some recipes to get started!</p>
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* Account Tab */}
+        {!showSurvey && activeTab === 'account' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <AccountInfo
+              user={currentUser}
+              onUpdatePreferences={() => setShowSurvey(true)}
+              recipeCount={savedRecipes.length}
+            />
+          </motion.div>
+        )}
       </div>
       </div>
+
+      {/* Bottom Navigation */}
+      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />}
     </>
   );
 
