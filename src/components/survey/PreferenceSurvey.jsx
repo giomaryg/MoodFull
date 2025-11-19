@@ -29,13 +29,14 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
   const [formData, setFormData] = useState({
     allergies: initialData.allergies || '',
     diet_preferences: initialData.diet_preferences || '',
+    blood_sugar_friendly: initialData.blood_sugar_friendly ?? null,
     priorities: initialData.priorities || [],
     open_to_new_cuisines: initialData.open_to_new_cuisines ?? null,
     preferred_cuisines: initialData.preferred_cuisines || [],
     meals_per_week: initialData.meals_per_week || ''
   });
 
-  const totalSteps = 6;
+  const totalSteps = 7;
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -62,10 +63,11 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
     switch (step) {
       case 1: return true;
       case 2: return true;
-      case 3: return formData.priorities.length > 0;
-      case 4: return formData.open_to_new_cuisines !== null;
-      case 5: return formData.preferred_cuisines.length > 0;
-      case 6: return formData.meals_per_week !== '';
+      case 3: return formData.blood_sugar_friendly !== null;
+      case 4: return formData.priorities.length > 0;
+      case 5: return formData.open_to_new_cuisines !== null;
+      case 6: return formData.preferred_cuisines.length > 0;
+      case 7: return formData.meals_per_week !== '';
       default: return false;
     }
   };
@@ -120,6 +122,60 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
       case 3:
         return (
           <div className="space-y-4">
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">
+                Do you need blood sugar friendly recipes?
+              </Label>
+              <p className="text-sm text-gray-500">For diabetes management or blood sugar control</p>
+              <div className="grid grid-cols-1 gap-3 mt-4">
+                <motion.button
+                  onClick={() => setFormData({ ...formData, blood_sugar_friendly: true })}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`p-5 rounded-xl border-2 transition-all ${
+                    formData.blood_sugar_friendly === true
+                      ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                      : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="text-left">
+                      <div className="font-semibold text-base">Yes, please prioritize low glycemic recipes</div>
+                      <div className="text-sm text-gray-500 mt-1">Focus on balanced blood sugar levels 🩺</div>
+                    </div>
+                    {formData.blood_sugar_friendly === true && (
+                      <Check className="w-6 h-6 text-[#c17a7a] ml-2" />
+                    )}
+                  </div>
+                </motion.button>
+                <motion.button
+                  onClick={() => setFormData({ ...formData, blood_sugar_friendly: false })}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`p-5 rounded-xl border-2 transition-all ${
+                    formData.blood_sugar_friendly === false
+                      ? 'bg-[#f5e6dc] border-[#c17a7a] shadow-md'
+                      : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="text-left">
+                      <div className="font-semibold text-base">No special requirements</div>
+                      <div className="text-sm text-gray-500 mt-1">Standard recipe recommendations 🍴</div>
+                    </div>
+                    {formData.blood_sugar_friendly === false && (
+                      <Check className="w-6 h-6 text-[#c17a7a] ml-2" />
+                    )}
+                  </div>
+                </motion.button>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="space-y-4">
             <div className="space-y-3">
               <Label className="text-base font-semibold">
                 What are your priorities?
@@ -152,7 +208,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
           </div>
         );
 
-      case 4:
+      case 5:
         return (
           <div className="space-y-4">
             <div className="space-y-4">
@@ -205,7 +261,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
           </div>
         );
 
-      case 5:
+      case 6:
         return (
           <div className="space-y-4">
             <div className="space-y-3">
@@ -236,7 +292,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
           </div>
         );
 
-      case 6:
+      case 7:
         return (
           <div className="space-y-4">
             <div className="space-y-4">
