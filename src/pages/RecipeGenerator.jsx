@@ -271,10 +271,8 @@ Make each recipe special and memorable!`,
 
             <div className="flex justify-center">
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/924d048e6_ChatGPTImageNov182025at05_01_45PM.png"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/3e9569a05_BlackAndWhiteAestheticMinimalistModernSimpleTypographyCoconutCosmeticsLogo.png"
                 alt="MoodFull Logo" className="w-48 sm:w-64 md:w-80 h-auto" />
-
-
             </div>
             <p className="text-[#5a6f60] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
 
