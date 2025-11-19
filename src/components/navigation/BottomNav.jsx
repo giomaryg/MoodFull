@@ -1,11 +1,12 @@
 import React from 'react';
-import { Home, BookMarked, User } from 'lucide-react';
+import { Home, BookMarked, User, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function BottomNav({ activeTab, onTabChange }) {
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'saved', label: 'Saved', icon: BookMarked },
+    { id: 'planner', label: 'Planner', icon: Calendar },
     { id: 'account', label: 'Account', icon: User }
   ];
 

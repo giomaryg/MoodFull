@@ -16,6 +16,7 @@ import RecipeGrid from '../components/recipe/RecipeGrid';
 import IntroScreen from '../components/IntroScreen';
 import BottomNav from '../components/navigation/BottomNav';
 import AccountInfo from '../components/account/AccountInfo';
+import MealPlanner from '../components/mealplan/MealPlanner';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
@@ -515,6 +516,16 @@ Make each recipe special and memorable!`,
           </motion.div>
         )}
 
+        {/* Planner Tab */}
+        {!showSurvey && activeTab === 'planner' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <MealPlanner />
+          </motion.div>
+        )}
+
         {/* Account Tab */}
         {!showSurvey && activeTab === 'account' && (
           <motion.div
@@ -528,8 +539,8 @@ Make each recipe special and memorable!`,
             />
           </motion.div>
         )}
-      </div>
-      </div>
+        </div>
+        </div>
 
       {/* Bottom Navigation */}
       {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />}
