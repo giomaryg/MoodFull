@@ -21,6 +21,7 @@ export default function IntroScreen({ userName, onContinue }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
           className="text-white text-4xl sm:text-5xl md:text-6xl"
+          style={{ fontFamily: 'Brittany Signature, cursive' }}
         >
           Hi, {userName || 'there'}! ✨
         </motion.h1>
@@ -30,6 +31,7 @@ export default function IntroScreen({ userName, onContinue }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.6 }}
           className="text-white/80 text-lg sm:text-xl"
+          style={{ fontFamily: 'Brittany Signature, cursive' }}
         >
           tap anywhere to continue
         </motion.p>
