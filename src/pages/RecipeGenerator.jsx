@@ -49,6 +49,18 @@ export default function RecipeGenerator() {
     );
   }, [savedRecipes, globalSearchQuery]);
 
+  const filteredGeneratedRecipes = useMemo(() => {
+    if (!globalSearchQuery.trim()) return generatedRecipes;
+
+    const query = globalSearchQuery.toLowerCase();
+    return generatedRecipes.filter((recipe) =>
+    recipe.name.toLowerCase().includes(query) ||
+    recipe.description?.toLowerCase().includes(query) ||
+    recipe.mood?.toLowerCase().includes(query) ||
+    recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
+    );
+  }, [generatedRecipes, globalSearchQuery]);
+
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => {
@@ -399,7 +411,7 @@ Make each recipe special and memorable!`,
               exit={{ opacity: 0, y: -20 }}>
 
               <RecipeGrid
-                recipes={generatedRecipes}
+                recipes={filteredGeneratedRecipes}
                 onRecipeClick={(recipe) => {
                   setCurrentRecipe(recipe);
                   setSavedRecipeId(null);
@@ -407,6 +419,7 @@ Make each recipe special and memorable!`,
                 onStartOver={() => {
                   setGeneratedRecipes([]);
                   setSelectedMoods([]);
+                  setGlobalSearchQuery('');
                 }} />
 
             </motion.div>
