@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Sparkles, Loader2, UtensilsCrossed, Search, X } from 'lucide-react';
+import { Sparkles, Loader2, UtensilsCrossed } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
 import MoodSelector from '../components/recipe/MoodSelector';
 import RecipeDisplay from '../components/recipe/RecipeDisplay';
 import SavedRecipes from '../components/recipe/SavedRecipes';
-import SimilarRecipes from '../components/recipe/SimilarRecipes';
 import PreferenceSurvey from '../components/survey/PreferenceSurvey';
 import RecipeGrid from '../components/recipe/RecipeGrid';
 
@@ -22,27 +20,13 @@ export default function RecipeGenerator() {
   const [savedRecipeId, setSavedRecipeId] = useState(null);
   const [showSurvey, setShowSurvey] = useState(false);
   const [userPreferences, setUserPreferences] = useState(null);
-  const [similarRecipes, setSimilarRecipes] = useState([]);
-  const [globalSearchQuery, setGlobalSearchQuery] = useState('');
 
   const queryClient = useQueryClient();
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
-    queryFn: () => base44.entities.Recipe.list('-created_date', 100)
+    queryFn: () => base44.entities.Recipe.list('-created_date', 20)
   });
-
-  const filteredSavedRecipes = useMemo(() => {
-    if (!globalSearchQuery.trim()) return savedRecipes;
-    
-    const query = globalSearchQuery.toLowerCase();
-    return savedRecipes.filter(recipe => 
-      recipe.name.toLowerCase().includes(query) ||
-      recipe.description?.toLowerCase().includes(query) ||
-      recipe.mood?.toLowerCase().includes(query) ||
-      recipe.ingredients?.some(ing => ing.toLowerCase().includes(query))
-    );
-  }, [savedRecipes, globalSearchQuery]);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -70,10 +54,6 @@ export default function RecipeGenerator() {
       await base44.auth.updateMe(preferences);
       setUserPreferences({ ...userPreferences, ...preferences });
       setShowSurvey(false);
-      setSelectedMoods([]);
-      setGeneratedRecipes([]);
-      setCurrentRecipe(null);
-      setSavedRecipeId(null);
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       toast.success('Preferences saved!');
     } catch (error) {
@@ -106,9 +86,6 @@ export default function RecipeGenerator() {
       }
       if (userPreferences.diet_preferences) {
         prefs.push(`Follow these dietary preferences: ${userPreferences.diet_preferences}`);
-      }
-      if (userPreferences.blood_sugar_friendly) {
-        prefs.push(`CRITICAL - This user needs blood sugar friendly recipes. Focus on low glycemic index foods, balanced macros, minimal added sugars, complex carbs, and fiber-rich ingredients suitable for diabetes management.`);
       }
       if (userPreferences.priorities?.length > 0) {
         prefs.push(`Prioritize: ${userPreferences.priorities.join(', ')}`);
@@ -239,44 +216,27 @@ Make each recipe special and memorable!`,
     setCurrentRecipe(recipe);
     setSelectedMoods(recipe.mood.split(', '));
     setSavedRecipeId(recipe.id);
-    findSimilarRecipes(recipe);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const findSimilarRecipes = (recipe) => {
-    // Find recipes with similar mood, difficulty, or cuisine
-    const similar = savedRecipes
-      .filter(r => r.id !== recipe.id)
-      .filter(r => {
-        const hasSimilarMood = recipe.mood?.split(', ').some(mood => 
-          r.mood?.includes(mood)
-        );
-        const hasSimilarDifficulty = r.difficulty === recipe.difficulty;
-        return hasSimilarMood || hasSimilarDifficulty;
-      })
-      .slice(0, 6);
-    
-    setSimilarRecipes(similar);
   };
 
   return (
     <div className="min-h-screen bg-[#f5ebe0]">
       {/* Hero Section */}
       <div className="bg-[#f5ebe0] border-b border-[#e8d5c4]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="max-w-6xl mx-auto px-6 py-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-3 sm:space-y-4">
+            className="text-center space-y-4">
 
             <div className="flex justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/924d048e6_ChatGPTImageNov182025at05_01_45PM.png"
-                alt="MoodFull Logo" className="w-48 sm:w-64 md:w-80 h-auto" />
+                alt="MoodFull Logo" className="w-80 h-auto" />
 
 
             </div>
-            <p className="text-[#9b8175] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
+            <p className="text-[#9b8175] mx-auto text-xl leading-relaxed max-w-2xl">Discover recipes that match your mood. Let your feelings guide your next delicious meal.
 
             </p>
           </motion.div>
@@ -284,7 +244,7 @@ Make each recipe special and memorable!`,
       </div>
 
       {/* Main Content */}
-      <div className="bg-[#f5ebe0] mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl space-y-8 sm:space-y-12">
+      <div className="bg-[#f5ebe0] mx-auto px-6 py-12 max-w-6xl space-y-12">
         {/* Survey */}
         {showSurvey &&
         <motion.div
@@ -293,46 +253,26 @@ Make each recipe special and memorable!`,
 
             <PreferenceSurvey
             onComplete={handleSurveyComplete}
-            initialData={userPreferences || {}}
-            currentUser={currentUser || {}} />
+            initialData={userPreferences || {}} />
 
           </motion.div>
         }
 
         {!showSurvey &&
         <>
-            {/* Search & Preferences */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
-              {/* Global Search */}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#9b8175]" />
-                <Input
-                  type="text"
-                  placeholder="Search all recipes..."
-                  value={globalSearchQuery}
-                  onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                  className="pl-10 pr-10 border-2 border-[#e8d5c4] focus:border-[#c17a7a] rounded-xl text-sm sm:text-base"
-                />
-                {globalSearchQuery && (
-                  <button
-                    onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#9b8175] hover:text-[#c17a7a] transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* Update Preferences Button */}
-              {userPreferences?.survey_completed && (
+            {/* Update Preferences Button */}
+            {userPreferences?.survey_completed &&
+          <div className="flex justify-end">
                 <Button
-                  onClick={() => setShowSurvey(true)}
-                  variant="outline"
-                  className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] text-sm sm:text-base whitespace-nowrap">
+              onClick={() => setShowSurvey(true)}
+              variant="outline"
+              size="sm" className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a]">
+
+
                   Update Preferences
                 </Button>
-              )}
-            </div>
+              </div>
+          }
 
             {/* Mood Selector */}
             <motion.div
@@ -341,9 +281,8 @@ Make each recipe special and memorable!`,
             transition={{ delay: 0.2 }}>
 
               <MoodSelector
-                selectedMoods={selectedMoods}
-                onMoodSelect={setSelectedMoods}
-                userName={currentUser?.full_name?.split(' ')[0]} />
+              selectedMoods={selectedMoods}
+              onMoodSelect={setSelectedMoods} />
 
             </motion.div>
 
@@ -359,7 +298,8 @@ Make each recipe special and memorable!`,
               <Button
                 onClick={generateRecipe}
                 disabled={isGenerating}
-                className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
+                size="lg"
+                className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-10 py-7 rounded-3xl font-semibold">
 
                 {isGenerating ?
                 <>
@@ -403,18 +343,12 @@ Make each recipe special and memorable!`,
         {/* Recipe Display */}
         <AnimatePresence mode="wait">
           {currentRecipe &&
-            <div className="space-y-6 sm:space-y-8">
+            <div className="space-y-6">
               <RecipeDisplay
                 recipe={currentRecipe}
                 onSave={handleSaveRecipe}
                 isSaved={!!savedRecipeId} />
 
-              {similarRecipes.length > 0 && (
-                <SimilarRecipes 
-                  recipes={similarRecipes}
-                  onRecipeClick={handleSavedRecipeClick}
-                />
-              )}
               
               {!isGenerating &&
               <div className="flex justify-center gap-4">
@@ -422,10 +356,10 @@ Make each recipe special and memorable!`,
                   onClick={() => {
                     setCurrentRecipe(null);
                     setSavedRecipeId(null);
-                    setSimilarRecipes([]);
                   }}
                   variant="outline"
-                  className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
+                  size="lg"
+                  className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all">
 
                     Back to Results
                   </Button>
@@ -437,17 +371,17 @@ Make each recipe special and memorable!`,
 
             {/* Saved Recipes */}
             {!currentRecipe && savedRecipes.length > 0 &&
-            <motion.div
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}>
 
                 <SavedRecipes
-              recipes={globalSearchQuery ? filteredSavedRecipes : savedRecipes}
+              recipes={savedRecipes}
               onRecipeClick={handleSavedRecipeClick} />
 
               </motion.div>
-            }
+          }
           </>
         }
       </div>
