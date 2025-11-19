@@ -53,7 +53,7 @@ const moods = [
 }];
 
 
-export default function MoodSelector({ selectedMoods, onMoodSelect }) {
+export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) {
   const handleMoodToggle = (moodId) => {
     if (selectedMoods.includes(moodId)) {
       onMoodSelect(selectedMoods.filter(m => m !== moodId));
@@ -65,10 +65,11 @@ export default function MoodSelector({ selectedMoods, onMoodSelect }) {
   return (
     <div className="space-y-6 sm:space-y-8">
       <div className="text-center space-y-2 sm:space-y-3 px-4">
-        <h2 className="text-[#c17a7a] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">How are you feeling?
-
+        <h2 className="text-[#c17a7a] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
+          How are you feeling{userName ? `, ${userName}` : ''}?
         </h2>
         <p className="text-[#9b8175] text-sm sm:text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
+        <p className="text-[#c17a7a] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">

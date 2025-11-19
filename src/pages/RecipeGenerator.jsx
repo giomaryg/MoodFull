@@ -341,8 +341,9 @@ Make each recipe special and memorable!`,
             transition={{ delay: 0.2 }}>
 
               <MoodSelector
-              selectedMoods={selectedMoods}
-              onMoodSelect={setSelectedMoods} />
+                selectedMoods={selectedMoods}
+                onMoodSelect={setSelectedMoods}
+                userName={currentUser?.full_name?.split(' ')[0]} />
 
             </motion.div>
 
