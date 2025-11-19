@@ -283,7 +283,7 @@ Make each recipe special and memorable!`,
             className="text-center">
 
             <header className="text-center">
-              <h1 className="text-[#6b9b76] text-4xl sm:text-5xl md:text-6xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
+              <h1 className="text-[#6b9b76] text-3xl sm:text-4xl md:text-5xl" style={{ fontFamily: 'Manly Signature, cursive' }}>
                 MoodFull
               </h1>
             </header>
