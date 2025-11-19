@@ -1,24 +1,57 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Users, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Clock, Users, Sparkles, Search } from 'lucide-react';
 
 export default function SavedRecipes({ recipes, onRecipeClick }) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredRecipes = useMemo(() => {
+    if (!searchQuery.trim()) return recipes;
+    
+    const query = searchQuery.toLowerCase();
+    return recipes.filter(recipe => 
+      recipe.name.toLowerCase().includes(query) ||
+      recipe.description?.toLowerCase().includes(query) ||
+      recipe.mood?.toLowerCase().includes(query) ||
+      recipe.ingredients?.some(ing => ing.toLowerCase().includes(query))
+    );
+  }, [recipes, searchQuery]);
+
   if (!recipes || recipes.length === 0) return null;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="p-2 bg-[#c17a7a] rounded-xl">
-          <Sparkles className="w-5 h-5 text-white" />
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-[#c17a7a] rounded-xl">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <h3 className="text-xl sm:text-2xl font-bold text-[#c17a7a]">Your Saved Recipes</h3>
         </div>
-        <h3 className="text-2xl font-bold text-[#c17a7a]">Your Saved Recipes</h3>
+        
+        <div className="relative flex-1 sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#9b8175]" />
+          <Input
+            type="text"
+            placeholder="Search recipes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 border-[#e8d5c4] focus:border-[#c17a7a] rounded-xl"
+          />
+        </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      {filteredRecipes.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-[#9b8175]">No recipes found matching "{searchQuery}"</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         <AnimatePresence>
-          {recipes.map((recipe, index) => (
+                {filteredRecipes.map((recipe, index) => (
             <motion.div
               key={recipe.id}
               initial={{ opacity: 0, scale: 0.95 }}
@@ -65,7 +98,8 @@ export default function SavedRecipes({ recipes, onRecipeClick }) {
             </motion.div>
           ))}
         </AnimatePresence>
-      </div>
-    </div>
-  );
-}
+        </div>
+        )}
+        </div>
+        );
+        }

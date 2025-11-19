@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import MoodSelector from '../components/recipe/MoodSelector';
 import RecipeDisplay from '../components/recipe/RecipeDisplay';
 import SavedRecipes from '../components/recipe/SavedRecipes';
+import SimilarRecipes from '../components/recipe/SimilarRecipes';
 import PreferenceSurvey from '../components/survey/PreferenceSurvey';
 import RecipeGrid from '../components/recipe/RecipeGrid';
 
@@ -20,6 +21,7 @@ export default function RecipeGenerator() {
   const [savedRecipeId, setSavedRecipeId] = useState(null);
   const [showSurvey, setShowSurvey] = useState(false);
   const [userPreferences, setUserPreferences] = useState(null);
+  const [similarRecipes, setSimilarRecipes] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -223,7 +225,24 @@ Make each recipe special and memorable!`,
     setCurrentRecipe(recipe);
     setSelectedMoods(recipe.mood.split(', '));
     setSavedRecipeId(recipe.id);
+    findSimilarRecipes(recipe);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const findSimilarRecipes = (recipe) => {
+    // Find recipes with similar mood, difficulty, or cuisine
+    const similar = savedRecipes
+      .filter(r => r.id !== recipe.id)
+      .filter(r => {
+        const hasSimilarMood = recipe.mood?.split(', ').some(mood => 
+          r.mood?.includes(mood)
+        );
+        const hasSimilarDifficulty = r.difficulty === recipe.difficulty;
+        return hasSimilarMood || hasSimilarDifficulty;
+      })
+      .slice(0, 6);
+    
+    setSimilarRecipes(similar);
   };
 
   return (
@@ -349,12 +368,18 @@ Make each recipe special and memorable!`,
         {/* Recipe Display */}
         <AnimatePresence mode="wait">
           {currentRecipe &&
-            <div className="space-y-6">
+            <div className="space-y-6 sm:space-y-8">
               <RecipeDisplay
                 recipe={currentRecipe}
                 onSave={handleSaveRecipe}
                 isSaved={!!savedRecipeId} />
 
+              {similarRecipes.length > 0 && (
+                <SimilarRecipes 
+                  recipes={similarRecipes}
+                  onRecipeClick={handleSavedRecipeClick}
+                />
+              )}
               
               {!isGenerating &&
               <div className="flex justify-center gap-4">
@@ -362,6 +387,7 @@ Make each recipe special and memorable!`,
                   onClick={() => {
                     setCurrentRecipe(null);
                     setSavedRecipeId(null);
+                    setSimilarRecipes([]);
                   }}
                   variant="outline"
                   className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
