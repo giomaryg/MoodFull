@@ -63,16 +63,16 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      <div className="text-center space-y-2 sm:space-y-3 px-4">
-        <h2 className="text-[#6b9b76] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="text-center space-y-1 sm:space-y-2 px-4">
+        <h2 className="text-[#6b9b76] text-xl sm:text-2xl md:text-3xl font-medium">
           How are you feeling today?
         </h2>
-        <p className="text-[#5a6f60] text-sm sm:text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
-        <p className="text-[#6b9b76] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
+        <p className="text-[#5a6f60] text-xs sm:text-sm">Choose your mood(s) and we'll create the perfect recipe for you</p>
+        <p className="text-[#6b9b76] text-xs font-medium italic">✨ Where every mood meets its perfect meal ✨</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
         {moods.map((mood) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);
@@ -83,7 +83,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
               onClick={() => handleMoodToggle(mood.id)}
               whileHover={{ scale: 1.05, y: -4 }}
               whileTap={{ scale: 0.95 }} 
-              className={`p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
+              className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
                 isSelected 
                   ? 'bg-[#f5e6dc] border-[#c17a7a]' 
                   : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
@@ -96,15 +96,15 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
 
 
 
-              <div className="flex flex-col items-center gap-3">
-                <div className="bg-[#6b9b76] p-4 rounded-2xl transform transition-transform shadow-md">
+              <div className="flex flex-col items-center gap-2">
+                <div className="bg-[#6b9b76] p-2.5 sm:p-3 rounded-xl transform transition-transform shadow-md">
 
 
 
-                  <Icon className="text-white w-7 h-7" />
+                  <Icon className="text-white w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <span className={`
-                  text-sm font-semibold tracking-wide
+                  text-xs sm:text-sm font-semibold tracking-wide
                   ${isSelected ? 'text-[#6b9b76]' : 'text-[#5a6f60]'}
                 `}>
                   {mood.label}
