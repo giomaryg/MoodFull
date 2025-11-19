@@ -281,11 +281,11 @@ Make each recipe special and memorable!`,
             animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-3 sm:space-y-4">
 
-            <div className="flex justify-center">
-              <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/3e9569a05_BlackAndWhiteAestheticMinimalistModernSimpleTypographyCoconutCosmeticsLogo.png"
-                alt="MoodFull Logo" className="w-32 sm:w-40 md:w-48 h-auto" />
-            </div>
+            <header className="text-center">
+              <h1 className="text-[#6b9b76] text-5xl sm:text-6xl md:text-7xl" style={{ fontFamily: 'Brittany, serif' }}>
+                MoodFull
+              </h1>
+            </header>
           </motion.div>
         </div>
       </div>
