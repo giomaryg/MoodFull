@@ -442,13 +442,13 @@ Make each recipe special and memorable!`,
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                 {/* Global Search */}
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b9b76]" />
                   <Input
                   type="text"
-                  placeholder="Search all recipes..."
+                  placeholder="Search your recipes or generate new ones..."
                   value={globalSearchQuery}
                   onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                  className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base" />
+                  className="pl-11 pr-10 py-6 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base shadow-md" />
 
                   {globalSearchQuery &&
                 <button
@@ -480,22 +480,54 @@ Make each recipe special and memorable!`,
               />
             </div>
 
-            {/* Mood Selector */}
-            <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}>
+            {/* Show Saved Recipes when searching or when no generated recipes */}
+            {(globalSearchQuery || Object.keys(advancedFilters).length > 0) && !currentRecipe && generatedRecipes.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-4"
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#6b9b76]">
+                    Search Results ({filteredSavedRecipes.length})
+                  </h3>
+                </div>
+                {filteredSavedRecipes.length > 0 ? (
+                  <SavedRecipes
+                    recipes={filteredSavedRecipes}
+                    onRecipeClick={(recipe) => {
+                      handleSavedRecipeClick(recipe);
+                    }}
+                    searchQuery={globalSearchQuery}
+                  />
+                ) : (
+                  <div className="text-center py-12 bg-white rounded-2xl border-2 border-[#c5d9c9]">
+                    <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-600 text-lg mb-2">No recipes found matching your search</p>
+                    <p className="text-gray-500 text-sm">Try adjusting your filters or generate new recipes below</p>
+                  </div>
+                )}
+              </motion.div>
+            )}
 
-              <MoodSelector
-              selectedMoods={selectedMoods}
-              onMoodSelect={setSelectedMoods}
-              userName={currentUser?.full_name?.split(' ')[0]} />
-
-            </motion.div>
+            {/* Mood Selector - Only show when not searching */}
+            {!globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <MoodSelector
+                  selectedMoods={selectedMoods}
+                  onMoodSelect={setSelectedMoods}
+                  userName={currentUser?.full_name?.split(' ')[0]}
+                />
+              </motion.div>
+            )}
 
         {/* Generate Button */}
         <AnimatePresence mode="wait">
-          {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 &&
+          {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -584,8 +616,8 @@ Make each recipe special and memorable!`,
             }
             </AnimatePresence>
 
-            {/* Personalized Recommendations */}
-            {!currentRecipe && generatedRecipes.length === 0 && (
+            {/* Personalized Recommendations - Only show when not searching */}
+            {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
               <RecommendedRecipes
                 userPreferences={userPreferences}
                 onRecipeClick={(recipe) => {
