@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronRight, ChevronLeft, Sparkles, Check } from 'lucide-react';
 
 const priorities = [
@@ -24,9 +26,12 @@ const cuisines = [
 
 const mealOptions = ['1-3 meals', '4-7 meals', '8-14 meals', '15+ meals'];
 
-export default function PreferenceSurvey({ onComplete, initialData = {} }) {
+export default function PreferenceSurvey({ onComplete, initialData = {}, currentUser = {} }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    gender: initialData.gender || currentUser.gender || '',
+    phone_number: initialData.phone_number || currentUser.phone_number || '',
+    birthday: initialData.birthday || currentUser.birthday || '',
     allergies: initialData.allergies || '',
     diet_preferences: initialData.diet_preferences || '',
     blood_sugar_friendly: initialData.blood_sugar_friendly ?? null,
@@ -36,7 +41,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
     meals_per_week: initialData.meals_per_week || ''
   });
 
-  const totalSteps = 7;
+  const totalSteps = 8;
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -61,13 +66,14 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
 
   const canProceed = () => {
     switch (step) {
-      case 1: return true;
+      case 1: return formData.gender && formData.phone_number && formData.birthday;
       case 2: return true;
-      case 3: return formData.blood_sugar_friendly !== null;
-      case 4: return formData.priorities.length > 0;
-      case 5: return formData.open_to_new_cuisines !== null;
-      case 6: return formData.preferred_cuisines.length > 0;
-      case 7: return formData.meals_per_week !== '';
+      case 3: return true;
+      case 4: return formData.blood_sugar_friendly !== null;
+      case 5: return formData.priorities.length > 0;
+      case 6: return formData.open_to_new_cuisines !== null;
+      case 7: return formData.preferred_cuisines.length > 0;
+      case 8: return formData.meals_per_week !== '';
       default: return false;
     }
   };
@@ -82,8 +88,57 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">Welcome to MoodFull! 🍽️</h2>
-              <p className="text-gray-600">Let's personalize your recipe experience</p>
+              <p className="text-gray-600">Let's get to know you better</p>
             </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="gender" className="text-base font-semibold">
+                  Gender
+                </Label>
+                <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="non-binary">Non-binary</SelectItem>
+                    <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone_number" className="text-base font-semibold">
+                  Phone Number
+                </Label>
+                <Input
+                  id="phone_number"
+                  type="tel"
+                  placeholder="(555) 123-4567"
+                  value={formData.phone_number}
+                  onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="birthday" className="text-base font-semibold">
+                  Birthday
+                </Label>
+                <Input
+                  id="birthday"
+                  type="date"
+                  value={formData.birthday}
+                  onChange={(e) => setFormData({ ...formData, birthday: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="space-y-4">
             <div className="space-y-3">
               <Label htmlFor="allergies" className="text-base font-semibold">
                 Are there any allergies we should know about?
@@ -100,7 +155,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
           </div>
         );
 
-      case 2:
+      case 3:
         return (
           <div className="space-y-4">
             <div className="space-y-3">

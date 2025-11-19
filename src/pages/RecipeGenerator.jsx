@@ -279,7 +279,8 @@ Make each recipe special and memorable!`,
 
             <PreferenceSurvey
             onComplete={handleSurveyComplete}
-            initialData={userPreferences || {}} />
+            initialData={userPreferences || {}}
+            currentUser={currentUser || {}} />
 
           </motion.div>
         }
