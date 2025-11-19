@@ -274,8 +274,8 @@ Make each recipe special and memorable!`,
 
       <div className="min-h-screen bg-[#e8f0ea]">
       {/* Hero Section */}
-      <div className="bg-[#e8f0ea] border-b border-[#c5d9c9]">
-        <div className="bg-slate-50 mx-auto px-4 py-8 max-w-6xl sm:px-6 sm:py-12">
+      <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
+        <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -284,17 +284,14 @@ Make each recipe special and memorable!`,
             <div className="flex justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/3e9569a05_BlackAndWhiteAestheticMinimalistModernSimpleTypographyCoconutCosmeticsLogo.png"
-                alt="MoodFull Logo" className="w-48 sm:w-64 md:w-80 h-auto" />
+                alt="MoodFull Logo" className="w-32 sm:w-40 md:w-48 h-auto" />
             </div>
-            <p className="text-[#5a6f60] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
-
-            </p>
           </motion.div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="bg-slate-50 mx-auto px-4 py-8 sm:px-6 sm:py-12 max-w-6xl space-y-8 sm:space-y-12">
+      <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-8 sm:px-6 sm:pb-12 max-w-6xl space-y-8 sm:space-y-12">
         {/* Survey */}
         {showSurvey &&
         <motion.div
