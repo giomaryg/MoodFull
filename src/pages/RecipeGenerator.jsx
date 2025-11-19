@@ -17,6 +17,7 @@ import IntroScreen from '../components/IntroScreen';
 import BottomNav from '../components/navigation/BottomNav';
 import AccountInfo from '../components/account/AccountInfo';
 import MealPlanner from '../components/mealplan/MealPlanner';
+import AdvancedFilters from '../components/recipe/AdvancedFilters';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
@@ -30,6 +31,8 @@ export default function RecipeGenerator() {
   const [globalSearchQuery, setGlobalSearchQuery] = useState('');
   const [showIntro, setShowIntro] = useState(true);
   const [activeTab, setActiveTab] = useState('home');
+  const [advancedFilters, setAdvancedFilters] = useState({});
+  const [showFilters, setShowFilters] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -39,28 +42,104 @@ export default function RecipeGenerator() {
   });
 
   const filteredSavedRecipes = useMemo(() => {
-    if (!globalSearchQuery.trim()) return savedRecipes;
+    let filtered = savedRecipes;
 
-    const query = globalSearchQuery.toLowerCase();
-    return savedRecipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(query) ||
-    recipe.description?.toLowerCase().includes(query) ||
-    recipe.mood?.toLowerCase().includes(query) ||
-    recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
-    );
-  }, [savedRecipes, globalSearchQuery]);
+    // Apply text search
+    if (globalSearchQuery.trim()) {
+      const query = globalSearchQuery.toLowerCase();
+      filtered = filtered.filter((recipe) =>
+        recipe.name.toLowerCase().includes(query) ||
+        recipe.description?.toLowerCase().includes(query) ||
+        recipe.mood?.toLowerCase().includes(query) ||
+        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
+      );
+    }
+
+    // Apply advanced filters
+    if (advancedFilters.cuisine) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.cuisine.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.cuisine.toLowerCase())
+      );
+    }
+
+    if (advancedFilters.dietary) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.dietary.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.dietary.toLowerCase()) ||
+        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.dietary.toLowerCase()))
+      );
+    }
+
+    if (advancedFilters.mealType) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.mealType.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.mealType.toLowerCase())
+      );
+    }
+
+    if (advancedFilters.maxPrepTime) {
+      const maxMinutes = parseInt(advancedFilters.maxPrepTime);
+      filtered = filtered.filter((recipe) => {
+        if (!recipe.prep_time) return false;
+        const prepMatch = recipe.prep_time.match(/(\d+)/);
+        if (!prepMatch) return false;
+        return parseInt(prepMatch[1]) <= maxMinutes;
+      });
+    }
+
+    return filtered;
+  }, [savedRecipes, globalSearchQuery, advancedFilters]);
 
   const filteredGeneratedRecipes = useMemo(() => {
-    if (!globalSearchQuery.trim()) return generatedRecipes;
+    let filtered = generatedRecipes;
 
-    const query = globalSearchQuery.toLowerCase();
-    return generatedRecipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(query) ||
-    recipe.description?.toLowerCase().includes(query) ||
-    recipe.mood?.toLowerCase().includes(query) ||
-    recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
-    );
-  }, [generatedRecipes, globalSearchQuery]);
+    // Apply text search
+    if (globalSearchQuery.trim()) {
+      const query = globalSearchQuery.toLowerCase();
+      filtered = filtered.filter((recipe) =>
+        recipe.name.toLowerCase().includes(query) ||
+        recipe.description?.toLowerCase().includes(query) ||
+        recipe.mood?.toLowerCase().includes(query) ||
+        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
+      );
+    }
+
+    // Apply advanced filters
+    if (advancedFilters.cuisine) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.cuisine.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.cuisine.toLowerCase())
+      );
+    }
+
+    if (advancedFilters.dietary) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.dietary.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.dietary.toLowerCase()) ||
+        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.dietary.toLowerCase()))
+      );
+    }
+
+    if (advancedFilters.mealType) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.mealType.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.mealType.toLowerCase())
+      );
+    }
+
+    if (advancedFilters.maxPrepTime) {
+      const maxMinutes = parseInt(advancedFilters.maxPrepTime);
+      filtered = filtered.filter((recipe) => {
+        if (!recipe.prep_time) return false;
+        const prepMatch = recipe.prep_time.match(/(\d+)/);
+        if (!prepMatch) return false;
+        return parseInt(prepMatch[1]) <= maxMinutes;
+      });
+    }
+
+    return filtered;
+  }, [generatedRecipes, globalSearchQuery, advancedFilters]);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -330,36 +409,46 @@ Make each recipe special and memorable!`,
         {!showSurvey && activeTab === 'home' &&
         <>
             {/* Search & Preferences */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
-              {/* Global Search */}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
-                <Input
-                type="text"
-                placeholder="Search all recipes..."
-                value={globalSearchQuery}
-                onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base" />
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+                {/* Global Search */}
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
+                  <Input
+                  type="text"
+                  placeholder="Search all recipes..."
+                  value={globalSearchQuery}
+                  onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                  className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base" />
 
-                {globalSearchQuery &&
-              <button
-                onClick={() => setGlobalSearchQuery('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors">
+                  {globalSearchQuery &&
+                <button
+                  onClick={() => setGlobalSearchQuery('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors">
 
-                    <X className="w-4 h-4" />
-                  </button>
+                      <X className="w-4 h-4" />
+                    </button>
+                }
+                </div>
+
+                {/* Update Preferences Button */}
+                {userPreferences?.survey_completed &&
+              <Button
+                onClick={() => setShowSurvey(true)}
+                variant="outline"
+                className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
+                    Update Preferences
+                  </Button>
               }
               </div>
 
-              {/* Update Preferences Button */}
-              {userPreferences?.survey_completed &&
-            <Button
-              onClick={() => setShowSurvey(true)}
-              variant="outline"
-              className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
-                  Update Preferences
-                </Button>
-            }
+              {/* Advanced Filters */}
+              <AdvancedFilters
+                filters={advancedFilters}
+                onFiltersChange={setAdvancedFilters}
+                showFilters={showFilters}
+                setShowFilters={setShowFilters}
+              />
             </div>
 
             {/* Mood Selector */}
@@ -423,7 +512,9 @@ Make each recipe special and memorable!`,
                   setGeneratedRecipes([]);
                   setSelectedMoods([]);
                   setGlobalSearchQuery('');
-                }} />
+                  setAdvancedFilters({});
+                }}
+                searchQuery={globalSearchQuery} />
 
             </motion.div>
             }
@@ -479,33 +570,43 @@ Make each recipe special and memorable!`,
               <p className="text-gray-600">Browse and manage your collection</p>
             </div>
 
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
-              <Input
-                type="text"
-                placeholder="Search saved recipes..."
-                value={globalSearchQuery}
-                onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+            {/* Search and Filters */}
+            <div className="space-y-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
+                <Input
+                  type="text"
+                  placeholder="Search saved recipes..."
+                  value={globalSearchQuery}
+                  onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                  className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+                />
+                {globalSearchQuery && (
+                  <button
+                    onClick={() => setGlobalSearchQuery('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              <AdvancedFilters
+                filters={advancedFilters}
+                onFiltersChange={setAdvancedFilters}
+                showFilters={showFilters}
+                setShowFilters={setShowFilters}
               />
-              {globalSearchQuery && (
-                <button
-                  onClick={() => setGlobalSearchQuery('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
             </div>
 
             {savedRecipes.length > 0 ? (
               <SavedRecipes
-                recipes={globalSearchQuery ? filteredSavedRecipes : savedRecipes}
+                recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
                 onRecipeClick={(recipe) => {
                   handleSavedRecipeClick(recipe);
                   setActiveTab('home');
                 }}
+                searchQuery={globalSearchQuery}
               />
             ) : (
               <div className="text-center py-12">
