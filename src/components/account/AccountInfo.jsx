@@ -1,14 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { User, Mail, Calendar, Settings, LogOut, ChefHat } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 
 export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: user?.full_name || '',
+    email: user?.email || '',
+    phone_number: user?.phone_number || ''
+  });
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleLogout = () => {
     base44.auth.logout();
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await base44.auth.updateMe(formData);
+      setIsEditing(false);
+      toast.success('Account information updated successfully!');
+    } catch (error) {
+      toast.error('Failed to update account information');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      full_name: user?.full_name || '',
+      email: user?.email || '',
+      phone_number: user?.phone_number || ''
+    });
+    setIsEditing(false);
   };
 
   return (
@@ -20,45 +52,117 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
       >
         <Card className="bg-white border-2 border-[#c5d9c9] rounded-2xl overflow-hidden">
           <CardHeader className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8" />
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                  <User className="w-8 h-8" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">{user?.full_name || 'User'}</CardTitle>
+                  <p className="text-white/80 text-sm mt-1 flex items-center gap-1">
+                    <Mail className="w-3 h-3" />
+                    {user?.email}
+                  </p>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-2xl">{user?.full_name || 'User'}</CardTitle>
-                <p className="text-white/80 text-sm mt-1 flex items-center gap-1">
-                  <Mail className="w-3 h-3" />
-                  {user?.email}
-                </p>
-              </div>
+              {!isEditing && (
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/20"
+                >
+                  <Edit2 className="w-5 h-5" />
+                </Button>
+              )}
             </div>
           </CardHeader>
           
           <CardContent className="p-6 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#f5e6dc] rounded-xl p-4 text-center">
-                <div className="text-3xl font-bold text-[#6b9b76]">{recipeCount || 0}</div>
-                <div className="text-sm text-gray-600 mt-1 flex items-center justify-center gap-1">
-                  <ChefHat className="w-3 h-3" />
-                  Saved Recipes
+            {isEditing ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Full Name</label>
+                  <Input
+                    value={formData.full_name}
+                    onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Email</label>
+                  <Input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Phone Number</label>
+                  <Input
+                    type="tel"
+                    value={formData.phone_number}
+                    onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                    placeholder="+1 (555) 000-0000"
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={handleSave}
+                    disabled={isSaving}
+                    className="flex-1 bg-[#6b9b76] hover:bg-[#5a8a65]"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    {isSaving ? 'Saving...' : 'Save Changes'}
+                  </Button>
+                  <Button
+                    onClick={handleCancel}
+                    variant="outline"
+                    className="flex-1 border-2 border-gray-300"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Cancel
+                  </Button>
                 </div>
               </div>
-              
-              <div className="bg-[#e8f0ea] rounded-xl p-4 text-center">
-                <div className="text-3xl font-bold text-[#6b9b76]">
-                  {user?.role === 'admin' ? '👑' : '🌟'}
+            ) : (
+              <>
+                <div className="space-y-3">
+                  {user?.phone_number && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Phone className="w-4 h-4" />
+                      <span>{user.phone_number}</span>
+                    </div>
+                  )}
+                  {user?.created_date && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Calendar className="w-4 h-4" />
+                      <span>Joined {new Date(user.created_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                    </div>
+                  )}
                 </div>
-                <div className="text-sm text-gray-600 mt-1">
-                  {user?.role === 'admin' ? 'Admin' : 'Member'}
-                </div>
-              </div>
-            </div>
 
-            {user?.created_date && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 pt-2">
-                <Calendar className="w-4 h-4" />
-                <span>Joined {new Date(user.created_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
-              </div>
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="bg-[#f5e6dc] rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-[#6b9b76]">{recipeCount || 0}</div>
+                    <div className="text-sm text-gray-600 mt-1 flex items-center justify-center gap-1">
+                      <ChefHat className="w-3 h-3" />
+                      Saved Recipes
+                    </div>
+                  </div>
+                  
+                  <div className="bg-[#e8f0ea] rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-[#6b9b76]">
+                      {user?.role === 'admin' ? '👑' : '🌟'}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      {user?.role === 'admin' ? 'Admin' : 'Member'}
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
