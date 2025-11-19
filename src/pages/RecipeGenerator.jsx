@@ -133,15 +133,15 @@ export default function RecipeGenerator() {
 
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 15 diverse and delicious recipes for someone feeling ${selectedMoods.join(' and ')}. 
+        prompt: `Generate 18 diverse and delicious recipes for someone feeling ${selectedMoods.join(' and ')}. 
         
 The recipes should match these moods: ${moodContext}.${preferencesContext}
 
-Create 15 unique, appetizing recipes with variety in:
+Create 15-20 unique, appetizing recipes with variety in:
 - Cuisine types (different cultures and cooking styles)
 - Difficulty levels (mix of easy, medium, and hard)
 - Preparation times (some quick, some more involved)
-- Meal types (appetizers, mains, desserts)
+- Meal types (appetizers, mains, desserts, side dishes)
 
 Each recipe must have:
 - A creative and appealing name
