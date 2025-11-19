@@ -5,8 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw } from 'lucide-react';
+import HighlightedText from './HighlightedText';
 
-export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
+export default function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
   const [sortBy, setSortBy] = useState('default');
   const [filterDifficulty, setFilterDifficulty] = useState('all');
 
@@ -155,10 +156,10 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
                 {/* Recipe name */}
                 <div className="flex-1">
                   <h3 className="font-bold text-base sm:text-lg md:text-xl text-gray-900 group-hover:text-[#6b9b76] transition-colors line-clamp-2 leading-tight">
-                    {recipe.name}
+                    <HighlightedText text={recipe.name} query={searchQuery} />
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600 mt-1.5 sm:mt-2 line-clamp-2 sm:line-clamp-3 leading-relaxed">
-                    {recipe.description}
+                    <HighlightedText text={recipe.description} query={searchQuery} />
                   </p>
                 </div>
 
