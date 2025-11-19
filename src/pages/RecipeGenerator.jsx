@@ -276,7 +276,7 @@ Make each recipe special and memorable!`,
 
 
             </div>
-            <p className="text-[#9b8175] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Discover recipes that match your mood. Let your feelings guide your next delicious meal.
+            <p className="text-[#9b8175] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
 
             </p>
           </motion.div>
