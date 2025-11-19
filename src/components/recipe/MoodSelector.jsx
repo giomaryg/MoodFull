@@ -66,7 +66,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
     <div className="space-y-6 sm:space-y-8">
       <div className="text-center space-y-2 sm:space-y-3 px-4">
         <h2 className="text-[#6b9b76] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
-          How are you feeling{userName ? `, ${userName}` : ''}?
+          How are you feeling today?
         </h2>
         <p className="text-[#5a6f60] text-sm sm:text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
         <p className="text-[#6b9b76] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
