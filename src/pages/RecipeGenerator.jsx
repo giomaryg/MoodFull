@@ -274,6 +274,7 @@ Make each recipe special and memorable!`,
 
       <div className="min-h-screen bg-[#e8f0ea]">
       {/* Hero Section */}
+      {!showIntro && (
       <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
         <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
           <motion.div
