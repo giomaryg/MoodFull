@@ -274,21 +274,23 @@ Make each recipe special and memorable!`,
 
       <div className="min-h-screen bg-[#e8f0ea]">
       {/* Hero Section */}
-      <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
-        <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-3 sm:space-y-4">
+      {!showIntro && (
+        <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
+          <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center space-y-3 sm:space-y-4">
 
-            <header className="text-center">
-              <h1 className="text-[#6b9b76] text-5xl sm:text-6xl md:text-7xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
-                MoodFull
-              </h1>
-            </header>
-          </motion.div>
+              <header className="text-center">
+                <h1 className="text-[#6b9b76] text-5xl sm:text-6xl md:text-7xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
+                  MoodFull
+                </h1>
+              </header>
+            </motion.div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Main Content */}
       <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-8 sm:px-6 sm:pb-12 max-w-6xl space-y-8 sm:space-y-12">
