@@ -276,7 +276,7 @@ Make each recipe special and memorable!`,
 
 
             </div>
-            <p className="text-[#9b8175] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
+            <p className="text-[#7a7870] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
 
             </p>
           </motion.div>
@@ -305,7 +305,7 @@ Make each recipe special and memorable!`,
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
               {/* Global Search */}
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#9b8175]" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7a7870]" />
                 <Input
                   type="text"
                   placeholder="Search all recipes..."
