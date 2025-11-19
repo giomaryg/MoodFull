@@ -85,6 +85,11 @@ Each recipe must have:
 - Number of servings
 - Difficulty level (easy, medium, or hard)
 - Complete nutritional information per serving
+- 3-5 helpful cooking tips and tricks
+- 3-5 ingredient substitution suggestions
+- 2-4 wine or beverage pairing recommendations
+- Cuisine type (e.g., Italian, Mexican, Asian, etc.)
+- 2-3 main ingredients (key ingredients for finding similar recipes)
 
 Make these recommendations feel personalized and thoughtful!`,
         response_json_schema: {
@@ -126,6 +131,29 @@ Make these recommendations feel personalized and thoughtful!`,
                       fiber: { type: "string" },
                       sodium: { type: "string" }
                     }
+                  },
+                  cooking_tips: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  substitutions: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        ingredient: { type: "string" },
+                        substitute: { type: "string" }
+                      }
+                    }
+                  },
+                  pairings: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  cuisine_type: { type: "string" },
+                  main_ingredients: {
+                    type: "array",
+                    items: { type: "string" }
                   }
                 }
               }

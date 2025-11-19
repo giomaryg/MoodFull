@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles } from 'lucide-react';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import SimilarRecipes from './SimilarRecipes';
 
 export default function RecipeDisplay({ recipe, onSave, isSaved }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
@@ -15,6 +16,46 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
     queryKey: ['recipes'],
     queryFn: () => base44.entities.Recipe.list('-created_date', 100)
   });
+
+  // Find similar recipes based on ingredients and cuisine
+  const similarRecipes = useMemo(() => {
+    if (!recipe || !recipes.length) return [];
+    
+    return recipes
+      .filter(r => r.id !== recipe.id)
+      .map(r => {
+        let score = 0;
+        
+        // Check for matching cuisine type
+        if (recipe.cuisine_type && r.cuisine_type === recipe.cuisine_type) {
+          score += 3;
+        }
+        
+        // Check for matching main ingredients
+        if (recipe.main_ingredients && r.main_ingredients) {
+          const matchingIngredients = recipe.main_ingredients.filter(ing =>
+            r.main_ingredients.some(rIng => rIng.toLowerCase().includes(ing.toLowerCase()))
+          );
+          score += matchingIngredients.length * 2;
+        }
+        
+        // Check for matching difficulty
+        if (recipe.difficulty === r.difficulty) {
+          score += 1;
+        }
+        
+        // Check for matching mood
+        if (recipe.mood && r.mood === recipe.mood) {
+          score += 1;
+        }
+        
+        return { recipe: r, score };
+      })
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .map(item => item.recipe);
+  }, [recipe, recipes]);
 
   if (!recipe) return null;
 
@@ -221,8 +262,104 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
               )}
             </div>
           </div>
+
+          {/* Cooking Tips */}
+          {recipe.cooking_tips && recipe.cooking_tips.length > 0 && (
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-[#6b9b76] rounded-full" />
+                Cooking Tips & Tricks
+              </h3>
+              <div className="bg-gradient-to-br from-[#f0f9f2] to-[#e8f0ea] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-inner border border-[#c5d9c9]">
+                <ul className="space-y-2.5 sm:space-y-3">
+                  {recipe.cooking_tips.map((tip, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex items-start gap-2 sm:gap-3 text-gray-800 text-sm sm:text-base"
+                    >
+                      <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-[#6b9b76] shrink-0 mt-0.5 sm:mt-1" />
+                      <span className="leading-relaxed">{tip}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Ingredient Substitutions */}
+          {recipe.substitutions && recipe.substitutions.length > 0 && (
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-[#c17a7a] rounded-full" />
+                Ingredient Substitutions
+              </h3>
+              <div className="bg-gradient-to-br from-[#faf6f2] to-[#f5e6dc] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-inner border border-[#e8d5c4]">
+                <div className="grid gap-3 sm:gap-4">
+                  {recipe.substitutions.map((sub, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex items-center gap-2 sm:gap-3 bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl border border-[#e8d5c4] shadow-sm"
+                    >
+                      <div className="flex-1">
+                        <span className="font-semibold text-gray-900 text-sm sm:text-base">{sub.ingredient}</span>
+                      </div>
+                      <RefreshCw className="w-4 h-4 text-[#c17a7a] shrink-0" />
+                      <div className="flex-1 text-right">
+                        <span className="text-gray-700 text-sm sm:text-base">{sub.substitute}</span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Wine & Beverage Pairings */}
+          {recipe.pairings && recipe.pairings.length > 0 && (
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-purple-500 rounded-full" />
+                Perfect Pairings
+              </h3>
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-inner border border-purple-200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {recipe.pairings.map((pairing, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex items-center gap-3 bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl border border-purple-200 shadow-sm"
+                    >
+                      <Wine className="w-5 h-5 text-purple-600 shrink-0" />
+                      <span className="text-gray-800 text-sm sm:text-base leading-relaxed">{pairing}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Similar Recipes Section */}
+      {similarRecipes.length > 0 && (
+        <div className="mt-8">
+          <SimilarRecipes
+            recipes={similarRecipes}
+            onRecipeClick={(similarRecipe) => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Note: Parent component should handle recipe click to update the current recipe
+            }}
+          />
+        </div>
+      )}
 
       {/* Add Meal Dialog */}
       {showAddMeal && (

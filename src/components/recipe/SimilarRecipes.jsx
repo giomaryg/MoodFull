@@ -38,13 +38,15 @@ export default function SimilarRecipes({ recipes, onRecipeClick }) {
                   </p>
                 </div>
                 
-                <div className="flex flex-wrap gap-2">
-                  <Badge 
-                    variant="secondary" 
-                    className="bg-[#e8f0ea] text-[#6b9b76] border-0 capitalize text-xs px-3 py-1 rounded-lg font-medium"
-                  >
-                    {recipe.mood}
-                  </Badge>
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-[#c5d9c9]">
+                  {recipe.cuisine_type && (
+                    <Badge 
+                      variant="secondary" 
+                      className="bg-[#e8f0ea] text-[#6b9b76] border-0 text-xs px-2 py-1 rounded-lg font-medium"
+                    >
+                      {recipe.cuisine_type}
+                    </Badge>
+                  )}
                   {recipe.prep_time && (
                     <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-0 text-xs px-3 py-1 rounded-lg">
                       <Clock className="w-3 h-3 mr-1" />
