@@ -34,13 +34,13 @@ export default function RecipeGenerator() {
 
   const filteredSavedRecipes = useMemo(() => {
     if (!globalSearchQuery.trim()) return savedRecipes;
-    
+
     const query = globalSearchQuery.toLowerCase();
-    return savedRecipes.filter(recipe => 
-      recipe.name.toLowerCase().includes(query) ||
-      recipe.description?.toLowerCase().includes(query) ||
-      recipe.mood?.toLowerCase().includes(query) ||
-      recipe.ingredients?.some(ing => ing.toLowerCase().includes(query))
+    return savedRecipes.filter((recipe) =>
+    recipe.name.toLowerCase().includes(query) ||
+    recipe.description?.toLowerCase().includes(query) ||
+    recipe.mood?.toLowerCase().includes(query) ||
+    recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
     );
   }, [savedRecipes, globalSearchQuery]);
 
@@ -96,7 +96,7 @@ export default function RecipeGenerator() {
       adventurous: "bold, exotic flavors from around the world that excite the palate"
     };
 
-    const moodContext = selectedMoods.map(mood => moodDescriptions[mood]).join(' and ');
+    const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(' and ');
 
     let preferencesContext = '';
     if (userPreferences && userPreferences.survey_completed) {
@@ -192,13 +192,13 @@ Make each recipe special and memorable!`,
         }
       });
 
-      const recipesWithMood = response.recipes.map(recipe => ({
+      const recipesWithMood = response.recipes.map((recipe) => ({
         ...recipe,
         mood: selectedMoods.join(', '),
         imageUrl: null,
         imageLoading: true
       }));
-      
+
       setGeneratedRecipes(recipesWithMood);
 
       // Generate images for each recipe in parallel
@@ -214,12 +214,12 @@ Make each recipe special and memorable!`,
           }
         })
       ).then((images) => {
-        setGeneratedRecipes(prev => 
-          prev.map((recipe, i) => ({
-            ...recipe,
-            imageUrl: images[i].url,
-            imageLoading: false
-          }))
+        setGeneratedRecipes((prev) =>
+        prev.map((recipe, i) => ({
+          ...recipe,
+          imageUrl: images[i].url,
+          imageLoading: false
+        }))
         );
       });
     } catch (error) {
@@ -245,17 +245,17 @@ Make each recipe special and memorable!`,
 
   const findSimilarRecipes = (recipe) => {
     // Find recipes with similar mood, difficulty, or cuisine
-    const similar = savedRecipes
-      .filter(r => r.id !== recipe.id)
-      .filter(r => {
-        const hasSimilarMood = recipe.mood?.split(', ').some(mood => 
-          r.mood?.includes(mood)
-        );
-        const hasSimilarDifficulty = r.difficulty === recipe.difficulty;
-        return hasSimilarMood || hasSimilarDifficulty;
-      })
-      .slice(0, 6);
-    
+    const similar = savedRecipes.
+    filter((r) => r.id !== recipe.id).
+    filter((r) => {
+      const hasSimilarMood = recipe.mood?.split(', ').some((mood) =>
+      r.mood?.includes(mood)
+      );
+      const hasSimilarDifficulty = r.difficulty === recipe.difficulty;
+      return hasSimilarMood || hasSimilarDifficulty;
+    }).
+    slice(0, 6);
+
     setSimilarRecipes(similar);
   };
 
@@ -263,7 +263,7 @@ Make each recipe special and memorable!`,
     <div className="min-h-screen bg-[#e8f0ea]">
       {/* Hero Section */}
       <div className="bg-[#e8f0ea] border-b border-[#c5d9c9]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="bg-slate-50 mx-auto px-4 py-8 max-w-6xl sm:px-6 sm:py-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -282,7 +282,7 @@ Make each recipe special and memorable!`,
       </div>
 
       {/* Main Content */}
-      <div className="bg-[#e8f0ea] mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl space-y-8 sm:space-y-12">
+      <div className="bg-slate-50 mx-auto px-4 py-8 sm:px-6 sm:py-12 max-w-6xl space-y-8 sm:space-y-12">
         {/* Survey */}
         {showSurvey &&
         <motion.div
@@ -305,31 +305,31 @@ Make each recipe special and memorable!`,
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
                 <Input
-                  type="text"
-                  placeholder="Search all recipes..."
-                  value={globalSearchQuery}
-                  onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                  className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base"
-                />
-                {globalSearchQuery && (
-                  <button
-                    onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors"
-                  >
+                type="text"
+                placeholder="Search all recipes..."
+                value={globalSearchQuery}
+                onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base" />
+
+                {globalSearchQuery &&
+              <button
+                onClick={() => setGlobalSearchQuery('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors">
+
                     <X className="w-4 h-4" />
                   </button>
-                )}
+              }
               </div>
 
               {/* Update Preferences Button */}
-              {userPreferences?.survey_completed && (
-                <Button
-                  onClick={() => setShowSurvey(true)}
-                  variant="outline"
-                  className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
+              {userPreferences?.survey_completed &&
+            <Button
+              onClick={() => setShowSurvey(true)}
+              variant="outline"
+              className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
                   Update Preferences
                 </Button>
-              )}
+            }
             </div>
 
             {/* Mood Selector */}
@@ -339,9 +339,9 @@ Make each recipe special and memorable!`,
             transition={{ delay: 0.2 }}>
 
               <MoodSelector
-                selectedMoods={selectedMoods}
-                onMoodSelect={setSelectedMoods}
-                userName={currentUser?.full_name?.split(' ')[0]} />
+              selectedMoods={selectedMoods}
+              onMoodSelect={setSelectedMoods}
+              userName={currentUser?.full_name?.split(' ')[0]} />
 
             </motion.div>
 
@@ -381,8 +381,8 @@ Make each recipe special and memorable!`,
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-            >
+              exit={{ opacity: 0, y: -20 }}>
+
               <RecipeGrid
                 recipes={generatedRecipes}
                 onRecipeClick={(recipe) => {
@@ -392,10 +392,10 @@ Make each recipe special and memorable!`,
                 onStartOver={() => {
                   setGeneratedRecipes([]);
                   setSelectedMoods([]);
-                }}
-              />
+                }} />
+
             </motion.div>
-          }
+            }
         </AnimatePresence>
 
         {/* Recipe Display */}
@@ -407,12 +407,12 @@ Make each recipe special and memorable!`,
                 onSave={handleSaveRecipe}
                 isSaved={!!savedRecipeId} />
 
-              {similarRecipes.length > 0 && (
-                <SimilarRecipes 
-                  recipes={similarRecipes}
-                  onRecipeClick={handleSavedRecipeClick}
-                />
-              )}
+              {similarRecipes.length > 0 &&
+              <SimilarRecipes
+                recipes={similarRecipes}
+                onRecipeClick={handleSavedRecipeClick} />
+
+              }
               
               {!isGenerating &&
               <div className="flex justify-center gap-4">
@@ -435,7 +435,7 @@ Make each recipe special and memorable!`,
 
             {/* Saved Recipes */}
             {!currentRecipe && savedRecipes.length > 0 &&
-            <motion.div
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}>
@@ -445,7 +445,7 @@ Make each recipe special and memorable!`,
               onRecipeClick={handleSavedRecipeClick} />
 
               </motion.div>
-            }
+          }
           </>
         }
       </div>
