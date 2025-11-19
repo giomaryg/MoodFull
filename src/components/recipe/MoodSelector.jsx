@@ -81,21 +81,22 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
-        {moods.map((mood) => {
+        {moods.map((mood, index) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);
+          const isKidFriendly = mood.id === 'kid_friendly';
 
           return (
-            <motion.button
-              key={mood.id}
-              onClick={() => handleMoodToggle(mood.id)}
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.95 }} 
-              className={`p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
-                isSelected 
-                  ? 'bg-[#f5e6dc] border-[#c17a7a]' 
-                  : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
-              }`}>
+            <div key={mood.id} className={isKidFriendly ? 'col-span-2 sm:col-span-1 flex justify-center' : ''}>
+              <motion.button
+                onClick={() => handleMoodToggle(mood.id)}
+                whileHover={{ scale: 1.05, y: -4 }}
+                whileTap={{ scale: 0.95 }} 
+                className={`p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
+                  isSelected 
+                    ? 'bg-[#f5e6dc] border-[#c17a7a]' 
+                    : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+                } ${isKidFriendly ? 'w-full sm:w-auto' : 'w-full'}`}>
 
 
 
@@ -118,7 +119,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
                   {mood.label}
                 </span>
               </div>
-              
+
               {isSelected &&
               <motion.div
                 layoutId="mood-indicator"
@@ -126,9 +127,10 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
                 transition={{ type: "spring", stiffness: 500, damping: 30 }} />
 
               }
-            </motion.button>);
+              </motion.button>
+              </div>);
 
-        })}
+              })}
       </div>
     </div>);
 
