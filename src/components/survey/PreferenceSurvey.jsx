@@ -84,7 +84,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
         return (
           <div className="space-y-4">
             <div className="text-center space-y-2 mb-6">
-              <div className="inline-block p-3 bg-[#9d9a8f] rounded-2xl mb-3">
+              <div className="inline-block p-3 bg-[#6b9b76] rounded-2xl mb-3">
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">Welcome to MoodFull! 🍽️</h2>
@@ -189,8 +189,8 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                   whileTap={{ scale: 0.98 }}
                   className={`p-5 rounded-xl border-2 transition-all ${
                     formData.blood_sugar_friendly === true
-                      ? 'bg-[#f0e6e6] border-[#9d9a8f] shadow-md'
-                      : 'bg-white border-[#d6d3cc] hover:border-[#9d9a8f]'
+                      ? 'bg-[#f5e8e8] border-[#6b9b76] shadow-md'
+                      : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -199,7 +199,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                       <div className="text-sm text-gray-500 mt-1">Focus on balanced blood sugar levels 🩺</div>
                     </div>
                     {formData.blood_sugar_friendly === true && (
-                      <Check className="w-6 h-6 text-[#9d9a8f] ml-2" />
+                      <Check className="w-6 h-6 text-[#6b9b76] ml-2" />
                     )}
                   </div>
                 </motion.button>
@@ -209,8 +209,8 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                   whileTap={{ scale: 0.98 }}
                   className={`p-5 rounded-xl border-2 transition-all ${
                     formData.blood_sugar_friendly === false
-                      ? 'bg-[#f0e6e6] border-[#9d9a8f] shadow-md'
-                      : 'bg-white border-[#d6d3cc] hover:border-[#9d9a8f]'
+                      ? 'bg-[#f5e8e8] border-[#6b9b76] shadow-md'
+                      : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -219,7 +219,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                       <div className="text-sm text-gray-500 mt-1">Standard recipe recommendations 🍴</div>
                     </div>
                     {formData.blood_sugar_friendly === false && (
-                      <Check className="w-6 h-6 text-[#9d9a8f] ml-2" />
+                      <Check className="w-6 h-6 text-[#6b9b76] ml-2" />
                     )}
                   </div>
                 </motion.button>
@@ -247,13 +247,13 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                       whileTap={{ scale: 0.98 }}
                       className={`p-4 rounded-xl border-2 text-left transition-all ${
                         isSelected
-                          ? 'bg-[#f0e6e6] border-[#9d9a8f] shadow-md'
-                          : 'bg-white border-[#d6d3cc] hover:border-[#9d9a8f]'
+                          ? 'bg-[#f5e8e8] border-[#6b9b76] shadow-md'
+                          : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-sm">{priority}</span>
-                        {isSelected && <Check className="w-5 h-5 text-[#9d9a8f]" />}
+                        {isSelected && <Check className="w-5 h-5 text-[#6b9b76]" />}
                       </div>
                     </motion.button>
                   );
@@ -277,8 +277,8 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                   whileTap={{ scale: 0.98 }}
                   className={`p-5 rounded-xl border-2 transition-all ${
                     formData.open_to_new_cuisines === true
-                      ? 'bg-[#f0e6e6] border-[#9d9a8f] shadow-md'
-                      : 'bg-white border-[#d6d3cc] hover:border-[#9d9a8f]'
+                      ? 'bg-[#f5e8e8] border-[#6b9b76] shadow-md'
+                      : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -287,7 +287,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                       <div className="text-sm text-gray-500 mt-1">Bring on the culinary adventure ✨</div>
                     </div>
                     {formData.open_to_new_cuisines === true && (
-                      <Check className="w-6 h-6 text-[#9d9a8f] ml-2" />
+                      <Check className="w-6 h-6 text-[#6b9b76] ml-2" />
                     )}
                   </div>
                 </motion.button>
@@ -297,8 +297,8 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                   whileTap={{ scale: 0.98 }}
                   className={`p-5 rounded-xl border-2 transition-all ${
                     formData.open_to_new_cuisines === false
-                      ? 'bg-[#f0e6e6] border-[#9d9a8f] shadow-md'
-                      : 'bg-white border-[#d6d3cc] hover:border-[#9d9a8f]'
+                      ? 'bg-[#f5e8e8] border-[#6b9b76] shadow-md'
+                      : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -307,7 +307,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                       <div className="text-sm text-gray-500 mt-1">Comfort in the familiar 🏠</div>
                     </div>
                     {formData.open_to_new_cuisines === false && (
-                      <Check className="w-6 h-6 text-[#9d9a8f] ml-2" />
+                      <Check className="w-6 h-6 text-[#6b9b76] ml-2" />
                     )}
                   </div>
                 </motion.button>
@@ -333,7 +333,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                       onClick={() => toggleInArray('preferred_cuisines', cuisine)}
                       className={`cursor-pointer px-4 py-2 text-sm transition-all ${
                         isSelected
-                          ? 'bg-[#9d9a8f] hover:bg-[#8d8a80] text-white'
+                          ? 'bg-[#6b9b76] hover:bg-[#5a8a65] text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -365,13 +365,13 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                       whileTap={{ scale: 0.98 }}
                       className={`p-5 rounded-xl border-2 transition-all ${
                         isSelected
-                          ? 'bg-[#f0e6e6] border-[#9d9a8f] shadow-md'
-                          : 'bg-white border-[#d6d3cc] hover:border-[#9d9a8f]'
+                          ? 'bg-[#f5e8e8] border-[#6b9b76] shadow-md'
+                          : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-base">{option}</span>
-                        {isSelected && <Check className="w-6 h-6 text-[#9d9a8f]" />}
+                        {isSelected && <Check className="w-6 h-6 text-[#6b9b76]" />}
                       </div>
                     </motion.button>
                   );
@@ -397,7 +397,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
             </div>
             <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
               <motion.div
-                className="h-full bg-[#9d9a8f] shadow-md"
+                className="h-full bg-[#6b9b76] shadow-md"
                 initial={{ width: 0 }}
                 animate={{ width: `${(step / totalSteps) * 100}%` }}
                 transition={{ duration: 0.3 }}
@@ -431,8 +431,8 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
             <Button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="bg-[#9d9a8f] hover:bg-[#8d8a80] shadow-lg hover:shadow-xl transition-all rounded-xl px-6"
-            >
+              className="bg-[#6b9b76] hover:bg-[#5a8a65] shadow-lg hover:shadow-xl transition-all rounded-xl px-6"
+              >
               {step === totalSteps ? (
                 <>
                   <Sparkles className="w-4 h-4 mr-2" />

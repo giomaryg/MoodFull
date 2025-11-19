@@ -260,9 +260,9 @@ Make each recipe special and memorable!`,
   };
 
   return (
-    <div className="min-h-screen bg-[#ebe9e3]">
+    <div className="min-h-screen bg-[#e8f0ea]">
       {/* Hero Section */}
-      <div className="bg-[#ebe9e3] border-b border-[#d6d3cc]">
+      <div className="bg-[#e8f0ea] border-b border-[#c5d9c9]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -276,7 +276,7 @@ Make each recipe special and memorable!`,
 
 
             </div>
-            <p className="text-[#7a7870] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
+            <p className="text-[#5a6f60] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Let your feelings be your guide
 
             </p>
           </motion.div>
@@ -284,7 +284,7 @@ Make each recipe special and memorable!`,
       </div>
 
       {/* Main Content */}
-      <div className="bg-[#ebe9e3] mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl space-y-8 sm:space-y-12">
+      <div className="bg-[#e8f0ea] mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl space-y-8 sm:space-y-12">
         {/* Survey */}
         {showSurvey &&
         <motion.div
@@ -305,18 +305,18 @@ Make each recipe special and memorable!`,
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
               {/* Global Search */}
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7a7870]" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
                 <Input
                   type="text"
                   placeholder="Search all recipes..."
                   value={globalSearchQuery}
                   onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                  className="pl-10 pr-10 border-2 border-[#d6d3cc] focus:border-[#9d9a8f] rounded-xl text-sm sm:text-base"
+                  className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base"
                 />
                 {globalSearchQuery && (
                   <button
                     onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#7a7870] hover:text-[#9d9a8f] transition-colors"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -328,7 +328,7 @@ Make each recipe special and memorable!`,
                 <Button
                   onClick={() => setShowSurvey(true)}
                   variant="outline"
-                  className="border-2 border-[#9d9a8f] hover:border-[#8d8a80] hover:bg-[#f0e6e6] text-[#9d9a8f] text-sm sm:text-base whitespace-nowrap">
+                  className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
                   Update Preferences
                 </Button>
               )}
@@ -359,7 +359,7 @@ Make each recipe special and memorable!`,
               <Button
                 onClick={generateRecipe}
                 disabled={isGenerating}
-                className="bg-[#9d9a8f] hover:bg-[#8d8a80] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
 
                 {isGenerating ?
                 <>
@@ -425,7 +425,7 @@ Make each recipe special and memorable!`,
                     setSimilarRecipes([]);
                   }}
                   variant="outline"
-                  className="border-2 border-[#9d9a8f] hover:border-[#8d8a80] hover:bg-[#f0e6e6] text-[#9d9a8f] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
+                  className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
 
                     Back to Results
                   </Button>

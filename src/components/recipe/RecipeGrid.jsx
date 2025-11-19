@@ -65,19 +65,19 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
       {/* Header with controls */}
       <div className="flex flex-col gap-4 pb-4 border-b border-[#e8d5c4]">
         <div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#9d9a8f] flex items-center gap-2 sm:gap-3">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#6b9b76] flex items-center gap-2 sm:gap-3">
             <ChefHat className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
             Your Recipe Options
           </h2>
-          <p className="text-[#7a7870] mt-1 text-sm sm:text-base">Found {filteredAndSortedRecipes.length} recipe{filteredAndSortedRecipes.length !== 1 ? 's' : ''} for you</p>
+          <p className="text-[#5a6f60] mt-1 text-sm sm:text-base">Found {filteredAndSortedRecipes.length} recipe{filteredAndSortedRecipes.length !== 1 ? 's' : ''} for you</p>
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 items-center">
           {/* Filter by difficulty */}
           <div className="flex items-center gap-2 flex-1 sm:flex-initial">
-            <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#7a7870]" />
+            <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6b9b76]" />
             <Select value={filterDifficulty} onValueChange={setFilterDifficulty}>
-              <SelectTrigger className="flex-1 sm:w-32 md:w-36 border-[#d6d3cc] text-sm">
+              <SelectTrigger className="flex-1 sm:w-32 md:w-36 border-[#c5d9c9] text-sm">
                 <SelectValue placeholder="Difficulty" />
               </SelectTrigger>
               <SelectContent>
@@ -91,9 +91,9 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
 
           {/* Sort */}
           <div className="flex items-center gap-2 flex-1 sm:flex-initial">
-            <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#7a7870]" />
+            <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6b9b76]" />
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="flex-1 sm:w-36 md:w-40 border-[#d6d3cc] text-sm">
+              <SelectTrigger className="flex-1 sm:w-36 md:w-40 border-[#c5d9c9] text-sm">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -111,8 +111,8 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
           <Button
             onClick={onStartOver}
             variant="outline"
-            className="border-2 border-[#9d9a8f] hover:border-[#8d8a80] hover:bg-[#f0e6e6] text-[#9d9a8f] text-sm w-full sm:w-auto"
-          >
+            className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm w-full sm:w-auto"
+            >
             <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
             Start Over
           </Button>
@@ -130,10 +130,10 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
           >
             <Card
               onClick={() => onRecipeClick(recipe)}
-              className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#d6d3cc] bg-white hover:bg-[#f5f3f0] group rounded-2xl overflow-hidden h-full"
-            >
+              className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#c5d9c9] bg-white hover:bg-[#f8faf8] group rounded-2xl overflow-hidden h-full"
+              >
               {/* Recipe Image */}
-              <div className="relative h-40 sm:h-44 md:h-48 bg-gradient-to-br from-[#f0e6e6] to-[#d6d3cc] overflow-hidden">
+              <div className="relative h-40 sm:h-44 md:h-48 bg-gradient-to-br from-[#f5e8e8] to-[#d4e4d6] overflow-hidden">
                 {recipe.imageLoading ? (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c17a7a]"></div>
@@ -146,7 +146,7 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <ChefHat className="w-16 h-16 text-[#9d9a8f] opacity-30" />
+                    <ChefHat className="w-16 h-16 text-[#6b9b76] opacity-30" />
                   </div>
                 )}
               </div>
@@ -154,7 +154,7 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
               <CardContent className="p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4 flex flex-col">
                 {/* Recipe name */}
                 <div className="flex-1">
-                  <h3 className="font-bold text-base sm:text-lg md:text-xl text-gray-900 group-hover:text-[#9d9a8f] transition-colors line-clamp-2 leading-tight">
+                  <h3 className="font-bold text-base sm:text-lg md:text-xl text-gray-900 group-hover:text-[#6b9b76] transition-colors line-clamp-2 leading-tight">
                     {recipe.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600 mt-1.5 sm:mt-2 line-clamp-2 sm:line-clamp-3 leading-relaxed">
@@ -163,7 +163,7 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
                 </div>
 
                 {/* Metadata */}
-                <div className="space-y-2 sm:space-y-3 pt-2 sm:pt-3 border-t border-[#d6d3cc]">
+                <div className="space-y-2 sm:space-y-3 pt-2 sm:pt-3 border-t border-[#c5d9c9]">
                   <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     <Badge 
                       variant="secondary" 
@@ -186,7 +186,7 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
                     </div>
 
                     {recipe.cook_time && (
-                    <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-[#7a7870]">
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-[#5a6f60]">
                       <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span>Cook: {recipe.cook_time}</span>
                     </div>
@@ -200,7 +200,7 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver }) {
 
       {filteredAndSortedRecipes.length === 0 && (
         <div className="text-center py-8 sm:py-12">
-          <p className="text-[#7a7870] text-sm sm:text-base md:text-lg px-4">No recipes match your filters. Try adjusting your selection.</p>
+          <p className="text-[#5a6f60] text-sm sm:text-base md:text-lg px-4">No recipes match your filters. Try adjusting your selection.</p>
         </div>
       )}
     </div>
