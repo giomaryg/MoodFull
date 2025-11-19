@@ -276,14 +276,14 @@ Make each recipe special and memorable!`,
       {/* Hero Section */}
       {!showIntro && (
       <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
-        <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
+        <div className="bg-slate-50 mx-auto px-4 py-3 max-w-6xl sm:px-6 sm:py-4">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-3 sm:space-y-4">
+            className="text-center">
 
             <header className="text-center">
-              <h1 className="text-[#6b9b76] text-5xl sm:text-6xl md:text-7xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
+              <h1 className="text-[#6b9b76] text-4xl sm:text-5xl md:text-6xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
                 MoodFull
               </h1>
             </header>
@@ -293,7 +293,7 @@ Make each recipe special and memorable!`,
       )}
 
       {/* Main Content */}
-      <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-8 sm:px-6 sm:pb-12 max-w-6xl space-y-8 sm:space-y-12">
+      <div className="bg-slate-50 mx-auto px-4 pt-20 sm:pt-24 pb-24 sm:px-6 max-w-6xl space-y-6 sm:space-y-8">
         {/* Survey */}
         {showSurvey &&
         <motion.div
@@ -368,16 +368,16 @@ Make each recipe special and memorable!`,
               <Button
                 onClick={generateRecipe}
                 disabled={isGenerating}
-                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base px-5 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold w-full sm:w-auto">
 
                 {isGenerating ?
                 <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Creating your perfect recipes...
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Creating recipes...
                   </> :
 
                 <>
-                    <Sparkles className="w-5 h-5 mr-2" />
+                    <Sparkles className="w-4 h-4 mr-2" />
                     Generate Recipes
                   </>
                 }
