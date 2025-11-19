@@ -290,6 +290,7 @@ Make each recipe special and memorable!`,
           </motion.div>
         </div>
       </div>
+      )}
 
       {/* Main Content */}
       <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-8 sm:px-6 sm:pb-12 max-w-6xl space-y-8 sm:space-y-12">
