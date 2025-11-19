@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby } from 'lucide-react';
 
 const moods = [
 {
@@ -50,6 +50,14 @@ const moods = [
   color: 'from-purple-400 to-violet-500',
   bg: 'bg-purple-50 hover:bg-purple-100',
   border: 'border-purple-300'
+},
+{
+  id: 'kid_friendly',
+  label: 'Kid Friendly',
+  icon: Baby,
+  color: 'from-teal-400 to-cyan-500',
+  bg: 'bg-teal-50 hover:bg-teal-100',
+  border: 'border-teal-300'
 }];
 
 

@@ -98,7 +98,8 @@ export default function RecipeGenerator() {
       energetic: "nutritious, energizing dishes with fresh ingredients to fuel your day",
       stressed: "simple, soothing comfort food that's easy to make and calming to eat",
       romantic: "elegant, sophisticated dishes perfect for a special dinner for two",
-      adventurous: "bold, exotic flavors from around the world that excite the palate"
+      adventurous: "bold, exotic flavors from around the world that excite the palate",
+      kid_friendly: "fun, nutritious, family-friendly meals that kids will love - simple flavors, colorful presentation, finger foods, and dishes that are easy for children to eat and enjoy"
     };
 
     const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(' and ');
