@@ -13,6 +13,7 @@ import SavedRecipes from '../components/recipe/SavedRecipes';
 import SimilarRecipes from '../components/recipe/SimilarRecipes';
 import PreferenceSurvey from '../components/survey/PreferenceSurvey';
 import RecipeGrid from '../components/recipe/RecipeGrid';
+import IntroScreen from '../components/IntroScreen';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
@@ -24,6 +25,7 @@ export default function RecipeGenerator() {
   const [userPreferences, setUserPreferences] = useState(null);
   const [similarRecipes, setSimilarRecipes] = useState([]);
   const [globalSearchQuery, setGlobalSearchQuery] = useState('');
+  const [showIntro, setShowIntro] = useState(true);
 
   const queryClient = useQueryClient();
 
@@ -260,7 +262,17 @@ Make each recipe special and memorable!`,
   };
 
   return (
-    <div className="min-h-screen bg-[#e8f0ea]">
+    <>
+      <AnimatePresence>
+        {showIntro && currentUser && (
+          <IntroScreen
+            userName={currentUser?.full_name?.split(' ')[0]}
+            onContinue={() => setShowIntro(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="min-h-screen bg-[#e8f0ea]">
       {/* Hero Section */}
       <div className="bg-[#e8f0ea] border-b border-[#c5d9c9]">
         <div className="bg-slate-50 mx-auto px-4 py-8 max-w-6xl sm:px-6 sm:py-12">
@@ -449,6 +461,8 @@ Make each recipe special and memorable!`,
           </>
         }
       </div>
-    </div>);
+      </div>
+    </>
+  );
 
 }
