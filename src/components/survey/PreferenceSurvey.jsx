@@ -332,9 +332,9 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <Card className="border-0 shadow-2xl rounded-3xl">
-        <CardContent className="p-10">
+    <div className="max-w-2xl mx-auto px-4">
+      <Card className="border-0 shadow-2xl rounded-2xl sm:rounded-3xl">
+        <CardContent className="p-6 sm:p-8 md:p-10">
           <div className="mb-8">
             <div className="flex justify-between text-sm text-gray-500 mb-2">
               <span>Step {step} of {totalSteps}</span>
@@ -357,7 +357,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {} }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="min-h-80"
+              className="min-h-64 sm:min-h-80"
             >
               {renderStep()}
             </motion.div>

@@ -63,15 +63,15 @@ export default function MoodSelector({ selectedMoods, onMoodSelect }) {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="text-center space-y-3">
-        <h2 className="text-[#c17a7a] text-4xl font-medium md:text-5xl">How are you feeling?
+    <div className="space-y-6 sm:space-y-8">
+      <div className="text-center space-y-2 sm:space-y-3 px-4">
+        <h2 className="text-[#c17a7a] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">How are you feeling?
 
         </h2>
-        <p className="text-[#9b8175] text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
+        <p className="text-[#9b8175] text-sm sm:text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
       </div>
-      
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         {moods.map((mood) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);
@@ -80,9 +80,9 @@ export default function MoodSelector({ selectedMoods, onMoodSelect }) {
             <motion.button
               key={mood.id}
               onClick={() => handleMoodToggle(mood.id)}
-              whileHover={{ scale: 1.08, y: -6 }}
+              whileHover={{ scale: 1.05, y: -4 }}
               whileTap={{ scale: 0.95 }} 
-              className={`p-5 rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
+              className={`p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
                 isSelected 
                   ? 'bg-[#f5e6dc] border-[#c17a7a]' 
                   : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
@@ -113,7 +113,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect }) {
               {isSelected &&
               <motion.div
                 layoutId="mood-indicator"
-                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1.5 bg-[#c17a7a] rounded-full shadow-md"
+                className="absolute -bottom-1.5 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-12 sm:w-16 h-1 sm:h-1.5 bg-[#c17a7a] rounded-full shadow-md"
                 transition={{ type: "spring", stiffness: 500, damping: 30 }} />
 
               }

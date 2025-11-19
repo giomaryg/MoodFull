@@ -54,6 +54,10 @@ export default function RecipeGenerator() {
       await base44.auth.updateMe(preferences);
       setUserPreferences({ ...userPreferences, ...preferences });
       setShowSurvey(false);
+      setSelectedMoods([]);
+      setGeneratedRecipes([]);
+      setCurrentRecipe(null);
+      setSavedRecipeId(null);
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       toast.success('Preferences saved!');
     } catch (error) {
@@ -86,6 +90,9 @@ export default function RecipeGenerator() {
       }
       if (userPreferences.diet_preferences) {
         prefs.push(`Follow these dietary preferences: ${userPreferences.diet_preferences}`);
+      }
+      if (userPreferences.blood_sugar_friendly) {
+        prefs.push(`CRITICAL - This user needs blood sugar friendly recipes. Focus on low glycemic index foods, balanced macros, minimal added sugars, complex carbs, and fiber-rich ingredients suitable for diabetes management.`);
       }
       if (userPreferences.priorities?.length > 0) {
         prefs.push(`Prioritize: ${userPreferences.priorities.join(', ')}`);
@@ -223,20 +230,20 @@ Make each recipe special and memorable!`,
     <div className="min-h-screen bg-[#f5ebe0]">
       {/* Hero Section */}
       <div className="bg-[#f5ebe0] border-b border-[#e8d5c4]">
-        <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-4">
+            className="text-center space-y-3 sm:space-y-4">
 
             <div className="flex justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691ce8ad33694c9622f52699/924d048e6_ChatGPTImageNov182025at05_01_45PM.png"
-                alt="MoodFull Logo" className="w-80 h-auto" />
+                alt="MoodFull Logo" className="w-48 sm:w-64 md:w-80 h-auto" />
 
 
             </div>
-            <p className="text-[#9b8175] mx-auto text-xl leading-relaxed max-w-2xl">Discover recipes that match your mood. Let your feelings guide your next delicious meal.
+            <p className="text-[#9b8175] mx-auto text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl px-4">Discover recipes that match your mood. Let your feelings guide your next delicious meal.
 
             </p>
           </motion.div>
@@ -244,7 +251,7 @@ Make each recipe special and memorable!`,
       </div>
 
       {/* Main Content */}
-      <div className="bg-[#f5ebe0] mx-auto px-6 py-12 max-w-6xl space-y-12">
+      <div className="bg-[#f5ebe0] mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-6xl space-y-8 sm:space-y-12">
         {/* Survey */}
         {showSurvey &&
         <motion.div
@@ -266,7 +273,7 @@ Make each recipe special and memorable!`,
                 <Button
               onClick={() => setShowSurvey(true)}
               variant="outline"
-              size="sm" className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a]">
+              className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] text-sm sm:text-base">
 
 
                   Update Preferences
@@ -298,8 +305,7 @@ Make each recipe special and memorable!`,
               <Button
                 onClick={generateRecipe}
                 disabled={isGenerating}
-                size="lg"
-                className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-10 py-7 rounded-3xl font-semibold">
+                className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
 
                 {isGenerating ?
                 <>
@@ -358,8 +364,7 @@ Make each recipe special and memorable!`,
                     setSavedRecipeId(null);
                   }}
                   variant="outline"
-                  size="lg"
-                  className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] rounded-2xl px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all">
+                  className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
 
                     Back to Results
                   </Button>
