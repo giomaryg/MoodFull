@@ -8,6 +8,7 @@ export default function Layout({ children, currentPageName }) {
         
         * {
           font-family: 'Italiana', serif;
+          font-weight: 700;
         }
       `}</style>
       {children}
