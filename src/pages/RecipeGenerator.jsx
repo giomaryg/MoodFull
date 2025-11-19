@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Loader2, UtensilsCrossed } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Sparkles, Loader2, UtensilsCrossed, Search, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
@@ -22,13 +23,26 @@ export default function RecipeGenerator() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [userPreferences, setUserPreferences] = useState(null);
   const [similarRecipes, setSimilarRecipes] = useState([]);
+  const [globalSearchQuery, setGlobalSearchQuery] = useState('');
 
   const queryClient = useQueryClient();
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
-    queryFn: () => base44.entities.Recipe.list('-created_date', 20)
+    queryFn: () => base44.entities.Recipe.list('-created_date', 100)
   });
+
+  const filteredSavedRecipes = useMemo(() => {
+    if (!globalSearchQuery.trim()) return savedRecipes;
+    
+    const query = globalSearchQuery.toLowerCase();
+    return savedRecipes.filter(recipe => 
+      recipe.name.toLowerCase().includes(query) ||
+      recipe.description?.toLowerCase().includes(query) ||
+      recipe.mood?.toLowerCase().includes(query) ||
+      recipe.ingredients?.some(ing => ing.toLowerCase().includes(query))
+    );
+  }, [savedRecipes, globalSearchQuery]);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -287,19 +301,38 @@ Make each recipe special and memorable!`,
 
         {!showSurvey &&
         <>
-            {/* Update Preferences Button */}
-            {userPreferences?.survey_completed &&
-          <div className="flex justify-end">
+            {/* Search & Preferences */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+              {/* Global Search */}
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#9b8175]" />
+                <Input
+                  type="text"
+                  placeholder="Search all recipes..."
+                  value={globalSearchQuery}
+                  onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                  className="pl-10 pr-10 border-2 border-[#e8d5c4] focus:border-[#c17a7a] rounded-xl text-sm sm:text-base"
+                />
+                {globalSearchQuery && (
+                  <button
+                    onClick={() => setGlobalSearchQuery('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#9b8175] hover:text-[#c17a7a] transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Update Preferences Button */}
+              {userPreferences?.survey_completed && (
                 <Button
-              onClick={() => setShowSurvey(true)}
-              variant="outline"
-              className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] text-sm sm:text-base">
-
-
+                  onClick={() => setShowSurvey(true)}
+                  variant="outline"
+                  className="border-2 border-[#c17a7a] hover:border-[#b06a6a] hover:bg-[#f5e6dc] text-[#c17a7a] text-sm sm:text-base whitespace-nowrap">
                   Update Preferences
                 </Button>
-              </div>
-          }
+              )}
+            </div>
 
             {/* Mood Selector */}
             <motion.div
@@ -403,17 +436,17 @@ Make each recipe special and memorable!`,
 
             {/* Saved Recipes */}
             {!currentRecipe && savedRecipes.length > 0 &&
-          <motion.div
+            <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}>
 
                 <SavedRecipes
-              recipes={savedRecipes}
+              recipes={globalSearchQuery ? filteredSavedRecipes : savedRecipes}
               onRecipeClick={handleSavedRecipeClick} />
 
               </motion.div>
-          }
+            }
           </>
         }
       </div>
