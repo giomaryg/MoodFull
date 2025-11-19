@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus } from 'lucide-react';
+import AddMealDialog from '../mealplan/AddMealDialog';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 export default function RecipeDisplay({ recipe, onSave, isSaved }) {
+  const [showAddMeal, setShowAddMeal] = useState(false);
+
+  const { data: recipes = [] } = useQuery({
+    queryKey: ['recipes'],
+    queryFn: () => base44.entities.Recipe.list('-created_date', 100)
+  });
+
   if (!recipe) return null;
 
   return (
@@ -50,29 +60,39 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
               </CardTitle>
               <p className="text-gray-600 text-sm sm:text-base md:text-lg mt-2 sm:mt-3 leading-relaxed">{recipe.description}</p>
             </div>
-            <Button
-              onClick={onSave}
-              variant={isSaved ? "default" : "outline"}
-              className={`
-                w-full sm:w-auto shrink-0 transition-all duration-300 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base
-                ${isSaved ?
-              'bg-[#c17a7a] hover:bg-[#b06a6a] shadow-lg' :
-              'border-2 hover:border-[#c17a7a] hover:bg-[#f5e6dc] hover:shadow-md'}
-              `
-              }>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                onClick={onSave}
+                variant={isSaved ? "default" : "outline"}
+                className={`
+                  flex-1 sm:flex-none shrink-0 transition-all duration-300 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base
+                  ${isSaved ?
+                'bg-[#c17a7a] hover:bg-[#b06a6a] shadow-lg' :
+                'border-2 hover:border-[#c17a7a] hover:bg-[#f5e6dc] hover:shadow-md'}
+                `
+                }>
 
-              {isSaved ?
-              <>
-                  <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                  Saved
-                </> :
+                {isSaved ?
+                <>
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                    Saved
+                  </> :
 
-              <>
-                  <BookmarkPlus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                  Save
-                </>
-              }
-            </Button>
+                <>
+                    <BookmarkPlus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                    Save
+                  </>
+                }
+              </Button>
+              <Button
+                onClick={() => setShowAddMeal(true)}
+                variant="outline"
+                className="flex-1 sm:flex-none border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base"
+              >
+                <CalendarPlus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                Add to Plan
+              </Button>
+            </div>
           </div>
 
           {/* Info Badges */}
@@ -203,6 +223,16 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Add Meal Dialog */}
+      {showAddMeal && (
+        <AddMealDialog
+          date={new Date()}
+          mealType="dinner"
+          recipes={isSaved ? recipes : [...recipes, recipe]}
+          onClose={() => setShowAddMeal(false)}
+        />
+      )}
     </motion.div>);
 
 }
