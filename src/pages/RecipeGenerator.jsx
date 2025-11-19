@@ -460,7 +460,7 @@ Make each recipe special and memorable!`,
           </>
         }
       </div>
-      </div>
+    </div>
     </>
   );
 
