@@ -18,6 +18,7 @@ import BottomNav from '../components/navigation/BottomNav';
 import AccountInfo from '../components/account/AccountInfo';
 import MealPlanner from '../components/mealplan/MealPlanner';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
+import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
@@ -408,6 +409,17 @@ Make each recipe special and memorable!`,
 
         {!showSurvey && activeTab === 'home' &&
         <>
+            {/* Personalized Recommendations */}
+            {!currentRecipe && generatedRecipes.length === 0 && (
+              <RecommendedRecipes
+                userPreferences={userPreferences}
+                onRecipeClick={(recipe) => {
+                  setCurrentRecipe(recipe);
+                  setSavedRecipeId(null);
+                }}
+              />
+            )}
+
             {/* Search & Preferences */}
             <div className="space-y-3">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
