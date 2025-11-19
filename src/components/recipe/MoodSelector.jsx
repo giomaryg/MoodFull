@@ -80,7 +80,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
         <p className="text-[#6b9b76] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
         {moods.map((mood) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);
