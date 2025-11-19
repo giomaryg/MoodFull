@@ -95,7 +95,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
                 isSelected 
                   ? 'bg-[#f5e6dc] border-[#c17a7a]' 
                   : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
-              }`}>
+              } ${mood.id === 'kid_friendly' ? 'col-span-2 sm:col-span-1' : ''}`}>
 
 
 
