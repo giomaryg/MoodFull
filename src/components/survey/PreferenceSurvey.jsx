@@ -174,7 +174,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
           </div>
         );
 
-      case 3:
+      case 4:
         return (
           <div className="space-y-4">
             <div className="space-y-4">
@@ -228,7 +228,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
           </div>
         );
 
-      case 4:
+      case 5:
         return (
           <div className="space-y-4">
             <div className="space-y-3">
@@ -263,7 +263,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
           </div>
         );
 
-      case 5:
+      case 6:
         return (
           <div className="space-y-4">
             <div className="space-y-4">
@@ -316,7 +316,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
           </div>
         );
 
-      case 6:
+      case 7:
         return (
           <div className="space-y-4">
             <div className="space-y-3">
@@ -347,7 +347,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
           </div>
         );
 
-      case 7:
+      case 8:
         return (
           <div className="space-y-4">
             <div className="space-y-4">
