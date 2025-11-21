@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock } from 'lucide-react';
 
 const moods = [
 {
@@ -58,6 +58,14 @@ const moods = [
   color: 'from-teal-400 to-cyan-500',
   bg: 'bg-teal-50 hover:bg-teal-100',
   border: 'border-teal-300'
+},
+{
+  id: 'nostalgic',
+  label: 'Nostalgic',
+  icon: Clock,
+  color: 'from-amber-400 to-yellow-500',
+  bg: 'bg-amber-50 hover:bg-amber-100',
+  border: 'border-amber-300'
 }];
 
 
@@ -80,11 +88,11 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
         <p className="text-[#6b9b76] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {moods.map((mood, index) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);
-          const isKidFriendly = mood.id === 'kid_friendly';
+          const isKidFriendly = mood.id === 'kid_friendly' || mood.id === 'nostalgic';
 
           return (
             <div key={mood.id} className={isKidFriendly ? 'col-span-2 sm:col-span-1 flex justify-center' : ''}>
