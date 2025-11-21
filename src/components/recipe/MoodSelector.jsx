@@ -92,19 +92,18 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
         {moods.map((mood, index) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);
-          const isKidFriendly = mood.id === 'kid_friendly' || mood.id === 'nostalgic';
 
           return (
-            <div key={mood.id} className={isKidFriendly ? 'col-span-2 sm:col-span-1 flex justify-center' : ''}>
-              <motion.button
-                onClick={() => handleMoodToggle(mood.id)}
-                whileHover={{ scale: 1.05, y: -4 }}
-                whileTap={{ scale: 0.95 }} 
-                className={`p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl ${
-                  isSelected 
-                    ? 'bg-[#f5e6dc] border-[#c17a7a]' 
-                    : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
-                } ${isKidFriendly ? 'w-full sm:w-auto' : 'w-full'}`}>
+            <motion.button
+              key={mood.id}
+              onClick={() => handleMoodToggle(mood.id)}
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.95 }} 
+              className={`p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl w-full ${
+                isSelected 
+                  ? 'bg-[#f5e6dc] border-[#c17a7a]' 
+                  : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+              }`}>
 
 
 
@@ -136,10 +135,9 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) 
 
               }
               </motion.button>
-              </div>);
-
+              );
               })}
-      </div>
-    </div>);
-
-}
+              </div>
+              </div>
+              );
+              }
