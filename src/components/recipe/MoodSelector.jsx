@@ -52,20 +52,20 @@ const moods = [
   border: 'border-purple-300'
 },
 {
-  id: 'kid_friendly',
-  label: 'Kid Friendly',
-  icon: Baby,
-  color: 'from-teal-400 to-cyan-500',
-  bg: 'bg-teal-50 hover:bg-teal-100',
-  border: 'border-teal-300'
-},
-{
   id: 'nostalgic',
   label: 'Nostalgic',
   icon: Clock,
   color: 'from-amber-400 to-yellow-500',
   bg: 'bg-amber-50 hover:bg-amber-100',
   border: 'border-amber-300'
+},
+{
+  id: 'kid_friendly',
+  label: 'Kid Friendly',
+  icon: Baby,
+  color: 'from-teal-400 to-cyan-500',
+  bg: 'bg-teal-50 hover:bg-teal-100',
+  border: 'border-teal-300'
 }];
 
 
