@@ -234,7 +234,7 @@ export default function RecipeGenerator() {
 
       The recipes should match these moods: ${moodContext}.${preferencesContext}
 
-      Create 25 unique, appetizing recipes with variety in:
+      Create 30 unique, appetizing recipes with variety in:
       - Cuisine types (different cultures and cooking styles)
       - Difficulty levels (mix of easy, medium, and hard)
       - Preparation times (some quick, some more involved)
