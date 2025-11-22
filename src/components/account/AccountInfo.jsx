@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone } from 'lucide-react';
+import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone, Languages } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 
@@ -13,7 +13,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
   const [formData, setFormData] = useState({
     full_name: user?.full_name || '',
     email: user?.email || '',
-    phone_number: user?.phone_number || ''
+    phone_number: user?.phone_number || '',
+    preferred_language: user?.preferred_language || 'en'
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -38,7 +39,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
     setFormData({
       full_name: user?.full_name || '',
       email: user?.email || '',
-      phone_number: user?.phone_number || ''
+      phone_number: user?.phone_number || '',
+      preferred_language: user?.preferred_language || 'en'
     });
     setIsEditing(false);
   };
@@ -108,6 +110,28 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
                     className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
                   />
                 </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center gap-2">
+                    <Languages className="w-4 h-4" />
+                    Preferred Language
+                  </label>
+                  <select
+                    value={formData.preferred_language}
+                    onChange={(e) => setFormData({ ...formData, preferred_language: e.target.value })}
+                    className="w-full border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-md px-3 py-2 bg-white"
+                  >
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="pt">Português</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">中文</option>
+                    <option value="ar">العربية</option>
+                    <option value="he">עברית</option>
+                  </select>
+                </div>
                 <div className="flex gap-3 pt-2">
                   <Button
                     onClick={handleSave}
@@ -134,6 +158,23 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <Phone className="w-4 h-4" />
                       <span>{user.phone_number}</span>
+                    </div>
+                  )}
+                  {user?.preferred_language && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Languages className="w-4 h-4" />
+                      <span>
+                        {user.preferred_language === 'en' && 'English'}
+                        {user.preferred_language === 'es' && 'Español'}
+                        {user.preferred_language === 'fr' && 'Français'}
+                        {user.preferred_language === 'de' && 'Deutsch'}
+                        {user.preferred_language === 'it' && 'Italiano'}
+                        {user.preferred_language === 'pt' && 'Português'}
+                        {user.preferred_language === 'ja' && '日本語'}
+                        {user.preferred_language === 'zh' && '中文'}
+                        {user.preferred_language === 'ar' && 'العربية'}
+                        {user.preferred_language === 'he' && 'עברית'}
+                      </span>
                     </div>
                   )}
                   {user?.created_date && (
