@@ -332,8 +332,9 @@ Make each recipe special and memorable!`,
       }));
 
       setGeneratedRecipes(recipesWithMood);
+      setIsGenerating(false);
 
-      // Generate images for each recipe in parallel
+      // Generate images in background after recipes are shown
       Promise.all(
         recipesWithMood.map(async (recipe, index) => {
           try {
@@ -356,7 +357,6 @@ Make each recipe special and memorable!`,
       });
     } catch (error) {
       toast.error('Failed to generate recipe. Please try again.');
-    } finally {
       setIsGenerating(false);
     }
   };
