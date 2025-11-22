@@ -189,9 +189,11 @@ export default function RecipeGenerator() {
       happy: "light, fun, colorful dishes that bring joy and celebrate good times",
       cozy: "warm, comforting meals perfect for relaxing at home",
       energetic: "nutritious, energizing dishes with fresh ingredients to fuel your day",
+      lazy: "easy, minimal-effort comfort food that requires little cooking - simple one-pot meals, no-fuss dishes, and relaxed cooking that still tastes great",
       stressed: "simple, soothing comfort food that's easy to make and calming to eat",
       romantic: "elegant, sophisticated dishes perfect for a special dinner for two",
       adventurous: "bold, exotic flavors from around the world that excite the palate",
+      anxious: "calming, grounding meals with familiar flavors - gentle, easy-to-digest dishes that bring comfort and peace of mind",
       kid_friendly: "fun, nutritious, family-friendly meals that kids will love - simple flavors, colorful presentation, finger foods, and dishes that are easy for children to eat and enjoy",
       nostalgic: "classic, traditional recipes that evoke memories and comfort - timeless dishes from the past, grandmother's cooking, old-fashioned favorites, and recipes that bring back warm memories"
     };

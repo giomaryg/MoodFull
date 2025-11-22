@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle } from 'lucide-react';
 
 const moods = [
 {
@@ -28,6 +28,14 @@ const moods = [
   border: 'border-green-300'
 },
 {
+  id: 'lazy',
+  label: 'Lazy',
+  icon: Moon,
+  color: 'from-indigo-400 to-blue-500',
+  bg: 'bg-indigo-50 hover:bg-indigo-100',
+  border: 'border-indigo-300'
+},
+{
   id: 'stressed',
   label: 'Stressed',
   icon: Cloud,
@@ -50,6 +58,14 @@ const moods = [
   color: 'from-purple-400 to-violet-500',
   bg: 'bg-purple-50 hover:bg-purple-100',
   border: 'border-purple-300'
+},
+{
+  id: 'anxious',
+  label: 'Anxious',
+  icon: AlertCircle,
+  color: 'from-slate-400 to-gray-500',
+  bg: 'bg-slate-50 hover:bg-slate-100',
+  border: 'border-slate-300'
 },
 {
   id: 'nostalgic',
