@@ -3,7 +3,8 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { X, Search } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { X, Search, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
@@ -13,6 +14,10 @@ export default function AddMealDialog({ date, mealType, recipes, onClose }) {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState('');
   const [notes, setNotes] = useState('');
+  const [mode, setMode] = useState('select'); // 'select' or 'create'
+  const [customMealName, setCustomMealName] = useState('');
+  const [customIngredients, setCustomIngredients] = useState('');
+  const [customInstructions, setCustomInstructions] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -31,16 +36,30 @@ export default function AddMealDialog({ date, mealType, recipes, onClose }) {
   );
 
   const handleAddMeal = () => {
-    if (!selectedRecipe) return;
+    if (mode === 'select') {
+      if (!selectedRecipe) return;
 
-    addMealMutation.mutate({
-      recipe_id: selectedRecipe.id,
-      recipe_name: selectedRecipe.name,
-      date: format(date, 'yyyy-MM-dd'),
-      meal_type: mealType,
-      servings: servings ? parseInt(servings) : selectedRecipe.servings,
-      notes
-    });
+      addMealMutation.mutate({
+        recipe_id: selectedRecipe.id,
+        recipe_name: selectedRecipe.name,
+        date: format(date, 'yyyy-MM-dd'),
+        meal_type: mealType,
+        servings: servings ? parseInt(servings) : selectedRecipe.servings,
+        notes
+      });
+    } else {
+      if (!customMealName.trim()) return;
+
+      addMealMutation.mutate({
+        recipe_name: customMealName,
+        custom_ingredients: customIngredients ? customIngredients.split('\n').filter(i => i.trim()) : [],
+        custom_instructions: customInstructions ? customInstructions.split('\n').filter(i => i.trim()) : [],
+        date: format(date, 'yyyy-MM-dd'),
+        meal_type: mealType,
+        servings: servings ? parseInt(servings) : 4,
+        notes
+      });
+    }
   };
 
   return (
@@ -71,51 +90,136 @@ export default function AddMealDialog({ date, mealType, recipes, onClose }) {
           </Button>
         </div>
 
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
-          <Input
-            type="text"
-            placeholder="Search recipes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
-          />
+        {/* Mode Tabs */}
+        <div className="flex gap-2 mb-4">
+          <Button
+            onClick={() => setMode('select')}
+            variant={mode === 'select' ? 'default' : 'outline'}
+            className={mode === 'select' ? 'bg-[#6b9b76] hover:bg-[#5a8a65] text-white' : 'border-2 border-[#c5d9c9]'}
+          >
+            <Search className="w-4 h-4 mr-2" />
+            Select Recipe
+          </Button>
+          <Button
+            onClick={() => setMode('create')}
+            variant={mode === 'create' ? 'default' : 'outline'}
+            className={mode === 'create' ? 'bg-[#6b9b76] hover:bg-[#5a8a65] text-white' : 'border-2 border-[#c5d9c9]'}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Custom Meal
+          </Button>
         </div>
 
-        {/* Recipe List */}
-        <div className="space-y-2 mb-6 max-h-60 overflow-y-auto">
-          {filteredRecipes.map((recipe) => (
-            <button
-              key={recipe.id}
-              onClick={() => setSelectedRecipe(recipe)}
-              className={`w-full text-left p-3 rounded-xl border-2 transition-all ${
-                selectedRecipe?.id === recipe.id
-                  ? 'bg-[#f5e6dc] border-[#c17a7a]'
-                  : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
-              }`}
-            >
-              <p className="font-semibold text-[#5a6f60]">{recipe.name}</p>
-              <p className="text-xs text-gray-500">
-                {recipe.prep_time} • {recipe.servings} servings
-              </p>
-            </button>
-          ))}
-          {filteredRecipes.length === 0 && (
-            <p className="text-center text-gray-500 py-8">No recipes found</p>
-          )}
-        </div>
+        {mode === 'select' ? (
+          <>
+            {/* Search */}
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
+              <Input
+                type="text"
+                placeholder="Search recipes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+              />
+            </div>
 
-        {/* Meal Details */}
-        {selectedRecipe && (
+            {/* Recipe List */}
+            <div className="space-y-2 mb-6 max-h-60 overflow-y-auto">
+              {filteredRecipes.map((recipe) => (
+                <button
+                  key={recipe.id}
+                  onClick={() => setSelectedRecipe(recipe)}
+                  className={`w-full text-left p-3 rounded-xl border-2 transition-all ${
+                    selectedRecipe?.id === recipe.id
+                      ? 'bg-[#f5e6dc] border-[#c17a7a]'
+                      : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
+                  }`}
+                >
+                  <p className="font-semibold text-[#5a6f60]">{recipe.name}</p>
+                  <p className="text-xs text-gray-500">
+                    {recipe.prep_time} • {recipe.servings} servings
+                  </p>
+                </button>
+              ))}
+              {filteredRecipes.length === 0 && (
+                <p className="text-center text-gray-500 py-8">No recipes found</p>
+              )}
+            </div>
+
+            {/* Meal Details */}
+            {selectedRecipe && (
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-[#5a6f60] mb-2">
+                    Servings
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder={selectedRecipe.servings?.toString()}
+                    value={servings}
+                    onChange={(e) => setServings(e.target.value)}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#5a6f60] mb-2">
+                    Notes (optional)
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Add notes..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
           <div className="space-y-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-[#5a6f60] mb-2">
+                Meal Name *
+              </label>
+              <Input
+                type="text"
+                placeholder="e.g. Grilled Chicken Salad"
+                value={customMealName}
+                onChange={(e) => setCustomMealName(e.target.value)}
+                className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#5a6f60] mb-2">
+                Ingredients (optional, one per line)
+              </label>
+              <Textarea
+                placeholder="2 chicken breasts&#10;1 cup lettuce&#10;2 tbsp olive oil"
+                value={customIngredients}
+                onChange={(e) => setCustomIngredients(e.target.value)}
+                className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl h-24"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#5a6f60] mb-2">
+                Instructions (optional, one per line)
+              </label>
+              <Textarea
+                placeholder="Season chicken with salt and pepper&#10;Grill for 6-8 minutes per side&#10;Slice and serve over lettuce"
+                value={customInstructions}
+                onChange={(e) => setCustomInstructions(e.target.value)}
+                className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl h-24"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-[#5a6f60] mb-2">
                 Servings
               </label>
               <Input
                 type="number"
-                placeholder={selectedRecipe.servings?.toString()}
+                placeholder="4"
                 value={servings}
                 onChange={(e) => setServings(e.target.value)}
                 className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
@@ -147,7 +251,7 @@ export default function AddMealDialog({ date, mealType, recipes, onClose }) {
           </Button>
           <Button
             onClick={handleAddMeal}
-            disabled={!selectedRecipe || addMealMutation.isPending}
+            disabled={(mode === 'select' && !selectedRecipe) || (mode === 'create' && !customMealName.trim()) || addMealMutation.isPending}
             className="flex-1 bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
           >
             Add to Plan
