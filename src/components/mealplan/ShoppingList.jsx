@@ -1,10 +1,25 @@
 import React, { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { X, Download, CheckSquare, Square } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function ShoppingList({ mealPlans, recipes, onClose }) {
   const [checkedItems, setCheckedItems] = useState({});
+  const [expandedRecipes, setExpandedRecipes] = useState({});
+  const [viewMode, setViewMode] = useState('consolidated'); // 'consolidated' or 'by-recipe'
+
+  const shoppingByRecipe = useMemo(() => {
+    return mealPlans.map((plan) => {
+      const recipe = recipes.find((r) => r.id === plan.recipe_id);
+      return {
+        planId: plan.id,
+        recipeName: recipe?.name || 'Unknown Recipe',
+        mealDate: plan.date,
+        mealType: plan.meal_type,
+        ingredients: recipe?.ingredients || []
+      };
+    });
+  }, [mealPlans, recipes]);
 
   const shoppingList = useMemo(() => {
     const ingredientMap = {};
@@ -67,14 +82,37 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
     }));
   };
 
+  const toggleRecipeExpand = (index) => {
+    setExpandedRecipes(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
   const downloadList = () => {
     let text = '🛒 Shopping List\n\n';
+    
+    text += '=== BY RECIPE ===\n\n';
+    shoppingByRecipe.forEach((group) => {
+      text += `${group.recipeName}\n`;
+      text += `${group.mealType} on ${new Date(group.mealDate).toLocaleDateString()}\n`;
+      group.ingredients.forEach(ingredient => {
+        text += `  - ${ingredient}\n`;
+      });
+      text += '\n';
+    });
+
+    text += '\n=== CONSOLIDATED LIST ===\n\n';
     Object.entries(shoppingList).forEach(([category, items]) => {
       if (items.length > 0) {
         text += `${category}\n`;
         items.forEach((item) => {
           const check = checkedItems[item.key] ? '✓' : '○';
-          text += `  ${check} ${item.original}\n`;
+          text += `  ${check} ${item.original}`;
+          if (item.recipes.length > 1) {
+            text += ` (${item.recipes.length} recipes)`;
+          }
+          text += '\n';
         });
         text += '\n';
       }
@@ -108,25 +146,51 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
         className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto"
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-2xl font-bold text-[#6b9b76]">Shopping List</h3>
-            <p className="text-sm text-gray-600">
-              {checkedCount} of {totalItems} items checked
-            </p>
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-2xl font-bold text-[#6b9b76]">Shopping List</h3>
+              <p className="text-sm text-gray-600">
+                {checkedCount} of {totalItems} items checked
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={downloadList}
+                variant="outline"
+                size="icon"
+                className="border-2 border-[#6b9b76]"
+              >
+                <Download className="w-4 h-4 text-[#6b9b76]" />
+              </Button>
+              <Button onClick={onClose} variant="ghost" size="icon">
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button
-              onClick={downloadList}
-              variant="outline"
-              size="icon"
-              className="border-2 border-[#6b9b76]"
+          
+          {/* View Mode Toggle */}
+          <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+            <button
+              onClick={() => setViewMode('consolidated')}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                viewMode === 'consolidated'
+                  ? 'bg-white text-[#6b9b76] shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
-              <Download className="w-4 h-4 text-[#6b9b76]" />
-            </Button>
-            <Button onClick={onClose} variant="ghost" size="icon">
-              <X className="w-5 h-5" />
-            </Button>
+              Consolidated
+            </button>
+            <button
+              onClick={() => setViewMode('by-recipe')}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                viewMode === 'by-recipe'
+                  ? 'bg-white text-[#6b9b76] shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              By Recipe
+            </button>
           </div>
         </div>
 
@@ -134,6 +198,58 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
         {totalItems === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">No meals planned yet. Add some meals to generate a shopping list!</p>
+          </div>
+        ) : viewMode === 'by-recipe' ? (
+          <div className="space-y-3">
+            {shoppingByRecipe.map((group, index) => (
+              <div key={index} className="border-2 border-[#c5d9c9] rounded-xl overflow-hidden">
+                <button
+                  onClick={() => toggleRecipeExpand(index)}
+                  className="w-full p-4 bg-[#f5e6dc] hover:bg-[#f0dfd0] transition-colors flex items-center justify-between"
+                >
+                  <div className="text-left">
+                    <p className="font-semibold text-gray-900">{group.recipeName}</p>
+                    <p className="text-sm text-gray-600 capitalize">
+                      {group.mealType} • {new Date(group.mealDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                  {expandedRecipes[index] ? (
+                    <ChevronUp className="w-5 h-5 text-[#6b9b76]" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-[#6b9b76]" />
+                  )}
+                </button>
+                {expandedRecipes[index] && (
+                  <div className="p-4 bg-white space-y-2">
+                    {group.ingredients.map((ingredient, ingIndex) => {
+                      const itemId = `recipe-${index}-${ingIndex}`;
+                      const isChecked = checkedItems[itemId];
+                      
+                      return (
+                        <button
+                          key={ingIndex}
+                          onClick={() => toggleItem(itemId)}
+                          className={`w-full text-left p-2 rounded-lg border transition-all flex items-center gap-3 ${
+                            isChecked
+                              ? 'bg-gray-50 border-gray-300 opacity-60'
+                              : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
+                          }`}
+                        >
+                          {isChecked ? (
+                            <CheckSquare className="w-4 h-4 text-[#6b9b76] flex-shrink-0" />
+                          ) : (
+                            <Square className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          )}
+                          <span className={`text-sm ${isChecked ? 'line-through text-gray-500' : 'text-gray-800'}`}>
+                            {ingredient}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         ) : (
           <div className="space-y-6">
@@ -166,7 +282,8 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
                             {item.original}
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
-                            Used in: {item.recipes.join(', ')}
+                            {item.recipes.length > 1 ? `Used in ${item.recipes.length} recipes: ` : 'Used in: '}
+                            {item.recipes.join(', ')}
                           </p>
                         </div>
                       </button>
