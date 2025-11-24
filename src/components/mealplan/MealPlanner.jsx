@@ -2,11 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2 } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import AddMealDialog from './AddMealDialog';
 import ShoppingList from './ShoppingList';
+import SwapMealDialog from './SwapMealDialog';
 
 export default function MealPlanner() {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
@@ -16,6 +17,7 @@ export default function MealPlanner() {
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
   const [regeneratingDay, setRegeneratingDay] = useState(null);
+  const [swappingMeal, setSwappingMeal] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -48,6 +50,13 @@ export default function MealPlanner() {
     }
   });
 
+  const updateMealMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.MealPlan.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
+    }
+  });
+
   const weekDays = useMemo(() => {
     return Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
   }, [currentWeekStart]);
@@ -62,6 +71,18 @@ export default function MealPlanner() {
     setSelectedDate(date);
     setSelectedMealType(mealType);
     setShowAddMeal(true);
+  };
+
+  const handleSwapMeal = async (meal, newRecipe) => {
+    await updateMealMutation.mutateAsync({
+      id: meal.id,
+      data: {
+        recipe_id: newRecipe.id,
+        recipe_name: newRecipe.name,
+        servings: newRecipe.servings
+      }
+    });
+    setSwappingMeal(null);
   };
 
   const generateWeeklyPlan = async () => {
@@ -445,7 +466,7 @@ Make them balanced, diverse, and delicious. Include:
                           exit={{ opacity: 0, scale: 0.8 }}
                           className="bg-[#f5e6dc] rounded-lg p-2 text-xs group relative"
                         >
-                          <p className="font-medium text-[#5a6f60] truncate">
+                          <p className="font-medium text-[#5a6f60] truncate pr-12">
                             {meal.recipe_name}
                           </p>
                           {meal.servings && (
@@ -453,12 +474,20 @@ Make them balanced, diverse, and delicious. Include:
                               {meal.servings} servings
                             </p>
                           )}
-                          <button
-                            onClick={() => deleteMealMutation.mutate(meal.id)}
-                            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <Trash2 className="w-3 h-3 text-red-500" />
-                          </button>
+                          <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => setSwappingMeal(meal)}
+                              className="p-1 hover:bg-white/50 rounded"
+                            >
+                              <Repeat className="w-3 h-3 text-[#6b9b76]" />
+                            </button>
+                            <button
+                              onClick={() => deleteMealMutation.mutate(meal.id)}
+                              className="p-1 hover:bg-white/50 rounded"
+                            >
+                              <Trash2 className="w-3 h-3 text-red-500" />
+                            </button>
+                          </div>
                         </motion.div>
                       ))}
                     </AnimatePresence>
@@ -499,6 +528,16 @@ Make them balanced, diverse, and delicious. Include:
           mealPlans={mealPlans}
           recipes={recipes}
           onClose={() => setShowShoppingList(false)}
+        />
+      )}
+
+      {/* Swap Meal Dialog */}
+      {swappingMeal && (
+        <SwapMealDialog
+          currentMeal={swappingMeal}
+          recipes={recipes}
+          onSwap={(newRecipe) => handleSwapMeal(swappingMeal, newRecipe)}
+          onClose={() => setSwappingMeal(null)}
         />
       )}
     </div>
