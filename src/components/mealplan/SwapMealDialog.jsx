@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { X, Search, Clock, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }) {
+  if (!currentMeal) return null;
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredRecipes = useMemo(() => {
