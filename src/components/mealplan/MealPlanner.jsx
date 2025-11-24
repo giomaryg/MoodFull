@@ -92,9 +92,7 @@ export default function MealPlanner() {
     if (!destination) return;
     if (source.droppableId === destination.droppableId) return;
 
-    const destParts = destination.droppableId.split('-');
-    const destDate = destParts.slice(0, 3).join('-'); // yyyy-MM-dd
-    const destMealType = destParts.slice(3).join('-'); // handles meal types with hyphens
+    const [destDate, destMealType] = destination.droppableId.split('|');
 
     const meal = mealPlans.find(m => m.id === draggableId);
     if (!meal) return;
@@ -473,7 +471,7 @@ Make them balanced, diverse, and delicious. Include:
               {weekDays.map((day) => {
                 const meals = getMealsForDay(day, mealType);
                 const isToday = isSameDay(day, new Date());
-                const dropId = `${format(day, 'yyyy-MM-dd')}-${mealType}`;
+                const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
 
                 return (
                   <Droppable key={dropId} droppableId={dropId}>
