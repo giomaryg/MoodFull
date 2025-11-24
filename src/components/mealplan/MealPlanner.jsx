@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AddMealDialog from './AddMealDialog';
 import ShoppingList from './ShoppingList';
 import SwapMealDialog from './SwapMealDialog';
@@ -83,6 +84,27 @@ export default function MealPlanner() {
       }
     });
     setSwappingMeal(null);
+  };
+
+  const handleDragEnd = async (result) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId) return;
+
+    const [sourceDate, sourceMealType] = source.droppableId.split('-');
+    const [destDate, destMealType] = destination.droppableId.split('-');
+
+    const meal = mealPlans.find(m => m.id === draggableId);
+    if (!meal) return;
+
+    await updateMealMutation.mutateAsync({
+      id: meal.id,
+      data: {
+        date: destDate,
+        meal_type: destMealType
+      }
+    });
   };
 
   const generateWeeklyPlan = async () => {
@@ -410,103 +432,117 @@ Make them balanced, diverse, and delicious. Include:
       </div>
 
       {/* Calendar Grid */}
-      <div className="bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
-        {/* Day Headers */}
-        <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
-          {weekDays.map((day) => (
-            <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
-              <p className="text-white font-semibold text-sm">
-                {format(day, 'EEE')}
-              </p>
-              <p className="text-white text-xs">
-                {format(day, 'MMM d')}
-              </p>
-              <Button
-                onClick={() => regenerateDay(day)}
-                disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
-                size="sm"
-                variant="ghost"
-                className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
-              >
-                {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
-                  <Loader2 className="w-3 h-3 text-white animate-spin" />
-                ) : (
-                  <RefreshCw className="w-3 h-3 text-white" />
-                )}
-              </Button>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
+          {/* Day Headers */}
+          <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
+            {weekDays.map((day) => (
+              <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
+                <p className="text-white font-semibold text-sm">
+                  {format(day, 'EEE')}
+                </p>
+                <p className="text-white text-xs">
+                  {format(day, 'MMM d')}
+                </p>
+                <Button
+                  onClick={() => regenerateDay(day)}
+                  disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
+                >
+                  {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
+                    <Loader2 className="w-3 h-3 text-white animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-3 h-3 text-white" />
+                  )}
+                </Button>
+              </div>
+            ))}
+          </div>
+
+          {/* Meal Rows */}
+          {mealTypes.map((mealType) => (
+            <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
+              {weekDays.map((day) => {
+                const meals = getMealsForDay(day, mealType);
+                const isToday = isSameDay(day, new Date());
+                const dropId = `${format(day, 'yyyy-MM-dd')}-${mealType}`;
+
+                return (
+                  <Droppable key={dropId} droppableId={dropId}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={`bg-white p-2 min-h-[120px] transition-colors ${
+                          isToday ? 'bg-[#f0f9f2]' : ''
+                        } ${snapshot.isDraggingOver ? 'bg-[#e8f0ea] ring-2 ring-[#6b9b76]' : ''}`}
+                      >
+                        {weekDays.indexOf(day) === 0 && (
+                          <p className="text-xs font-semibold text-[#6b9b76] mb-2 capitalize">
+                            {mealType}
+                          </p>
+                        )}
+                        
+                        <div className="space-y-1">
+                          {meals.map((meal, index) => (
+                            <Draggable key={meal.id} draggableId={meal.id} index={index}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`bg-[#f5e6dc] rounded-lg p-2 text-xs group relative cursor-move ${
+                                    snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
+                                  }`}
+                                >
+                                  <p className="font-medium text-[#5a6f60] truncate pr-12">
+                                    {meal.recipe_name}
+                                  </p>
+                                  {meal.servings && (
+                                    <p className="text-gray-500 text-xs">
+                                      {meal.servings} servings
+                                    </p>
+                                  )}
+                                  <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      onClick={() => setSwappingMeal(meal)}
+                                      className="p-1 hover:bg-white/50 rounded"
+                                    >
+                                      <Repeat className="w-3 h-3 text-[#6b9b76]" />
+                                    </button>
+                                    <button
+                                      onClick={() => deleteMealMutation.mutate(meal.id)}
+                                      className="p-1 hover:bg-white/50 rounded"
+                                    >
+                                      <Trash2 className="w-3 h-3 text-red-500" />
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+
+                        <Button
+                          onClick={() => handleAddMeal(day, mealType)}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full mt-2 text-[#6b9b76] hover:bg-[#f0f9f2]"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    )}
+                  </Droppable>
+                );
+              })}
             </div>
           ))}
         </div>
-
-        {/* Meal Rows */}
-        {mealTypes.map((mealType) => (
-          <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
-            {weekDays.map((day) => {
-              const meals = getMealsForDay(day, mealType);
-              const isToday = isSameDay(day, new Date());
-
-              return (
-                <div
-                  key={`${day.toString()}-${mealType}`}
-                  className={`bg-white p-2 min-h-[120px] ${isToday ? 'bg-[#f0f9f2]' : ''}`}
-                >
-                  {weekDays.indexOf(day) === 0 && (
-                    <p className="text-xs font-semibold text-[#6b9b76] mb-2 capitalize">
-                      {mealType}
-                    </p>
-                  )}
-                  
-                  <div className="space-y-1">
-                    <AnimatePresence>
-                      {meals.map((meal) => (
-                        <motion.div
-                          key={meal.id}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          className="bg-[#f5e6dc] rounded-lg p-2 text-xs group relative"
-                        >
-                          <p className="font-medium text-[#5a6f60] truncate pr-12">
-                            {meal.recipe_name}
-                          </p>
-                          {meal.servings && (
-                            <p className="text-gray-500 text-xs">
-                              {meal.servings} servings
-                            </p>
-                          )}
-                          <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                              onClick={() => setSwappingMeal(meal)}
-                              className="p-1 hover:bg-white/50 rounded"
-                            >
-                              <Repeat className="w-3 h-3 text-[#6b9b76]" />
-                            </button>
-                            <button
-                              onClick={() => deleteMealMutation.mutate(meal.id)}
-                              className="p-1 hover:bg-white/50 rounded"
-                            >
-                              <Trash2 className="w-3 h-3 text-red-500" />
-                            </button>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-
-                  <Button
-                    onClick={() => handleAddMeal(day, mealType)}
-                    variant="ghost"
-                    size="sm"
-                    className="w-full mt-2 text-[#6b9b76] hover:bg-[#f0f9f2]"
-                  >
-                    <Plus className="w-3 h-3" />
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+      </DragDropContext>
 
       {/* Add Meal Dialog */}
       {showAddMeal && (
