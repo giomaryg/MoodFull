@@ -3,10 +3,27 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Clock, Users, Sparkles, Search } from 'lucide-react';
+import { Clock, Users, Sparkles, Search, Trash2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import HighlightedText from './HighlightedText';
 
 export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '' }) {
+  const queryClient = useQueryClient();
+
+  const deleteRecipeMutation = useMutation({
+    mutationFn: (id) => base44.entities.Recipe.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipes'] });
+      toast.success('Recipe removed from your collection');
+    }
+  });
+
+  const handleDelete = (e, recipeId) => {
+    e.stopPropagation();
+    deleteRecipeMutation.mutate(recipeId);
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const displayQuery = externalSearchQuery || searchQuery;
 
@@ -64,11 +81,17 @@ export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: exte
             >
               <Card
                 onClick={() => onRecipeClick(recipe)}
-                className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#c5d9c9] bg-white hover:bg-[#f8faf8] group rounded-2xl overflow-hidden"
+                className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#c5d9c9] bg-white hover:bg-[#f8faf8] group rounded-2xl overflow-hidden relative"
                 >
+                <button
+                  onClick={(e) => handleDelete(e, recipe.id)}
+                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 hover:bg-red-50 transition-all z-10"
+                >
+                  <Trash2 className="w-4 h-4 text-red-500" />
+                </button>
                 <CardContent className="p-6 space-y-4">
                   <div className="space-y-2">
-                    <h4 className="font-bold text-lg text-gray-900 group-hover:text-[#6b9b76] transition-colors line-clamp-1">
+                    <h4 className="font-bold text-lg text-gray-900 group-hover:text-[#6b9b76] transition-colors line-clamp-1 pr-10">
                       <HighlightedText text={recipe.name} query={displayQuery} />
                     </h4>
                     <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
