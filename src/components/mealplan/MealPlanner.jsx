@@ -92,19 +92,25 @@ export default function MealPlanner() {
     if (!destination) return;
     if (source.droppableId === destination.droppableId) return;
 
-    const [sourceDate, sourceMealType] = source.droppableId.split('-');
-    const [destDate, destMealType] = destination.droppableId.split('-');
+    const destParts = destination.droppableId.split('-');
+    const destDate = destParts.slice(0, 3).join('-'); // yyyy-MM-dd
+    const destMealType = destParts.slice(3).join('-'); // handles meal types with hyphens
 
     const meal = mealPlans.find(m => m.id === draggableId);
     if (!meal) return;
 
-    await updateMealMutation.mutateAsync({
-      id: meal.id,
-      data: {
-        date: destDate,
-        meal_type: destMealType
-      }
-    });
+    try {
+      await updateMealMutation.mutateAsync({
+        id: meal.id,
+        data: {
+          date: destDate,
+          meal_type: destMealType
+        }
+      });
+    } catch (error) {
+      console.error('Failed to move meal:', error);
+      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
+    }
   };
 
   const generateWeeklyPlan = async () => {
