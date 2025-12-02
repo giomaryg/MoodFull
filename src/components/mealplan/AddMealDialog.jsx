@@ -34,8 +34,10 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
   });
 
   const filteredRecipes = recipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    recipe.mood?.toLowerCase().includes(searchQuery.toLowerCase())
+    recipe && recipe.name && (
+      recipe.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      recipe.mood?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
   const handleAddMeal = () => {
