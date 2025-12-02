@@ -38,6 +38,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
     priorities: initialData.priorities || [],
     open_to_new_cuisines: initialData.open_to_new_cuisines ?? null,
     preferred_cuisines: initialData.preferred_cuisines || [],
+    otherCuisine: '',
     meals_per_week: initialData.meals_per_week || ''
   });
 
@@ -47,7 +48,16 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      onComplete({ ...formData, survey_completed: true });
+      const finalCuisines = formData.preferred_cuisines.filter(c => c !== 'Other');
+      if (formData.preferred_cuisines.includes('Other') && formData.otherCuisine) {
+        finalCuisines.push(formData.otherCuisine);
+      }
+      
+      onComplete({ 
+        ...formData, 
+        preferred_cuisines: finalCuisines,
+        survey_completed: true 
+      });
     }
   };
 
@@ -324,7 +334,7 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                 Please select cuisines you are interested in trying!
               </Label>
               <p className="text-sm text-gray-500 mb-4">Choose your favorites</p>
-              <div className="flex flex-wrap gap-2 max-h-80 overflow-y-auto">
+              <div className="flex flex-wrap gap-2 max-h-80 overflow-y-auto mb-4">
                 {cuisines.map((cuisine) => {
                   const isSelected = formData.preferred_cuisines.includes(cuisine);
                   return (
@@ -343,6 +353,27 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
                   );
                 })}
               </div>
+              
+              {formData.preferred_cuisines.includes('Other') && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-2"
+                >
+                  <Label htmlFor="otherCuisine" className="text-sm font-medium text-gray-700">
+                    Please specify the other cuisine:
+                  </Label>
+                  <Input
+                    id="otherCuisine"
+                    placeholder="e.g. Ethiopian, Moroccan, Peruvian..."
+                    value={formData.otherCuisine}
+                    onChange={(e) => setFormData({ ...formData, otherCuisine: e.target.value })}
+                    className="border-[#c5d9c9] focus:border-[#6b9b76]"
+                    autoFocus
+                  />
+                </motion.div>
+              )}
             </div>
           </div>
         );
