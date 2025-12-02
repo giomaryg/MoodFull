@@ -50,7 +50,7 @@ export default function RecipeGenerator() {
   });
 
   const filteredSavedRecipes = useMemo(() => {
-    let filtered = savedRecipes;
+    let filtered = savedRecipes.filter(r => r && r.name);
 
     // Apply text search
     if (globalSearchQuery.trim()) {
@@ -136,7 +136,7 @@ export default function RecipeGenerator() {
   }, [savedRecipes, globalSearchQuery, advancedFilters]);
 
   const filteredGeneratedRecipes = useMemo(() => {
-    let filtered = generatedRecipes;
+    let filtered = generatedRecipes.filter(r => r && r.name);
 
     // Apply text search
     if (globalSearchQuery.trim()) {
