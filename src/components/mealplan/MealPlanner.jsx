@@ -65,8 +65,9 @@ export default function MealPlanner() {
   }, [currentWeekStart]);
 
   const getMealsForDay = (date, mealType) => {
+    const dateString = format(date, 'yyyy-MM-dd');
     return mealPlans.filter(
-      (plan) => isSameDay(new Date(plan.date), date) && plan.meal_type === mealType
+      (plan) => plan.date === dateString && plan.meal_type === mealType
     );
   };
 
@@ -274,8 +275,9 @@ For each meal provide:
     
     try {
       // Delete existing meals for this day
+      const dateString = format(date, 'yyyy-MM-dd');
       const existingMeals = mealPlans.filter(plan => 
-        isSameDay(new Date(plan.date), date)
+        plan.date === dateString
       );
       await Promise.all(existingMeals.map(meal => 
         deleteMealMutation.mutateAsync(meal.id)
