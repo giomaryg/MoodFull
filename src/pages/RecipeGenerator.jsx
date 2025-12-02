@@ -89,6 +89,42 @@ export default function RecipeGenerator() {
       });
     }
 
+    if (advancedFilters.difficulty) {
+      filtered = filtered.filter((recipe) => recipe.difficulty === advancedFilters.difficulty);
+    }
+
+    if (advancedFilters.maxCalories) {
+      const maxCal = parseInt(advancedFilters.maxCalories);
+      filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
+    }
+
+    // Sorting
+    const sortBy = advancedFilters.sortBy || 'date_desc';
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'date_desc':
+          return new Date(b.created_date || 0) - new Date(a.created_date || 0);
+        case 'date_asc':
+          return new Date(a.created_date || 0) - new Date(b.created_date || 0);
+        case 'rating':
+          return (b.rating || 0) - (a.rating || 0);
+        case 'time_asc': {
+          const getMin = (t) => parseInt(t?.match(/(\d+)/)?.[1] || 999);
+          return getMin(a.prep_time) - getMin(b.prep_time);
+        }
+        case 'calories_asc':
+          return (a.nutrition?.calories || 0) - (b.nutrition?.calories || 0);
+        case 'difficulty_asc': {
+          const diffOrder = { easy: 1, medium: 2, hard: 3 };
+          return (diffOrder[a.difficulty] || 2) - (diffOrder[b.difficulty] || 2);
+        }
+        default:
+          return 0;
+      }
+    });
+
     return filtered;
   }, [savedRecipes, globalSearchQuery, advancedFilters]);
 
@@ -138,6 +174,42 @@ export default function RecipeGenerator() {
         return parseInt(prepMatch[1]) <= maxMinutes;
       });
     }
+
+    if (advancedFilters.difficulty) {
+      filtered = filtered.filter((recipe) => recipe.difficulty === advancedFilters.difficulty);
+    }
+
+    if (advancedFilters.maxCalories) {
+      const maxCal = parseInt(advancedFilters.maxCalories);
+      filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
+    }
+
+    // Sorting
+    const sortBy = advancedFilters.sortBy || 'date_desc';
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'date_desc':
+          return new Date(b.created_date || 0) - new Date(a.created_date || 0);
+        case 'date_asc':
+          return new Date(a.created_date || 0) - new Date(b.created_date || 0);
+        case 'rating':
+          return (b.rating || 0) - (a.rating || 0);
+        case 'time_asc': {
+          const getMin = (t) => parseInt(t?.match(/(\d+)/)?.[1] || 999);
+          return getMin(a.prep_time) - getMin(b.prep_time);
+        }
+        case 'calories_asc':
+          return (a.nutrition?.calories || 0) - (b.nutrition?.calories || 0);
+        case 'difficulty_asc': {
+          const diffOrder = { easy: 1, medium: 2, hard: 3 };
+          return (diffOrder[a.difficulty] || 2) - (diffOrder[b.difficulty] || 2);
+        }
+        default:
+          return 0;
+      }
+    });
 
     return filtered;
   }, [generatedRecipes, globalSearchQuery, advancedFilters]);

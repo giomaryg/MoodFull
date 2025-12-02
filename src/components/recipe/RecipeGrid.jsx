@@ -8,53 +8,6 @@ import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw } from 'lucide-re
 import HighlightedText from './HighlightedText';
 
 export default function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
-  const [sortBy, setSortBy] = useState('default');
-  const [filterDifficulty, setFilterDifficulty] = useState('all');
-
-  const filteredAndSortedRecipes = useMemo(() => {
-    let result = [...recipes];
-
-    // Filter by difficulty
-    if (filterDifficulty !== 'all') {
-      result = result.filter(recipe => recipe.difficulty === filterDifficulty);
-    }
-
-    // Sort
-    switch (sortBy) {
-      case 'name':
-        result.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case 'difficulty-easy':
-        result.sort((a, b) => {
-          const order = { easy: 1, medium: 2, hard: 3 };
-          return order[a.difficulty] - order[b.difficulty];
-        });
-        break;
-      case 'difficulty-hard':
-        result.sort((a, b) => {
-          const order = { easy: 3, medium: 2, hard: 1 };
-          return order[a.difficulty] - order[b.difficulty];
-        });
-        break;
-      case 'prep-time':
-        result.sort((a, b) => {
-          const getMinutes = (time) => {
-            const match = time?.match(/(\d+)/);
-            return match ? parseInt(match[1]) : 999;
-          };
-          return getMinutes(a.prep_time) - getMinutes(b.prep_time);
-        });
-        break;
-      case 'servings':
-        result.sort((a, b) => (a.servings || 0) - (b.servings || 0));
-        break;
-      default:
-        break;
-    }
-
-    return result;
-  }, [recipes, sortBy, filterDifficulty]);
-
   const difficultyColors = {
     easy: 'bg-green-50 text-green-700 border-green-200',
     medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
@@ -63,66 +16,31 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver, search
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header with controls */}
-      <div className="flex flex-col gap-4 pb-4 border-b border-[#e8d5c4]">
+      {/* Header with summary and actions */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-[#e8d5c4]">
         <div>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#6b9b76] flex items-center gap-2 sm:gap-3">
             <ChefHat className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
-            Your Recipe Options
+            Recipe Collection
           </h2>
-          <p className="text-[#5a6f60] mt-1 text-sm sm:text-base">Found {filteredAndSortedRecipes.length} recipe{filteredAndSortedRecipes.length !== 1 ? 's' : ''} for you</p>
+          <p className="text-[#5a6f60] mt-1 text-sm sm:text-base">Showing {recipes.length} recipe{recipes.length !== 1 ? 's' : ''}</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 sm:gap-3 items-center">
-          {/* Filter by difficulty */}
-          <div className="flex items-center gap-2 flex-1 sm:flex-initial">
-            <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6b9b76]" />
-            <Select value={filterDifficulty} onValueChange={setFilterDifficulty}>
-              <SelectTrigger className="flex-1 sm:w-32 md:w-36 border-[#c5d9c9] text-sm">
-                <SelectValue placeholder="Difficulty" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Levels</SelectItem>
-                <SelectItem value="easy">Easy</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="hard">Hard</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Sort */}
-          <div className="flex items-center gap-2 flex-1 sm:flex-initial">
-            <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6b9b76]" />
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="flex-1 sm:w-36 md:w-40 border-[#c5d9c9] text-sm">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="default">Default</SelectItem>
-                <SelectItem value="name">Name (A-Z)</SelectItem>
-                <SelectItem value="difficulty-easy">Easiest First</SelectItem>
-                <SelectItem value="difficulty-hard">Hardest First</SelectItem>
-                <SelectItem value="prep-time">Quickest First</SelectItem>
-                <SelectItem value="servings">Servings</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Start over button */}
+        {onStartOver && (
           <Button
             onClick={onStartOver}
             variant="outline"
             className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm w-full sm:w-auto"
-            >
+          >
             <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
             Start Over
           </Button>
-          </div>
-          </div>
+        )}
+      </div>
 
       {/* Recipe Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-        {filteredAndSortedRecipes.map((recipe, index) => (
+        {recipes.map((recipe, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
@@ -199,7 +117,7 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver, search
         ))}
       </div>
 
-      {filteredAndSortedRecipes.length === 0 && (
+      {recipes.length === 0 && (
         <div className="text-center py-8 sm:py-12">
           <p className="text-[#5a6f60] text-sm sm:text-base md:text-lg px-4">No recipes match your filters. Try adjusting your selection.</p>
         </div>

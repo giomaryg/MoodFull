@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -11,11 +12,25 @@ import SimilarRecipes from './SimilarRecipes';
 
 export default function RecipeDisplay({ recipe, onSave, isSaved }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: recipes = [] } = useQuery({
     queryKey: ['recipes'],
     queryFn: () => base44.entities.Recipe.list('-created_date', 100)
   });
+
+  const updateRatingMutation = useMutation({
+    mutationFn: ({ id, rating }) => base44.entities.Recipe.update(id, { rating }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipes'] });
+    }
+  });
+
+  const handleRate = (rating) => {
+    if (recipe.id && isSaved) {
+      updateRatingMutation.mutate({ id: recipe.id, rating });
+    }
+  };
 
   // Find similar recipes based on ingredients and cuisine
   const similarRecipes = useMemo(() => {
@@ -100,6 +115,27 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
                 {recipe.name}
               </CardTitle>
               <p className="text-gray-600 text-sm sm:text-base md:text-lg mt-2 sm:mt-3 leading-relaxed">{recipe.description}</p>
+            </div>
+            <div className="flex items-center gap-4">
+              {isSaved && (
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => handleRate(star)}
+                      className="focus:outline-none transition-transform hover:scale-110"
+                    >
+                      <Star
+                        className={`w-5 h-5 ${
+                          (recipe.rating || 0) >= star
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'text-gray-300 hover:text-yellow-200'
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="flex gap-2 w-full sm:w-auto">
               <Button

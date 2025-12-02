@@ -2,12 +2,21 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { X, SlidersHorizontal } from 'lucide-react';
+import { X, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const cuisines = ['Italian', 'Mexican', 'Asian', 'Indian', 'Mediterranean', 'American', 'French', 'Thai', 'Chinese', 'Japanese'];
 const dietaryRestrictions = ['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free', 'Keto', 'Low-Carb', 'Paleo'];
 const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Appetizer'];
+const sortOptions = [
+  { label: 'Name (A-Z)', value: 'name' },
+  { label: 'Newest First', value: 'date_desc' },
+  { label: 'Oldest First', value: 'date_asc' },
+  { label: 'Highest Rated', value: 'rating' },
+  { label: 'Prep Time (Low to High)', value: 'time_asc' },
+  { label: 'Calories (Low to High)', value: 'calories_asc' },
+  { label: 'Difficulty (Easy to Hard)', value: 'difficulty_asc' }
+];
 
 export default function AdvancedFilters({ filters, onFiltersChange, showFilters, setShowFilters }) {
   const updateFilter = (key, value) => {
@@ -79,6 +88,24 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <X
                 className="w-3 h-3 ml-2 cursor-pointer"
                 onClick={() => clearFilter('maxPrepTime')}
+              />
+            </Badge>
+          )}
+          {filters.difficulty && (
+            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1 capitalize">
+              {filters.difficulty}
+              <X
+                className="w-3 h-3 ml-2 cursor-pointer"
+                onClick={() => clearFilter('difficulty')}
+              />
+            </Badge>
+          )}
+          {filters.maxCalories && (
+            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1">
+              Max {filters.maxCalories} cal
+              <X
+                className="w-3 h-3 ml-2 cursor-pointer"
+                onClick={() => clearFilter('maxCalories')}
               />
             </Badge>
           )}
@@ -190,6 +217,74 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                     <SelectItem value="30">30 minutes</SelectItem>
                     <SelectItem value="45">45 minutes</SelectItem>
                     <SelectItem value="60">1 hour</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Difficulty Filter */}
+              <div>
+                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
+                  Difficulty
+                </label>
+                <Select
+                  value={filters.difficulty || ''}
+                  onValueChange={(value) => updateFilter('difficulty', value)}
+                >
+                  <SelectTrigger className="border-2 border-[#c5d9c9]">
+                    <SelectValue placeholder="Any difficulty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>Any difficulty</SelectItem>
+                    <SelectItem value="easy">Easy</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="hard">Hard</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Max Calories Filter */}
+              <div>
+                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
+                  Max Calories
+                </label>
+                <Select
+                  value={filters.maxCalories || ''}
+                  onValueChange={(value) => updateFilter('maxCalories', value)}
+                >
+                  <SelectTrigger className="border-2 border-[#c5d9c9]">
+                    <SelectValue placeholder="Any calories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>Any calories</SelectItem>
+                    <SelectItem value="300">Under 300</SelectItem>
+                    <SelectItem value="500">Under 500</SelectItem>
+                    <SelectItem value="700">Under 700</SelectItem>
+                    <SelectItem value="1000">Under 1000</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Sort By */}
+              <div>
+                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
+                  Sort By
+                </label>
+                <Select
+                  value={filters.sortBy || 'date_desc'}
+                  onValueChange={(value) => updateFilter('sortBy', value)}
+                >
+                  <SelectTrigger className="border-2 border-[#c5d9c9]">
+                    <div className="flex items-center">
+                      <ArrowUpDown className="w-4 h-4 mr-2 text-[#6b9b76]" />
+                      <SelectValue placeholder="Sort by..." />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sortOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
