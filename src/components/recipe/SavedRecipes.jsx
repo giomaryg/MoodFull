@@ -34,10 +34,12 @@ export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: exte
     
     const lowerQuery = query.toLowerCase();
     return recipes.filter(recipe => 
-      recipe.name.toLowerCase().includes(lowerQuery) ||
-      recipe.description?.toLowerCase().includes(lowerQuery) ||
-      recipe.mood?.toLowerCase().includes(lowerQuery) ||
-      recipe.ingredients?.some(ing => ing.toLowerCase().includes(lowerQuery))
+      recipe && recipe.name && (
+        recipe.name.toLowerCase().includes(lowerQuery) ||
+        recipe.description?.toLowerCase().includes(lowerQuery) ||
+        recipe.mood?.toLowerCase().includes(lowerQuery) ||
+        recipe.ingredients?.some(ing => ing.toLowerCase().includes(lowerQuery))
+      )
     );
   }, [recipes, displayQuery]);
 
