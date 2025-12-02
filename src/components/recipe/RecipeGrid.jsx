@@ -40,7 +40,7 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver, search
 
       {/* Recipe Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-        {recipes.map((recipe, index) => (
+        {recipes.filter(r => r && r.name).map((recipe, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
