@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
@@ -12,7 +12,15 @@ import SimilarRecipes from './SimilarRecipes';
 
 export default function RecipeDisplay({ recipe, onSave, isSaved }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
+  const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const queryClient = useQueryClient();
+
+  // Reset servings when recipe changes
+  React.useEffect(() => {
+    if (recipe?.servings) {
+      setCurrentServings(recipe.servings);
+    }
+  }, [recipe?.id, recipe?.servings]);
 
   const { data: recipes = [] } = useQuery({
     queryKey: ['recipes'],
@@ -31,6 +39,61 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
       updateRatingMutation.mutate({ id: recipe.id, rating });
     }
   };
+
+  const scaledIngredients = useMemo(() => {
+    if (!recipe?.ingredients) return [];
+    const factor = currentServings / (recipe.servings || 1);
+    if (factor === 1) return recipe.ingredients;
+
+    return recipe.ingredients.map(ing => {
+      // Matches: "1 cup", "1/2 cup", "1.5 cups", "1-2 cups"
+      const match = ing.match(/^((?:\d+(?:[\/.]\d+)?)(?:\s*-\s*\d+(?:[\/.]\d+)?)?)(.*)$/);
+      
+      if (!match) return ing;
+      
+      const [_, quantityPart, rest] = match;
+      
+      const scaleValue = (valStr) => {
+        if (valStr.includes('/')) {
+          const [num, den] = valStr.split('/').map(Number);
+          return (num / den) * factor;
+        }
+        return parseFloat(valStr) * factor;
+      };
+
+      const formatValue = (val) => {
+        // Round to 2 decimal places
+        const rounded = Math.round(val * 100) / 100;
+        
+        // Convert common decimals to fractions
+        const fractionMap = {
+          0.25: '1/4', 0.33: '1/3', 0.5: '1/2', 0.66: '2/3', 0.75: '3/4'
+        };
+        
+        // Check for exact integer
+        if (Math.abs(rounded % 1) < 0.01) return Math.round(rounded).toString();
+
+        // Check for close matches to fractions
+        for (const [dec, frac] of Object.entries(fractionMap)) {
+          if (Math.abs((rounded % 1) - parseFloat(dec)) < 0.05) {
+            const whole = Math.floor(rounded);
+            return whole > 0 ? `${whole} ${frac}` : frac;
+          }
+        }
+        
+        return rounded.toString();
+      };
+
+      let newQuantity;
+      if (quantityPart.includes('-')) {
+        newQuantity = quantityPart.split('-').map(p => formatValue(scaleValue(p.trim()))).join(' - ');
+      } else {
+        newQuantity = formatValue(scaleValue(quantityPart));
+      }
+
+      return `${newQuantity}${rest}`;
+    });
+  }, [recipe?.ingredients, recipe?.servings, currentServings]);
 
   // Find similar recipes based on ingredients and cuisine
   const similarRecipes = useMemo(() => {
@@ -187,10 +250,25 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
               </Badge>
             }
             {recipe.servings &&
-            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl">
-                <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mr-1 sm:mr-1.5" />
-                {recipe.servings} servings
-              </Badge>
+              <div className="flex items-center bg-green-50 text-green-700 border border-green-200 rounded-lg sm:rounded-xl px-2 sm:px-3 py-1">
+                <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mr-2" />
+                <button 
+                  onClick={() => setCurrentServings(Math.max(1, currentServings - 1))}
+                  className="p-1 hover:bg-green-100 rounded-full transition-colors focus:outline-none"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <span className="mx-2 font-bold text-sm sm:text-base min-w-[1.5rem] text-center">
+                  {currentServings}
+                </span>
+                <button 
+                  onClick={() => setCurrentServings(currentServings + 1)}
+                  className="p-1 hover:bg-green-100 rounded-full transition-colors focus:outline-none"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+                <span className="ml-1 text-xs sm:text-sm font-medium">servings</span>
+              </div>
             }
             {recipe.difficulty &&
             <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200 capitalize px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl">
@@ -257,7 +335,7 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
             </h3>
             <div className="bg-[#faf6f2] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-inner border border-[#e8d5c4]">
               <ul className="space-y-2 sm:space-y-3">
-                {recipe.ingredients?.map((ingredient, index) =>
+                {scaledIngredients.map((ingredient, index) =>
                 <motion.li
                   key={index}
                   initial={{ opacity: 0, x: -10 }}
@@ -270,6 +348,11 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
                   </motion.li>
                 )}
               </ul>
+              {currentServings !== recipe.servings && (
+                <p className="text-xs text-gray-500 mt-4 text-right italic">
+                  * Ingredients adjusted for {currentServings} servings
+                </p>
+              )}
             </div>
           </div>
 
