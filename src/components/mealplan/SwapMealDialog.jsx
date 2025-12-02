@@ -11,10 +11,11 @@ export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredRecipes = useMemo(() => {
-    if (!searchQuery.trim()) return recipes;
+    const validRecipes = recipes.filter(r => r && r.name && r.description);
+    if (!searchQuery.trim()) return validRecipes;
     
     const query = searchQuery.toLowerCase();
-    return recipes.filter((recipe) =>
+    return validRecipes.filter((recipe) =>
       recipe.name.toLowerCase().includes(query) ||
       recipe.description?.toLowerCase().includes(query) ||
       recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
