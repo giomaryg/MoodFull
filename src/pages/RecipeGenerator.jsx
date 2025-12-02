@@ -403,12 +403,14 @@ export default function RecipeGenerator() {
         }
       });
 
-      const recipesWithMood = response.recipes.map((recipe) => ({
-        ...recipe,
-        mood: selectedMoods.join(', '),
-        imageUrl: null,
-        imageLoading: true
-      }));
+      const recipesWithMood = (response.recipes || [])
+        .filter(r => r && r.name && r.description && r.ingredients && r.instructions)
+        .map((recipe) => ({
+          ...recipe,
+          mood: selectedMoods.join(', '),
+          imageUrl: null,
+          imageLoading: true
+        }));
 
       setGeneratedRecipes(recipesWithMood);
       setIsGenerating(false);
