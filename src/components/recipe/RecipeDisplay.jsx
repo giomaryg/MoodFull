@@ -366,6 +366,7 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
         <AddMealDialog
           date={new Date()}
           mealType="dinner"
+          enableDateSelection={true}
           recipes={isSaved ? recipes : [...recipes, recipe]}
           onClose={() => setShowAddMeal(false)}
         />

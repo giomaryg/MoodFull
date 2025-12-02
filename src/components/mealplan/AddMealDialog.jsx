@@ -4,12 +4,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { X, Search, Plus } from 'lucide-react';
+import { X, Search, Plus, CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 
-export default function AddMealDialog({ date, mealType, recipes, onClose }) {
+export default function AddMealDialog({ date, mealType, recipes, onClose, enableDateSelection = false }) {
+  const [selectedDate, setSelectedDate] = useState(date);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState('');
@@ -42,7 +43,7 @@ export default function AddMealDialog({ date, mealType, recipes, onClose }) {
       addMealMutation.mutate({
         recipe_id: selectedRecipe.id,
         recipe_name: selectedRecipe.name,
-        date: format(date, 'yyyy-MM-dd'),
+        date: format(selectedDate, 'yyyy-MM-dd'),
         meal_type: mealType,
         servings: servings ? parseInt(servings) : selectedRecipe.servings,
         notes
@@ -54,7 +55,7 @@ export default function AddMealDialog({ date, mealType, recipes, onClose }) {
         recipe_name: customMealName,
         custom_ingredients: customIngredients ? customIngredients.split('\n').filter(i => i.trim()) : [],
         custom_instructions: customInstructions ? customInstructions.split('\n').filter(i => i.trim()) : [],
-        date: format(date, 'yyyy-MM-dd'),
+        date: format(selectedDate, 'yyyy-MM-dd'),
         meal_type: mealType,
         servings: servings ? parseInt(servings) : 4,
         notes
@@ -81,9 +82,24 @@ export default function AddMealDialog({ date, mealType, recipes, onClose }) {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-2xl font-bold text-[#6b9b76]">Add Meal</h3>
-            <p className="text-sm text-gray-600">
-              {format(date, 'EEEE, MMM d')} - {mealType}
-            </p>
+            {!enableDateSelection ? (
+              <p className="text-sm text-gray-600">
+                {format(selectedDate, 'EEEE, MMM d')} - {mealType}
+              </p>
+            ) : (
+              <div className="flex items-center gap-2 mt-1">
+                <div className="relative">
+                  <CalendarIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
+                  <Input
+                    type="date"
+                    value={format(selectedDate, 'yyyy-MM-dd')}
+                    onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                    className="pl-8 h-8 text-sm w-40"
+                  />
+                </div>
+                <span className="text-sm text-gray-600 capitalize">- {mealType}</span>
+              </div>
+            )}
           </div>
           <Button onClick={onClose} variant="ghost" size="icon">
             <X className="w-5 h-5" />
