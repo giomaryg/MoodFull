@@ -7,16 +7,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AddMealDialog from './AddMealDialog';
-import ShoppingList from './ShoppingList';
 import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
 
-export default function MealPlanner() {
+export default function MealPlanner({ onOpenShoppingList }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedMealType, setSelectedMealType] = useState(null);
-  const [showShoppingList, setShowShoppingList] = useState(false);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
   const [regeneratingDay, setRegeneratingDay] = useState(null);
   const [swappingMeal, setSwappingMeal] = useState(null);
@@ -417,12 +415,12 @@ Make them balanced, diverse, and delicious. Include:
             )}
           </Button>
           <Button
-            onClick={() => setShowShoppingList(true)}
+            onClick={onOpenShoppingList}
             className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none"
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
             Shopping List
-          </Button>
+          </Button
         </div>
       </div>
 
@@ -586,14 +584,7 @@ Make them balanced, diverse, and delicious. Include:
         />
       )}
 
-      {/* Shopping List Dialog */}
-      {showShoppingList && (
-        <ShoppingList
-          mealPlans={mealPlans}
-          recipes={recipes}
-          onClose={() => setShowShoppingList(false)}
-        />
-      )}
+
 
       {/* Swap Meal Dialog */}
       {swappingMeal && (

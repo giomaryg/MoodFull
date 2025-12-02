@@ -6,30 +6,67 @@ import { motion } from 'framer-motion';
 export default function ShoppingList({ mealPlans, recipes, onClose }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [expandedRecipes, setExpandedRecipes] = useState({});
-  const [viewMode, setViewMode] = useState('consolidated'); // 'consolidated' or 'by-recipe'
+  const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', or 'by-recipe'
+  
+  // Selection state
+  const [selectedPlanIds, setSelectedPlanIds] = useState(new Set(mealPlans.map(p => p.id)));
+  const [selectedRecipeIds, setSelectedRecipeIds] = useState(new Set());
+
+  const togglePlanSelection = (id) => {
+    const newSelected = new Set(selectedPlanIds);
+    if (newSelected.has(id)) newSelected.delete(id);
+    else newSelected.add(id);
+    setSelectedPlanIds(newSelected);
+  };
+
+  const toggleRecipeSelection = (id) => {
+    const newSelected = new Set(selectedRecipeIds);
+    if (newSelected.has(id)) newSelected.delete(id);
+    else newSelected.add(id);
+    setSelectedRecipeIds(newSelected);
+  };
+
+  const selectedMeals = useMemo(() => {
+    return mealPlans.filter(plan => selectedPlanIds.has(plan.id));
+  }, [mealPlans, selectedPlanIds]);
+
+  const selectedExtraRecipes = useMemo(() => {
+    return recipes.filter(r => selectedRecipeIds.has(r.id));
+  }, [recipes, selectedRecipeIds]);
 
   const shoppingByRecipe = useMemo(() => {
-    return mealPlans.map((plan) => {
+    const fromPlans = selectedMeals.map((plan) => {
       const recipe = recipes.find((r) => r.id === plan.recipe_id);
       return {
-        planId: plan.id,
+        id: `plan-${plan.id}`,
         recipeName: recipe?.name || 'Unknown Recipe',
-        mealDate: plan.date,
-        mealType: plan.meal_type,
-        ingredients: recipe?.ingredients || []
+        details: `${plan.meal_type} on ${new Date(plan.date).toLocaleDateString()}`,
+        ingredients: recipe?.ingredients || [],
+        servings: plan.servings
       };
     });
-  }, [mealPlans, recipes]);
+
+    const fromRecipes = selectedExtraRecipes.map(recipe => ({
+      id: `recipe-${recipe.id}`,
+      recipeName: recipe.name,
+      details: 'Extra Item',
+      ingredients: recipe.ingredients || [],
+      servings: recipe.servings
+    }));
+
+    return [...fromPlans, ...fromRecipes];
+  }, [selectedMeals, selectedExtraRecipes, recipes]);
 
   const shoppingList = useMemo(() => {
     const ingredientMap = {};
 
-    mealPlans.forEach((plan) => {
+    // Process meal plans
+    selectedMeals.forEach((plan) => {
       const recipe = recipes.find((r) => r.id === plan.recipe_id);
       if (!recipe || !recipe.ingredients) return;
 
-      const servingMultiplier = (plan.servings || recipe.servings) / recipe.servings;
-
+      const servingMultiplier = (plan.servings || recipe.servings) / (recipe.servings || 1);
+      
       recipe.ingredients.forEach((ingredient) => {
         const cleanIngredient = ingredient.toLowerCase().trim();
         if (!ingredientMap[cleanIngredient]) {
@@ -40,6 +77,26 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
           };
         }
         ingredientMap[cleanIngredient].count += servingMultiplier;
+        if (!ingredientMap[cleanIngredient].recipes.includes(recipe.name)) {
+          ingredientMap[cleanIngredient].recipes.push(recipe.name);
+        }
+      });
+    });
+
+    // Process extra recipes
+    selectedExtraRecipes.forEach((recipe) => {
+      if (!recipe.ingredients) return;
+      
+      recipe.ingredients.forEach((ingredient) => {
+        const cleanIngredient = ingredient.toLowerCase().trim();
+        if (!ingredientMap[cleanIngredient]) {
+          ingredientMap[cleanIngredient] = {
+            original: ingredient,
+            count: 0,
+            recipes: []
+          };
+        }
+        ingredientMap[cleanIngredient].count += 1; // Default 1x for extra recipes
         if (!ingredientMap[cleanIngredient].recipes.includes(recipe.name)) {
           ingredientMap[cleanIngredient].recipes.push(recipe.name);
         }
@@ -59,13 +116,13 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
       const item = { key, ...data };
       const lower = key.toLowerCase();
 
-      if (lower.match(/lettuce|tomato|onion|pepper|carrot|celery|cucumber|spinach|kale|fruit|vegetable/)) {
+      if (lower.match(/lettuce|tomato|onion|pepper|carrot|celery|cucumber|spinach|kale|fruit|vegetable|potato|garlic|herb|basil|parsley/)) {
         categorized['Produce'].push(item);
-      } else if (lower.match(/chicken|beef|pork|turkey|steak|fish|salmon|meat|poultry/)) {
+      } else if (lower.match(/chicken|beef|pork|turkey|steak|fish|salmon|meat|poultry|bacon|sausage|ham/)) {
         categorized['Meat & Poultry'].push(item);
       } else if (lower.match(/milk|cheese|yogurt|butter|cream|egg/)) {
         categorized['Dairy & Eggs'].push(item);
-      } else if (lower.match(/flour|sugar|salt|pepper|oil|rice|pasta|spice|sauce|stock|broth/)) {
+      } else if (lower.match(/flour|sugar|salt|pepper|oil|rice|pasta|spice|sauce|stock|broth|canned|bean|lentil|vinegar|soy/)) {
         categorized['Pantry'].push(item);
       } else {
         categorized['Other'].push(item);
@@ -73,7 +130,7 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
     });
 
     return categorized;
-  }, [mealPlans, recipes]);
+  }, [selectedMeals, selectedExtraRecipes, recipes]);
 
   const toggleItem = (key) => {
     setCheckedItems((prev) => ({
@@ -170,23 +227,35 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
           </div>
           
           {/* View Mode Toggle */}
-          <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+          <div className="flex gap-2 bg-gray-100 p-1 rounded-lg overflow-x-auto">
             <button
-              onClick={() => setViewMode('consolidated')}
-              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                viewMode === 'consolidated'
+              onClick={() => setViewMode('selection')}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                viewMode === 'selection'
                   ? 'bg-white text-[#6b9b76] shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Consolidated
+              Select Recipes
+            </button>
+            <button
+              onClick={() => setViewMode('consolidated')}
+              disabled={selectedPlanIds.size === 0 && selectedRecipeIds.size === 0}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                viewMode === 'consolidated'
+                  ? 'bg-white text-[#6b9b76] shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900 disabled:opacity-50'
+              }`}
+            >
+              Shopping List
             </button>
             <button
               onClick={() => setViewMode('by-recipe')}
-              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              disabled={selectedPlanIds.size === 0 && selectedRecipeIds.size === 0}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
                 viewMode === 'by-recipe'
                   ? 'bg-white text-[#6b9b76] shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-gray-600 hover:text-gray-900 disabled:opacity-50'
               }`}
             >
               By Recipe
@@ -194,10 +263,121 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
           </div>
         </div>
 
-        {/* Shopping List */}
-        {totalItems === 0 ? (
+        {/* Selection Mode */}
+        {viewMode === 'selection' && (
+          <div className="space-y-8">
+            {/* Meal Plan Selection */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-lg font-bold text-[#5a6f60]">Weekly Meal Plan</h4>
+                <Button
+                  onClick={() => {
+                    if (selectedPlanIds.size === mealPlans.length) setSelectedPlanIds(new Set());
+                    else setSelectedPlanIds(new Set(mealPlans.map(p => p.id)));
+                  }}
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm text-[#6b9b76]"
+                >
+                  {selectedPlanIds.size === mealPlans.length ? 'Deselect All' : 'Select All'}
+                </Button>
+              </div>
+              {mealPlans.length === 0 ? (
+                <p className="text-gray-500 text-sm italic">No meals planned yet.</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {mealPlans.map((plan) => {
+                    const recipe = recipes.find(r => r.id === plan.recipe_id);
+                    const isSelected = selectedPlanIds.has(plan.id);
+                    return (
+                      <div
+                        key={plan.id}
+                        onClick={() => togglePlanSelection(plan.id)}
+                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                          isSelected
+                            ? 'bg-[#f0f9f2] border-[#6b9b76]'
+                            : 'bg-white border-[#c5d9c9] hover:border-[#a3c4a8]'
+                        }`}
+                      >
+                        {isSelected ? (
+                          <CheckSquare className="w-5 h-5 text-[#6b9b76]" />
+                        ) : (
+                          <Square className="w-5 h-5 text-gray-400" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-medium text-gray-900 truncate">{recipe?.name}</p>
+                          <p className="text-xs text-gray-500">
+                            {format(new Date(plan.date), 'EEE, MMM d')} • {plan.meal_type}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Saved Recipes Selection */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-lg font-bold text-[#5a6f60]">Extra Recipes</h4>
+                <p className="text-sm text-gray-500">{selectedRecipeIds.size} selected</p>
+              </div>
+              {recipes.length === 0 ? (
+                <p className="text-gray-500 text-sm italic">No saved recipes.</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto">
+                  {recipes.map((recipe) => {
+                    const isSelected = selectedRecipeIds.has(recipe.id);
+                    return (
+                      <div
+                        key={recipe.id}
+                        onClick={() => toggleRecipeSelection(recipe.id)}
+                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3 ${
+                          isSelected
+                            ? 'bg-[#f0f9f2] border-[#6b9b76]'
+                            : 'bg-white border-[#c5d9c9] hover:border-[#a3c4a8]'
+                        }`}
+                      >
+                        {isSelected ? (
+                          <CheckSquare className="w-5 h-5 text-[#6b9b76]" />
+                        ) : (
+                          <Square className="w-5 h-5 text-gray-400" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-medium text-gray-900 truncate">{recipe.name}</p>
+                          <p className="text-xs text-gray-500 truncate">{recipe.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="sticky bottom-0 pt-4 bg-white border-t mt-6">
+              <Button
+                onClick={() => setViewMode('consolidated')}
+                disabled={selectedPlanIds.size === 0 && selectedRecipeIds.size === 0}
+                className="w-full bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
+              >
+                Generate Shopping List ({selectedPlanIds.size + selectedRecipeIds.size} Items)
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Shopping List Views */}
+        {viewMode !== 'selection' && totalItems === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No meals planned yet. Add some meals to generate a shopping list!</p>
+            <p className="text-gray-500">No items in list. Select some recipes first!</p>
+            <Button 
+              onClick={() => setViewMode('selection')}
+              variant="link"
+              className="text-[#6b9b76]"
+            >
+              Go to Selection
+            </Button>
           </div>
         ) : viewMode === 'by-recipe' ? (
           <div className="space-y-3">
@@ -210,7 +390,7 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
                   <div className="text-left">
                     <p className="font-semibold text-gray-900">{group.recipeName}</p>
                     <p className="text-sm text-gray-600 capitalize">
-                      {group.mealType} • {new Date(group.mealDate).toLocaleDateString()}
+                      {group.details}
                     </p>
                   </div>
                   {expandedRecipes[index] ? (

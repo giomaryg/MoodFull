@@ -17,6 +17,7 @@ import IntroScreen from '../components/IntroScreen';
 import BottomNav from '../components/navigation/BottomNav';
 import AccountInfo from '../components/account/AccountInfo';
 import MealPlanner from '../components/mealplan/MealPlanner';
+import ShoppingList from '../components/mealplan/ShoppingList';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 
@@ -34,12 +35,18 @@ export default function RecipeGenerator() {
   const [activeTab, setActiveTab] = useState('home');
   const [advancedFilters, setAdvancedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
+  const [showShoppingList, setShowShoppingList] = useState(false);
 
   const queryClient = useQueryClient();
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
     queryFn: () => base44.entities.Recipe.list('-created_date', 100)
+  });
+
+  const { data: mealPlans = [] } = useQuery({
+    queryKey: ['mealPlans'],
+    queryFn: () => base44.entities.MealPlan.list('-date', 100)
   });
 
   const filteredSavedRecipes = useMemo(() => {
@@ -754,6 +761,7 @@ Make each recipe special and memorable!`,
                   setActiveTab('home');
                 }}
                 searchQuery={globalSearchQuery}
+                onOpenShoppingList={() => setShowShoppingList(true)}
               />
             ) : (
               <div className="text-center py-12">
@@ -770,7 +778,7 @@ Make each recipe special and memorable!`,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <MealPlanner />
+            <MealPlanner onOpenShoppingList={() => setShowShoppingList(true)} />
           </motion.div>
         )}
 

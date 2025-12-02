@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Clock, Users, Sparkles, Search, Trash2 } from 'lucide-react';
+import { Clock, Users, Sparkles, Search, Trash2, ShoppingCart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import HighlightedText from './HighlightedText';
 
-export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '' }) {
+export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '', onOpenShoppingList }) {
   const queryClient = useQueryClient();
 
   const deleteRecipeMutation = useMutation({
@@ -51,6 +52,16 @@ export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: exte
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-[#6b9b76]">Your Saved Recipes</h3>
         </div>
+
+        {onOpenShoppingList && (
+          <Button
+            onClick={onOpenShoppingList}
+            className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white"
+          >
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Shopping List
+          </Button>
+        )}
         
         <div className="relative flex-1 sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
