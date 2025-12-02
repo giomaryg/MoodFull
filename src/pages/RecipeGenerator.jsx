@@ -18,6 +18,7 @@ import BottomNav from '../components/navigation/BottomNav';
 import AccountInfo from '../components/account/AccountInfo';
 import MealPlanner from '../components/mealplan/MealPlanner';
 import ShoppingList from '../components/mealplan/ShoppingList';
+import ShoppingList from '../components/mealplan/ShoppingList';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 
