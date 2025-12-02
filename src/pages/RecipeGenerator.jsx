@@ -321,22 +321,22 @@ export default function RecipeGenerator() {
 
       IMPORTANT: Include a good variety of steak and poultry dishes (chicken, turkey, duck). Make sure at least 30-40% of the recipes feature beef steaks or poultry as the main protein.
 
-Each recipe must have:
-- A creative and appealing name
-- A brief, enticing description (2-3 sentences)
-- Complete list of ingredients with measurements
-- Step-by-step cooking instructions
-- Preparation and cooking times (be realistic)
-- Number of servings
-- Difficulty level (easy, medium, or hard)
-- Complete nutritional information per serving (calories, protein, carbs, fat, fiber, sodium)
-- 3-5 helpful cooking tips and tricks
-- 3-5 ingredient substitution suggestions (what can be swapped)
-- 2-4 wine or beverage pairing recommendations
-- Cuisine type (e.g., Italian, Mexican, Asian, etc.)
-- 2-3 main ingredients (key ingredients for finding similar recipes)
+      Each recipe must have:
+      - A creative and appealing name
+      - A brief, enticing description (2-3 sentences)
+      - Complete list of ingredients with measurements
+      - Step-by-step cooking instructions
+      - Preparation and cooking times (be realistic)
+      - Number of servings
+      - Difficulty level (easy, medium, or hard)
+      - Complete nutritional information per serving (calories, protein, carbs, fat, fiber, sodium)
+      - 3-5 helpful cooking tips and tricks
+      - 3-5 ingredient substitution suggestions (what can be swapped)
+      - 2-4 wine or beverage pairing recommendations
+      - Cuisine type (e.g., Italian, Mexican, Asian, etc.)
+      - 2-3 main ingredients (key ingredients for finding similar recipes)
 
-Make each recipe special and memorable!`,
+      Make each recipe special and memorable!`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -371,39 +371,39 @@ Make each recipe special and memorable!`,
                       fat: { type: "string" },
                       fiber: { type: "string" },
                       sodium: { type: "string" }
-                      }
-                      },
-                      cooking_tips: {
-                      type: "array",
-                      items: { type: "string" }
-                      },
-                      substitutions: {
-                      type: "array",
-                      items: {
+                    }
+                  },
+                  cooking_tips: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  substitutions: {
+                    type: "array",
+                    items: {
                       type: "object",
                       properties: {
                         ingredient: { type: "string" },
                         substitute: { type: "string" }
                       }
-                      }
-                      },
-                      pairings: {
-                      type: "array",
-                      items: { type: "string" }
-                      },
-                      cuisine_type: { type: "string" },
-                      main_ingredients: {
-                      type: "array",
-                      items: { type: "string" }
-                      }
-                      }
-                      }
-                      }
-                      }
-                      }
-                      });
+                    }
+                  },
+                  pairings: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  cuisine_type: { type: "string" },
+                  main_ingredients: {
+                    type: "array",
+                    items: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
 
-                      const recipesWithMood = response.recipes.map((recipe) => ({
+      const recipesWithMood = response.recipes.map((recipe) => ({
         ...recipe,
         mood: selectedMoods.join(', '),
         imageUrl: null,
@@ -427,11 +427,11 @@ Make each recipe special and memorable!`,
         })
       ).then((images) => {
         setGeneratedRecipes((prev) =>
-        prev.map((recipe, i) => ({
-          ...recipe,
-          imageUrl: images[i].url,
-          imageLoading: false
-        }))
+          prev.map((recipe, i) => ({
+            ...recipe,
+            imageUrl: images[i].url,
+            imageLoading: false
+          }))
         );
       });
     } catch (error) {
@@ -457,15 +457,15 @@ Make each recipe special and memorable!`,
   const findSimilarRecipes = (recipe) => {
     // Find recipes with similar mood, difficulty, or cuisine
     const similar = savedRecipes.
-    filter((r) => r.id !== recipe.id).
-    filter((r) => {
-      const hasSimilarMood = recipe.mood?.split(', ').some((mood) =>
-      r.mood?.includes(mood)
-      );
-      const hasSimilarDifficulty = r.difficulty === recipe.difficulty;
-      return hasSimilarMood || hasSimilarDifficulty;
-    }).
-    slice(0, 6);
+      filter((r) => r.id !== recipe.id).
+      filter((r) => {
+        const hasSimilarMood = recipe.mood?.split(', ').some((mood) =>
+          r.mood?.includes(mood)
+        );
+        const hasSimilarDifficulty = r.difficulty === recipe.difficulty;
+        return hasSimilarMood || hasSimilarDifficulty;
+      }).
+      slice(0, 6);
 
     setSimilarRecipes(similar);
   };
@@ -482,325 +482,335 @@ Make each recipe special and memorable!`,
       </AnimatePresence>
 
       <div className="min-h-screen bg-[#e8f0ea]">
-      {/* Hero Section */}
-      {!showIntro && (
-      <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
-        <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-3 sm:space-y-4">
+        {/* Hero Section */}
+        {!showIntro && (
+          <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
+            <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center space-y-3 sm:space-y-4">
 
-            <header className="text-center">
-              <h1 className="text-[#6b9b76] text-4xl sm:text-5xl md:text-6xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
-                MoodFull
-              </h1>
-            </header>
-          </motion.div>
-        </div>
-      </div>
-      )}
-
-      {/* Main Content */}
-      <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-24 sm:px-6 max-w-6xl space-y-8 sm:space-y-12">
-        {/* Survey */}
-        {showSurvey &&
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}>
-
-            <PreferenceSurvey
-            onComplete={handleSurveyComplete}
-            initialData={userPreferences || {}}
-            currentUser={currentUser || {}} />
-
-          </motion.div>
-        }
-
-        {!showSurvey && activeTab === 'home' &&
-        <>
-            {/* Search & Preferences */}
-            <div className="space-y-3">
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
-                {/* Global Search */}
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b9b76]" />
-                  <Input
-                  type="text"
-                  placeholder="Search your recipes or generate new ones..."
-                  value={globalSearchQuery}
-                  onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                  className="pl-11 pr-10 py-6 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base shadow-md" />
-
-                  {globalSearchQuery &&
-                <button
-                  onClick={() => setGlobalSearchQuery('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors">
-
-                      <X className="w-4 h-4" />
-                    </button>
-                }
-                </div>
-
-                {/* Update Preferences Button */}
-                {userPreferences?.survey_completed &&
-              <Button
-                onClick={() => setShowSurvey(true)}
-                variant="outline"
-                className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
-                    Update Preferences
-                  </Button>
-              }
-              </div>
-
-              {/* Advanced Filters */}
-              <AdvancedFilters
-                filters={advancedFilters}
-                onFiltersChange={setAdvancedFilters}
-                showFilters={showFilters}
-                setShowFilters={setShowFilters}
-              />
+                <header className="text-center">
+                  <h1 className="text-[#6b9b76] text-4xl sm:text-5xl md:text-6xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
+                    MoodFull
+                  </h1>
+                </header>
+              </motion.div>
             </div>
+          </div>
+        )}
 
-            {/* Show Saved Recipes when searching or when no generated recipes */}
-            {(globalSearchQuery || Object.keys(advancedFilters).length > 0) && !currentRecipe && generatedRecipes.length === 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#6b9b76]">
-                    Search Results ({filteredSavedRecipes.length})
-                  </h3>
-                </div>
-                {filteredSavedRecipes.length > 0 ? (
-                  <SavedRecipes
-                    recipes={filteredSavedRecipes}
-                    onRecipeClick={(recipe) => {
-                      handleSavedRecipeClick(recipe);
-                    }}
-                    searchQuery={globalSearchQuery}
-                  />
-                ) : (
-                  <div className="text-center py-12 bg-white rounded-2xl border-2 border-[#c5d9c9]">
-                    <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-600 text-lg mb-2">No recipes found matching your search</p>
-                    <p className="text-gray-500 text-sm">Try adjusting your filters or generate new recipes below</p>
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {/* Mood Selector - Only show when not searching */}
-            {!globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <MoodSelector
-                  selectedMoods={selectedMoods}
-                  onMoodSelect={setSelectedMoods}
-                  userName={currentUser?.full_name?.split(' ')[0]}
-                />
-              </motion.div>
-            )}
-
-        {/* Generate Button */}
-        <AnimatePresence mode="wait">
-          {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="flex justify-center">
-
-              <Button
-                onClick={generateRecipe}
-                disabled={isGenerating}
-                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
-
-                {isGenerating ?
-                <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Creating your perfect recipes...
-                  </> :
-
-                <>
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Generate Recipes
-                  </>
-                }
-              </Button>
-            </motion.div>
-            }
-        </AnimatePresence>
-
-        {/* Recipe Grid */}
-        <AnimatePresence mode="wait">
-          {generatedRecipes.length > 0 && !currentRecipe &&
+        {/* Main Content */}
+        <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-24 sm:px-6 max-w-6xl space-y-8 sm:space-y-12">
+          {/* Survey */}
+          {showSurvey &&
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}>
+              animate={{ opacity: 1, y: 0 }}>
 
-              <RecipeGrid
-                recipes={filteredGeneratedRecipes}
-                onRecipeClick={(recipe) => {
-                  setCurrentRecipe(recipe);
-                  setSavedRecipeId(null);
-                }}
-                onStartOver={() => {
-                  setGeneratedRecipes([]);
-                  setSelectedMoods([]);
-                  setGlobalSearchQuery('');
-                  setAdvancedFilters({});
-                }}
-                searchQuery={globalSearchQuery} />
+              <PreferenceSurvey
+                onComplete={handleSurveyComplete}
+                initialData={userPreferences || {}}
+                currentUser={currentUser || {}} />
 
             </motion.div>
-            }
-        </AnimatePresence>
+          }
 
-        {/* Recipe Display */}
-        <AnimatePresence mode="wait">
-          {currentRecipe &&
-            <div className="space-y-6 sm:space-y-8">
-              <RecipeDisplay
-                recipe={currentRecipe}
-                onSave={handleSaveRecipe}
-                isSaved={!!savedRecipeId} />
+          {!showSurvey && activeTab === 'home' &&
+            <>
+              {/* Search & Preferences */}
+              <div className="space-y-3">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
+                  {/* Global Search */}
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b9b76]" />
+                    <Input
+                      type="text"
+                      placeholder="Search your recipes or generate new ones..."
+                      value={globalSearchQuery}
+                      onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                      className="pl-11 pr-10 py-6 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base shadow-md" />
 
-              {similarRecipes.length > 0 &&
-              <SimilarRecipes
-                recipes={similarRecipes}
-                onRecipeClick={handleSavedRecipeClick} />
+                    {globalSearchQuery &&
+                      <button
+                        onClick={() => setGlobalSearchQuery('')}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors">
 
-              }
-              
-              {!isGenerating &&
-              <div className="flex justify-center gap-4">
-                  <Button
-                  onClick={() => {
-                    setCurrentRecipe(null);
-                    setSavedRecipeId(null);
-                    setSimilarRecipes([]);
-                  }}
-                  variant="outline"
-                  className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
+                        <X className="w-4 h-4" />
+                      </button>
+                    }
+                  </div>
 
-                    Back to Results
-                  </Button>
+                  {/* Update Preferences Button */}
+                  {userPreferences?.survey_completed &&
+                    <Button
+                      onClick={() => setShowSurvey(true)}
+                      variant="outline"
+                      className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
+                      Update Preferences
+                    </Button>
+                  }
                 </div>
-              }
-            </div>
-            }
-            </AnimatePresence>
 
-            {/* Personalized Recommendations - Only show when not searching */}
-            {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
-              <RecommendedRecipes
-                userPreferences={userPreferences}
-                onRecipeClick={(recipe) => {
-                  setCurrentRecipe(recipe);
-                  setSavedRecipeId(null);
-                }}
-              />
-            )}
+                {/* Advanced Filters */}
+                <AdvancedFilters
+                  filters={advancedFilters}
+                  onFiltersChange={setAdvancedFilters}
+                  showFilters={showFilters}
+                  setShowFilters={setShowFilters}
+                />
+              </div>
+
+              {/* Show Saved Recipes when searching or when no generated recipes */}
+              {(globalSearchQuery || Object.keys(advancedFilters).length > 0) && !currentRecipe && generatedRecipes.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl sm:text-2xl font-bold text-[#6b9b76]">
+                      Search Results ({filteredSavedRecipes.length})
+                    </h3>
+                  </div>
+                  {filteredSavedRecipes.length > 0 ? (
+                    <SavedRecipes
+                      recipes={filteredSavedRecipes}
+                      onRecipeClick={(recipe) => {
+                        handleSavedRecipeClick(recipe);
+                      }}
+                      searchQuery={globalSearchQuery}
+                    />
+                  ) : (
+                    <div className="text-center py-12 bg-white rounded-2xl border-2 border-[#c5d9c9]">
+                      <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-600 text-lg mb-2">No recipes found matching your search</p>
+                      <p className="text-gray-500 text-sm">Try adjusting your filters or generate new recipes below</p>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* Mood Selector - Only show when not searching */}
+              {!globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <MoodSelector
+                    selectedMoods={selectedMoods}
+                    onMoodSelect={setSelectedMoods}
+                    userName={currentUser?.full_name?.split(' ')[0]}
+                  />
+                </motion.div>
+              )}
+
+              {/* Generate Button */}
+              <AnimatePresence mode="wait">
+                {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="flex justify-center">
+
+                    <Button
+                      onClick={generateRecipe}
+                      disabled={isGenerating}
+                      className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
+
+                      {isGenerating ?
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Creating your perfect recipes...
+                        </> :
+
+                        <>
+                          <Sparkles className="w-5 h-5 mr-2" />
+                          Generate Recipes
+                        </>
+                      }
+                    </Button>
+                  </motion.div>
+                }
+              </AnimatePresence>
+
+              {/* Recipe Grid */}
+              <AnimatePresence mode="wait">
+                {generatedRecipes.length > 0 && !currentRecipe &&
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}>
+
+                    <RecipeGrid
+                      recipes={filteredGeneratedRecipes}
+                      onRecipeClick={(recipe) => {
+                        setCurrentRecipe(recipe);
+                        setSavedRecipeId(null);
+                      }}
+                      onStartOver={() => {
+                        setGeneratedRecipes([]);
+                        setSelectedMoods([]);
+                        setGlobalSearchQuery('');
+                        setAdvancedFilters({});
+                      }}
+                      searchQuery={globalSearchQuery} />
+
+                  </motion.div>
+                }
+              </AnimatePresence>
+
+              {/* Recipe Display */}
+              <AnimatePresence mode="wait">
+                {currentRecipe &&
+                  <div className="space-y-6 sm:space-y-8">
+                    <RecipeDisplay
+                      recipe={currentRecipe}
+                      onSave={handleSaveRecipe}
+                      isSaved={!!savedRecipeId} />
+
+                    {similarRecipes.length > 0 &&
+                      <SimilarRecipes
+                        recipes={similarRecipes}
+                        onRecipeClick={handleSavedRecipeClick} />
+
+                    }
+
+                    {!isGenerating &&
+                      <div className="flex justify-center gap-4">
+                        <Button
+                          onClick={() => {
+                            setCurrentRecipe(null);
+                            setSavedRecipeId(null);
+                            setSimilarRecipes([]);
+                          }}
+                          variant="outline"
+                          className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
+
+                          Back to Results
+                        </Button>
+                      </div>
+                    }
+                  </div>
+                }
+              </AnimatePresence>
+
+              {/* Personalized Recommendations - Only show when not searching */}
+              {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
+                <RecommendedRecipes
+                  userPreferences={userPreferences}
+                  onRecipeClick={(recipe) => {
+                    setCurrentRecipe(recipe);
+                    setSavedRecipeId(null);
+                  }}
+                />
+              )}
 
             </>
-            }
+          }
 
-        {/* Saved Recipes Tab */}
-        {!showSurvey && activeTab === 'saved' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-6"
-          >
-            <div className="text-center space-y-2">
-              <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Your Saved Recipes</h2>
-              <p className="text-gray-600">Browse and manage your collection</p>
-            </div>
+          {/* Saved Recipes Tab */}
+          {!showSurvey && activeTab === 'saved' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-6"
+            >
+              <div className="text-center space-y-2">
+                <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Your Saved Recipes</h2>
+                <p className="text-gray-600">Browse and manage your collection</p>
+              </div>
 
-            {/* Search and Filters */}
-            <div className="space-y-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
-                <Input
-                  type="text"
-                  placeholder="Search saved recipes..."
-                  value={globalSearchQuery}
-                  onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                  className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+              {/* Search and Filters */}
+              <div className="space-y-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
+                  <Input
+                    type="text"
+                    placeholder="Search saved recipes..."
+                    value={globalSearchQuery}
+                    onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                    className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+                  />
+                  {globalSearchQuery && (
+                    <button
+                      onClick={() => setGlobalSearchQuery('')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                <AdvancedFilters
+                  filters={advancedFilters}
+                  onFiltersChange={setAdvancedFilters}
+                  showFilters={showFilters}
+                  setShowFilters={setShowFilters}
                 />
-                {globalSearchQuery && (
-                  <button
-                    onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
               </div>
 
-              <AdvancedFilters
-                filters={advancedFilters}
-                onFiltersChange={setAdvancedFilters}
-                showFilters={showFilters}
-                setShowFilters={setShowFilters}
+              {savedRecipes.length > 0 ? (
+                <SavedRecipes
+                  recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
+                  onRecipeClick={(recipe) => {
+                    handleSavedRecipeClick(recipe);
+                    setActiveTab('home');
+                  }}
+                  searchQuery={globalSearchQuery}
+                  onOpenShoppingList={() => setShowShoppingList(true)}
+                />
+              ) : (
+                <div className="text-center py-12">
+                  <UtensilsCrossed className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-600">No saved recipes yet. Generate some recipes to get started!</p>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* Planner Tab */}
+          {!showSurvey && activeTab === 'planner' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <MealPlanner onOpenShoppingList={() => setShowShoppingList(true)} />
+            </motion.div>
+          )}
+
+          {/* Account Tab */}
+          {!showSurvey && activeTab === 'account' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <AccountInfo
+                user={currentUser}
+                onUpdatePreferences={() => setShowSurvey(true)}
+                recipeCount={savedRecipes.length}
               />
-            </div>
-
-            {savedRecipes.length > 0 ? (
-              <SavedRecipes
-                recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
-                onRecipeClick={(recipe) => {
-                  handleSavedRecipeClick(recipe);
-                  setActiveTab('home');
-                }}
-                searchQuery={globalSearchQuery}
-                onOpenShoppingList={() => setShowShoppingList(true)}
-              />
-            ) : (
-              <div className="text-center py-12">
-                <UtensilsCrossed className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600">No saved recipes yet. Generate some recipes to get started!</p>
-              </div>
-            )}
-          </motion.div>
-        )}
-
-        {/* Planner Tab */}
-        {!showSurvey && activeTab === 'planner' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <MealPlanner onOpenShoppingList={() => setShowShoppingList(true)} />
-          </motion.div>
-        )}
-
-        {/* Account Tab */}
-        {!showSurvey && activeTab === 'account' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <AccountInfo
-              user={currentUser}
-              onUpdatePreferences={() => setShowSurvey(true)}
-              recipeCount={savedRecipes.length}
-            />
-          </motion.div>
-        )}
+            </motion.div>
+          )}
         </div>
-        </div>
+      </div>
 
       {/* Bottom Navigation */}
       {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />}
+
+      {/* Global Shopping List Modal */}
+      {showShoppingList && (
+        <div className="fixed inset-0 z-50">
+          <ShoppingList
+            mealPlans={mealPlans}
+            recipes={savedRecipes}
+            onClose={() => setShowShoppingList(false)}
+          />
+        </div>
+      )}
     </>
   );
-
 }
