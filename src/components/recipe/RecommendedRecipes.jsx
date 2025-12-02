@@ -162,12 +162,14 @@ Make these recommendations feel personalized and thoughtful!`,
         }
       });
 
-      const recipesWithImages = response.recipes.map(recipe => ({
-        ...recipe,
-        mood: 'recommended',
-        imageUrl: null,
-        imageLoading: true
-      }));
+      const recipesWithImages = response.recipes
+        .filter(r => r && r.name && r.description)
+        .map(recipe => ({
+          ...recipe,
+          mood: 'recommended',
+          imageUrl: null,
+          imageLoading: true
+        }));
 
       setRecommendations(recipesWithImages);
 
@@ -263,7 +265,7 @@ Make these recommendations feel personalized and thoughtful!`,
 
       {recommendations.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {recommendations.map((recipe, index) => (
+          {recommendations.filter(r => r && r.name).map((recipe, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
