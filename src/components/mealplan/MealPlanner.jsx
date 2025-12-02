@@ -420,7 +420,7 @@ Make them balanced, diverse, and delicious. Include:
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
             Shopping List
-          </Button
+          </Button>
         </div>
       </div>
 
