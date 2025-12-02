@@ -2,13 +2,14 @@ import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AddMealDialog from './AddMealDialog';
 import ShoppingList from './ShoppingList';
 import SwapMealDialog from './SwapMealDialog';
+import RepeatMealDialog from './RepeatMealDialog';
 
 export default function MealPlanner() {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
@@ -19,6 +20,7 @@ export default function MealPlanner() {
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
   const [regeneratingDay, setRegeneratingDay] = useState(null);
   const [swappingMeal, setSwappingMeal] = useState(null);
+  const [repeatingMeal, setRepeatingMeal] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -523,12 +525,21 @@ Make them balanced, diverse, and delicious. Include:
                                     <button
                                       onClick={() => setSwappingMeal(meal)}
                                       className="p-1 hover:bg-white/50 rounded"
+                                      title="Swap Meal"
+                                    >
+                                      <ArrowLeftRight className="w-3 h-3 text-[#6b9b76]" />
+                                    </button>
+                                    <button
+                                      onClick={() => setRepeatingMeal(meal)}
+                                      className="p-1 hover:bg-white/50 rounded"
+                                      title="Repeat Meal"
                                     >
                                       <Repeat className="w-3 h-3 text-[#6b9b76]" />
                                     </button>
                                     <button
                                       onClick={() => deleteMealMutation.mutate(meal.id)}
                                       className="p-1 hover:bg-white/50 rounded"
+                                      title="Remove Meal"
                                     >
                                       <Trash2 className="w-3 h-3 text-red-500" />
                                     </button>
@@ -588,6 +599,13 @@ Make them balanced, diverse, and delicious. Include:
           recipes={recipes}
           onSwap={(newRecipe) => handleSwapMeal(swappingMeal, newRecipe)}
           onClose={() => setSwappingMeal(null)}
+        />
+      )}
+
+      {repeatingMeal && (
+        <RepeatMealDialog
+          meal={repeatingMeal}
+          onClose={() => setRepeatingMeal(null)}
         />
       )}
     </div>
