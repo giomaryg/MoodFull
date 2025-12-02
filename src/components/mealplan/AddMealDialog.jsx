@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from '@/components/ui/textarea';
 import { X, Search, Plus, CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
@@ -11,6 +12,7 @@ import { toast } from 'sonner';
 
 export default function AddMealDialog({ date, mealType, recipes, onClose, enableDateSelection = false }) {
   const [selectedDate, setSelectedDate] = useState(date);
+  const [selectedMealType, setSelectedMealType] = useState(mealType || 'dinner');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState('');
@@ -44,7 +46,7 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
         recipe_id: selectedRecipe.id,
         recipe_name: selectedRecipe.name,
         date: format(selectedDate, 'yyyy-MM-dd'),
-        meal_type: mealType,
+        meal_type: selectedMealType,
         servings: servings ? parseInt(servings) : selectedRecipe.servings,
         notes
       });
@@ -56,7 +58,7 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
         custom_ingredients: customIngredients ? customIngredients.split('\n').filter(i => i.trim()) : [],
         custom_instructions: customInstructions ? customInstructions.split('\n').filter(i => i.trim()) : [],
         date: format(selectedDate, 'yyyy-MM-dd'),
-        meal_type: mealType,
+        meal_type: selectedMealType,
         servings: servings ? parseInt(servings) : 4,
         notes
       });
@@ -84,10 +86,10 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
             <h3 className="text-2xl font-bold text-[#6b9b76]">Add Meal</h3>
             {!enableDateSelection ? (
               <p className="text-sm text-gray-600">
-                {format(selectedDate, 'EEEE, MMM d')} - {mealType}
+                {format(selectedDate, 'EEEE, MMM d')} - {selectedMealType}
               </p>
             ) : (
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <div className="relative">
                   <CalendarIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <Input
@@ -97,7 +99,17 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
                     className="pl-8 h-8 text-sm w-40"
                   />
                 </div>
-                <span className="text-sm text-gray-600 capitalize">- {mealType}</span>
+                <Select value={selectedMealType} onValueChange={setSelectedMealType}>
+                  <SelectTrigger className="h-8 w-32 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="breakfast">Breakfast</SelectItem>
+                    <SelectItem value="lunch">Lunch</SelectItem>
+                    <SelectItem value="dinner">Dinner</SelectItem>
+                    <SelectItem value="snack">Snack</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </div>

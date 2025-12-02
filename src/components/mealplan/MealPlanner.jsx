@@ -577,6 +577,7 @@ Make them balanced, diverse, and delicious. Include:
           date={selectedDate}
           mealType={selectedMealType}
           recipes={recipes}
+          enableDateSelection={true}
           onClose={() => {
             setShowAddMeal(false);
             setSelectedDate(null);
