@@ -65,33 +65,18 @@ export default function RecommendedRecipes({ userPreferences, onRecipeClick }) {
       const userContext = contextParts.join('\n');
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Based on this user's preferences and behavior, recommend 6 diverse recipes they would love:
+        prompt: `Based on this user's preferences, recommend 6 diverse recipes:
 
 ${userContext}
 
-Generate 6 personalized recipe recommendations that:
-- Match their dietary needs and preferences
-- Complement their existing saved recipes (similar but different)
-- Align with their cooking priorities
-- Introduce variety while staying within their comfort zone
-- Consider their preferred cuisines but also suggest exciting new options
-
+Generate 6 personalized recipe recommendations.
 Each recipe must have:
-- A creative and appealing name
-- A brief, enticing description (2-3 sentences) explaining why it's recommended for THIS user
-- Complete list of ingredients with measurements
-- Step-by-step cooking instructions
-- Preparation and cooking times
-- Number of servings
-- Difficulty level (easy, medium, or hard)
-- Complete nutritional information per serving
-- 3-5 helpful cooking tips and tricks
-- 3-5 ingredient substitution suggestions
-- 2-4 wine or beverage pairing recommendations
-- Cuisine type (e.g., Italian, Mexican, Asian, etc.)
-- 2-3 main ingredients (key ingredients for finding similar recipes)
-
-Make these recommendations feel personalized and thoughtful!`,
+- Name
+- Description
+- Ingredients with measurements
+- Instructions
+- Prep time
+- Cook time`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -102,59 +87,10 @@ Make these recommendations feel personalized and thoughtful!`,
                 properties: {
                   name: { type: "string" },
                   description: { type: "string" },
-                  recommendation_reason: { 
-                    type: "string",
-                    description: "Why this recipe is recommended for this specific user"
-                  },
-                  ingredients: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  instructions: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
+                  ingredients: { type: "array", items: { type: "string" }},
+                  instructions: { type: "array", items: { type: "string" }},
                   prep_time: { type: "string" },
-                  cook_time: { type: "string" },
-                  servings: { type: "number" },
-                  difficulty: {
-                    type: "string",
-                    enum: ["easy", "medium", "hard"]
-                  },
-                  nutrition: {
-                    type: "object",
-                    properties: {
-                      calories: { type: "number" },
-                      protein: { type: "string" },
-                      carbs: { type: "string" },
-                      fat: { type: "string" },
-                      fiber: { type: "string" },
-                      sodium: { type: "string" }
-                    }
-                  },
-                  cooking_tips: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  substitutions: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        ingredient: { type: "string" },
-                        substitute: { type: "string" }
-                      }
-                    }
-                  },
-                  pairings: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  cuisine_type: { type: "string" },
-                  main_ingredients: {
-                    type: "array",
-                    items: { type: "string" }
-                  }
+                  cook_time: { type: "string" }
                 }
               }
             }
