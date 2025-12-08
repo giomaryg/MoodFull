@@ -173,26 +173,22 @@ Make these recommendations feel personalized and thoughtful!`,
 
       setRecommendations(recipesWithImages);
 
-      // Generate images in parallel
-      Promise.all(
-        recipesWithImages.map(async (recipe, index) => {
-          try {
-            const imageResponse = await base44.integrations.Core.GenerateImage({
-              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality, detailed.`
-            });
-            return { index, url: imageResponse.url };
-          } catch (error) {
-            return { index, url: null };
-          }
-        })
-      ).then((images) => {
-        setRecommendations(prev =>
-          prev.map((recipe, i) => ({
-            ...recipe,
-            imageUrl: images[i].url,
-            imageLoading: false
-          }))
-        );
+      // Generate images individually to show them as they complete
+      recipesWithImages.forEach(async (recipe, index) => {
+        try {
+          const imageResponse = await base44.integrations.Core.GenerateImage({
+            prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality, detailed.`
+          });
+          
+          setRecommendations(prev => 
+            prev.map((r, i) => i === index ? { ...r, imageUrl: imageResponse.url, imageLoading: false } : r)
+          );
+        } catch (error) {
+          // If image generation fails, just stop loading
+          setRecommendations(prev => 
+            prev.map((r, i) => i === index ? { ...r, imageLoading: false } : r)
+          );
+        }
       });
 
       toast.success('Recommendations generated!');
@@ -265,7 +261,7 @@ Make these recommendations feel personalized and thoughtful!`,
 
       {recommendations.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {recommendations.filter(r => r && r.name).map((recipe, index) => (
+          {recommendations.map((recipe, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
