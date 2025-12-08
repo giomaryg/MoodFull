@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw } from 'lucide-react';
 import HighlightedText from './HighlightedText';
 
-export default function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
+function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
   const difficultyColors = {
     easy: 'bg-green-50 text-green-700 border-green-200',
     medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
@@ -125,3 +125,5 @@ export default function RecipeGrid({ recipes, onRecipeClick, onStartOver, search
     </div>
   );
 }
+
+export default React.memo(RecipeGrid);

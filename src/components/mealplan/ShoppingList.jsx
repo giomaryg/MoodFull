@@ -4,7 +4,7 @@ import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp } from 'lucide
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
-export default function ShoppingList({ mealPlans, recipes, onClose }) {
+function ShoppingList({ mealPlans, recipes, onClose }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [expandedRecipes, setExpandedRecipes] = useState({});
   const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', or 'by-recipe'
@@ -479,3 +479,5 @@ export default function ShoppingList({ mealPlans, recipes, onClose }) {
     </motion.div>
   );
 }
+
+export default React.memo(ShoppingList);

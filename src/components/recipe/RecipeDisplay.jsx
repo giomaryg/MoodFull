@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import SimilarRecipes from './SimilarRecipes';
 
-export default function RecipeDisplay({ recipe, onSave, isSaved }) {
+function RecipeDisplay({ recipe, onSave, isSaved }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const queryClient = useQueryClient();
@@ -491,5 +491,6 @@ export default function RecipeDisplay({ recipe, onSave, isSaved }) {
         />
       )}
     </motion.div>);
-
 }
+
+export default React.memo(RecipeDisplay);

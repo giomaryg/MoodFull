@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import HighlightedText from './HighlightedText';
 
-export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '', onOpenShoppingList }) {
+function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '', onOpenShoppingList }) {
   const queryClient = useQueryClient();
 
   const deleteRecipeMutation = useMutation({
@@ -141,4 +141,6 @@ export default function SavedRecipes({ recipes, onRecipeClick, searchQuery: exte
         )}
         </div>
         );
-        }
+}
+
+export default React.memo(SavedRecipes);

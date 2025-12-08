@@ -10,7 +10,7 @@ import AddMealDialog from './AddMealDialog';
 import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
 
-export default function MealPlanner({ onOpenShoppingList }) {
+function MealPlanner({ onOpenShoppingList }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -605,3 +605,5 @@ Make them balanced, diverse, and delicious. Include:
     </div>
   );
 }
+
+export default React.memo(MealPlanner);

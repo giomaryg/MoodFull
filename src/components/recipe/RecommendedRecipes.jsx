@@ -8,7 +8,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-export default function RecommendedRecipes({ userPreferences, onRecipeClick }) {
+function RecommendedRecipes({ userPreferences, onRecipeClick }) {
   const [recommendations, setRecommendations] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const queryClient = useQueryClient();
@@ -281,3 +281,5 @@ Each recipe must have:
     </div>
   );
 }
+
+export default React.memo(RecommendedRecipes);
