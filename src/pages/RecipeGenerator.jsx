@@ -308,8 +308,44 @@ export default function RecipeGenerator() {
     }
 
     try {
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 25 diverse and delicious recipes for someone feeling ${selectedMoods.join(' and ')}. 
+      const conversation = await base44.agents.createConversation({ agent_name: 'recipe_generator' });
+      
+      let finalRecipes = [];
+
+      const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
+        const lastMessage = data.messages[data.messages.length - 1];
+        if (lastMessage && lastMessage.role === 'assistant') {
+          const text = lastMessage.content;
+          // Parse NDJSON (New Line Delimited JSON)
+          const lines = text.split('\n').filter(line => line.trim());
+          const parsedRecipes = lines.map(line => {
+            try {
+              // Clean up potential markdown code block artifacts if they sneak in
+              const cleanLine = line.replace(/```json/g, '').replace(/```/g, '').trim();
+              if (!cleanLine) return null;
+              return JSON.parse(cleanLine);
+            } catch (e) {
+              return null;
+            }
+          }).filter(r => r && r.name && r.description);
+
+          if (parsedRecipes.length > 0) {
+            const recipesWithMood = parsedRecipes.map((recipe) => ({
+              ...recipe,
+              mood: selectedMoods.join(', '),
+              imageUrl: null,
+              imageLoading: true
+            }));
+            
+            finalRecipes = recipesWithMood;
+            setGeneratedRecipes(recipesWithMood);
+          }
+        }
+      });
+
+      await base44.agents.addMessage(conversation, {
+        role: 'user',
+        content: `Generate 25 diverse and delicious recipes for someone feeling ${selectedMoods.join(' and ')}. 
 
       The recipes should match these moods: ${moodContext}.${preferencesContext}
 
@@ -321,123 +357,65 @@ export default function RecipeGenerator() {
 
       IMPORTANT: Include a good variety of steak and poultry dishes (chicken, turkey, duck). Make sure at least 30-40% of the recipes feature beef steaks or poultry as the main protein.
 
-      Each recipe must have:
-      - A creative and appealing name
-      - A brief, enticing description (2-3 sentences)
-      - Complete list of ingredients with measurements
-      - Step-by-step cooking instructions
-      - Preparation and cooking times (be realistic)
-      - Number of servings
-      - Difficulty level (easy, medium, or hard)
-      - Complete nutritional information per serving (calories, protein, carbs, fat, fiber, sodium)
-      - 3-5 helpful cooking tips and tricks
-      - 3-5 ingredient substitution suggestions (what can be swapped)
-      - 2-4 wine or beverage pairing recommendations
-      - Cuisine type (e.g., Italian, Mexican, Asian, etc.)
-      - 2-3 main ingredients (key ingredients for finding similar recipes)
+      Output strictly as Newline Delimited JSON. One recipe object per line. No array wrapping.
 
-      Make each recipe special and memorable!`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            recipes: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  name: { type: "string" },
-                  description: { type: "string" },
-                  ingredients: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  instructions: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  prep_time: { type: "string" },
-                  cook_time: { type: "string" },
-                  servings: { type: "number" },
-                  difficulty: {
-                    type: "string",
-                    enum: ["easy", "medium", "hard"]
-                  },
-                  nutrition: {
-                    type: "object",
-                    properties: {
-                      calories: { type: "number" },
-                      protein: { type: "string" },
-                      carbs: { type: "string" },
-                      fat: { type: "string" },
-                      fiber: { type: "string" },
-                      sodium: { type: "string" }
-                    }
-                  },
-                  cooking_tips: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  substitutions: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        ingredient: { type: "string" },
-                        substitute: { type: "string" }
-                      }
-                    }
-                  },
-                  pairings: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  cuisine_type: { type: "string" },
-                  main_ingredients: {
-                    type: "array",
-                    items: { type: "string" }
-                  }
-                }
-              }
-            }
-          }
-        }
+      Each recipe JSON object must have these fields:
+      - name (string): Creative and appealing name
+      - description (string): Brief, enticing description
+      - ingredients (array of strings): Complete list with measurements
+      - instructions (array of strings): Step-by-step cooking instructions
+      - prep_time (string): e.g. "15 mins"
+      - cook_time (string): e.g. "30 mins"
+      - servings (number): e.g. 4
+      - difficulty (string): "easy", "medium", or "hard"
+      - nutrition (object): { calories (number), protein, carbs, fat, fiber, sodium (strings) }
+      - cooking_tips (array of strings): 3-5 helpful tips
+      - substitutions (array of objects): [{ ingredient, substitute }]
+      - pairings (array of strings): Wine/beverage recommendations
+      - cuisine_type (string)
+      - main_ingredients (array of strings)
+      
+      Begin immediately with the first JSON object.`
       });
 
-      const recipesWithMood = (response.recipes || [])
-        .filter(r => r && r.name && r.description && r.ingredients && r.instructions)
-        .map((recipe) => ({
-          ...recipe,
-          mood: selectedMoods.join(', '),
-          imageUrl: null,
-          imageLoading: true
-        }));
-
-      setGeneratedRecipes(recipesWithMood);
+      unsubscribe();
       setIsGenerating(false);
 
-      // Generate images in background after recipes are shown
-      Promise.all(
-        recipesWithMood.map(async (recipe, index) => {
-          try {
-            const imageResponse = await base44.integrations.Core.GenerateImage({
-              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality, detailed, delicious looking meal.`
+      // Generate images in background for the final list
+      if (finalRecipes.length > 0) {
+        Promise.all(
+          finalRecipes.map(async (recipe, index) => {
+            try {
+              const imageResponse = await base44.integrations.Core.GenerateImage({
+                prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality, detailed, delicious looking meal.`
+              });
+              return { index, url: imageResponse.url };
+            } catch (error) {
+              return { index, url: null };
+            }
+          })
+        ).then((images) => {
+          setGeneratedRecipes((prev) => {
+            // Map images to the recipes by index, preserving any that might have been added/changed if necessary
+            // Note: Since we replaced the list, mapping by index 1:1 with the finalRecipes snapshot is safe
+            const newRecipes = [...prev];
+            images.forEach(({ index, url }) => {
+              if (newRecipes[index]) {
+                newRecipes[index] = {
+                  ...newRecipes[index],
+                  imageUrl: url,
+                  imageLoading: false
+                };
+              }
             });
-            return { index, url: imageResponse.url };
-          } catch (error) {
-            return { index, url: null };
-          }
-        })
-      ).then((images) => {
-        setGeneratedRecipes((prev) =>
-          prev.map((recipe, i) => ({
-            ...recipe,
-            imageUrl: images[i].url,
-            imageLoading: false
-          }))
-        );
-      });
+            return newRecipes;
+          });
+        });
+      }
+
     } catch (error) {
-      toast.error('Failed to generate recipe. Please try again.');
+      console.error(error);
+      toast.error('Failed to generate recipes. Please try again.');
       setIsGenerating(false);
     }
   };
