@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,47 +23,51 @@ export default function RecommendedRecipes({ userPreferences, onRecipeClick }) {
     queryFn: () => base44.entities.MealPlan.list('-date', 50)
   });
 
+  const userContext = useMemo(() => {
+    if (!userPreferences) return '';
+
+    // Analyze user's saved recipes to find patterns
+    const savedRecipeNames = savedRecipes.slice(0, 10).map(r => r.name).join(', ');
+    const savedMoods = [...new Set(savedRecipes.map(r => r.mood).filter(Boolean))].join(', ');
+    const mealPlanRecipes = mealPlans.slice(0, 10).map(m => m.recipe_name).join(', ');
+
+    // Build context about user preferences
+    let contextParts = [];
+    
+    if (userPreferences.diet_preferences) {
+      contextParts.push(`Dietary preferences: ${userPreferences.diet_preferences}`);
+    }
+    if (userPreferences.allergies) {
+      contextParts.push(`MUST AVOID: ${userPreferences.allergies}`);
+    }
+    if (userPreferences.blood_sugar_friendly) {
+      contextParts.push(`Needs blood sugar friendly recipes with low glycemic index`);
+    }
+    if (userPreferences.priorities?.length > 0) {
+      contextParts.push(`Priorities: ${userPreferences.priorities.join(', ')}`);
+    }
+    if (userPreferences.preferred_cuisines?.length > 0) {
+      contextParts.push(`Preferred cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+    }
+    if (savedRecipeNames) {
+      contextParts.push(`Recently saved recipes: ${savedRecipeNames}`);
+    }
+    if (savedMoods) {
+      contextParts.push(`Favorite moods: ${savedMoods}`);
+    }
+    if (mealPlanRecipes) {
+      contextParts.push(`Recently planned meals: ${mealPlanRecipes}`);
+    }
+
+    return contextParts.join('\n');
+  }, [userPreferences, savedRecipes, mealPlans]);
+
   const generateRecommendations = async () => {
     if (!userPreferences) return;
 
     setIsGenerating(true);
     
     try {
-      // Analyze user's saved recipes to find patterns
-      const savedRecipeNames = savedRecipes.slice(0, 10).map(r => r.name).join(', ');
-      const savedMoods = [...new Set(savedRecipes.map(r => r.mood).filter(Boolean))].join(', ');
-      const mealPlanRecipes = mealPlans.slice(0, 10).map(m => m.recipe_name).join(', ');
-
-      // Build context about user preferences
-      let contextParts = [];
-      
-      if (userPreferences.diet_preferences) {
-        contextParts.push(`Dietary preferences: ${userPreferences.diet_preferences}`);
-      }
-      if (userPreferences.allergies) {
-        contextParts.push(`MUST AVOID: ${userPreferences.allergies}`);
-      }
-      if (userPreferences.blood_sugar_friendly) {
-        contextParts.push(`Needs blood sugar friendly recipes with low glycemic index`);
-      }
-      if (userPreferences.priorities?.length > 0) {
-        contextParts.push(`Priorities: ${userPreferences.priorities.join(', ')}`);
-      }
-      if (userPreferences.preferred_cuisines?.length > 0) {
-        contextParts.push(`Preferred cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
-      }
-      if (savedRecipeNames) {
-        contextParts.push(`Recently saved recipes: ${savedRecipeNames}`);
-      }
-      if (savedMoods) {
-        contextParts.push(`Favorite moods: ${savedMoods}`);
-      }
-      if (mealPlanRecipes) {
-        contextParts.push(`Recently planned meals: ${mealPlanRecipes}`);
-      }
-
-      const userContext = contextParts.join('\n');
-
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Based on this user's preferences, recommend 6 diverse recipes:
 
