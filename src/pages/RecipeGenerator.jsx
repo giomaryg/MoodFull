@@ -259,7 +259,7 @@ export default function RecipeGenerator() {
   };
 
   const generateRecipe = async () => {
-    if (!selectedMoods.length) return;
+    if (!selectedMoods.length && !globalSearchQuery) return;
 
     setIsGenerating(true);
     setSavedRecipeId(null);
@@ -308,10 +308,18 @@ export default function RecipeGenerator() {
     }
 
     try {
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 25 diverse and delicious recipes for someone feeling ${selectedMoods.join(' and ')}. 
+      let promptText = 'Generate 25 diverse and delicious recipes';
+      if (selectedMoods.length > 0) promptText += ` for someone feeling ${selectedMoods.join(' and ')}`;
+      if (globalSearchQuery) promptText += ` based on the request: "${globalSearchQuery}"`;
 
-      The recipes should match these moods: ${moodContext}.${preferencesContext}
+      let promptContext = '';
+      if (selectedMoods.length > 0) promptContext += `The recipes should match these moods: ${moodContext}. `;
+      if (globalSearchQuery) promptContext += `IMPORTANT: The user specifically searched for "${globalSearchQuery}". Ensure the recipes match this request (e.g. if searching for 'dessert', provide desserts). `;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `${promptText}. 
+
+      ${promptContext}${preferencesContext}
 
       Create 30 unique, appetizing recipes with variety in:
       - Cuisine types (different cultures and cooking styles)
@@ -571,10 +579,28 @@ export default function RecipeGenerator() {
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-4"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <h3 className="text-xl sm:text-2xl font-bold text-[#6b9b76]">
                       Search Results ({filteredSavedRecipes.length})
                     </h3>
+                    <Button 
+                      onClick={() => generateRecipe()}
+                      disabled={isGenerating}
+                      variant="outline"
+                      className="border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] w-full sm:w-auto"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Generate "{globalSearchQuery}" recipes
+                        </>
+                      )}
+                    </Button>
                   </div>
                   {filteredSavedRecipes.length > 0 ? (
                     <SavedRecipes
@@ -587,8 +613,26 @@ export default function RecipeGenerator() {
                   ) : (
                     <div className="text-center py-12 bg-white rounded-2xl border-2 border-[#c5d9c9]">
                       <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                      <p className="text-gray-600 text-lg mb-2">No recipes found matching your search</p>
-                      <p className="text-gray-500 text-sm">Try adjusting your filters or generate new recipes below</p>
+                      <p className="text-gray-600 text-lg mb-2">No saved recipes found matching "{globalSearchQuery}"</p>
+                      <p className="text-gray-500 text-sm mb-6">But you can generate new ones!</p>
+                      
+                      <Button 
+                        onClick={() => generateRecipe()}
+                        disabled={isGenerating}
+                        className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Generating "{globalSearchQuery}" recipes...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Generate recipes for "{globalSearchQuery}"
+                          </>
+                        )}
+                      </Button>
                     </div>
                   )}
                 </motion.div>
