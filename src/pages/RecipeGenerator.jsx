@@ -25,7 +25,7 @@ export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
-  const recipeDisplayRef = useRef(null);
+
 
 
 
@@ -703,7 +703,7 @@ export default function RecipeGenerator() {
               <AnimatePresence mode="wait">
                 {currentRecipe &&
                   <motion.div
-                    ref={recipeDisplayRef}
+
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
