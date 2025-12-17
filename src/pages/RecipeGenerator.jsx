@@ -727,7 +727,6 @@ export default function RecipeGenerator() {
                           onClick={() => {
                             setCurrentRecipe(null);
                             setSavedRecipeId(null);
-                            setSimilarRecipes([]);
                           }}
                           variant="outline"
                           className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
