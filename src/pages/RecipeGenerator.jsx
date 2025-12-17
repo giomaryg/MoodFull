@@ -706,10 +706,9 @@ export default function RecipeGenerator() {
               </AnimatePresence>
 
               {/* Recipe Display */}
-              <div ref={recipeDisplayRef}>
-                <AnimatePresence mode="wait">
+              <AnimatePresence mode="wait">
                 {currentRecipe &&
-                  <div className="space-y-6 sm:space-y-8">
+                  <div className="space-y-6 sm:space-y-8" ref={recipeDisplayRef}>
                     <RecipeDisplay
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
@@ -739,7 +738,6 @@ export default function RecipeGenerator() {
                   </div>
                 }
               </AnimatePresence>
-            </div>
 
               {/* Personalized Recommendations - Only show when not searching */}
               {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
