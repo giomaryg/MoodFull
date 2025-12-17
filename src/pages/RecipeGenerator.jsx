@@ -712,13 +712,13 @@ export default function RecipeGenerator() {
               <AnimatePresence mode="wait">
                 {currentRecipe &&
                   <motion.div
+                    ref={recipeDisplayRef}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     className="space-y-6 sm:space-y-8"
                   >
                     <RecipeDisplay
-                      ref={recipeDisplayRef}
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
                       isSaved={!!savedRecipeId}
