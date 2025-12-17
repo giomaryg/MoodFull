@@ -487,7 +487,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
           onClose={() => setShowAddMeal(false)}
         />
       )}
-    </motion.div>);
+    </motion.div>
+  );
 }
 
-      export default React.memo(RecipeDisplay);
+export default React.memo(RecipeDisplay);
