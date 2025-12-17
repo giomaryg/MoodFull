@@ -28,16 +28,7 @@ export default function RecipeGenerator() {
   const recipeDisplayRef = useRef(null);
 
 
-  useEffect(() => {
-    if (currentRecipe && recipeDisplayRef.current) {
-      // A small delay to allow the DOM to update, especially with animations
-      setTimeout(() => {
-        if (recipeDisplayRef.current) {
-          recipeDisplayRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 200);
-    }
-  }, [currentRecipe]);
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [savedRecipeId, setSavedRecipeId] = useState(null);
   const [showSurvey, setShowSurvey] = useState(false);
