@@ -32,8 +32,10 @@ export default function RecipeGenerator() {
     if (currentRecipe && recipeDisplayRef.current) {
       // A small delay to allow the DOM to update, especially with animations
       setTimeout(() => {
-        recipeDisplayRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 150);
+        if (recipeDisplayRef.current) {
+          recipeDisplayRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 200);
     }
   }, [currentRecipe]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -710,12 +712,12 @@ export default function RecipeGenerator() {
               <AnimatePresence mode="wait">
                 {currentRecipe &&
                   <motion.div
-                    ref={recipeDisplayRef}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="space-y-6 sm:space-y-8"
+                    className="space-y-6 sm:space-y-8 relative"
                   >
+                    <div ref={recipeDisplayRef} className="absolute -top-32 sm:-top-40" />
                     <RecipeDisplay
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
