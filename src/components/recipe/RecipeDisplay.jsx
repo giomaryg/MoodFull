@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import SimilarRecipes from './SimilarRecipes';
 
-function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
+const RecipeDisplay = React.forwardRef(({ recipe, onSave, isSaved, onSimilarRecipeClick }, ref) => {
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const queryClient = useQueryClient();
@@ -139,7 +139,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+                ref={ref}
+                initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}>
 
@@ -488,6 +489,6 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
         />
       )}
     </motion.div>);
-}
+});
 
-export default React.memo(RecipeDisplay);
+      export default React.memo(RecipeDisplay);
