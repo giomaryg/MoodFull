@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,8 +12,15 @@ import SimilarRecipes from './SimilarRecipes';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
-  const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
+    const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const queryClient = useQueryClient();
+  const descriptionRef = useRef(null);
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      descriptionRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+  }, [recipe.id]);
 
   // Reset servings when recipe changes
   React.useEffect(() => {
@@ -177,7 +184,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
               <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-2 sm:mb-3">
                 {recipe.name}
               </CardTitle>
-              <p className="text-gray-600 text-sm sm:text-base md:text-lg mt-2 sm:mt-3 leading-relaxed">{recipe.description}</p>
+              <p ref={descriptionRef} className="text-gray-600 text-sm sm:text-base md:text-lg mt-2 sm:mt-3 leading-relaxed">{recipe.description}</p>
             </div>
             <div className="flex items-center gap-4">
               {isSaved && (

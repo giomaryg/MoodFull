@@ -42,9 +42,11 @@ export default function RecipeGenerator() {
   const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
 
-  useLayoutEffect(() => {
-    window.scrollTo(0, scrollPosition);
-  }, [currentRecipe]);
+    useLayoutEffect(() => {
+    if (!currentRecipe) {
+      window.scrollTo({ top: scrollPosition, behavior: 'auto' });
+    }
+  }, [currentRecipe, scrollPosition]);
 
   const queryClient = useQueryClient();
 
