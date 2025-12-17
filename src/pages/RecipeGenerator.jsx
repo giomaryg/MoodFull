@@ -706,9 +706,10 @@ export default function RecipeGenerator() {
               </AnimatePresence>
 
               {/* Recipe Display */}
-              <AnimatePresence mode="wait">
+              <div ref={recipeDisplayRef}>
+                <AnimatePresence mode="wait">
                 {currentRecipe &&
-                  <div className="space-y-6 sm:space-y-8" ref={recipeDisplayRef}>
+                  <div className="space-y-6 sm:space-y-8">
                     <RecipeDisplay
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
