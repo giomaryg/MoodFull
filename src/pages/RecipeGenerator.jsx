@@ -39,7 +39,7 @@ export default function RecipeGenerator() {
   const [savedRecipeId, setSavedRecipeId] = useState(null);
   const [showSurvey, setShowSurvey] = useState(false);
   const [userPreferences, setUserPreferences] = useState(null);
-  const [similarRecipes, setSimilarRecipes] = useState([]);
+
   const [globalSearchQuery, setGlobalSearchQuery] = useState('');
   const [showIntro, setShowIntro] = useState(true);
   const [activeTab, setActiveTab] = useState('home');
@@ -470,25 +470,11 @@ export default function RecipeGenerator() {
     setCurrentRecipe(recipe);
     setSelectedMoods(recipe.mood.split(', '));
     setSavedRecipeId(recipe.id);
-    findSimilarRecipes(recipe);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+
   };
 
-  const findSimilarRecipes = (recipe) => {
-    // Find recipes with similar mood, difficulty, or cuisine
-    const similar = savedRecipes.
-      filter((r) => r.id !== recipe.id).
-      filter((r) => {
-        const hasSimilarMood = recipe.mood?.split(', ').some((mood) =>
-          r.mood?.includes(mood)
-        );
-        const hasSimilarDifficulty = r.difficulty === recipe.difficulty;
-        return hasSimilarMood || hasSimilarDifficulty;
-      }).
-      slice(0, 6);
 
-    setSimilarRecipes(similar);
-  };
 
   return (
     <>
@@ -722,18 +708,18 @@ export default function RecipeGenerator() {
               {/* Recipe Display */}
               <AnimatePresence mode="wait">
                 {currentRecipe &&
-                  <div className="space-y-6 sm:space-y-8">
+                  <div className="space-y-6 sm:space-y-8" ref={recipeDisplayRef}>
                     <RecipeDisplay
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
-                      isSaved={!!savedRecipeId} />
+                      isSaved={!!savedRecipeId}
+                      onSimilarRecipeClick={(recipe) => {
+                        setCurrentRecipe(recipe);
+                        const savedVersion = savedRecipes.find(r => r.id === recipe.id);
+                        setSavedRecipeId(savedVersion ? savedVersion.id : null);
+                      }} />
 
-                    {similarRecipes.length > 0 &&
-                      <SimilarRecipes
-                        recipes={similarRecipes}
-                        onRecipeClick={handleSavedRecipeClick} />
 
-                    }
 
                     {!isGenerating &&
                       <div className="flex justify-center gap-4">
