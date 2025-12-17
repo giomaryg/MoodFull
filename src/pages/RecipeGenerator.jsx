@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,8 @@ import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
-  const [currentRecipe, setCurrentRecipe] = useState(null);
+    const [currentRecipe, setCurrentRecipe] = useState(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
 
 
@@ -40,6 +41,10 @@ export default function RecipeGenerator() {
   const [advancedFilters, setAdvancedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, scrollPosition);
+  }, [currentRecipe]);
 
   const queryClient = useQueryClient();
 
@@ -460,12 +465,11 @@ export default function RecipeGenerator() {
     }
   };
 
-  const handleSavedRecipeClick = (recipe) => {
+    const handleSavedRecipeClick = (recipe) => {
+    setScrollPosition(window.scrollY);
     setCurrentRecipe(recipe);
     setSelectedMoods(recipe.mood.split(', '));
     setSavedRecipeId(recipe.id);
-
-
   };
 
 
@@ -683,7 +687,8 @@ export default function RecipeGenerator() {
 
                     <RecipeGrid
                       recipes={filteredGeneratedRecipes}
-                      onRecipeClick={(recipe) => {
+                                            onRecipeClick={(recipe) => {
+                        setScrollPosition(window.scrollY);
                         setCurrentRecipe(recipe);
                         setSavedRecipeId(null);
                       }}
@@ -713,7 +718,10 @@ export default function RecipeGenerator() {
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
                       isSaved={!!savedRecipeId}
-                      onSimilarRecipeClick={(recipe) => {
+                                            onSimilarRecipeClick={(recipe) => {
+                        // When clicking a similar recipe, we want to scroll to the top of the new recipe display
+                        // rather than maintaining the previous scroll position.
+                        setScrollPosition(0);
                         setCurrentRecipe(recipe);
                         const savedVersion = savedRecipes.find(r => r.id === recipe.id);
                         setSavedRecipeId(savedVersion ? savedVersion.id : null);
@@ -724,7 +732,8 @@ export default function RecipeGenerator() {
                     {!isGenerating &&
                       <div className="flex justify-center gap-4">
                         <Button
-                          onClick={() => {
+                                                    onClick={() => {
+                            // The useLayoutEffect will restore the scroll position automatically
                             setCurrentRecipe(null);
                             setSavedRecipeId(null);
                           }}
@@ -743,7 +752,8 @@ export default function RecipeGenerator() {
               {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
                 <RecommendedRecipes
                   userPreferences={userPreferences}
-                  onRecipeClick={(recipe) => {
+                                    onRecipeClick={(recipe) => {
+                    setScrollPosition(window.scrollY);
                     setCurrentRecipe(recipe);
                     setSavedRecipeId(null);
                   }}
