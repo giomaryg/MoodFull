@@ -25,13 +25,15 @@ export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
+  const recipeDisplayRef = useRef(null);
 
 
   useEffect(() => {
-    if (currentRecipe) {
+    if (currentRecipe && recipeDisplayRef.current) {
+      // A small delay to allow the DOM to update, especially with animations
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 100);
+        recipeDisplayRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
     }
   }, [currentRecipe]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -707,7 +709,13 @@ export default function RecipeGenerator() {
               {/* Recipe Display */}
               <AnimatePresence mode="wait">
                 {currentRecipe &&
-                  <div className="space-y-6 sm:space-y-8">
+                  <motion.div
+                    ref={recipeDisplayRef}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="space-y-6 sm:space-y-8"
+                  >
                     <RecipeDisplay
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
@@ -734,7 +742,7 @@ export default function RecipeGenerator() {
                         </Button>
                       </div>
                     }
-                  </div>
+                  </motion.div>
                 }
               </AnimatePresence>
 
