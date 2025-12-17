@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import SimilarRecipes from './SimilarRecipes';
 
-function RecipeDisplay({ recipe, onSave, isSaved }) {
+function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const queryClient = useQueryClient();
@@ -472,10 +472,7 @@ function RecipeDisplay({ recipe, onSave, isSaved }) {
         <div className="mt-8">
           <SimilarRecipes
             recipes={similarRecipes}
-            onRecipeClick={(similarRecipe) => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-              // Note: Parent component should handle recipe click to update the current recipe
-            }}
+            onRecipeClick={onSimilarRecipeClick}
           />
         </div>
       )}

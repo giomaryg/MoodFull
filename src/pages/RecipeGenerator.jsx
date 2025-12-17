@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,16 @@ export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
+  const recipeDisplayRef = useRef(null);
+
+  useEffect(() => {
+    if (currentRecipe && recipeDisplayRef.current) {
+      // A small delay to allow the DOM to update, especially with animations
+      setTimeout(() => {
+        recipeDisplayRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [currentRecipe]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [savedRecipeId, setSavedRecipeId] = useState(null);
   const [showSurvey, setShowSurvey] = useState(false);
