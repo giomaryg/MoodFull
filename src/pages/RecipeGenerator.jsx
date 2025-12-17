@@ -25,13 +25,12 @@ export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [currentRecipe, setCurrentRecipe] = useState(null);
-  const recipeDisplayRef = useRef(null);
+
 
   useEffect(() => {
-    if (currentRecipe && recipeDisplayRef.current) {
-      // A small delay to allow the DOM to update, especially with animations
+    if (currentRecipe) {
       setTimeout(() => {
-        recipeDisplayRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 100);
     }
   }, [currentRecipe]);
@@ -708,7 +707,7 @@ export default function RecipeGenerator() {
               {/* Recipe Display */}
               <AnimatePresence mode="wait">
                 {currentRecipe &&
-                  <div className="space-y-6 sm:space-y-8" ref={recipeDisplayRef}>
+                  <div className="space-y-6 sm:space-y-8">
                     <RecipeDisplay
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
