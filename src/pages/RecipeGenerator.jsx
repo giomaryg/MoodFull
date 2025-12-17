@@ -739,6 +739,7 @@ export default function RecipeGenerator() {
                   </div>
                 }
               </AnimatePresence>
+            </div>
 
               {/* Personalized Recommendations - Only show when not searching */}
               {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
