@@ -715,10 +715,10 @@ export default function RecipeGenerator() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="space-y-6 sm:space-y-8 relative"
+                    className="space-y-6 sm:space-y-8"
                   >
-                    <div ref={recipeDisplayRef} className="absolute -top-32 sm:-top-40" />
                     <RecipeDisplay
+                      ref={recipeDisplayRef}
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
                       isSaved={!!savedRecipeId}
