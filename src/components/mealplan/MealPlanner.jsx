@@ -515,7 +515,7 @@ Make them balanced, diverse, and delicious. Include:
                                     snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
                                   }`}
                                 >
-                                  <p className="font-medium text-[#5a6f60] pr-12 break-words text-sm leading-tight">
+                                  <p className="font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal">
                                     {meal.recipe_name}
                                   </p>
                                   {meal.servings && (
