@@ -250,6 +250,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                   </>
                 }
               </Button>
+              {isSaved && (
+                <Button
+                  onClick={() => setShowEditDialog(true)}
+                  variant="outline"
+                  className="flex-1 sm:flex-none border-2 border-gray-300 text-gray-600 hover:bg-gray-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base"
+                >
+                  <Pencil className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                  Edit
+                </Button>
+              )}
               <Button
                 onClick={() => setShowAddMeal(true)}
                 variant="outline"
