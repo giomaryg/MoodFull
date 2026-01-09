@@ -8,6 +8,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+// SimilarRecipes imported below to avoid circular dependency issues if any, 
+// but standard import works fine in most setups. 
 import SimilarRecipes from './SimilarRecipes';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {

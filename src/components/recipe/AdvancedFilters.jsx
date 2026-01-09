@@ -1,240 +1,127 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { X, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
+import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const cuisines = ['Italian', 'Mexican', 'Asian', 'Indian', 'Mediterranean', 'American', 'French', 'Thai', 'Chinese', 'Japanese'];
-const dietaryRestrictions = ['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free', 'Keto', 'Low-Carb', 'Paleo'];
-const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Appetizer'];
-const sortOptions = [
-  { label: 'Name (A-Z)', value: 'name' },
-  { label: 'Newest First', value: 'date_desc' },
-  { label: 'Oldest First', value: 'date_asc' },
-  { label: 'Highest Rated', value: 'rating' },
-  { label: 'Prep Time (Low to High)', value: 'time_asc' },
-  { label: 'Calories (Low to High)', value: 'calories_asc' },
-  { label: 'Difficulty (Easy to Hard)', value: 'difficulty_asc' }
-];
-
 export default function AdvancedFilters({ filters, onFiltersChange, showFilters, setShowFilters }) {
-  const updateFilter = (key, value) => {
+  const handleFilterChange = (key, value) => {
     onFiltersChange({ ...filters, [key]: value });
   };
 
-  const clearFilter = (key) => {
-    const newFilters = { ...filters };
-    delete newFilters[key];
-    onFiltersChange(newFilters);
-  };
-
-  const clearAllFilters = () => {
+  const clearFilters = () => {
     onFiltersChange({});
   };
 
-  const activeFilterCount = Object.keys(filters).filter(key => filters[key]).length;
+  const activeFilterCount = Object.keys(filters).length;
 
   return (
-    <div className="space-y-3">
-      {/* Filter Toggle Button */}
-      <Button
-        onClick={() => setShowFilters(!showFilters)}
-        variant="outline"
-        className="w-full sm:w-auto border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2]"
-      >
-        <SlidersHorizontal className="w-4 h-4 mr-2" />
-        Advanced Filters
+    <div className="w-full">
+      <div className="flex items-center gap-2 mb-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowFilters(!showFilters)}
+          className={`gap-2 ${showFilters || activeFilterCount > 0 ? 'border-[#6b9b76] text-[#6b9b76] bg-[#f0f9f2]' : 'text-gray-600'}`}
+        >
+          <Filter className="w-4 h-4" />
+          Filters
+          {activeFilterCount > 0 && (
+            <Badge variant="secondary" className="bg-[#6b9b76] text-white hover:bg-[#5a8a65] ml-1 h-5 px-1.5 min-w-[1.25rem]">
+              {activeFilterCount}
+            </Badge>
+          )}
+          {showFilters ? <ChevronUp className="w-3 h-3 ml-1" /> : <ChevronDown className="w-3 h-3 ml-1" />}
+        </Button>
+
         {activeFilterCount > 0 && (
-          <Badge className="ml-2 bg-[#6b9b76] text-white">
-            {activeFilterCount}
-          </Badge>
-        )}
-      </Button>
-
-      {/* Active Filters Display */}
-      {activeFilterCount > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {filters.cuisine && (
-            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1">
-              Cuisine: {filters.cuisine}
-              <X
-                className="w-3 h-3 ml-2 cursor-pointer"
-                onClick={() => clearFilter('cuisine')}
-              />
-            </Badge>
-          )}
-          {filters.dietary && (
-            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1">
-              {filters.dietary}
-              <X
-                className="w-3 h-3 ml-2 cursor-pointer"
-                onClick={() => clearFilter('dietary')}
-              />
-            </Badge>
-          )}
-          {filters.mealType && (
-            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1">
-              {filters.mealType}
-              <X
-                className="w-3 h-3 ml-2 cursor-pointer"
-                onClick={() => clearFilter('mealType')}
-              />
-            </Badge>
-          )}
-          {filters.maxPrepTime && (
-            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1">
-              Max {filters.maxPrepTime} min prep
-              <X
-                className="w-3 h-3 ml-2 cursor-pointer"
-                onClick={() => clearFilter('maxPrepTime')}
-              />
-            </Badge>
-          )}
-          {filters.difficulty && (
-            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1 capitalize">
-              {filters.difficulty}
-              <X
-                className="w-3 h-3 ml-2 cursor-pointer"
-                onClick={() => clearFilter('difficulty')}
-              />
-            </Badge>
-          )}
-          {filters.maxCalories && (
-            <Badge className="bg-[#f5e6dc] text-[#5a6f60] border border-[#c5d9c9] px-3 py-1">
-              Max {filters.maxCalories} cal
-              <X
-                className="w-3 h-3 ml-2 cursor-pointer"
-                onClick={() => clearFilter('maxCalories')}
-              />
-            </Badge>
-          )}
-          <Button
-            onClick={clearAllFilters}
-            variant="ghost"
-            size="sm"
-            className="text-[#6b9b76] hover:text-[#5a8a65] h-auto py-1 px-2"
-          >
+          <Button variant="ghost" size="sm" onClick={clearFilters} className="text-gray-500 hover:text-red-500 h-8 px-2 text-xs">
             Clear all
+            <X className="w-3 h-3 ml-1" />
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Filter Options Panel */}
       <AnimatePresence>
         {showFilters && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="bg-white rounded-xl border-2 border-[#c5d9c9] p-4 space-y-4"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Cuisine Filter */}
-              <div>
-                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
-                  Cuisine
-                </label>
-                <Select
-                  value={filters.cuisine || ''}
-                  onValueChange={(value) => updateFilter('cuisine', value)}
-                >
-                  <SelectTrigger className="border-2 border-[#c5d9c9]">
-                    <SelectValue placeholder="Any cuisine" />
+            <div className="bg-white p-4 rounded-xl border-2 border-[#c5d9c9] shadow-sm mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              
+              {/* Cuisine */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Cuisine</Label>
+                <Select value={filters.cuisine || "all"} onValueChange={(val) => handleFilterChange('cuisine', val === "all" ? null : val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Any Cuisine" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>Any cuisine</SelectItem>
-                    {cuisines.map((cuisine) => (
-                      <SelectItem key={cuisine} value={cuisine}>
-                        {cuisine}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="all">Any Cuisine</SelectItem>
+                    <SelectItem value="Italian">Italian</SelectItem>
+                    <SelectItem value="Mexican">Mexican</SelectItem>
+                    <SelectItem value="Asian">Asian</SelectItem>
+                    <SelectItem value="American">American</SelectItem>
+                    <SelectItem value="Mediterranean">Mediterranean</SelectItem>
+                    <SelectItem value="French">French</SelectItem>
+                    <SelectItem value="Indian">Indian</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Dietary Restrictions Filter */}
-              <div>
-                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
-                  Dietary
-                </label>
-                <Select
-                  value={filters.dietary || ''}
-                  onValueChange={(value) => updateFilter('dietary', value)}
-                >
-                  <SelectTrigger className="border-2 border-[#c5d9c9]">
-                    <SelectValue placeholder="Any diet" />
+              {/* Dietary */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Dietary</Label>
+                <Select value={filters.dietary || "all"} onValueChange={(val) => handleFilterChange('dietary', val === "all" ? null : val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Any Diet" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>Any diet</SelectItem>
-                    {dietaryRestrictions.map((diet) => (
-                      <SelectItem key={diet} value={diet}>
-                        {diet}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="all">Any Diet</SelectItem>
+                    <SelectItem value="Vegetarian">Vegetarian</SelectItem>
+                    <SelectItem value="Vegan">Vegan</SelectItem>
+                    <SelectItem value="Gluten-Free">Gluten-Free</SelectItem>
+                    <SelectItem value="Keto">Keto</SelectItem>
+                    <SelectItem value="Paleo">Paleo</SelectItem>
+                    <SelectItem value="Low-Carb">Low-Carb</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Meal Type Filter */}
-              <div>
-                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
-                  Meal Type
-                </label>
-                <Select
-                  value={filters.mealType || ''}
-                  onValueChange={(value) => updateFilter('mealType', value)}
-                >
-                  <SelectTrigger className="border-2 border-[#c5d9c9]">
-                    <SelectValue placeholder="Any meal" />
+              {/* Meal Type */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Meal Type</Label>
+                <Select value={filters.mealType || "all"} onValueChange={(val) => handleFilterChange('mealType', val === "all" ? null : val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Any Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>Any meal</SelectItem>
-                    {mealTypes.map((meal) => (
-                      <SelectItem key={meal} value={meal}>
-                        {meal}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="all">Any Type</SelectItem>
+                    <SelectItem value="Breakfast">Breakfast</SelectItem>
+                    <SelectItem value="Lunch">Lunch</SelectItem>
+                    <SelectItem value="Dinner">Dinner</SelectItem>
+                    <SelectItem value="Snack">Snack</SelectItem>
+                    <SelectItem value="Dessert">Dessert</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Prep Time Filter */}
-              <div>
-                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
-                  Max Prep Time
-                </label>
-                <Select
-                  value={filters.maxPrepTime || ''}
-                  onValueChange={(value) => updateFilter('maxPrepTime', value)}
-                >
-                  <SelectTrigger className="border-2 border-[#c5d9c9]">
-                    <SelectValue placeholder="Any time" />
+              {/* Difficulty */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Difficulty</Label>
+                <Select value={filters.difficulty || "all"} onValueChange={(val) => handleFilterChange('difficulty', val === "all" ? null : val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Any Difficulty" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>Any time</SelectItem>
-                    <SelectItem value="15">15 minutes</SelectItem>
-                    <SelectItem value="30">30 minutes</SelectItem>
-                    <SelectItem value="45">45 minutes</SelectItem>
-                    <SelectItem value="60">1 hour</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Difficulty Filter */}
-              <div>
-                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
-                  Difficulty
-                </label>
-                <Select
-                  value={filters.difficulty || ''}
-                  onValueChange={(value) => updateFilter('difficulty', value)}
-                >
-                  <SelectTrigger className="border-2 border-[#c5d9c9]">
-                    <SelectValue placeholder="Any difficulty" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null}>Any difficulty</SelectItem>
+                    <SelectItem value="all">Any Difficulty</SelectItem>
                     <SelectItem value="easy">Easy</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="hard">Hard</SelectItem>
@@ -242,52 +129,58 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                 </Select>
               </div>
 
-              {/* Max Calories Filter */}
-              <div>
-                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
-                  Max Calories
-                </label>
-                <Select
-                  value={filters.maxCalories || ''}
-                  onValueChange={(value) => updateFilter('maxCalories', value)}
-                >
-                  <SelectTrigger className="border-2 border-[#c5d9c9]">
-                    <SelectValue placeholder="Any calories" />
+              {/* Max Prep Time */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Max Prep Time</Label>
+                <Select value={filters.maxPrepTime || "all"} onValueChange={(val) => handleFilterChange('maxPrepTime', val === "all" ? null : val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Any Time" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>Any calories</SelectItem>
-                    <SelectItem value="300">Under 300</SelectItem>
-                    <SelectItem value="500">Under 500</SelectItem>
-                    <SelectItem value="700">Under 700</SelectItem>
-                    <SelectItem value="1000">Under 1000</SelectItem>
+                    <SelectItem value="all">Any Time</SelectItem>
+                    <SelectItem value="15">15 mins or less</SelectItem>
+                    <SelectItem value="30">30 mins or less</SelectItem>
+                    <SelectItem value="45">45 mins or less</SelectItem>
+                    <SelectItem value="60">1 hour or less</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Max Calories */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Max Calories</Label>
+                <Select value={filters.maxCalories || "all"} onValueChange={(val) => handleFilterChange('maxCalories', val === "all" ? null : val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Any Calories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Any Calories</SelectItem>
+                    <SelectItem value="300">Under 300 kcal</SelectItem>
+                    <SelectItem value="500">Under 500 kcal</SelectItem>
+                    <SelectItem value="800">Under 800 kcal</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Sort By */}
-              <div>
-                <label className="text-sm font-medium text-[#5a6f60] mb-2 block">
-                  Sort By
-                </label>
-                <Select
-                  value={filters.sortBy || 'date_desc'}
-                  onValueChange={(value) => updateFilter('sortBy', value)}
-                >
-                  <SelectTrigger className="border-2 border-[#c5d9c9]">
-                    <div className="flex items-center">
-                      <ArrowUpDown className="w-4 h-4 mr-2 text-[#6b9b76]" />
-                      <SelectValue placeholder="Sort by..." />
-                    </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Sort By</Label>
+                <Select value={filters.sortBy || "date_desc"} onValueChange={(val) => handleFilterChange('sortBy', val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Sort By" />
                   </SelectTrigger>
                   <SelectContent>
-                    {sortOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="date_desc">Newest First</SelectItem>
+                    <SelectItem value="date_asc">Oldest First</SelectItem>
+                    <SelectItem value="rating">Highest Rated</SelectItem>
+                    <SelectItem value="time_asc">Fastest Prep</SelectItem>
+                    <SelectItem value="calories_asc">Lowest Calories</SelectItem>
+                    <SelectItem value="difficulty_asc">Easiest First</SelectItem>
+                    <SelectItem value="name">Name (A-Z)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+
             </div>
           </motion.div>
         )}

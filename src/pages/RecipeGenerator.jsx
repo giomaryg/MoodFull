@@ -40,6 +40,8 @@ export default function RecipeGenerator() {
   const [activeTab, setActiveTab] = useState('home');
   const [advancedFilters, setAdvancedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
+  const [advancedFilters, setAdvancedFilters] = useState({});
+  const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
 
     useLayoutEffect(() => {
@@ -557,7 +559,15 @@ export default function RecipeGenerator() {
                       Update Preferences
                     </Button>
                   }
-                </div>
+                  </div>
+
+                  {/* Advanced Filters */}
+                  <AdvancedFilters 
+                  filters={advancedFilters} 
+                  onFiltersChange={setAdvancedFilters}
+                  showFilters={showFilters}
+                  setShowFilters={setShowFilters}
+                  />
 
                 {/* Advanced Filters */}
                 <AdvancedFilters
@@ -651,7 +661,7 @@ export default function RecipeGenerator() {
 
               {/* Generate Button */}
               <AnimatePresence mode="wait">
-                {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
+                {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && Object.keys(advancedFilters).length === 0 &&
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
