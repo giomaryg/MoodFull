@@ -450,8 +450,10 @@ Make them balanced, diverse, and delicious. Include:
       {/* Calendar Grid */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
-          {/* Day Headers */}
-          <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
+          <div className="overflow-x-auto">
+            <div className="min-w-[1000px]">
+              {/* Day Headers */}
+              <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
             {weekDays.map((day) => (
               <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
                 <p className="text-white font-semibold text-sm">
@@ -478,9 +480,9 @@ Make them balanced, diverse, and delicious. Include:
           </div>
 
           {/* Meal Rows */}
-          {mealTypes.map((mealType) => (
-            <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
-              {weekDays.map((day) => {
+              {mealTypes.map((mealType) => (
+                <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
+                  {weekDays.map((day) => {
                 const meals = getMealsForDay(day, mealType);
                 const isToday = isSameDay(day, new Date());
                 const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
@@ -513,7 +515,7 @@ Make them balanced, diverse, and delicious. Include:
                                     snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
                                   }`}
                                 >
-                                  <p className="font-medium text-[#5a6f60] pr-12 break-words">
+                                  <p className="font-medium text-[#5a6f60] pr-12 break-words text-sm leading-tight">
                                     {meal.recipe_name}
                                   </p>
                                   {meal.servings && (
@@ -565,7 +567,9 @@ Make them balanced, diverse, and delicious. Include:
                 );
               })}
             </div>
-          ))}
+              ))}
+            </div>
+          </div>
         </div>
       </DragDropContext>
 
