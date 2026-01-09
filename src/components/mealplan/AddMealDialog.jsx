@@ -97,7 +97,10 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
                   <Input
                     type="date"
                     value={format(selectedDate, 'yyyy-MM-dd')}
-                    onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                    onChange={(e) => {
+                                      const [year, month, day] = e.target.value.split('-').map(Number);
+                                      setSelectedDate(new Date(year, month - 1, day));
+                                    }}
                     className="pl-8 h-8 text-sm w-40"
                   />
                 </div>
