@@ -10,7 +10,7 @@ import AddMealDialog from './AddMealDialog';
 import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
 
-function MealPlanner({ onOpenShoppingList }) {
+function MealPlanner({ onOpenShoppingList, onRecipeClick }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
