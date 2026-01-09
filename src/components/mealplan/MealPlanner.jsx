@@ -451,7 +451,7 @@ Make them balanced, diverse, and delicious. Include:
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
           <div className="overflow-x-auto">
-            <div className="min-w-[1000px]">
+            <div className="min-w-[800px]">
               {/* Day Headers */}
               <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
             {weekDays.map((day) => (
@@ -493,7 +493,7 @@ Make them balanced, diverse, and delicious. Include:
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className={`bg-white p-2 min-h-[120px] transition-colors ${
+                        className={`bg-white p-2 min-h-[100px] transition-colors ${
                           isToday ? 'bg-[#f0f9f2]' : ''
                         } ${snapshot.isDraggingOver ? 'bg-[#e8f0ea] ring-2 ring-[#6b9b76]' : ''}`}
                       >
