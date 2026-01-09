@@ -11,9 +11,11 @@ import { base44 } from '@/api/base44Client';
 // SimilarRecipes imported below to avoid circular dependency issues if any, 
 // but standard import works fine in most setups. 
 import SimilarRecipes from './SimilarRecipes';
+import RecipeEditDialog from './RecipeEditDialog';
 
-function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick }) {
+function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
     const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const queryClient = useQueryClient();
   const descriptionRef = useRef(null);
