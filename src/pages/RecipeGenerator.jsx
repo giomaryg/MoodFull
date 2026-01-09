@@ -720,7 +720,11 @@ export default function RecipeGenerator() {
                       recipe={currentRecipe}
                       onSave={handleSaveRecipe}
                       isSaved={!!savedRecipeId}
-                                            onSimilarRecipeClick={(recipe) => {
+                      onUpdate={(updatedRecipe) => {
+                        // Update the current recipe with the new data
+                        setCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
+                      }}
+                      onSimilarRecipeClick={(recipe) => {
                         // When clicking a similar recipe, we want to scroll to the top of the new recipe display
                         // rather than maintaining the previous scroll position.
                         setScrollPosition(0);
