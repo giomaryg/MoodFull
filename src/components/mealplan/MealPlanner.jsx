@@ -9,8 +9,9 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AddMealDialog from './AddMealDialog';
 import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
+import RecipeDetailModal from './RecipeDetailModal';
 
-function MealPlanner({ onOpenShoppingList, onRecipeClick }) {
+function MealPlanner({ onOpenShoppingList }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -19,6 +20,7 @@ function MealPlanner({ onOpenShoppingList, onRecipeClick }) {
   const [regeneratingDay, setRegeneratingDay] = useState(null);
   const [swappingMeal, setSwappingMeal] = useState(null);
   const [repeatingMeal, setRepeatingMeal] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -519,9 +521,9 @@ Make them balanced, diverse, and delicious. Include:
                                 >
                                   <div 
                                     onClick={(e) => {
-                                      if (linkedRecipe && onRecipeClick) {
+                                      if (linkedRecipe) {
                                         e.stopPropagation();
-                                        onRecipeClick(linkedRecipe);
+                                        setSelectedRecipe(linkedRecipe);
                                       }
                                     }}
                                     className={linkedRecipe ? 'cursor-pointer hover:underline' : ''}
@@ -617,6 +619,13 @@ Make them balanced, diverse, and delicious. Include:
         <RepeatMealDialog
           meal={repeatingMeal}
           onClose={() => setRepeatingMeal(null)}
+        />
+      )}
+
+      {selectedRecipe && (
+        <RecipeDetailModal
+          recipe={selectedRecipe}
+          onClose={() => setSelectedRecipe(null)}
         />
       )}
     </div>
