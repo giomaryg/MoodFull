@@ -12,7 +12,7 @@ import RepeatMealDialog from './RepeatMealDialog';
 import RecipeDetailModal from './RecipeDetailModal';
 
 function MealPlanner({ onOpenShoppingList }) {
-  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
+  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedMealType, setSelectedMealType] = useState(null);
