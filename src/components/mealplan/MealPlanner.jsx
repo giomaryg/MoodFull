@@ -504,7 +504,9 @@ Make them balanced, diverse, and delicious. Include:
                         )}
                         
                         <div className="space-y-1">
-                          {meals.map((meal, index) => (
+                          {meals.map((meal, index) => {
+                            const linkedRecipe = recipes.find(r => r.id === meal.recipe_id);
+                            return (
                             <Draggable key={meal.id} draggableId={meal.id} index={index}>
                               {(provided, snapshot) => (
                                 <div
@@ -515,31 +517,41 @@ Make them balanced, diverse, and delicious. Include:
                                     snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
                                   }`}
                                 >
-                                  <p className="font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal">
-                                    {meal.recipe_name}
-                                  </p>
-                                  {meal.servings && (
-                                    <p className="text-gray-500 text-xs">
-                                      {meal.servings} servings
+                                  <div 
+                                    onClick={(e) => {
+                                      if (linkedRecipe && onRecipeClick) {
+                                        e.stopPropagation();
+                                        onRecipeClick(linkedRecipe);
+                                      }
+                                    }}
+                                    className={linkedRecipe ? 'cursor-pointer hover:underline' : ''}
+                                  >
+                                    <p className="font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal">
+                                      {meal.recipe_name}
                                     </p>
-                                  )}
+                                    {meal.servings && (
+                                      <p className="text-gray-500 text-xs">
+                                        {meal.servings} servings
+                                      </p>
+                                    )}
+                                  </div>
                                   <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
-                                      onClick={() => setSwappingMeal(meal)}
+                                      onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
                                       className="p-1 hover:bg-white/50 rounded"
                                       title="Swap Meal"
                                     >
                                       <ArrowLeftRight className="w-3 h-3 text-[#6b9b76]" />
                                     </button>
                                     <button
-                                      onClick={() => setRepeatingMeal(meal)}
+                                      onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
                                       className="p-1 hover:bg-white/50 rounded"
                                       title="Repeat Meal"
                                     >
                                       <Repeat className="w-3 h-3 text-[#6b9b76]" />
                                     </button>
                                     <button
-                                      onClick={() => deleteMealMutation.mutate(meal.id)}
+                                      onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
                                       className="p-1 hover:bg-white/50 rounded"
                                       title="Remove Meal"
                                     >
@@ -549,7 +561,8 @@ Make them balanced, diverse, and delicious. Include:
                                 </div>
                               )}
                             </Draggable>
-                          ))}
+                            );
+                          })}
                           {provided.placeholder}
                         </div>
 
