@@ -45,6 +45,21 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     }
   });
 
+  const updateRecipeMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Recipe.update(id, data),
+    onSuccess: (updatedRecipe) => {
+      queryClient.invalidateQueries({ queryKey: ['recipes'] });
+      setShowEditDialog(false);
+      if (onUpdate) onUpdate(updatedRecipe);
+    }
+  });
+
+  const handleEditSave = (formData) => {
+    if (recipe.id && isSaved) {
+      updateRecipeMutation.mutate({ id: recipe.id, data: formData });
+    }
+  };
+
   const handleRate = (rating) => {
     if (recipe.id && isSaved) {
       updateRatingMutation.mutate({ id: recipe.id, rating });
