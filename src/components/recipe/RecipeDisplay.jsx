@@ -523,6 +523,15 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           onClose={() => setShowAddMeal(false)}
         />
       )}
+
+      {/* Edit Recipe Dialog */}
+      {showEditDialog && (
+        <RecipeEditDialog
+          recipe={recipe}
+          onSave={handleEditSave}
+          onClose={() => setShowEditDialog(false)}
+        />
+      )}
     </motion.div>
   );
 }
