@@ -8,13 +8,14 @@ export default function RecipeDetailModal({ recipe, onClose }) {
   if (!recipe) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={onClose}>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50" onClick={onClose}>
+      <div className="flex items-center justify-center min-h-full p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden"
       >
         {/* Header with image */}
         <div className="relative h-48 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] shrink-0">
@@ -50,7 +51,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+        <div className="p-5 space-y-5">
           {/* Description */}
           {recipe.description && (
             <p className="text-gray-600">{recipe.description}</p>
@@ -137,6 +138,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           )}
         </div>
       </motion.div>
+      </div>
     </div>
   );
 }
