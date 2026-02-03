@@ -47,6 +47,19 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     }
   });
 
+  const updateReviewMutation = useMutation({
+    mutationFn: ({ id, review }) => base44.entities.Recipe.update(id, { review }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipes'] });
+    }
+  });
+
+  const handleReviewSave = (review) => {
+    if (recipe.id && isSaved) {
+      updateReviewMutation.mutate({ id: recipe.id, review });
+    }
+  };
+
   const updateRecipeMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Recipe.update(id, data),
     onSuccess: (updatedRecipe) => {
@@ -315,56 +328,26 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             }
           </div>
 
-          {/* Nutritional Information */}
-          {recipe.nutrition &&
-          <div className="mt-4 sm:mt-6 bg-gradient-to-br from-[#faf6f2] to-[#f5e6dc] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-[#e8d5c4] shadow-inner">
-              <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
-                <div className="w-1 h-5 sm:h-6 bg-[#c17a7a] rounded-full" />
-                Nutrition Facts (per serving)
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4">
-                {recipe.nutrition.calories &&
-              <div className="bg-white rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 shadow-sm border border-[#e8d5c4]">
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.calories}</div>
-                    <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Calories</div>
-                  </div>
-              }
-                {recipe.nutrition.protein &&
-              <div className="bg-white rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 shadow-sm border border-[#e8d5c4]">
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.protein}</div>
-                    <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Protein</div>
-                  </div>
-              }
-                {recipe.nutrition.carbs &&
-              <div className="bg-white rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 shadow-sm border border-[#e8d5c4]">
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.carbs}</div>
-                    <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Carbs</div>
-                  </div>
-              }
-                {recipe.nutrition.fat &&
-              <div className="bg-white rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 shadow-sm border border-[#e8d5c4]">
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.fat}</div>
-                    <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Fat</div>
-                  </div>
-              }
-                {recipe.nutrition.fiber &&
-              <div className="bg-white rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 shadow-sm border border-[#e8d5c4]">
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.fiber}</div>
-                    <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Fiber</div>
-                  </div>
-              }
-                {recipe.nutrition.sodium &&
-              <div className="bg-white rounded-lg sm:rounded-xl p-2.5 sm:p-3 md:p-4 shadow-sm border border-[#e8d5c4]">
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#c17a7a]">{recipe.nutrition.sodium}</div>
-                    <div className="text-[10px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1">Sodium</div>
-                  </div>
-              }
-              </div>
-            </div>
-          }
           </CardHeader>
 
-        <CardContent className="space-y-6 sm:space-y-8 p-4 sm:p-6 md:p-8">
+        <CardContent className="space-y-6 sm:space-y-8 p-4 sm:p-6 md:p-8 pt-0">
+          {/* Enhanced Nutrition Panel */}
+          <NutritionPanel
+            nutrition={recipe.nutrition}
+            vitamins_minerals={recipe.vitamins_minerals}
+            health_benefits={recipe.health_benefits}
+            servings={recipe.servings}
+            currentServings={currentServings}
+          />
+
+          {/* User Rating & Review */}
+          <RecipeReview
+            recipe={recipe}
+            isSaved={isSaved}
+            onRate={handleRate}
+            onReviewSave={handleReviewSave}
+          />
+
           {/* Ingredients */}
           <div className="space-y-3 sm:space-y-4">
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
