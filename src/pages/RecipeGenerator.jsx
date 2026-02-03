@@ -365,7 +365,9 @@ export default function RecipeGenerator() {
       - Preparation and cooking times (be realistic)
       - Number of servings
       - Difficulty level (easy, medium, or hard)
-      - Complete nutritional information per serving (calories, protein, carbs, fat, fiber, sodium)
+      - Complete nutritional information per serving (calories, protein, carbs, fat, fiber, sodium, sugar, saturated_fat, cholesterol)
+      - Key vitamins and minerals with amounts and daily value percentages (e.g., Vitamin A, Vitamin C, Iron, Calcium, Omega-3, etc.)
+      - 3-5 specific health benefits of the recipe (e.g., "Supports brain function with omega-3 fatty acids", "Rich in antioxidants for cellular health")
       - 3-5 helpful cooking tips and tricks
       - 3-5 ingredient substitution suggestions (what can be swapped)
       - 2-4 wine or beverage pairing recommendations
@@ -406,8 +408,26 @@ export default function RecipeGenerator() {
                       carbs: { type: "string" },
                       fat: { type: "string" },
                       fiber: { type: "string" },
-                      sodium: { type: "string" }
+                      sodium: { type: "string" },
+                      sugar: { type: "string" },
+                      saturated_fat: { type: "string" },
+                      cholesterol: { type: "string" }
                     }
+                  },
+                  vitamins_minerals: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        name: { type: "string" },
+                        amount: { type: "string" },
+                        daily_value: { type: "string" }
+                      }
+                    }
+                  },
+                  health_benefits: {
+                    type: "array",
+                    items: { type: "string" }
                   },
                   cooking_tips: {
                     type: "array",
