@@ -338,7 +338,22 @@ export default function RecipeGenerator() {
       - Preparation times (some quick, some more involved)
       - Meal types (appetizers, mains, desserts, side dishes)
 
-      IMPORTANT: Include a good variety of steak and poultry dishes (chicken, turkey, duck). Make sure at least 30-40% of the recipes feature beef steaks or poultry as the main protein.
+      CRITICAL - BRAIN HEALTH FOCUS: All recipes must prioritize ingredients scientifically proven to support brain health and cognitive function. Include:
+      - Fatty fish (salmon, mackerel, sardines) rich in omega-3 DHA and EPA
+      - Leafy greens (spinach, kale, broccoli) high in vitamin K, folate, and antioxidants
+      - Berries (blueberries, strawberries) with anthocyanins and flavonoids
+      - Nuts and seeds (walnuts, flaxseeds, chia seeds) for omega-3s and vitamin E
+      - Whole grains (quinoa, oats, brown rice) for steady glucose and B vitamins
+      - Eggs (especially yolks) for choline
+      - Dark chocolate/cacao for flavonoids
+      - Turmeric and other anti-inflammatory spices
+      - Avocados for healthy fats and vitamin K
+      - Legumes and beans for protein and fiber
+      - Extra virgin olive oil for polyphenols
+      
+      Avoid or minimize: processed foods, refined sugars, excessive saturated fats, and inflammatory ingredients.
+      
+      Include a good variety of lean proteins including poultry (chicken, turkey) and fatty fish. Make sure at least 30-40% of the recipes feature brain-healthy proteins as the main ingredient.
 
       Each recipe must have:
       - A creative and appealing name
