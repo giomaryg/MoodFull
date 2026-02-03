@@ -340,19 +340,22 @@ export default function RecipeGenerator() {
 
       BALANCED VARIETY - Mix of healthy and comfort foods:
       
-      HEALTHY OPTIONS (about 50% of recipes) - Include brain & body health ingredients:
-      - Fatty fish (salmon, mackerel) for omega-3s
-      - Leafy greens, berries, nuts and seeds
-      - Whole grains, legumes, avocados
-      - Extra virgin olive oil, turmeric, ginger
-      - Fermented foods, colorful vegetables
+      PROTEIN-FOCUSED RECIPES (at least 60% of recipes) - Feature these proteins prominently:
+      - BEEF: Ribeye steaks, filet mignon, NY strip, ground beef, beef tenderloin, brisket, short ribs
+      - CHICKEN: Grilled chicken breast, roasted whole chicken, chicken thighs, wings, chicken cutlets
+      - PORK: Pork chops, pork tenderloin, pulled pork, bacon-wrapped dishes, pork belly, ribs
+      - SEAFOOD: Salmon, shrimp, lobster, crab, scallops, tuna steaks, cod, halibut, mussels
+      - OTHER: Lamb chops, duck breast, turkey, sausages
       
-      COMFORT & CLASSIC OPTIONS (about 50% of recipes) - Delicious everyday favorites:
+      HEALTHY OPTIONS (about 20% of recipes) - Include brain & body health ingredients:
+      - Fatty fish (salmon, mackerel) for omega-3s
+      - Lean proteins with leafy greens
+      - Grilled meats with vegetable sides
+      
+      COMFORT & CLASSIC OPTIONS (about 20% of recipes) - Delicious everyday favorites:
       - Hearty steaks, burgers, and beef dishes
-      - Creamy pastas and mac & cheese
+      - Creamy pastas with meat
       - Fried chicken, wings, and crispy dishes
-      - Pizza, tacos, and international street food
-      - Rich desserts and indulgent treats
       - Classic comfort foods like meatloaf, pot roast, BBQ
       
       This balance ensures users enjoy variety - from nutritious brain-boosting meals to satisfying comfort classics.
