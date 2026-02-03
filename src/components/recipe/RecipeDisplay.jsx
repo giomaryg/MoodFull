@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
@@ -12,6 +12,8 @@ import { base44 } from '@/api/base44Client';
 // but standard import works fine in most setups. 
 import SimilarRecipes from './SimilarRecipes';
 import RecipeEditDialog from './RecipeEditDialog';
+import NutritionPanel from './NutritionPanel';
+import RecipeReview from './RecipeReview';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
