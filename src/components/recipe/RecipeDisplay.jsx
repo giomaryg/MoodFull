@@ -486,7 +486,6 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             </div>
           )}
         </CardContent>
-        </CardContent>
       </Card>
 
       {/* Similar Recipes Section */}
