@@ -338,38 +338,24 @@ export default function RecipeGenerator() {
       - Preparation times (some quick, some more involved)
       - Meal types (appetizers, mains, desserts, side dishes)
 
-      CRITICAL - BRAIN & OVERALL HEALTH FOCUS: All recipes must prioritize ingredients scientifically proven to support brain health, cognitive function, and overall wellness. Include:
+      BALANCED VARIETY - Mix of healthy and comfort foods:
       
-      BRAIN HEALTH:
-      - Fatty fish (salmon, mackerel, sardines) rich in omega-3 DHA and EPA
-      - Leafy greens (spinach, kale, broccoli) high in vitamin K, folate, and antioxidants
-      - Berries (blueberries, strawberries) with anthocyanins and flavonoids
-      - Nuts and seeds (walnuts, flaxseeds, chia seeds) for omega-3s and vitamin E
-      - Eggs (especially yolks) for choline
-      - Dark chocolate/cacao for flavonoids
-      - Turmeric and other anti-inflammatory spices
+      HEALTHY OPTIONS (about 50% of recipes) - Include brain & body health ingredients:
+      - Fatty fish (salmon, mackerel) for omega-3s
+      - Leafy greens, berries, nuts and seeds
+      - Whole grains, legumes, avocados
+      - Extra virgin olive oil, turmeric, ginger
+      - Fermented foods, colorful vegetables
       
-      HEART HEALTH:
-      - Extra virgin olive oil for polyphenols and healthy monounsaturated fats
-      - Avocados for potassium and healthy fats
-      - Garlic and onions for cardiovascular benefits
-      - Tomatoes for lycopene
+      COMFORT & CLASSIC OPTIONS (about 50% of recipes) - Delicious everyday favorites:
+      - Hearty steaks, burgers, and beef dishes
+      - Creamy pastas and mac & cheese
+      - Fried chicken, wings, and crispy dishes
+      - Pizza, tacos, and international street food
+      - Rich desserts and indulgent treats
+      - Classic comfort foods like meatloaf, pot roast, BBQ
       
-      GUT HEALTH & IMMUNITY:
-      - Fermented foods (yogurt, kimchi, sauerkraut) for probiotics
-      - Fiber-rich legumes and beans
-      - Whole grains (quinoa, oats, brown rice) for prebiotics and B vitamins
-      - Ginger for digestion and anti-inflammation
-      
-      LONGEVITY & ANTI-AGING:
-      - Colorful vegetables for diverse phytonutrients
-      - Green tea or matcha for EGCG
-      - Cruciferous vegetables (broccoli, cauliflower, Brussels sprouts) for sulforaphane
-      - Herbs like rosemary, oregano, and basil for antioxidants
-      
-      Avoid or minimize: processed foods, refined sugars, excessive saturated fats, trans fats, and inflammatory ingredients.
-      
-      Include a good variety of lean proteins including poultry (chicken, turkey) and fatty fish. Make sure at least 30-40% of the recipes feature health-promoting proteins as the main ingredient.
+      This balance ensures users enjoy variety - from nutritious brain-boosting meals to satisfying comfort classics.
 
       Each recipe must have:
       - A creative and appealing name
