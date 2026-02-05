@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronRight, ChevronLeft, Sparkles, Check } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Sparkles, Check, X } from 'lucide-react';
 
 const priorities = [
   'Quick & Easy',
@@ -26,7 +26,7 @@ const cuisines = [
 
 const mealOptions = ['1-3 meals', '4-7 meals', '8-14 meals', '15+ meals'];
 
-export default function PreferenceSurvey({ onComplete, initialData = {}, currentUser = {} }) {
+export default function PreferenceSurvey({ onComplete, onSkip, initialData = {}, currentUser = {} }) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     gender: initialData.gender || currentUser.gender || '',
@@ -419,7 +419,16 @@ export default function PreferenceSurvey({ onComplete, initialData = {}, current
 
   return (
     <div className="max-w-2xl mx-auto px-4">
-      <Card className="border-0 shadow-2xl rounded-2xl sm:rounded-3xl">
+      <Card className="border-0 shadow-2xl rounded-2xl sm:rounded-3xl relative">
+        {onSkip && (
+          <button
+            onClick={onSkip}
+            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors z-10"
+            aria-label="Skip survey"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
         <CardContent className="p-6 sm:p-8 md:p-10">
           <div className="mb-8">
             <div className="flex justify-between text-sm text-gray-500 mb-2">
