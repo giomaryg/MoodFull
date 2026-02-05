@@ -11,6 +11,14 @@ export default function Layout({ children, currentPageName }) {
           font-family: 'Italiana', serif;
           font-weight: 700;
         }
+        
+        p, span, li, label, td, th {
+          font-weight: 600;
+        }
+        
+        .text-xs, .text-sm {
+          font-weight: 600;
+        }
       `}</style>
       {children}
     </>
