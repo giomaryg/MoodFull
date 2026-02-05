@@ -557,6 +557,7 @@ export default function RecipeGenerator() {
 
               <PreferenceSurvey
                 onComplete={handleSurveyComplete}
+                onSkip={() => setShowSurvey(false)}
                 initialData={userPreferences || {}}
                 currentUser={currentUser || {}} />
 
