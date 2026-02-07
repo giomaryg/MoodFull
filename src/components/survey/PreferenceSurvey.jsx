@@ -458,7 +458,7 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
             </motion.div>
           </AnimatePresence>
 
-          <div className="flex justify-between mt-8 pt-6 border-t">
+          <div className="flex justify-between items-center mt-8 pt-6 border-t">
             <Button
               onClick={handleBack}
               variant="outline"
@@ -468,6 +468,15 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
               <ChevronLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
+            {onSkip && (
+              <Button
+                onClick={onSkip}
+                variant="ghost"
+                className="text-gray-500 hover:text-gray-700"
+              >
+                Skip
+              </Button>
+            )}
             <Button
               onClick={handleNext}
               disabled={!canProceed()}
