@@ -382,12 +382,27 @@ export default function RecipeGenerator() {
         return { index, detail };
       });
 
-      // Update recipes as each detail comes in
+      // Update recipes as each detail comes in, then load photo after detail is ready
       enrichPromises.forEach(async (promise) => {
         const { index, detail } = await promise;
         setGeneratedRecipes(prev => prev.map((r, i) =>
-          i === index ? { ...r, ...detail, _loading: false } : r
+          i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
         ));
+
+        // Load photo only after recipe details are shown
+        try {
+          const recipe = quickRecipes[index];
+          const imageResponse = await base44.integrations.Core.GenerateImage({
+            prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+          });
+          setGeneratedRecipes(prev => prev.map((r, i) =>
+            i === index ? { ...r, imageUrl: imageResponse.url, imageLoading: false } : r
+          ));
+        } catch {
+          setGeneratedRecipes(prev => prev.map((r, i) =>
+            i === index ? { ...r, imageLoading: false } : r
+          ));
+        }
       });
 
     } catch (error) {
