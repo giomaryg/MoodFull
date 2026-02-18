@@ -58,6 +58,11 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
                      <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
                      <span className="text-xs text-[#6b9b76] opacity-70">Loading details...</span>
                    </div>
+                 ) : recipe.imageLoading ? (
+                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                     <ChefHat className="w-16 h-16 text-[#6b9b76] opacity-20" />
+                     <span className="text-xs text-[#6b9b76] opacity-50">Loading photo...</span>
+                   </div>
                  ) : recipe.imageUrl ? (
                    <img 
                      src={recipe.imageUrl} 
