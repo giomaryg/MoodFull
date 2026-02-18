@@ -297,24 +297,20 @@ export default function RecipeGenerator() {
     let preferencesContext = '';
     if (userPreferences?.survey_completed) {
       const prefs = [];
-      if (userPreferences.allergies) prefs.push(`AVOID allergens: ${userPreferences.allergies}`);
+      if (userPreferences.allergies) prefs.push(`AVOID: ${userPreferences.allergies}`);
       if (userPreferences.diet_preferences) prefs.push(`Diet: ${userPreferences.diet_preferences}`);
-      if (userPreferences.blood_sugar_friendly) prefs.push(`Blood sugar friendly: low glycemic, balanced macros`);
-      if (userPreferences.priorities?.length > 0) prefs.push(`Priorities: ${userPreferences.priorities.join(', ')}`);
+      if (userPreferences.blood_sugar_friendly) prefs.push(`Low glycemic`);
       if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
-      if (prefs.length > 0) preferencesContext = `\nUser preferences: ${prefs.join('. ')}`;
+      if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
     try {
       const searchContext = globalSearchQuery ? `matching "${globalSearchQuery}"` : '';
       const moodPart = selectedMoods.length > 0 ? `for mood: ${moodContext}` : '';
 
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 12 diverse recipes ${moodPart} ${searchContext}.${preferencesContext}
-
-  Include variety in cuisine, difficulty, and meal types. Mix proteins (beef, chicken, seafood, pork) with healthy and comfort options.
-
-  Each recipe needs: name, description (1 sentence), ingredients with measurements, step-by-step instructions, prep_time, cook_time, servings, difficulty (easy/medium/hard), nutrition (calories number, protein, carbs, fat, fiber, sodium, sugar, saturated_fat, cholesterol as strings), vitamins_minerals (name, amount, daily_value), health_benefits (3), cooking_tips (3), substitutions (ingredient + substitute, 3), pairings (2), cuisine_type, main_ingredients (2-3).`,
+      // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
+      const quickResponse = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate 8 diverse recipe ideas ${moodPart} ${searchContext}.${preferencesContext} Include variety in cuisine and difficulty. For each: name, 1-sentence description, prep_time, cook_time, servings, difficulty, cuisine_type, main_ingredients (2-3).`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -325,31 +321,10 @@ export default function RecipeGenerator() {
                 properties: {
                   name: { type: "string" },
                   description: { type: "string" },
-                  ingredients: { type: "array", items: { type: "string" } },
-                  instructions: { type: "array", items: { type: "string" } },
                   prep_time: { type: "string" },
                   cook_time: { type: "string" },
                   servings: { type: "number" },
                   difficulty: { type: "string", enum: ["easy", "medium", "hard"] },
-                  nutrition: {
-                    type: "object",
-                    properties: {
-                      calories: { type: "number" },
-                      protein: { type: "string" },
-                      carbs: { type: "string" },
-                      fat: { type: "string" },
-                      fiber: { type: "string" },
-                      sodium: { type: "string" },
-                      sugar: { type: "string" },
-                      saturated_fat: { type: "string" },
-                      cholesterol: { type: "string" }
-                    }
-                  },
-                  vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
-                  health_benefits: { type: "array", items: { type: "string" } },
-                  cooking_tips: { type: "array", items: { type: "string" } },
-                  substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
-                  pairings: { type: "array", items: { type: "string" } },
                   cuisine_type: { type: "string" },
                   main_ingredients: { type: "array", items: { type: "string" } }
                 }
@@ -359,17 +334,62 @@ export default function RecipeGenerator() {
         }
       });
 
-      const recipesWithMood = (response.recipes || [])
-        .filter(r => r && r.name && r.description && r.ingredients && r.instructions)
+      const quickRecipes = (quickResponse.recipes || [])
+        .filter(r => r && r.name && r.description)
         .map((recipe) => ({
           ...recipe,
           mood: selectedMoods.join(', '),
-          imageUrl: null,
-          imageLoading: false
+          ingredients: [],
+          instructions: [],
+          _loading: true
         }));
 
-      setGeneratedRecipes(recipesWithMood);
+      // Show recipes immediately
+      setGeneratedRecipes(quickRecipes);
       setIsGenerating(false);
+
+      // Phase 2: Enrich all recipes in parallel (ingredients, instructions, nutrition, etc.)
+      const enrichPromises = quickRecipes.map(async (recipe, index) => {
+        const detail = await base44.integrations.Core.InvokeLLM({
+          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              ingredients: { type: "array", items: { type: "string" } },
+              instructions: { type: "array", items: { type: "string" } },
+              nutrition: {
+                type: "object",
+                properties: {
+                  calories: { type: "number" },
+                  protein: { type: "string" },
+                  carbs: { type: "string" },
+                  fat: { type: "string" },
+                  fiber: { type: "string" },
+                  sodium: { type: "string" },
+                  sugar: { type: "string" },
+                  saturated_fat: { type: "string" },
+                  cholesterol: { type: "string" }
+                }
+              },
+              vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
+              health_benefits: { type: "array", items: { type: "string" } },
+              cooking_tips: { type: "array", items: { type: "string" } },
+              substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
+              pairings: { type: "array", items: { type: "string" } }
+            }
+          }
+        });
+        return { index, detail };
+      });
+
+      // Update recipes as each detail comes in
+      enrichPromises.forEach(async (promise) => {
+        const { index, detail } = await promise;
+        setGeneratedRecipes(prev => prev.map((r, i) =>
+          i === index ? { ...r, ...detail, _loading: false } : r
+        ));
+      });
+
     } catch (error) {
       toast.error('Failed to generate recipe. Please try again.');
       setIsGenerating(false);
