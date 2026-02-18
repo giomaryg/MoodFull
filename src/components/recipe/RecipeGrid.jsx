@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw } from 'lucide-react';
+import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, Loader2 } from 'lucide-react';
 import HighlightedText from './HighlightedText';
 
 function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
