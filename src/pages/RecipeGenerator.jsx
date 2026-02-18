@@ -42,6 +42,10 @@ export default function RecipeGenerator() {
   const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [activeTab]);
+
     useLayoutEffect(() => {
     if (!currentRecipe) {
       window.scrollTo({ top: scrollPosition, behavior: 'auto' });
@@ -512,6 +516,7 @@ export default function RecipeGenerator() {
     setCurrentRecipe(recipe);
     setSelectedMoods(recipe.mood.split(', '));
     setSavedRecipeId(recipe.id);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
 
@@ -734,6 +739,7 @@ export default function RecipeGenerator() {
                         setScrollPosition(window.scrollY);
                         setCurrentRecipe(recipe);
                         setSavedRecipeId(null);
+                        window.scrollTo({ top: 0, behavior: 'auto' });
                       }}
                       onStartOver={() => {
                         setGeneratedRecipes([]);
@@ -803,6 +809,7 @@ export default function RecipeGenerator() {
                     setScrollPosition(window.scrollY);
                     setCurrentRecipe(recipe);
                     setSavedRecipeId(null);
+                    window.scrollTo({ top: 0, behavior: 'auto' });
                   }}
                 />
               )}
