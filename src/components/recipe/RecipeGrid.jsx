@@ -52,22 +52,18 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
               className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#c5d9c9] bg-white hover:bg-[#f8faf8] group rounded-2xl overflow-hidden h-full"
               >
               {/* Recipe Image */}
-              <div className="relative h-40 sm:h-44 md:h-48 bg-gradient-to-br from-[#f5e8e8] to-[#d4e4d6] overflow-hidden">
-                {recipe.imageLoading ? (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c17a7a]"></div>
-                  </div>
-                ) : recipe.imageUrl ? (
-                  <img 
-                    src={recipe.imageUrl} 
-                    alt={recipe.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <ChefHat className="w-16 h-16 text-[#6b9b76] opacity-30" />
-                  </div>
-                )}
+               <div className="relative h-40 sm:h-44 md:h-48 bg-gradient-to-br from-[#f5e8e8] to-[#d4e4d6] overflow-hidden">
+                 {recipe.imageUrl ? (
+                   <img 
+                     src={recipe.imageUrl} 
+                     alt={recipe.name}
+                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                   />
+                 ) : (
+                   <div className="absolute inset-0 flex items-center justify-center">
+                     <ChefHat className="w-16 h-16 text-[#6b9b76] opacity-30" />
+                   </div>
+                 )}
               </div>
 
               <CardContent className="p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4 flex flex-col">
