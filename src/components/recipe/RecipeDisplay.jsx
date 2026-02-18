@@ -23,9 +23,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const descriptionRef = useRef(null);
 
   useEffect(() => {
-    if (descriptionRef.current) {
-      descriptionRef.current.scrollIntoView({ behavior: 'auto', block: 'start' });
-    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [recipe.id]);
 
   // Reset servings when recipe changes
