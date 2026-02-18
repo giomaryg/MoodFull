@@ -51,9 +51,14 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
               onClick={() => onRecipeClick(recipe)}
               className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#c5d9c9] bg-white hover:bg-[#f8faf8] group rounded-2xl overflow-hidden h-full"
               >
-              {/* Recipe Image */}
+              {/* Recipe Image / Loading */}
                <div className="relative h-40 sm:h-44 md:h-48 bg-gradient-to-br from-[#f5e8e8] to-[#d4e4d6] overflow-hidden">
-                 {recipe.imageUrl ? (
+                 {recipe._loading ? (
+                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                     <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
+                     <span className="text-xs text-[#6b9b76] opacity-70">Loading details...</span>
+                   </div>
+                 ) : recipe.imageUrl ? (
                    <img 
                      src={recipe.imageUrl} 
                      alt={recipe.name}
