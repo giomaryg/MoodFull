@@ -280,108 +280,41 @@ export default function RecipeGenerator() {
     setSavedRecipeId(null);
 
     const moodDescriptions = {
-      happy: "light, fun, colorful dishes that bring joy and celebrate good times",
-      cozy: "warm, comforting meals perfect for relaxing at home",
-      energetic: "nutritious, energizing dishes with fresh ingredients to fuel your day",
-      lazy: "easy, minimal-effort comfort food that requires little cooking - simple one-pot meals, no-fuss dishes, and relaxed cooking that still tastes great",
-      stressed: "simple, soothing comfort food that's easy to make and calming to eat",
-      romantic: "elegant, sophisticated dishes perfect for a special dinner for two",
-      adventurous: "bold, exotic flavors from around the world that excite the palate",
-      anxious: "calming, grounding meals with familiar flavors - gentle, easy-to-digest dishes that bring comfort and peace of mind",
-      kid_friendly: "fun, nutritious, family-friendly meals that kids will love - simple flavors, colorful presentation, finger foods, and dishes that are easy for children to eat and enjoy",
-      nostalgic: "classic, traditional recipes that evoke memories and comfort - timeless dishes from the past, grandmother's cooking, old-fashioned favorites, and recipes that bring back warm memories"
+      happy: "light, fun, colorful dishes",
+      cozy: "warm, comforting meals",
+      energetic: "nutritious, energizing dishes",
+      lazy: "easy, minimal-effort comfort food",
+      stressed: "simple, soothing comfort food",
+      romantic: "elegant dishes for two",
+      adventurous: "bold, exotic flavors",
+      anxious: "calming, grounding meals",
+      kid_friendly: "fun, family-friendly meals kids love",
+      nostalgic: "classic, traditional recipes"
     };
 
-    const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(' and ');
+    const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(', ');
 
     let preferencesContext = '';
-    if (userPreferences && userPreferences.survey_completed) {
+    if (userPreferences?.survey_completed) {
       const prefs = [];
-      if (userPreferences.allergies) {
-        prefs.push(`CRITICAL - AVOID these allergens: ${userPreferences.allergies}`);
-      }
-      if (userPreferences.diet_preferences) {
-        prefs.push(`Follow these dietary preferences: ${userPreferences.diet_preferences}`);
-      }
-      if (userPreferences.blood_sugar_friendly) {
-        prefs.push(`CRITICAL - This user needs blood sugar friendly recipes. Focus on low glycemic index foods, balanced macros, minimal added sugars, complex carbs, and fiber-rich ingredients suitable for diabetes management.`);
-      }
-      if (userPreferences.priorities?.length > 0) {
-        prefs.push(`Prioritize: ${userPreferences.priorities.join(', ')}`);
-      }
-      if (userPreferences.preferred_cuisines?.length > 0) {
-        prefs.push(`Preferred cuisines to draw inspiration from: ${userPreferences.preferred_cuisines.join(', ')}`);
-      }
-      if (userPreferences.meals_per_week) {
-        const complexity = userPreferences.meals_per_week.includes('1-3') ? 'Keep it simple and easy' : 'Can be more involved';
-        prefs.push(`User cooks ${userPreferences.meals_per_week}. ${complexity}`);
-      }
-
-      if (prefs.length > 0) {
-        preferencesContext = `\n\nUSER PREFERENCES:\n${prefs.join('\n')}`;
-      }
+      if (userPreferences.allergies) prefs.push(`AVOID allergens: ${userPreferences.allergies}`);
+      if (userPreferences.diet_preferences) prefs.push(`Diet: ${userPreferences.diet_preferences}`);
+      if (userPreferences.blood_sugar_friendly) prefs.push(`Blood sugar friendly: low glycemic, balanced macros`);
+      if (userPreferences.priorities?.length > 0) prefs.push(`Priorities: ${userPreferences.priorities.join(', ')}`);
+      if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+      if (prefs.length > 0) preferencesContext = `\nUser preferences: ${prefs.join('. ')}`;
     }
 
     try {
-      let promptText = 'Generate 25 diverse and delicious recipes';
-      if (selectedMoods.length > 0) promptText += ` for someone feeling ${selectedMoods.join(' and ')}`;
-      if (globalSearchQuery) promptText += ` based on the request: "${globalSearchQuery}"`;
-
-      let promptContext = '';
-      if (selectedMoods.length > 0) promptContext += `The recipes should match these moods: ${moodContext}. `;
-      if (globalSearchQuery) promptContext += `IMPORTANT: The user specifically searched for "${globalSearchQuery}". Ensure the recipes match this request (e.g. if searching for 'dessert', provide desserts). `;
+      const searchContext = globalSearchQuery ? `matching "${globalSearchQuery}"` : '';
+      const moodPart = selectedMoods.length > 0 ? `for mood: ${moodContext}` : '';
 
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${promptText}. 
+        prompt: `Generate 12 diverse recipes ${moodPart} ${searchContext}.${preferencesContext}
 
-      ${promptContext}${preferencesContext}
+  Include variety in cuisine, difficulty, and meal types. Mix proteins (beef, chicken, seafood, pork) with healthy and comfort options.
 
-      Create 30 unique, appetizing recipes with variety in:
-      - Cuisine types (different cultures and cooking styles)
-      - Difficulty levels (mix of easy, medium, and hard)
-      - Preparation times (some quick, some more involved)
-      - Meal types (appetizers, mains, desserts, side dishes)
-
-      BALANCED VARIETY - Mix of healthy and comfort foods:
-      
-      PROTEIN-FOCUSED RECIPES (at least 60% of recipes) - Feature these proteins prominently:
-      - BEEF: Ribeye steaks, filet mignon, NY strip, ground beef, beef tenderloin, brisket, short ribs
-      - CHICKEN: Grilled chicken breast, roasted whole chicken, chicken thighs, wings, chicken cutlets
-      - PORK: Pork chops, pork tenderloin, pulled pork, bacon-wrapped dishes, pork belly, ribs
-      - SEAFOOD: Salmon, shrimp, lobster, crab, scallops, tuna steaks, cod, halibut, mussels
-      - OTHER: Lamb chops, duck breast, turkey, sausages
-      
-      HEALTHY OPTIONS (about 20% of recipes) - Include brain & body health ingredients:
-      - Fatty fish (salmon, mackerel) for omega-3s
-      - Lean proteins with leafy greens
-      - Grilled meats with vegetable sides
-      
-      COMFORT & CLASSIC OPTIONS (about 20% of recipes) - Delicious everyday favorites:
-      - Hearty steaks, burgers, and beef dishes
-      - Creamy pastas with meat
-      - Fried chicken, wings, and crispy dishes
-      - Classic comfort foods like meatloaf, pot roast, BBQ
-      
-      This balance ensures users enjoy variety - from nutritious brain-boosting meals to satisfying comfort classics.
-
-      Each recipe must have:
-      - A creative and appealing name
-      - A brief, enticing description (2-3 sentences)
-      - Complete list of ingredients with measurements
-      - Step-by-step cooking instructions
-      - Preparation and cooking times (be realistic)
-      - Number of servings
-      - Difficulty level (easy, medium, or hard)
-      - Complete nutritional information per serving (calories, protein, carbs, fat, fiber, sodium, sugar, saturated_fat, cholesterol)
-      - Key vitamins and minerals with amounts and daily value percentages (e.g., Vitamin A, Vitamin C, Iron, Calcium, Omega-3, etc.)
-      - 3-5 specific health benefits of the recipe (e.g., "Supports brain function with omega-3 fatty acids", "Rich in antioxidants for cellular health")
-      - 3-5 helpful cooking tips and tricks
-      - 3-5 ingredient substitution suggestions (what can be swapped)
-      - 2-4 wine or beverage pairing recommendations
-      - Cuisine type (e.g., Italian, Mexican, Asian, etc.)
-      - 2-3 main ingredients (key ingredients for finding similar recipes)
-
-      Make each recipe special and memorable!`,
+  Each recipe needs: name, description (1 sentence), ingredients with measurements, step-by-step instructions, prep_time, cook_time, servings, difficulty (easy/medium/hard), nutrition (calories number, protein, carbs, fat, fiber, sodium, sugar, saturated_fat, cholesterol as strings), vitamins_minerals (name, amount, daily_value), health_benefits (3), cooking_tips (3), substitutions (ingredient + substitute, 3), pairings (2), cuisine_type, main_ingredients (2-3).`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -392,21 +325,12 @@ export default function RecipeGenerator() {
                 properties: {
                   name: { type: "string" },
                   description: { type: "string" },
-                  ingredients: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  instructions: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
+                  ingredients: { type: "array", items: { type: "string" } },
+                  instructions: { type: "array", items: { type: "string" } },
                   prep_time: { type: "string" },
                   cook_time: { type: "string" },
                   servings: { type: "number" },
-                  difficulty: {
-                    type: "string",
-                    enum: ["easy", "medium", "hard"]
-                  },
+                  difficulty: { type: "string", enum: ["easy", "medium", "hard"] },
                   nutrition: {
                     type: "object",
                     properties: {
@@ -421,44 +345,13 @@ export default function RecipeGenerator() {
                       cholesterol: { type: "string" }
                     }
                   },
-                  vitamins_minerals: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        name: { type: "string" },
-                        amount: { type: "string" },
-                        daily_value: { type: "string" }
-                      }
-                    }
-                  },
-                  health_benefits: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  cooking_tips: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
-                  substitutions: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        ingredient: { type: "string" },
-                        substitute: { type: "string" }
-                      }
-                    }
-                  },
-                  pairings: {
-                    type: "array",
-                    items: { type: "string" }
-                  },
+                  vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
+                  health_benefits: { type: "array", items: { type: "string" } },
+                  cooking_tips: { type: "array", items: { type: "string" } },
+                  substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
+                  pairings: { type: "array", items: { type: "string" } },
                   cuisine_type: { type: "string" },
-                  main_ingredients: {
-                    type: "array",
-                    items: { type: "string" }
-                  }
+                  main_ingredients: { type: "array", items: { type: "string" } }
                 }
               }
             }
@@ -472,33 +365,11 @@ export default function RecipeGenerator() {
           ...recipe,
           mood: selectedMoods.join(', '),
           imageUrl: null,
-          imageLoading: true
+          imageLoading: false
         }));
 
       setGeneratedRecipes(recipesWithMood);
       setIsGenerating(false);
-
-      // Generate images in background after recipes are shown
-      Promise.all(
-        recipesWithMood.map(async (recipe, index) => {
-          try {
-            const imageResponse = await base44.integrations.Core.GenerateImage({
-              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality, detailed, delicious looking meal.`
-            });
-            return { index, url: imageResponse.url };
-          } catch (error) {
-            return { index, url: null };
-          }
-        })
-      ).then((images) => {
-        setGeneratedRecipes((prev) =>
-          prev.map((recipe, i) => ({
-            ...recipe,
-            imageUrl: images[i].url,
-            imageLoading: false
-          }))
-        );
-      });
     } catch (error) {
       toast.error('Failed to generate recipe. Please try again.');
       setIsGenerating(false);
