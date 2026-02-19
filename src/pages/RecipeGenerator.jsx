@@ -310,7 +310,7 @@ export default function RecipeGenerator() {
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
       const quickResponse = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 8 diverse recipe ideas ${moodPart} ${searchContext}.${preferencesContext} Include variety in cuisine and difficulty. For each: name, 1-sentence description, prep_time, cook_time, servings, difficulty, cuisine_type, main_ingredients (2-3).`,
+        prompt: `Generate 8 diverse recipe ideas ${moodPart} ${searchContext}.${preferencesContext} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Do NOT generate 8 similar recipes - make them varied and interesting.`,
         response_json_schema: {
           type: "object",
           properties: {
