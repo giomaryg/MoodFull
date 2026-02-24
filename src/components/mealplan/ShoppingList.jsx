@@ -8,6 +8,24 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
 function ShoppingList({ mealPlans, recipes, onClose }) {
+  const queryClient = useQueryClient();
+  const [readdingId, setReaddingId] = useState(null);
+
+  const handleReaddToMealPlan = async (plan) => {
+    setReaddingId(plan.id);
+    const today = new Date().toISOString().split('T')[0];
+    await base44.entities.MealPlan.create({
+      recipe_id: plan.recipe_id || null,
+      recipe_name: plan.recipe_name,
+      date: today,
+      meal_type: plan.meal_type,
+      servings: plan.servings || 2,
+      notes: plan.notes || ''
+    });
+    queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
+    toast.success(`${plan.recipe_name} added to today's meal plan!`);
+    setReaddingId(null);
+  };
   const [checkedItems, setCheckedItems] = useState({});
   const [expandedRecipes, setExpandedRecipes] = useState({});
   const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', 'by-recipe', or 'history'
