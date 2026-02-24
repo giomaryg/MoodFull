@@ -521,13 +521,21 @@ Make them balanced, diverse, and delicious. Include:
                                   }`}
                                 >
                                   <div 
-                                    onClick={() => {
-                                      if (linkedRecipe) setSelectedRecipe(linkedRecipe);
+                                    onClick={async () => {
+                                      if (!meal.recipe_id) return;
+                                      if (linkedRecipe) {
+                                        setSelectedRecipe(linkedRecipe);
+                                      } else {
+                                        setLoadingRecipeId(meal.id);
+                                        const results = await base44.entities.Recipe.filter({ id: meal.recipe_id });
+                                        setLoadingRecipeId(null);
+                                        if (results?.length > 0) setSelectedRecipe(results[0]);
+                                      }
                                     }}
-                                    className={linkedRecipe ? 'cursor-pointer' : ''}
+                                    className={meal.recipe_id ? 'cursor-pointer' : ''}
                                   >
-                                    <p className={`font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal ${linkedRecipe ? 'hover:underline' : ''}`}>
-                                      {meal.recipe_name}
+                                    <p className={`font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal ${meal.recipe_id ? 'hover:underline' : ''}`}>
+                                      {loadingRecipeId === meal.id ? '...' : meal.recipe_name}
                                     </p>
                                     {meal.servings && (
                                       <p className="text-gray-500 text-xs">
