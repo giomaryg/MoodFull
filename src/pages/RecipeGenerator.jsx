@@ -609,7 +609,7 @@ export default function RecipeGenerator() {
 
               {/* Generate Button */}
               <AnimatePresence mode="wait">
-                {selectedMoods.length > 0 && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
+                {(selectedMoods.length > 0 || selectedMealTypes.length > 0) && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
