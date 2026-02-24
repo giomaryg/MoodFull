@@ -441,7 +441,7 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
               mealPlans.map((plan, index) => {
                 const recipe = recipes.find(r => r.id === plan.recipe_id);
                 return (
-                <div key={plan.id} className="border-2 border-[#c5d9c9] rounded-xl overflow-hidden">
+                <div key={plan.id} className="border-2 border-[#c5d9c9] rounded-xl overflow-hidden bg-white">
                   <div className="w-full p-4 bg-[#f5f5f5] flex items-center justify-between gap-2">
                     <div>
                       <p className="font-semibold text-gray-900">{plan.recipe_name}</p>
