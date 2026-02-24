@@ -24,11 +24,11 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
   const [selectedPlanIds, setSelectedPlanIds] = useState(new Set(validPlanIds));
   const [selectedRecipeIds, setSelectedRecipeIds] = useState(new Set());
 
-  // Remove deleted meal plans / recipes from selection
+  // Remove deleted meal plans / recipes from selection; also drop plans with no recipe/ingredients
   useEffect(() => {
-    const validPlanIds = new Set(mealPlans.map(p => p.id));
-    setSelectedPlanIds(prev => new Set([...prev].filter(id => validPlanIds.has(id))));
-  }, [mealPlans]);
+    const valid = new Set(validPlanIds);
+    setSelectedPlanIds(prev => new Set([...prev].filter(id => valid.has(id))));
+  }, [validPlanIds]);
 
   useEffect(() => {
     const validRecipeIds = new Set(recipes.map(r => r.id));
