@@ -515,19 +515,17 @@ Make them balanced, diverse, and delicious. Include:
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className={`bg-[#f5e6dc] rounded-lg p-2 text-xs group relative cursor-move ${
+                                  className={`bg-[#f5e6dc] rounded-lg p-2 text-xs group relative ${
                                     snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
                                   }`}
                                 >
+                                  {/* Drag handle - only the grip area */}
+                                  <div {...provided.dragHandleProps} className="absolute inset-0 rounded-lg cursor-move" />
                                   <div 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      if (linkedRecipe) {
-                                        setSelectedRecipe(linkedRecipe);
-                                      }
+                                    onClick={() => {
+                                      if (linkedRecipe) setSelectedRecipe(linkedRecipe);
                                     }}
-                                    className={linkedRecipe ? 'cursor-pointer' : ''}
+                                    className={`relative z-10 ${linkedRecipe ? 'cursor-pointer' : ''}`}
                                   >
                                     <p className={`font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal ${linkedRecipe ? 'hover:underline' : ''}`}>
                                       {meal.recipe_name}
