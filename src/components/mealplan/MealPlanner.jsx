@@ -521,9 +521,16 @@ Make them balanced, diverse, and delicious. Include:
                                   }`}
                                 >
                                   <div 
-                                    onClick={(e) => {
+                                    onClick={async (e) => {
                                       e.stopPropagation();
-                                      setSelectedRecipe(linkedRecipe || { name: meal.recipe_name, servings: meal.servings });
+                                      if (linkedRecipe) {
+                                        setSelectedRecipe(linkedRecipe);
+                                      } else if (meal.recipe_id) {
+                                        setLoadingRecipeId(meal.id);
+                                        const fetched = await base44.entities.Recipe.filter({ id: meal.recipe_id });
+                                        setLoadingRecipeId(null);
+                                        if (fetched?.length > 0) setSelectedRecipe(fetched[0]);
+                                      }
                                     }}
                                     className="cursor-pointer"
                                   >
