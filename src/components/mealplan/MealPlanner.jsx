@@ -542,8 +542,18 @@ Make them balanced, diverse, and delicious. Include:
            if (meal.recipe_id) {
              setLoadingRecipeId(meal.id);
              try {
-               const result = await base44.entities.Recipe.get(meal.recipe_id);
-               if (result) setSelectedRecipe(result);
+               const results = await base44.entities.Recipe.filter({ id: meal.recipe_id });
+               if (results?.length > 0) {
+                 setSelectedRecipe(results[0]);
+               } else {
+                 setSelectedRecipe({
+                   name: meal.recipe_name,
+                   ingredients: meal.custom_ingredients || [],
+                   instructions: meal.custom_instructions || [],
+                   servings: meal.servings,
+                   notes: meal.notes
+                 });
+               }
              } catch (e) {
                setSelectedRecipe({
                  name: meal.recipe_name,
@@ -554,7 +564,7 @@ Make them balanced, diverse, and delicious. Include:
                });
              }
              setLoadingRecipeId(null);
-           } else if (meal.custom_ingredients?.length > 0 || meal.custom_instructions?.length > 0) {
+           } else {
              setSelectedRecipe({
                name: meal.recipe_name,
                ingredients: meal.custom_ingredients || [],
