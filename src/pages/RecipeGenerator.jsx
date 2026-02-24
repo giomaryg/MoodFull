@@ -600,6 +600,8 @@ export default function RecipeGenerator() {
                   <MoodSelector
                     selectedMoods={selectedMoods}
                     onMoodSelect={setSelectedMoods}
+                    selectedMealTypes={selectedMealTypes}
+                    onMealTypeSelect={setSelectedMealTypes}
                     userName={currentUser?.full_name?.split(' ')[0]}
                   />
                 </motion.div>
