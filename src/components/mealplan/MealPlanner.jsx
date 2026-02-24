@@ -515,48 +515,64 @@ Make them balanced, diverse, and delicious. Include:
      <div
        ref={provided.innerRef}
        {...provided.draggableProps}
-       {...provided.dragHandleProps}
-       className={`bg-[#f5e6dc] rounded-lg p-2 text-xs group relative cursor-move ${
+       className={`bg-[#f5e6dc] rounded-lg text-xs group relative ${
          snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
        }`}
-       onClick={async () => {
-          if (linkedRecipe) {
-            setSelectedRecipe(linkedRecipe);
-            return;
-          }
-          if (meal.recipe_id) {
-            setLoadingRecipeId(meal.id);
-            try {
-              const result = await base44.entities.Recipe.get(meal.recipe_id);
-              if (result) setSelectedRecipe(result);
-            } catch (e) {
-              // recipe deleted — build from meal data
-              setSelectedRecipe({
-                name: meal.recipe_name,
-                ingredients: meal.custom_ingredients || [],
-                instructions: meal.custom_instructions || [],
-                servings: meal.servings,
-                notes: meal.notes
-              });
-            }
-            setLoadingRecipeId(null);
-          } else if (meal.custom_ingredients?.length > 0 || meal.custom_instructions?.length > 0) {
-            setSelectedRecipe({
-              name: meal.recipe_name,
-              ingredients: meal.custom_ingredients || [],
-              instructions: meal.custom_instructions || [],
-              servings: meal.servings,
-              notes: meal.notes
-            });
-          }
-        }}
      >
-       <p className={`font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal ${meal.recipe_id ? 'hover:underline cursor-pointer' : ''}`}>
-         {loadingRecipeId === meal.id ? '...' : meal.recipe_name}
-       </p>
-       {meal.servings && (
-         <p className="text-gray-500 text-xs">{meal.servings} servings</p>
-       )}
+       {/* Drag handle — small grip area only */}
+       <div
+         {...provided.dragHandleProps}
+         className="absolute left-0 top-0 bottom-0 w-4 flex items-center justify-center cursor-move opacity-30 group-hover:opacity-60"
+       >
+         <div className="flex flex-col gap-0.5">
+           <div className="w-1 h-1 rounded-full bg-gray-500" />
+           <div className="w-1 h-1 rounded-full bg-gray-500" />
+           <div className="w-1 h-1 rounded-full bg-gray-500" />
+         </div>
+       </div>
+
+       {/* Clickable content area */}
+       <div
+         className="pl-5 pr-8 py-2 cursor-pointer"
+         onClick={async () => {
+           if (linkedRecipe) {
+             setSelectedRecipe(linkedRecipe);
+             return;
+           }
+           if (meal.recipe_id) {
+             setLoadingRecipeId(meal.id);
+             try {
+               const result = await base44.entities.Recipe.get(meal.recipe_id);
+               if (result) setSelectedRecipe(result);
+             } catch (e) {
+               setSelectedRecipe({
+                 name: meal.recipe_name,
+                 ingredients: meal.custom_ingredients || [],
+                 instructions: meal.custom_instructions || [],
+                 servings: meal.servings,
+                 notes: meal.notes
+               });
+             }
+             setLoadingRecipeId(null);
+           } else if (meal.custom_ingredients?.length > 0 || meal.custom_instructions?.length > 0) {
+             setSelectedRecipe({
+               name: meal.recipe_name,
+               ingredients: meal.custom_ingredients || [],
+               instructions: meal.custom_instructions || [],
+               servings: meal.servings,
+               notes: meal.notes
+             });
+           }
+         }}
+       >
+         <p className="font-medium text-[#5a6f60] break-words text-xs leading-normal hover:underline">
+           {loadingRecipeId === meal.id ? '...' : meal.recipe_name}
+         </p>
+         {meal.servings && (
+           <p className="text-gray-500 text-xs">{meal.servings} servings</p>
+         )}
+       </div>
+
        <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
          <button
            onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
