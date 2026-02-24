@@ -521,14 +521,12 @@ Make them balanced, diverse, and delicious. Include:
                                 >
                                   <div 
                                     onClick={(e) => {
-                                      if (linkedRecipe) {
-                                        e.stopPropagation();
-                                        setSelectedRecipe(linkedRecipe);
-                                      }
+                                      e.stopPropagation();
+                                      setSelectedRecipe(linkedRecipe || { name: meal.recipe_name, servings: meal.servings });
                                     }}
-                                    className={linkedRecipe ? 'cursor-pointer hover:underline' : ''}
+                                    className="cursor-pointer"
                                   >
-                                    <p className="font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal">
+                                    <p className="font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal hover:underline">
                                       {meal.recipe_name}
                                     </p>
                                     {meal.servings && (
