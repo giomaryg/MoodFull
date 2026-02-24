@@ -19,10 +19,10 @@ export default function RecipeDetailModal({ recipe, onClose }) {
       >
         {/* Header with image */}
         <div className="relative h-48 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] shrink-0">
-          {recipe.imageUrl ? (
+          {(recipe.imageUrl || recipe.image_url) ? (
             <>
               <img
-                src={recipe.imageUrl}
+                src={recipe.imageUrl || recipe.image_url}
                 alt={recipe.name}
                 className="w-full h-full object-cover"
               />
