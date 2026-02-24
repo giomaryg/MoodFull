@@ -275,7 +275,7 @@ export default function RecipeGenerator() {
   };
 
   const generateRecipe = async () => {
-    if (!selectedMoods.length && !globalSearchQuery) return;
+    if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
 
     setIsGenerating(true);
     setSavedRecipeId(null);
