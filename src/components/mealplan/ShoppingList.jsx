@@ -412,6 +412,58 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
               Go to Selection
             </Button>
           </div>
+        ) : viewMode === 'history' ? (
+          <div className="space-y-3">
+            {mealPlans.length === 0 ? (
+              <p className="text-center text-gray-500 py-8">No meal history yet.</p>
+            ) : (
+              mealPlans.map((plan, index) => {
+                const recipe = recipes.find(r => r.id === plan.recipe_id);
+                const isDeleted = !recipe;
+                return (
+                  <div key={plan.id} className={`border-2 rounded-xl overflow-hidden ${isDeleted ? 'border-gray-200 opacity-60' : 'border-[#c5d9c9]'}`}>
+                    <button
+                      onClick={() => toggleRecipeExpand(`hist-${index}`)}
+                      className="w-full p-4 bg-[#f5f5f5] hover:bg-[#efefef] transition-colors flex items-center justify-between"
+                    >
+                      <div className="text-left">
+                        <p className="font-semibold text-gray-900">
+                          {plan.recipe_name}
+                          {isDeleted && <span className="ml-2 text-xs text-red-400 font-normal">(deleted)</span>}
+                        </p>
+                        <p className="text-sm text-gray-500 capitalize">
+                          {format(new Date(plan.date), 'EEE, MMM d')} · {plan.meal_type}
+                        </p>
+                      </div>
+                      {expandedRecipes[`hist-${index}`] ? (
+                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                      )}
+                    </button>
+                    {expandedRecipes[`hist-${index}`] && (
+                      <div className="p-4 bg-white">
+                        {recipe?.ingredients?.length > 0 ? (
+                          <ul className="space-y-1">
+                            {recipe.ingredients.map((ing, i) => (
+                              <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#c5d9c9] mt-1.5 shrink-0" />
+                                {ing}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-gray-400 italic">
+                            {isDeleted ? 'Recipe was deleted — ingredients unavailable.' : 'No ingredients on record.'}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
         ) : viewMode === 'by-recipe' ? (
           <div className="space-y-3">
             {shoppingByRecipe.map((group, index) => (
