@@ -170,6 +170,34 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
               );
               })}
               </div>
+
+      {/* Meal Type Selector */}
+      <div className="space-y-3">
+        <p className="text-center text-[#5a6f60] text-sm sm:text-base font-medium">What type of meal are you looking for?</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          {mealTypes.map((type) => {
+            const Icon = type.icon;
+            const isSelected = selectedMealTypes.includes(type.id);
+            return (
+              <motion.button
+                key={type.id}
+                onClick={() => handleMealTypeToggle(type.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-full border-2 transition-all duration-200 shadow-sm font-medium text-sm ${
+                  isSelected
+                    ? 'bg-[#f5e6dc] border-[#c17a7a] text-[#6b9b76]'
+                    : 'bg-white border-[#e8d5c4] text-[#5a6f60] hover:border-[#c17a7a]'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {type.label}
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+
               </div>
               );
               }
