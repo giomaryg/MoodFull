@@ -312,7 +312,7 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
                   size="sm"
                   className="text-sm text-[#6b9b76]"
                 >
-                  {selectedPlanIds.size === mealPlans.length ? 'Deselect All' : 'Select All'}
+                  {selectedPlanIds.size === validPlanIds.length ? 'Deselect All' : 'Select All'}
                 </Button>
               </div>
               {validPlanIds.length === 0 ? (
