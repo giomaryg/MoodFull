@@ -7,10 +7,21 @@ import { format } from 'date-fns';
 function ShoppingList({ mealPlans, recipes, onClose }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [expandedRecipes, setExpandedRecipes] = useState({});
-  const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', or 'by-recipe'
+  const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', 'by-recipe', or 'history'
   
+  // Only pre-select meal plans that have a matching saved recipe with ingredients
+  const validPlanIds = useMemo(() => 
+    mealPlans
+      .filter(p => {
+        const recipe = recipes.find(r => r.id === p.recipe_id);
+        return recipe && recipe.ingredients?.length > 0;
+      })
+      .map(p => p.id),
+    [mealPlans, recipes]
+  );
+
   // Selection state
-  const [selectedPlanIds, setSelectedPlanIds] = useState(new Set(mealPlans.map(p => p.id)));
+  const [selectedPlanIds, setSelectedPlanIds] = useState(new Set(validPlanIds));
   const [selectedRecipeIds, setSelectedRecipeIds] = useState(new Set());
 
   // Remove deleted meal plans / recipes from selection
