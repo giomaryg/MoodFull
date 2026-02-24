@@ -283,6 +283,16 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
             >
               By Recipe
             </button>
+            <button
+              onClick={() => setViewMode('history')}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                viewMode === 'history'
+                  ? 'bg-white text-[#6b9b76] shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              History
+            </button>
           </div>
         </div>
 
