@@ -315,11 +315,11 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
                   {selectedPlanIds.size === mealPlans.length ? 'Deselect All' : 'Select All'}
                 </Button>
               </div>
-              {mealPlans.length === 0 ? (
-                <p className="text-gray-500 text-sm italic">No meals planned yet.</p>
+              {validPlanIds.length === 0 ? (
+                <p className="text-gray-500 text-sm italic">No meals planned with saved recipes yet.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {mealPlans.map((plan) => {
+                  {mealPlans.filter(p => validPlanIds.includes(p.id)).map((plan) => {
                     const recipe = recipes.find(r => r.id === plan.recipe_id);
                     const isSelected = selectedPlanIds.has(plan.id);
                     return (
