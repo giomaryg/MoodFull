@@ -440,47 +440,52 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
             ) : (
               mealPlans.map((plan, index) => {
                 const recipe = recipes.find(r => r.id === plan.recipe_id);
-                const isDeleted = !recipe;
                 return (
-                  <div key={plan.id} className={`border-2 rounded-xl overflow-hidden ${isDeleted ? 'border-gray-200 opacity-60' : 'border-[#c5d9c9]'}`}>
+                <div key={plan.id} className="border-2 border-[#c5d9c9] rounded-xl overflow-hidden">
+                  <div className="w-full p-4 bg-[#f5f5f5] flex items-center justify-between gap-2">
                     <button
                       onClick={() => toggleRecipeExpand(`hist-${index}`)}
-                      className="w-full p-4 bg-[#f5f5f5] hover:bg-[#efefef] transition-colors flex items-center justify-between"
+                      className="flex-1 text-left flex items-center gap-3"
                     >
-                      <div className="text-left">
-                        <p className="font-semibold text-gray-900">
-                          {plan.recipe_name}
-                          {isDeleted && <span className="ml-2 text-xs text-red-400 font-normal">(deleted)</span>}
-                        </p>
+                      <div>
+                        <p className="font-semibold text-gray-900">{plan.recipe_name}</p>
                         <p className="text-sm text-gray-500 capitalize">
                           {format(new Date(plan.date), 'EEE, MMM d')} · {plan.meal_type}
                         </p>
                       </div>
                       {expandedRecipes[`hist-${index}`] ? (
-                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                        <ChevronUp className="w-4 h-4 text-gray-400 ml-auto" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                        <ChevronDown className="w-4 h-4 text-gray-400 ml-auto" />
                       )}
                     </button>
-                    {expandedRecipes[`hist-${index}`] && (
-                      <div className="p-4 bg-white">
-                        {recipe?.ingredients?.length > 0 ? (
-                          <ul className="space-y-1">
-                            {recipe.ingredients.map((ing, i) => (
-                              <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#c5d9c9] mt-1.5 shrink-0" />
-                                {ing}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-sm text-gray-400 italic">
-                            {isDeleted ? 'Recipe was deleted — ingredients unavailable.' : 'No ingredients on record.'}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                    <button
+                      onClick={() => handleReaddToMealPlan(plan)}
+                      disabled={readdingId === plan.id}
+                      className="flex items-center gap-1 text-xs bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-2.5 py-1.5 rounded-lg transition-colors shrink-0 disabled:opacity-60"
+                      title="Add to today's meal plan"
+                    >
+                      <Plus className="w-3 h-3" />
+                      Add Again
+                    </button>
                   </div>
+                  {expandedRecipes[`hist-${index}`] && (
+                    <div className="p-4 bg-white">
+                      {recipe?.ingredients?.length > 0 ? (
+                        <ul className="space-y-1">
+                          {recipe.ingredients.map((ing, i) => (
+                            <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#c5d9c9] mt-1.5 shrink-0" />
+                              {ing}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-gray-400 italic">No ingredients on record.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
                 );
               })
             )}
