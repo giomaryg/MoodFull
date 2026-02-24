@@ -413,8 +413,9 @@ export default function RecipeGenerator() {
 
   const handleSaveRecipe = () => {
     if (currentRecipe && !savedRecipeId) {
-      // Include imageUrl so it persists in the saved recipe
-      saveRecipeMutation.mutate(currentRecipe);
+      // Persist the photo URL under image_url field
+      const { imageUrl, imageLoading, _loading, ...rest } = currentRecipe;
+      saveRecipeMutation.mutate({ ...rest, image_url: imageUrl || null });
     }
   };
 
