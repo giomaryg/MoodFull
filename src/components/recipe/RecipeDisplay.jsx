@@ -185,10 +185,10 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       <Card className="overflow-hidden shadow-2xl border-0 bg-white rounded-2xl sm:rounded-3xl">
         {/* Header Section with Image */}
         <div className="h-56 sm:h-64 md:h-80 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] relative overflow-hidden">
-          {recipe.imageUrl ?
+          {(recipe.imageUrl || recipe.image_url) ?
           <>
               <img
-              src={recipe.imageUrl}
+              src={recipe.imageUrl || recipe.image_url}
               alt={recipe.name}
               className="absolute inset-0 w-full h-full object-cover" />
 
