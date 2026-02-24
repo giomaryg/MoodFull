@@ -63,9 +63,9 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
                      <ChefHat className="w-16 h-16 text-[#6b9b76] opacity-20" />
                      <span className="text-xs text-[#6b9b76] opacity-50">Loading photo...</span>
                    </div>
-                 ) : recipe.imageUrl ? (
+                 ) : (recipe.imageUrl || recipe.image_url) ? (
                    <img 
-                     src={recipe.imageUrl} 
+                     src={recipe.imageUrl || recipe.image_url} 
                      alt={recipe.name}
                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                    />
