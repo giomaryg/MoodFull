@@ -23,6 +23,7 @@ import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
+  const [selectedMealTypes, setSelectedMealTypes] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
     const [currentRecipe, setCurrentRecipe] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
