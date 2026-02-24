@@ -511,82 +511,58 @@ Make them balanced, diverse, and delicious. Include:
                             const linkedRecipe = recipes.find(r => r.id === meal.recipe_id);
                             return (
  <Draggable key={meal.id} draggableId={meal.id} index={index}>
-  {(provided, snapshot) => (
-    <div
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      className={`bg-[#f5e6dc] rounded-lg p-2 text-xs group relative ${
-        snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
-      }`}
-    >
-      {/* DRAG HANDLE (only this area drags) */}
-      <div
-        {...provided.dragHandleProps}
-        className="absolute left-2 top-2 w-4 h-4 cursor-move opacity-60 hover:opacity-100"
-        title="Drag"
-      >
-        {/* you can swap this for a grip icon if you want */}
-        <span className="block w-3 h-3">⋮⋮</span>
-      </div>
-
-      {/* CLICKABLE RECIPE AREA */}
-      <button
-        type="button"
-        onClick={async (e) => {
-          e.stopPropagation();
-          if (!meal.recipe_id) return;
-
-          if (linkedRecipe) {
-            setSelectedRecipe(linkedRecipe);
-          } else {
-            setLoadingRecipeId(meal.id);
-            const results = await base44.entities.Recipe.filter({ id: meal.recipe_id });
-            setLoadingRecipeId(null);
-            if (results?.length > 0) setSelectedRecipe(results[0]);
-          }
-        }}
-        className={`text-left w-full pl-6 pr-8 ${meal.recipe_id ? 'cursor-pointer' : 'cursor-default'}`}
-      >
-        <p className={`font-medium text-[#5a6f60] break-words text-xs leading-normal ${
-          meal.recipe_id ? 'hover:underline' : ''
-        }`}>
-          {loadingRecipeId === meal.id ? '...' : meal.recipe_name}
-        </p>
-
-        {meal.servings && (
-          <p className="text-gray-500 text-xs">
-            {meal.servings} servings
-          </p>
-        )}
-      </button>
-
-      {/* ACTION BUTTONS */}
-      <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
-          className="p-1 hover:bg-white/50 rounded"
-          title="Swap Meal"
-        >
-          <ArrowLeftRight className="w-3 h-3 text-[#6b9b76]" />
-        </button>
-        <button
-          onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
-          className="p-1 hover:bg-white/50 rounded"
-          title="Repeat Meal"
-        >
-          <Repeat className="w-3 h-3 text-[#6b9b76]" />
-        </button>
-        <button
-          onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
-          className="p-1 hover:bg-white/50 rounded"
-          title="Remove Meal"
-        >
-          <Trash2 className="w-3 h-3 text-red-500" />
-        </button>
-      </div>
-    </div>
-  )}
-</Draggable>
+   {(provided, snapshot) => (
+     <div
+       ref={provided.innerRef}
+       {...provided.draggableProps}
+       {...provided.dragHandleProps}
+       className={`bg-[#f5e6dc] rounded-lg p-2 text-xs group relative cursor-move ${
+         snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
+       }`}
+       onClick={async () => {
+         if (!meal.recipe_id) return;
+         if (linkedRecipe) {
+           setSelectedRecipe(linkedRecipe);
+         } else {
+           setLoadingRecipeId(meal.id);
+           const results = await base44.entities.Recipe.filter({ id: meal.recipe_id });
+           setLoadingRecipeId(null);
+           if (results?.length > 0) setSelectedRecipe(results[0]);
+         }
+       }}
+     >
+       <p className={`font-medium text-[#5a6f60] pr-8 break-words text-xs leading-normal ${meal.recipe_id ? 'hover:underline cursor-pointer' : ''}`}>
+         {loadingRecipeId === meal.id ? '...' : meal.recipe_name}
+       </p>
+       {meal.servings && (
+         <p className="text-gray-500 text-xs">{meal.servings} servings</p>
+       )}
+       <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+         <button
+           onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
+           className="p-1 hover:bg-white/50 rounded"
+           title="Swap Meal"
+         >
+           <ArrowLeftRight className="w-3 h-3 text-[#6b9b76]" />
+         </button>
+         <button
+           onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
+           className="p-1 hover:bg-white/50 rounded"
+           title="Repeat Meal"
+         >
+           <Repeat className="w-3 h-3 text-[#6b9b76]" />
+         </button>
+         <button
+           onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
+           className="p-1 hover:bg-white/50 rounded"
+           title="Remove Meal"
+         >
+           <Trash2 className="w-3 h-3 text-red-500" />
+         </button>
+       </div>
+     </div>
+   )}
+ </Draggable>
                             );
                           })}
                           {provided.placeholder}
