@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -12,6 +12,17 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
   // Selection state
   const [selectedPlanIds, setSelectedPlanIds] = useState(new Set(mealPlans.map(p => p.id)));
   const [selectedRecipeIds, setSelectedRecipeIds] = useState(new Set());
+
+  // Remove deleted meal plans / recipes from selection
+  useEffect(() => {
+    const validPlanIds = new Set(mealPlans.map(p => p.id));
+    setSelectedPlanIds(prev => new Set([...prev].filter(id => validPlanIds.has(id))));
+  }, [mealPlans]);
+
+  useEffect(() => {
+    const validRecipeIds = new Set(recipes.map(r => r.id));
+    setSelectedRecipeIds(prev => new Set([...prev].filter(id => validRecipeIds.has(id))));
+  }, [recipes]);
 
   const togglePlanSelection = (id) => {
     const newSelected = new Set(selectedPlanIds);
