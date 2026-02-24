@@ -21,6 +21,7 @@ function MealPlanner({ onOpenShoppingList }) {
   const [swappingMeal, setSwappingMeal] = useState(null);
   const [repeatingMeal, setRepeatingMeal] = useState(null);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [loadingRecipeId, setLoadingRecipeId] = useState(null);
 
   const queryClient = useQueryClient();
 
