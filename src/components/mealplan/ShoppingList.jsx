@@ -443,22 +443,12 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
                 return (
                 <div key={plan.id} className="border-2 border-[#c5d9c9] rounded-xl overflow-hidden">
                   <div className="w-full p-4 bg-[#f5f5f5] flex items-center justify-between gap-2">
-                    <button
-                      onClick={() => toggleRecipeExpand(`hist-${index}`)}
-                      className="flex-1 text-left flex items-center gap-3"
-                    >
-                      <div>
-                        <p className="font-semibold text-gray-900">{plan.recipe_name}</p>
-                        <p className="text-sm text-gray-500 capitalize">
-                          {format(new Date(plan.date), 'EEE, MMM d')} · {plan.meal_type}
-                        </p>
-                      </div>
-                      {expandedRecipes[`hist-${index}`] ? (
-                        <ChevronUp className="w-4 h-4 text-gray-400 ml-auto" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4 text-gray-400 ml-auto" />
-                      )}
-                    </button>
+                    <div>
+                      <p className="font-semibold text-gray-900">{plan.recipe_name}</p>
+                      <p className="text-sm text-gray-500 capitalize">
+                        {format(new Date(plan.date), 'EEE, MMM d')} · {plan.meal_type}
+                      </p>
+                    </div>
                     <button
                       onClick={() => handleReaddToMealPlan(plan)}
                       disabled={readdingId === plan.id}
@@ -469,22 +459,20 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
                       Add Again
                     </button>
                   </div>
-                  {expandedRecipes[`hist-${index}`] && (
-                    <div className="p-4 bg-white">
-                      {recipe?.ingredients?.length > 0 ? (
-                        <ul className="space-y-1">
-                          {recipe.ingredients.map((ing, i) => (
-                            <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-[#c5d9c9] mt-1.5 shrink-0" />
-                              {ing}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-sm text-gray-400 italic">No ingredients on record.</p>
-                      )}
-                    </div>
-                  )}
+                  <div className="px-4 pb-4 bg-white">
+                    {recipe?.ingredients?.length > 0 ? (
+                      <ul className="space-y-1">
+                        {recipe.ingredients.map((ing, i) => (
+                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#c5d9c9] mt-1.5 shrink-0" />
+                            {ing}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-gray-400 italic">No ingredients on record.</p>
+                    )}
+                  </div>
                 </div>
                 );
               })
