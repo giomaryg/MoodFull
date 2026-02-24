@@ -305,8 +305,8 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
                 <h4 className="text-lg font-bold text-[#5a6f60]">Weekly Meal Plan</h4>
                 <Button
                   onClick={() => {
-                    if (selectedPlanIds.size === mealPlans.length) setSelectedPlanIds(new Set());
-                    else setSelectedPlanIds(new Set(mealPlans.map(p => p.id)));
+                    if (selectedPlanIds.size === validPlanIds.length) setSelectedPlanIds(new Set());
+                    else setSelectedPlanIds(new Set(validPlanIds));
                   }}
                   variant="ghost"
                   size="sm"
