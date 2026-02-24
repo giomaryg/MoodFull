@@ -1,6 +1,9 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
