@@ -93,12 +93,20 @@ const moods = [
 }];
 
 
-export default function MoodSelector({ selectedMoods, onMoodSelect, userName }) {
+export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName }) {
   const handleMoodToggle = (moodId) => {
     if (selectedMoods.includes(moodId)) {
       onMoodSelect(selectedMoods.filter(m => m !== moodId));
     } else {
       onMoodSelect([...selectedMoods, moodId]);
+    }
+  };
+
+  const handleMealTypeToggle = (typeId) => {
+    if (selectedMealTypes.includes(typeId)) {
+      onMealTypeSelect && onMealTypeSelect(selectedMealTypes.filter(t => t !== typeId));
+    } else {
+      onMealTypeSelect && onMealTypeSelect([...selectedMealTypes, typeId]);
     }
   };
 
