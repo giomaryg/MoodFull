@@ -413,6 +413,7 @@ export default function RecipeGenerator() {
 
   const handleSaveRecipe = () => {
     if (currentRecipe && !savedRecipeId) {
+      // Include imageUrl so it persists in the saved recipe
       saveRecipeMutation.mutate(currentRecipe);
     }
   };
