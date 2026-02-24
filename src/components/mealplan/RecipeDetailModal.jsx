@@ -85,7 +85,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           </div>
 
           {/* Ingredients */}
-          {recipe.ingredients?.length > 0 && (
+          {recipe.ingredients?.length > 0 ? (
             <div>
               <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[#c17a7a] rounded-full" />
@@ -99,6 +99,10 @@ export default function RecipeDetailModal({ recipe, onClose }) {
                   </li>
                 ))}
               </ul>
+            </div>
+          ) : (
+            <div className="bg-[#faf6f2] rounded-xl p-4 text-center text-gray-400 text-sm italic">
+              No ingredients saved for this meal. Try generating a full recipe from the Recipe Generator.
             </div>
           )}
 
