@@ -422,18 +422,7 @@ function ShoppingList({ mealPlans, recipes, onClose }) {
         )}
 
         {/* Shopping List Views */}
-        {viewMode !== 'selection' && totalItems === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500">No items in list. Select some recipes first!</p>
-            <Button 
-              onClick={() => setViewMode('selection')}
-              variant="link"
-              className="text-[#6b9b76]"
-            >
-              Go to Selection
-            </Button>
-          </div>
-        ) : viewMode === 'history' ? (
+        {viewMode === 'history' ? (
           <div className="space-y-3">
             {mealPlans.length === 0 ? (
               <p className="text-center text-gray-500 py-8">No meal history yet.</p>
