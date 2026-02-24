@@ -308,6 +308,7 @@ export default function RecipeGenerator() {
     try {
       const searchContext = globalSearchQuery ? `matching "${globalSearchQuery}"` : '';
       const moodPart = selectedMoods.length > 0 ? `for mood: ${moodContext}` : '';
+      const mealTypePart = selectedMealTypes.length > 0 ? ` Meal type(s): ${selectedMealTypes.join(', ')}.` : '';
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
       const quickResponse = await base44.integrations.Core.InvokeLLM({
