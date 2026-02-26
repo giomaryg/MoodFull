@@ -7,7 +7,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet';
-import { CreditCard, AlertCircle, CheckCircle2, Receipt, Calendar } from 'lucide-react';
+import { CreditCard, AlertCircle, CheckCircle2, Receipt, Calendar, Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function BillingPanel({ isOpen, onClose, user }) {
