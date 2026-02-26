@@ -43,6 +43,7 @@ export default function RecipeGenerator() {
   const [advancedFilters, setAdvancedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
