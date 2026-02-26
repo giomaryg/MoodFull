@@ -279,6 +279,13 @@ export default function RecipeGenerator() {
   const generateRecipe = async () => {
     if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
 
+    // Free limit: 3 mood uses max — show paywall if exceeded
+    const usedMoods = (currentUser?.used_mood_count || 0);
+    if (usedMoods >= 3 && !currentUser?.is_premium) {
+      setShowPaywall(true);
+      return;
+    }
+
     setIsGenerating(true);
     setSavedRecipeId(null);
 
