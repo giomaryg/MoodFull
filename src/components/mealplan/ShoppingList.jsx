@@ -344,8 +344,9 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
           </div>
         </div>
 
+        {/* Content — only show for premium */}
         {/* Selection Mode */}
-        {viewMode === 'selection' && (
+        {currentUser?.is_premium && viewMode === 'selection' && (
           <div className="space-y-8">
             {/* Meal Plan Selection */}
             <div>
