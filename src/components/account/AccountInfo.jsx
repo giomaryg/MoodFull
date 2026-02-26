@@ -211,6 +211,41 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
         </Card>
       </motion.div>
 
+      {/* Account Settings / Billing Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+      >
+        <Card className="bg-white border-2 border-[#c5d9c9] rounded-2xl">
+          <CardHeader>
+            <CardTitle className="text-xl text-[#6b9b76] flex items-center gap-2">
+              <CreditCard className="w-5 h-5" />
+              Subscription & Billing
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between p-4 bg-[#f5f9f6] rounded-xl border border-[#e0ede4]">
+              <div>
+                <p className="font-semibold text-gray-800">
+                  {user?.is_premium ? 'Premium Plan' : 'Free Plan'}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {user?.is_premium ? 'Active subscription' : 'Basic features only'}
+                </p>
+              </div>
+              <Button 
+                onClick={() => setIsBillingOpen(true)}
+                variant="outline"
+                className="border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2]"
+              >
+                Manage
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
       {/* Preferences Card */}
       {user?.survey_completed && (
         <motion.div
