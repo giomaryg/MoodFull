@@ -359,10 +359,14 @@ export default function RecipeGenerator() {
           _loading: true
         }));
 
-      // Increment usage count
-      const newCount = (currentUser?.used_mood_count || 0) + 1;
-      await base44.auth.updateMe({ used_mood_count: newCount });
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      // Increment daily usage count (reset if new day)
+      if (!currentUser?.is_premium) {
+        const today = new Date().toISOString().slice(0, 10);
+        const lastReset = currentUser?.daily_mood_reset_date;
+        const dailyCount = lastReset === today ? (currentUser?.daily_mood_count || 0) : 0;
+        await base44.auth.updateMe({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
+        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      }
 
       // Show recipes immediately
       setGeneratedRecipes(quickRecipes);
