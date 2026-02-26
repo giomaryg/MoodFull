@@ -246,8 +246,35 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         onClick={(e) => e.stopPropagation()}
         className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto"
       >
+        {/* Premium gate */}
+        {!currentUser?.is_premium ? (
+          <div className="relative py-8">
+            <div className="blur-sm pointer-events-none select-none space-y-3">
+              {[1,2,3].map(i => (
+                <div key={i} className="bg-gray-100 rounded-xl p-4 flex gap-3 items-center">
+                  <div className="w-5 h-5 rounded bg-gray-200 flex-shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 bg-gray-200 rounded w-2/3" />
+                    <div className="h-2 bg-gray-100 rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center px-6 py-8 bg-white rounded-2xl shadow-lg border border-[#c5d9c9] max-w-xs mx-auto">
+                <span className="text-4xl mb-3 block">🔒</span>
+                <h3 className="text-[#6b9b76] font-bold text-lg mb-1">Shopping List — Premium</h3>
+                <p className="text-gray-500 text-sm mb-4">Upgrade to generate shopping lists from your meal plans.</p>
+                <Button onClick={onClose} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl w-full">
+                  View Plans
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         {/* Header */}
-        <div className="space-y-4 mb-6">
+        <div className={`space-y-4 mb-6 ${!currentUser?.is_premium ? 'hidden' : ''}`}>
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-2xl font-bold text-[#6b9b76]">Shopping List</h3>
