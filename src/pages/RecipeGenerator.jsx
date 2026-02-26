@@ -920,6 +920,7 @@ export default function RecipeGenerator() {
             mealPlans={mealPlans}
             recipes={savedRecipes}
             onClose={() => setShowShoppingList(false)}
+            currentUser={currentUser}
           />
         </div>
       )}
