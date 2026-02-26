@@ -20,6 +20,7 @@ import MealPlanner from '../components/mealplan/MealPlanner';
 import ShoppingList from '../components/mealplan/ShoppingList';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
+import Paywall from '../components/paywall/Paywall';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
