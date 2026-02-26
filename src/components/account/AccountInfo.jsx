@@ -327,6 +327,12 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
           Log Out
         </Button>
       </motion.div>
+
+      <BillingPanel 
+        isOpen={isBillingOpen} 
+        onClose={() => setIsBillingOpen(false)} 
+        user={user} 
+      />
     </div>
   );
 }
