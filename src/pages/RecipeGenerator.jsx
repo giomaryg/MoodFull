@@ -355,6 +355,11 @@ export default function RecipeGenerator() {
           _loading: true
         }));
 
+      // Increment usage count
+      const newCount = (currentUser?.used_mood_count || 0) + 1;
+      await base44.auth.updateMe({ used_mood_count: newCount });
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+
       // Show recipes immediately
       setGeneratedRecipes(quickRecipes);
       setIsGenerating(false);
