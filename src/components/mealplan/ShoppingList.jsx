@@ -450,7 +450,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         )}
 
         {/* Shopping List Views */}
-        {viewMode === 'history' ? (
+        {currentUser?.is_premium && viewMode === 'history' ? (
           <div className="space-y-3">
             {mealPlans.length === 0 ? (
               <p className="text-center text-gray-500 py-8">No meal history yet.</p>
