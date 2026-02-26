@@ -27,7 +27,7 @@ const PLANS = [
 const FEATURES = [
   { label: 'Moods available', free: '3 moods', premium: 'Unlimited' },
   { label: 'Recipes per session', free: '8–10', premium: 'Unlimited' },
-  { label: 'Meal planner', free: false, premium: true },
+  { label: 'Meal planner', free: true, premium: true },
   { label: 'Shopping list', free: false, premium: true },
   { label: 'Save recipes', free: false, premium: true },
   { label: 'Personalized preferences', free: false, premium: true },
