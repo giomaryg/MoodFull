@@ -279,11 +279,15 @@ export default function RecipeGenerator() {
   const generateRecipe = async () => {
     if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
 
-    // Free limit: 3 mood uses max — show paywall if exceeded
-    const usedMoods = (currentUser?.used_mood_count || 0);
-    if (usedMoods >= 3 && !currentUser?.is_premium) {
-      setShowPaywall(true);
-      return;
+    // Free limit: 3 mood generations per day (resets every 24h)
+    if (!currentUser?.is_premium) {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastReset = currentUser?.daily_mood_reset_date;
+      const dailyCount = lastReset === today ? (currentUser?.daily_mood_count || 0) : 0;
+      if (dailyCount >= 3) {
+        setShowPaywall(true);
+        return;
+      }
     }
 
     setIsGenerating(true);
