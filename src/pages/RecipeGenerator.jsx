@@ -789,50 +789,83 @@ export default function RecipeGenerator() {
                 <p className="text-gray-600">Browse and manage your collection</p>
               </div>
 
-              {/* Search and Filters */}
-              <div className="space-y-3">
+              {!currentUser?.is_premium ? (
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
-                  <Input
-                    type="text"
-                    placeholder="Search saved recipes..."
-                    value={globalSearchQuery}
-                    onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                    className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
-                  />
-                  {globalSearchQuery && (
-                    <button
-                      onClick={() => setGlobalSearchQuery('')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
+                  {/* Blurred preview */}
+                  <div className="blur-sm pointer-events-none select-none">
+                    <div className="space-y-3">
+                      {[1,2,3].map(i => (
+                        <div key={i} className="bg-white rounded-2xl border-2 border-[#c5d9c9] p-4 flex gap-4">
+                          <div className="w-20 h-20 bg-[#c5d9c9] rounded-xl flex-shrink-0" />
+                          <div className="flex-1 space-y-2">
+                            <div className="h-4 bg-[#c5d9c9] rounded w-2/3" />
+                            <div className="h-3 bg-[#e0ede4] rounded w-full" />
+                            <div className="h-3 bg-[#e0ede4] rounded w-1/2" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Overlay CTA */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-2xl">
+                    <div className="text-center px-6 py-8 bg-white rounded-2xl shadow-lg border border-[#c5d9c9] max-w-xs mx-auto">
+                      <span className="text-4xl mb-3 block">🔒</span>
+                      <h3 className="text-[#6b9b76] font-bold text-lg mb-1">Save Recipes — Premium</h3>
+                      <p className="text-gray-500 text-sm mb-4">Unlock unlimited recipe saving, shopping lists & more.</p>
+                      <Button onClick={() => setShowPaywall(true)} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl w-full">
+                        Unlock Premium
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-
-                <AdvancedFilters
-                  filters={advancedFilters}
-                  onFiltersChange={setAdvancedFilters}
-                  showFilters={showFilters}
-                  setShowFilters={setShowFilters}
-                />
-              </div>
-
-              {savedRecipes.length > 0 ? (
-                <SavedRecipes
-                  recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
-                  onRecipeClick={(recipe) => {
-                    handleSavedRecipeClick(recipe);
-                    setActiveTab('home');
-                  }}
-                  searchQuery={globalSearchQuery}
-                  onOpenShoppingList={() => setShowShoppingList(true)}
-                />
               ) : (
-                <div className="text-center py-12">
-                  <UtensilsCrossed className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-600">No saved recipes yet. Generate some recipes to get started!</p>
-                </div>
+                <>
+                  {/* Search and Filters */}
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
+                      <Input
+                        type="text"
+                        placeholder="Search saved recipes..."
+                        value={globalSearchQuery}
+                        onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                        className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
+                      />
+                      {globalSearchQuery && (
+                        <button
+                          onClick={() => setGlobalSearchQuery('')}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+
+                    <AdvancedFilters
+                      filters={advancedFilters}
+                      onFiltersChange={setAdvancedFilters}
+                      showFilters={showFilters}
+                      setShowFilters={setShowFilters}
+                    />
+                  </div>
+
+                  {savedRecipes.length > 0 ? (
+                    <SavedRecipes
+                      recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
+                      onRecipeClick={(recipe) => {
+                        handleSavedRecipeClick(recipe);
+                        setActiveTab('home');
+                      }}
+                      searchQuery={globalSearchQuery}
+                      onOpenShoppingList={() => setShowShoppingList(true)}
+                    />
+                  ) : (
+                    <div className="text-center py-12">
+                      <UtensilsCrossed className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-600">No saved recipes yet. Generate some recipes to get started!</p>
+                    </div>
+                  )}
+                </>
               )}
             </motion.div>
           )}
