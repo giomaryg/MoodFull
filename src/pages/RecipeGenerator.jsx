@@ -832,6 +832,20 @@ export default function RecipeGenerator() {
       {/* Bottom Navigation */}
       {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />}
 
+      {/* Paywall Modal */}
+      <AnimatePresence>
+        {showPaywall && (
+          <Paywall
+            onClose={() => setShowPaywall(false)}
+            onSubscribe={(plan) => {
+              // Placeholder: hook up real payment here
+              toast.success(`You selected the ${plan} plan! Payment coming soon.`);
+              setShowPaywall(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Global Shopping List Modal */}
       {showShoppingList && (
         <div className="fixed inset-0 z-50">
