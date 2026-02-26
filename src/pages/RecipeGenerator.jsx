@@ -612,6 +612,32 @@ export default function RecipeGenerator() {
                 </motion.div>
               )}
 
+              {/* Daily limit notice */}
+              {!currentUser?.is_premium && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (() => {
+                const today = new Date().toISOString().slice(0, 10);
+                const lastReset = currentUser?.daily_mood_reset_date;
+                const dailyCount = lastReset === today ? (currentUser?.daily_mood_count || 0) : 0;
+                const remaining = Math.max(0, 3 - dailyCount);
+                if (dailyCount >= 3) {
+                  return (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm">
+                      <span className="text-xl">⏳</span>
+                      <div>
+                        <p className="font-semibold text-amber-800">Daily limit reached</p>
+                        <p className="text-amber-700 text-xs">You've used your 3 free generations for today. Resets in 24 hours — or <button onClick={() => setShowPaywall(true)} className="underline font-semibold">upgrade for unlimited</button>.</p>
+                      </div>
+                    </motion.div>
+                  );
+                }
+                if (dailyCount > 0) {
+                  return (
+                    <p className="text-xs text-center text-gray-400">{remaining} free generation{remaining !== 1 ? 's' : ''} left today</p>
+                  );
+                }
+                return null;
+              })()}
+
               {/* Mood Selector - Only show when not searching */}
               {!globalSearchQuery && Object.keys(advancedFilters).length === 0 && (
                 <motion.div
