@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
-function ShoppingList({ mealPlans, recipes, onClose }) {
+function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
   const queryClient = useQueryClient();
   const [readdingId, setReaddingId] = useState(null);
 
