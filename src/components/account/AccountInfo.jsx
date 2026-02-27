@@ -228,10 +228,10 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
             <div className="flex items-center justify-between p-4 bg-[#f5f9f6] rounded-xl border border-[#e0ede4]">
               <div>
                 <p className="font-semibold text-gray-800">
-                  {user?.is_premium ? 'Premium Plan' : 'Free Plan'}
+                  {user?.is_premium ? 'Premium Plan' : user?.role === 'admin' ? 'Admin Access (Premium)' : 'Free Plan'}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {user?.is_premium ? 'Active subscription' : 'Basic features only'}
+                  {user?.is_premium ? 'Active subscription' : user?.role === 'admin' ? 'All features unlocked for testing' : 'Basic features only'}
                 </p>
               </div>
               <Button 
