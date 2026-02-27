@@ -5,6 +5,10 @@ export default function Layout({ children, currentPageName }) {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+        @font-face {
+          font-family: 'Brittany Signature';
+          src: url('https://fonts.cdnfonts.com/s/72951/BrittanySignature.woff') format('woff');
+        }
 
         * {
           font-family: 'Syne', sans-serif;
