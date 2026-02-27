@@ -467,7 +467,7 @@ export default function RecipeGenerator() {
       <div className="min-h-screen bg-[#e8f0ea]">
         {/* Hero Section */}
         {!showIntro &&
-        <div className="fixed top-0 left-0 right-0 z-50 glass-header border-b-0 pb-2 pt-6">
+        <div className="fixed top-0 left-0 right-0 z-50 glass-header border-b-0 pb-2 pt-3">
             <div className="mx-auto my-1 px-3 max-w-6xl">
               <motion.div
               initial={{ opacity: 0, y: -20 }}
