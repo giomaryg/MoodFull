@@ -317,7 +317,7 @@ export default function RecipeGenerator() {
     if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
 
     // Free limit: 3 mood generations per day (resets every 24h)
-    if (!currentUser?.is_premium) {
+    if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
       const today = new Date().toISOString().slice(0, 10);
       const lastReset = currentUser?.daily_mood_reset_date;
       const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -397,7 +397,7 @@ export default function RecipeGenerator() {
       }));
 
       // Increment daily usage count (reset if new day)
-      if (!currentUser?.is_premium) {
+      if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
         const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -661,7 +661,7 @@ export default function RecipeGenerator() {
             }
 
               {/* Daily limit notice */}
-              {!currentUser?.is_premium && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (() => {
+              {!currentUser?.is_premium && currentUser?.role !== 'admin' && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (() => {
               const today = new Date().toISOString().slice(0, 10);
               const lastReset = currentUser?.daily_mood_reset_date;
               const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -846,7 +846,7 @@ export default function RecipeGenerator() {
                 <p className="text-gray-600">Browse and manage your collection</p>
               </div>
 
-              {!currentUser?.is_premium ?
+              {(!currentUser?.is_premium && currentUser?.role !== 'admin') ?
             <div className="relative">
                   {/* Blurred preview */}
                   <div className="blur-sm pointer-events-none select-none">
