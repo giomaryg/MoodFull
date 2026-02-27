@@ -69,6 +69,11 @@ export default function RecipeGenerator() {
     queryFn: () => base44.entities.MealPlan.list('-date', 100)
   });
 
+  const { data: inventory = [] } = useQuery({
+    queryKey: ['inventory'],
+    queryFn: () => base44.entities.Ingredient.list()
+  });
+
   const filteredSavedRecipes = useMemo(() => {
     let filtered = savedRecipes.filter((r) => r && r.name);
 
@@ -481,6 +486,154 @@ export default function RecipeGenerator() {
     }
   };
 
+  const generateFromInventory = async () => {
+    if (inventory.length === 0) {
+      toast.error('Add items to your pantry first!');
+      setActiveTab('inventory');
+      return;
+    }
+    
+    if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastReset = currentUser?.daily_mood_reset_date;
+      const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
+      if (dailyCount >= 3) {
+        setShowPaywall(true);
+        return;
+      }
+    }
+
+    setIsGenerating(true);
+    setSavedRecipeId(null);
+    setGlobalSearchQuery('');
+    setAdvancedFilters({});
+
+    let preferencesContext = '';
+    if (userPreferences?.survey_completed) {
+      const prefs = [];
+      if (userPreferences.allergies) prefs.push(`AVOID: ${userPreferences.allergies}`);
+      if (userPreferences.diet_preferences) prefs.push(`Diet: ${userPreferences.diet_preferences}`);
+      if (userPreferences.blood_sugar_friendly) prefs.push(`Low glycemic`);
+      if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+      if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
+    }
+
+    const inventoryList = inventory.map(i => `${i.name}`).join(', ');
+
+    try {
+      const quickResponse = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate 4 realistic recipe ideas using ONLY or MAINLY these ingredients I already have: ${inventoryList}. Try to minimize extra ingredients needed. ${preferencesContext}. Provide varied options.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            recipes: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  prep_time: { type: "string" },
+                  cook_time: { type: "string" },
+                  servings: { type: "number" },
+                  difficulty: { type: "string", enum: ["easy", "medium", "hard"] },
+                  cuisine_type: { type: "string" },
+                  main_ingredients: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const quickRecipes = (quickResponse.recipes || [])
+        .filter((r) => r && r.name && r.description)
+        .map((recipe) => ({
+          ...recipe,
+          mood: 'From Pantry',
+          ingredients: [],
+          instructions: [],
+          _loading: true
+        }));
+
+      if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+        const today = new Date().toISOString().slice(0, 10);
+        const lastReset = currentUser?.daily_mood_reset_date;
+        const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
+        await base44.auth.updateMe({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
+        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      }
+
+      setGeneratedRecipes(quickRecipes);
+      setIsGenerating(false);
+
+      const enrichPromises = quickRecipes.map(async (recipe, index) => {
+        const detail = await base44.integrations.Core.InvokeLLM({
+          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). Prioritize using: ${inventoryList}. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              ingredients: { type: "array", items: { type: "string" } },
+              instructions: { type: "array", items: { type: "string" } },
+              nutrition: {
+                type: "object",
+                properties: {
+                  calories: { type: "number" },
+                  protein: { type: "string" },
+                  carbs: { type: "string" },
+                  fat: { type: "string" },
+                  fiber: { type: "string" },
+                  sodium: { type: "string" },
+                  sugar: { type: "string" },
+                  saturated_fat: { type: "string" },
+                  cholesterol: { type: "string" }
+                }
+              },
+              vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
+              health_benefits: { type: "array", items: { type: "string" } },
+              cooking_tips: { type: "array", items: { type: "string" } },
+              substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
+              pairings: { type: "array", items: { type: "string" } }
+            }
+          }
+        });
+        return { index, detail };
+      });
+
+      enrichPromises.forEach(async (promise) => {
+        const { index, detail } = await promise;
+        setGeneratedRecipes((prev) => prev.map((r, i) =>
+          i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
+        ));
+
+        try {
+          const recipe = quickRecipes[index];
+          const [img1, img2, img3] = await Promise.all([
+            base44.integrations.Core.GenerateImage({
+              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+            }),
+            base44.integrations.Core.GenerateImage({
+              prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
+            }),
+            base44.integrations.Core.GenerateImage({
+              prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
+            })
+          ]);
+          setGeneratedRecipes((prev) => prev.map((r, i) =>
+            i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
+          ));
+        } catch {
+          setGeneratedRecipes((prev) => prev.map((r, i) =>
+            i === index ? { ...r, imageLoading: false } : r
+          ));
+        }
+      });
+    } catch (error) {
+      toast.error('Failed to generate recipe from pantry. Please try again.');
+      setIsGenerating(false);
+    }
+  };
+
   const handleSaveRecipe = () => {
     if (currentRecipe && !savedRecipeId) {
       // Persist the photo URL under image_url field
@@ -721,23 +874,20 @@ export default function RecipeGenerator() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex justify-center">
+                className="flex flex-col sm:flex-row justify-center gap-4">
 
                     <Button
                   onClick={generateRecipe}
                   disabled={isGenerating}
-                  className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-[calc(100%-32px)] sm:w-auto mx-auto max-w-sm flex items-center justify-center gap-2">
+                  className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
+                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</> : <>✦ Generate Recipes</>}
+                    </Button>
 
-                      {isGenerating ?
-                  <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Generating...
-                        </> :
-
-                  <>
-                          ✦ Generate Recipes
-                        </>
-                  }
+                    <Button
+                  onClick={generateFromInventory}
+                  disabled={isGenerating}
+                  className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
+                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Package className="w-5 h-5" /> Use My Pantry</>}
                     </Button>
                   </motion.div>
               }
@@ -935,6 +1085,15 @@ export default function RecipeGenerator() {
             animate={{ opacity: 1 }}>
 
               <MealPlanner onOpenShoppingList={() => setShowShoppingList(true)} />
+            </motion.div>
+          }
+
+          {/* Inventory Tab */}
+          {!showSurvey && activeTab === 'inventory' &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}>
+              <InventoryManagement />
             </motion.div>
           }
 
