@@ -674,6 +674,16 @@ export default function RecipeGenerator() {
                       <div>
                         <p className="font-semibold text-amber-800">Daily limit reached</p>
                         <p className="text-amber-700 text-xs">You've used your 3 free generations for today. Resets in 24 hours — or <button onClick={() => setShowPaywall(true)} className="underline font-semibold">upgrade for unlimited</button>.</p>
+                        <button 
+                          onClick={async () => {
+                            await base44.auth.updateMe({ daily_mood_count: 0, daily_mood_reset_date: null });
+                            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+                            toast.success('Daily limit reset for testing!');
+                          }} 
+                          className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 px-2 py-1 rounded hover:bg-amber-200 transition-colors"
+                        >
+                          Reset Limit (Dev)
+                        </button>
                       </div>
                     </motion.div>);
 
