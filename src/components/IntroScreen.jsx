@@ -28,12 +28,12 @@ export default function IntroScreen({ userName, onContinue }) {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="relative z-10 flex flex-col items-center mt-[60px]"
+          className="relative z-10 flex flex-col items-center mt-[40px]"
         >
-          <div className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#6b9b76] mb-3">
+          <div className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#6b9b76] mb-8">
             ◎ System Ready
           </div>
-          <div className="text-4xl font-normal tracking-normal leading-[1.1] text-gradient text-center pb-2" style={{ fontFamily: "'Brittany Signature', cursive" }}>
+          <div className="text-3xl sm:text-4xl font-normal tracking-normal leading-[1.4] text-gradient text-center px-4 py-2 w-full break-words" style={{ fontFamily: "'Brittany Signature', cursive" }}>
             Hey, {userName || 'Alex'}.
           </div>
           <div className="text-[11px] text-[#5a6f60]/55 mt-2">
