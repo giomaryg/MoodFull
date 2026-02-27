@@ -122,6 +122,13 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                     <div className="font-mono text-[8px] text-[#5a6f60]/45 tracking-[0.04em]">
                       {recipe.prep_time || '25 min'} · {recipe.difficulty || 'Easy'} {recipe.nutrition?.calories ? `· ${recipe.nutrition.calories} kcal` : ''}
                     </div>
+                    {recipe.collections && recipe.collections.length > 0 && (
+                      <div className="flex gap-1 mt-1 flex-wrap">
+                        {recipe.collections.map((c, i) => (
+                          <span key={i} className="text-[7px] bg-[#6b9b76]/10 text-[#6b9b76] px-1.5 py-0.5 rounded-sm border border-[#6b9b76]/20 uppercase tracking-widest font-mono">{c}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="w-5 h-5 rounded-full border border-[#c5d9c9]/70 flex items-center justify-center text-[9px] text-[#6b9b76] flex-shrink-0">
                     →
