@@ -141,9 +141,6 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
           </motion.div>
         </AnimatePresence>
       </div>
-      </div>
-
-    </div>
     </div>
   );
 }
