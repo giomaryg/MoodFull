@@ -140,10 +140,10 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
                 <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#6b9b76]/50 to-transparent" />
               )}
               
-              <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 relative ${
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 relative ${
                 isSelected 
-                  ? 'border border-transparent scale-110 shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.1),_inset_4px_4px_10px_rgba(255,255,255,0.7),_0_0_20px_rgba(107,155,118,0.4)]' 
-                  : 'bg-white/40 border border-[#c5d9c9]/30 shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.05),_inset_2px_2px_6px_rgba(255,255,255,0.5)] hover:shadow-[inset_-3px_-3px_8px_rgba(0,0,0,0.08),_inset_3px_3px_8px_rgba(255,255,255,0.6)]'
+                  ? 'border border-transparent scale-105 shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.05),_inset_2px_2px_6px_rgba(255,255,255,0.5),_0_0_10px_rgba(107,155,118,0.2)]' 
+                  : 'bg-white/40 border border-[#c5d9c9]/30 shadow-[inset_-1px_-1px_4px_rgba(0,0,0,0.03),_inset_1px_1px_4px_rgba(255,255,255,0.4)] hover:shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.06),_inset_2px_2px_5px_rgba(255,255,255,0.5)]'
               }`}
               style={{
                 background: isSelected ? 'radial-gradient(circle at 30% 30%, #e8f0ea 0%, #8db894 100%)' : ''

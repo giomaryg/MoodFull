@@ -417,11 +417,19 @@ export default function RecipeGenerator() {
         // Load photo only after recipe details are shown
         try {
           const recipe = quickRecipes[index];
-          const imageResponse = await base44.integrations.Core.GenerateImage({
-            prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
-          });
+          const [img1, img2, img3] = await Promise.all([
+            base44.integrations.Core.GenerateImage({
+              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+            }),
+            base44.integrations.Core.GenerateImage({
+              prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
+            }),
+            base44.integrations.Core.GenerateImage({
+              prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
+            })
+          ]);
           setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, imageUrl: imageResponse.url, imageLoading: false } : r
+          i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
           ));
         } catch {
           setGeneratedRecipes((prev) => prev.map((r, i) =>
@@ -439,8 +447,8 @@ export default function RecipeGenerator() {
   const handleSaveRecipe = () => {
     if (currentRecipe && !savedRecipeId) {
       // Persist the photo URL under image_url field
-      const { imageUrl, imageLoading, _loading, ...rest } = currentRecipe;
-      saveRecipeMutation.mutate({ ...rest, image_url: imageUrl || null });
+      const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = currentRecipe;
+      saveRecipeMutation.mutate({ ...rest, image_url: imageUrl || (imageUrls ? imageUrls[0] : null) });
     }
   };
 

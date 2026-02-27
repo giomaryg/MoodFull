@@ -22,7 +22,7 @@ export default function ThreeBackground() {
       color: 0x6b9b76, 
       wireframe: true,
       transparent: true,
-      opacity: 0.1
+      opacity: 0.05
     });
 
     const rings = [];
@@ -51,7 +51,7 @@ export default function ThreeBackground() {
       size: 0.2,
       color: 0x6b9b76,
       transparent: true,
-      opacity: 0.4
+      opacity: 0.2
     });
     const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
     scene.add(particlesMesh);

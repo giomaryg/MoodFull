@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
@@ -18,9 +18,11 @@ import RecipeReview from './RecipeReview';
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
-    const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
+  const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const queryClient = useQueryClient();
   const descriptionRef = useRef(null);
+  const images = recipe.imageUrls || (recipe.imageUrl || recipe.image_url ? [recipe.imageUrl || recipe.image_url] : []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -186,23 +188,52 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         {/* Header Section with Image */}
         <div className="h-48 sm:h-56 md:h-64 bg-gradient-to-br from-[#8db894] via-[#5a8a65] to-[#3d5244] relative overflow-hidden flex items-center justify-center text-5xl perspective-1000">
           <div className="absolute inset-0 blur-md scale-110 opacity-60">
-             {(recipe.imageUrl || recipe.image_url) && (
-               <img src={recipe.imageUrl || recipe.image_url} className="w-full h-full object-cover" alt="" />
+             {images.length > 0 && (
+               <img src={images[currentImageIndex]} className="w-full h-full object-cover transition-all duration-500" alt="" />
              )}
           </div>
           
-          {(recipe.imageUrl || recipe.image_url) ?
-          <motion.div 
-            animate={{ rotateY: 360 }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.4)] border-[6px] border-white/30 relative z-10"
-            style={{ transformStyle: "preserve-3d" }}
-          >
-              <img
-              src={recipe.imageUrl || recipe.image_url}
-              alt={recipe.name}
-              className="absolute inset-0 w-full h-full object-cover" />
-          </motion.div> :
+          {images.length > 0 ?
+          <div className="relative z-10 flex items-center justify-center group h-full w-full">
+            {images.length > 1 && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setCurrentImageIndex((i) => (i - 1 + images.length) % images.length); }}
+                className="absolute left-4 sm:left-12 bg-white/40 hover:bg-white/70 p-2 rounded-full text-gray-900 transition-colors z-30"
+              >
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            )}
+            
+            <motion.div 
+              animate={{ rotateY: 360 }}
+              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.4)] border-[6px] border-white/30 relative z-10"
+              style={{ transformStyle: "preserve-3d" }}
+            >
+                <img
+                key={images[currentImageIndex]}
+                src={images[currentImageIndex]}
+                alt={recipe.name}
+                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+            </motion.div>
+
+            {images.length > 1 && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setCurrentImageIndex((i) => (i + 1) % images.length); }}
+                className="absolute right-4 sm:right-12 bg-white/40 hover:bg-white/70 p-2 rounded-full text-gray-900 transition-colors z-30"
+              >
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            )}
+            
+            {images.length > 1 && (
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 z-30">
+                {images.map((_, idx) => (
+                  <div key={idx} className={`w-2 h-2 rounded-full transition-colors ${idx === currentImageIndex ? 'bg-white' : 'bg-white/40'}`} />
+                ))}
+              </div>
+            )}
+          </div> :
 
           <motion.div
             animate={{ rotateY: 360 }}
