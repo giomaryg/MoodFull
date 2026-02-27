@@ -467,7 +467,7 @@ export default function RecipeGenerator() {
       <div className="min-h-screen bg-[#e8f0ea]">
         {/* Hero Section */}
         {!showIntro &&
-        <div className="fixed top-0 left-0 right-0 z-50 glass-header border-b-0 pb-2 pt-6">
+        <div className="pt-1 glass-header fixed top-0 left-0 right-0 z-50 border-b-0">
             <div className="mx-auto my-1 px-3 max-w-6xl">
               <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -477,7 +477,7 @@ export default function RecipeGenerator() {
                   <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
                     ◎ AI Recipe Generator
                   </div>
-                  <h1 className="text-gradient my-2 pt-2 pb-2 text-3xl font-normal tracking-tight sm:text-6xl" style={{ fontFamily: "'Brittany Signature', cursive" }}>
+                  <h1 className="text-gradient my-2 pt-4 pb-2 text-3xl font-normal tracking-tight sm:text-6xl" style={{ fontFamily: "'Brittany Signature', cursive" }}>
                     Moodfull
                   </h1>
                 </header>
@@ -515,8 +515,8 @@ export default function RecipeGenerator() {
                     type="text"
                     placeholder="Search your recipes or generate new ones..."
                     value={globalSearchQuery}
-                    onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                    className="pl-11 pr-10 py-6 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl text-sm sm:text-base shadow-md" />
+                    onChange={(e) => setGlobalSearchQuery(e.target.value)} className="bg-transparent my-3 pt-6 pr-8 pb-6 pl-10 text-sm rounded-xl flex h-9 w-full transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-2 border-[#c5d9c9] focus:border-[#6b9b76] sm:text-base shadow-md" />
+
 
                     {globalSearchQuery &&
                   <button
