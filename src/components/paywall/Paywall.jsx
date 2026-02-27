@@ -161,10 +161,17 @@ export default function Paywall({ onClose, onSubscribe }) {
           >
             <Button
               onClick={() => onSubscribe?.(selectedPlan)}
-              className="w-full bg-[#6b9b76] hover:bg-[#5a8a65] text-white text-base font-semibold py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all"
+              className="w-full bg-[#6b9b76] hover:bg-[#5a8a65] text-white text-base font-semibold py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
             >
-              <Sparkles className="w-4 h-4 mr-2" />
-              {selectedPlan === 'annual' ? 'Start for $6.67/mo — Billed Annually' : 'Start for $7.99/month'}
+              <Sparkles className="w-4 h-4 mr-2 flex-shrink-0" />
+              {selectedPlan === 'annual' ? (
+                <div className="flex items-center">
+                  <span>Start for $6.67/mo</span>
+                  <span className="text-xs font-normal opacity-80 ml-1.5">— Billed Annually</span>
+                </div>
+              ) : (
+                <span>Start for $7.99/month</span>
+              )}
             </Button>
             <p className="text-center text-xs text-gray-400 mt-2">
               Cancel anytime · No commitment
