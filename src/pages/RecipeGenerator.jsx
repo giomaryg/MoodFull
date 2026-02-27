@@ -669,17 +669,16 @@ export default function RecipeGenerator() {
                     <Button
                       onClick={generateRecipe}
                       disabled={isGenerating}
-                      className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-base sm:text-lg px-6 sm:px-10 py-5 sm:py-7 rounded-3xl font-semibold w-full sm:w-auto">
+                      className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-[calc(100%-32px)] sm:w-auto mx-auto max-w-sm flex items-center justify-center gap-2">
 
                       {isGenerating ?
                         <>
-                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Generating recipes...
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Generating...
                         </> :
 
                         <>
-                          <Sparkles className="w-5 h-5 mr-2" />
-                          Generate Recipes
+                          ✦ Generate Recipes
                         </>
                       }
                     </Button>
