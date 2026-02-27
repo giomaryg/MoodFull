@@ -539,9 +539,14 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                           ) : (
                             <Square className="w-4 h-4 text-gray-400 flex-shrink-0" />
                           )}
-                          <span className={`text-sm ${isChecked ? 'line-through text-gray-500' : 'text-gray-800'}`}>
-                            {ingredient}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-sm ${isChecked ? 'line-through text-gray-500' : 'text-gray-800'}`}>
+                              {ingredient}
+                            </span>
+                            {isChecked && (
+                              <span className="text-[10px] font-medium bg-[#f0f9f2] text-[#6b9b76] px-1.5 py-0.5 rounded border border-[#6b9b76]/30">In Pantry</span>
+                            )}
+                          </div>
                         </button>
                       );
                     })}
@@ -577,9 +582,14 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                           <Square className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                         )}
                         <div className="flex-1">
-                          <p className={`font-medium ${checkedItems[item.key] ? 'line-through text-gray-500' : 'text-[#5a6f60]'}`}>
-                            {item.original}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className={`font-medium ${checkedItems[item.key] ? 'line-through text-gray-500' : 'text-[#5a6f60]'}`}>
+                              {item.original}
+                            </p>
+                            {checkedItems[item.key] && (
+                              <span className="text-[10px] font-medium bg-[#f0f9f2] text-[#6b9b76] px-1.5 py-0.5 rounded border border-[#6b9b76]/30">In Pantry</span>
+                            )}
+                          </div>
                           <p className="text-xs text-gray-500 mt-1">
                             {item.recipes.length > 1 ? `Used in ${item.recipes.length} recipes: ` : 'Used in: '}
                             {item.recipes.join(', ')}
