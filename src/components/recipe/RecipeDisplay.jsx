@@ -355,24 +355,24 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </div>
 
           {/* Instructions */}
-          <div className="space-y-3 sm:space-y-4">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-              <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-[#c17a7a] rounded-full" />
-              Instructions
-            </h3>
-            <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/70 mb-2">
+              <span>Instructions</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/60 to-transparent"></div>
+            </div>
+            <div className="space-y-3">
               {recipe.instructions?.map((instruction, index) =>
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
-                className="flex gap-3 sm:gap-4 items-start group hover:bg-[#faf6f2] p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-200">
+                className="flex gap-3 items-start group glass-panel p-3 sm:p-4 rounded-[14px] transition-all duration-200">
 
-                  <div className="bg-[#242424] text-white text-sm font-bold rounded-full shrink-0 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center sm:text-base shadow-lg">
+                  <div className="bg-[#6b9b76] text-white font-mono text-[10px] sm:text-xs font-bold rounded-xl shrink-0 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center shadow-md">
                     {index + 1}
                   </div>
-                  <p className="flex-1 text-gray-800 leading-relaxed pt-1 sm:pt-1.5 md:pt-2 text-sm sm:text-base">
+                  <p className="flex-1 text-[#3d5244]/80 leading-relaxed pt-0.5 text-[11px] sm:text-xs">
                     {instruction}
                   </p>
                 </motion.div>
