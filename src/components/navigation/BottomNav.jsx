@@ -11,49 +11,43 @@ export default function BottomNav({ activeTab, onTabChange }) {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#c5d9c9] z-[100] pb-safe">
-      <div className="w-full">
-        <div className="flex items-center justify-between h-16">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
+    <div className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 w-[calc(100%-24px)] sm:max-w-md bg-white/80 backdrop-blur-md border border-[#c5d9c9]/60 rounded-3xl p-2 flex items-center justify-around shadow-[0_4px_20px_rgba(107,155,118,0.12)] z-[100]">
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.id;
+        
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onTabChange(tab.id)}
+            className={`flex flex-col items-center gap-1.5 px-3 py-2 rounded-2xl relative transition-colors ${
+              isActive ? 'bg-[#6b9b76]/10' : ''
+            }`}
+          >
+            <Icon
+              strokeWidth={isActive ? 2.5 : 2}
+              className={`w-5 h-5 transition-colors ${
+                isActive ? 'text-[#6b9b76]' : 'text-[#5a6f60]/40'
+              }`}
+            />
+            <span
+              className={`font-mono text-[8px] sm:text-[9px] tracking-[0.07em] uppercase transition-colors ${
+                isActive ? 'text-[#6b9b76]' : 'text-[#5a6f60]/40'
+              }`}
+            >
+              {tab.label}
+            </span>
             
-            return (
-              <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
-                className="flex flex-col items-center justify-center flex-1 h-full relative"
-              >
-                <motion.div
-                  whileTap={{ scale: 0.9 }}
-                  className="flex flex-col items-center gap-1"
-                >
-                  <Icon
-                    className={`w-6 h-6 transition-colors ${
-                      isActive ? 'text-[#6b9b76]' : 'text-gray-400'
-                    }`}
-                  />
-                  <span
-                    className={`text-xs font-medium transition-colors ${
-                      isActive ? 'text-[#6b9b76]' : 'text-gray-400'
-                    }`}
-                  >
-                    {tab.label}
-                  </span>
-                </motion.div>
-                
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-[#6b9b76] rounded-b-full"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+            {isActive && (
+              <motion.div
+                layoutId="activeTabDot"
+                className="absolute -bottom-[2px] left-1/2 transform -translate-x-1/2 w-1 h-1 bg-[#6b9b76] rounded-full shadow-[0_0_5px_rgba(107,155,118,0.7)]"
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              />
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
