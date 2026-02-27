@@ -113,7 +113,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
       </div>
 
       {/* Navigation Footer / Side Panel */}
-      <div className="p-4 sm:p-8 md:p-6 lg:p-8 border-t md:border-t-0 md:border-l border-gray-800 flex md:flex-col justify-between items-center md:items-stretch md:justify-center gap-4 md:gap-6 bg-gray-950 shrink-0 md:w-64 lg:w-80">
+      <div className="p-4 sm:p-8 md:p-6 lg:p-8 border-t md:border-t-0 md:border-l border-gray-800 flex md:flex-col justify-between items-center md:items-stretch md:justify-center gap-4 md:gap-6 bg-gray-950 shrink-0 md:w-64 lg:w-80 transition-all duration-500 ease-in-out transform origin-bottom md:origin-right">
         <Button 
           onClick={prevStep} 
           disabled={currentStep === 0}
