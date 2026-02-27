@@ -96,6 +96,55 @@ function MealPlanner({ onOpenShoppingList, savedRecipes = [], generatedRecipes =
     if (!destination) return;
     if (source.droppableId === destination.droppableId) return;
 
+    if (source.droppableId === 'recipes-list') {
+      const isGenerated = draggableId.startsWith('gen-');
+      const realId = isGenerated ? draggableId.replace('gen-', '') : draggableId;
+      
+      let recipe = null;
+      if (isGenerated) {
+        recipe = generatedRecipes[parseInt(realId)];
+      } else {
+        recipe = savedRecipes.find(r => r.id === realId) || recipes.find(r => r.id === realId);
+      }
+
+      if (!recipe) return;
+
+      const [destDate, destMealType] = destination.droppableId.split('|');
+
+      let finalRecipeId = recipe.id;
+
+      if (isGenerated && !recipe.id) {
+        try {
+          const saved = await base44.entities.Recipe.create({
+            name: recipe.name,
+            description: recipe.description,
+            ingredients: recipe.ingredients,
+            instructions: recipe.instructions,
+            prep_time: recipe.prep_time,
+            cook_time: recipe.cook_time,
+            servings: recipe.servings,
+            difficulty: recipe.difficulty,
+            nutrition: recipe.nutrition,
+            image_url: recipe.imageUrl || (recipe.imageUrls ? recipe.imageUrls[0] : null),
+            mood: recipe.mood || 'generated'
+          });
+          finalRecipeId = saved.id;
+          queryClient.invalidateQueries({ queryKey: ['recipes'] });
+        } catch (e) {
+          console.error("Failed to save generated recipe", e);
+        }
+      }
+
+      createMealMutation.mutate({
+        recipe_id: finalRecipeId,
+        recipe_name: recipe.name,
+        date: destDate,
+        meal_type: destMealType,
+        servings: recipe.servings || 4
+      });
+      return;
+    }
+
     const [destDate, destMealType] = destination.droppableId.split('|');
 
     const meal = mealPlans.find(m => m.id === draggableId);
