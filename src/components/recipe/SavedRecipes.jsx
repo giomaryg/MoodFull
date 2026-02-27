@@ -82,63 +82,56 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
           <p className="text-[#5a6f60]">No recipes found matching "{displayQuery}"</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <AnimatePresence>
-                {filteredRecipes.map((recipe, index) => (
-            <motion.div
-              key={recipe.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <Card
-                onClick={() => onRecipeClick(recipe)}
-                className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#c5d9c9] bg-white hover:bg-[#f8faf8] group rounded-2xl overflow-hidden relative"
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 px-3 py-2 font-mono text-[7px] tracking-[0.15em] uppercase text-[#6b9b76]/45">
+            <span>Recent</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/50 to-transparent"></div>
+          </div>
+          <AnimatePresence>
+            {filteredRecipes.map((recipe, index) => (
+              <motion.div
+                key={recipe.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <div
+                  onClick={() => onRecipeClick(recipe)}
+                  className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:scale-[1.02] transition-transform duration-200 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
                 >
-                <button
-                  onClick={(e) => handleDelete(e, recipe.id)}
-                  className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 hover:bg-red-50 transition-all z-10"
-                >
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                </button>
-                <CardContent className="p-6 space-y-4">
-                  <div className="space-y-2">
-                    <h4 className="font-bold text-lg text-gray-900 group-hover:text-[#6b9b76] transition-colors line-clamp-1 pr-10">
+                  <button
+                    onClick={(e) => handleDelete(e, recipe.id)}
+                    className="absolute top-2 right-2 p-1.5 bg-white/80 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:bg-red-50 transition-all z-10"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                  </button>
+                  <div className="w-11 h-11 rounded-[10px] flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65]">
+                    🥗
+                    {recipe.image_url && (
+                      <img src={recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0 pr-6">
+                    <div className="text-[11px] font-semibold text-[#3d5244] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
                       <HighlightedText text={recipe.name} query={displayQuery} />
-                    </h4>
-                    <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-                      <HighlightedText text={recipe.description} query={displayQuery} />
-                    </p>
+                    </div>
+                    <div className="text-[#6b9b76] text-[8px] tracking-widest mb-0.5">
+                      {'★'.repeat(recipe.rating || 5)}{'☆'.repeat(5 - (recipe.rating || 5))}
+                    </div>
+                    <div className="font-mono text-[8px] text-[#5a6f60]/45 tracking-[0.04em]">
+                      {recipe.prep_time || '25 min'} · {recipe.difficulty || 'Easy'} {recipe.nutrition?.calories ? `· ${recipe.nutrition.calories} kcal` : ''}
+                    </div>
                   </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    <Badge 
-                      variant="secondary" 
-                      className="bg-[#e8f0ea] text-[#6b9b76] border-0 capitalize text-xs px-3 py-1 rounded-lg font-medium"
-                    >
-                      {recipe.mood}
-                    </Badge>
-                    {recipe.prep_time && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-0 text-xs px-3 py-1 rounded-lg">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {recipe.prep_time}
-                      </Badge>
-                    )}
-                    {recipe.servings && (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-0 text-xs px-3 py-1 rounded-lg">
-                        <Users className="w-3 h-3 mr-1" />
-                        {recipe.servings}
-                      </Badge>
-                    )}
+                  <div className="w-5 h-5 rounded-full border border-[#c5d9c9]/70 flex items-center justify-center text-[9px] text-[#6b9b76] flex-shrink-0">
+                    →
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
-        )}
+      )}
         </div>
         );
 }
