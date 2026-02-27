@@ -182,35 +182,29 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}>
 
-      <Card className="overflow-hidden shadow-2xl border-0 bg-white rounded-2xl sm:rounded-3xl">
+      <Card className="overflow-hidden shadow-2xl border-0 bg-[#e8f0ea] rounded-[24px]">
         {/* Header Section with Image */}
-        <div className="h-56 sm:h-64 md:h-80 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] relative overflow-hidden">
+        <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#8db894] via-[#5a8a65] to-[#3d5244] relative overflow-hidden flex items-center justify-center text-5xl">
           {(recipe.imageUrl || recipe.image_url) ?
           <>
               <img
               src={recipe.imageUrl || recipe.image_url}
               alt={recipe.name}
               className="absolute inset-0 w-full h-full object-cover" />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             </> :
 
           <>
-              <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}>
-
-                  <ChefHat className="w-20 h-20 text-[#c17a7a] opacity-40" />
-                </motion.div>
-              </div>
+              🥗
             </>
           }
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#e8f0ea]" />
+          
+          <div className="absolute top-3 left-4 font-mono text-[8px] sm:text-[9px] tracking-[0.12em] uppercase bg-[#6b9b76]/85 text-white px-2.5 py-1 rounded-md backdrop-blur-sm">
+            ◎ {recipe.mood ? recipe.mood.replace(/,/g, ' ·') : 'Recipe'}
+          </div>
         </div>
 
-        <CardHeader className="pb-4 sm:pb-6 pt-6 sm:pt-8 px-4 sm:px-6">
+        <CardHeader className="pb-4 sm:pb-6 pt-2 sm:pt-4 px-4 sm:px-6 bg-[#e8f0ea]">
           <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4">
             <div className="flex-1">
               <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-2 sm:mb-3">
