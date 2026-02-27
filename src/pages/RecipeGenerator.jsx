@@ -1121,9 +1121,10 @@ export default function RecipeGenerator() {
         {showPaywall &&
         <Paywall
           onClose={() => setShowPaywall(false)}
-          onSubscribe={(plan) => {
+          onSubscribe={(plan, method = 'card') => {
             // Placeholder: hook up real payment here
-            toast.success(`You selected the ${plan} plan! Payment coming soon.`);
+            const methodText = method === 'apple_pay' ? 'Apple Pay' : method === 'samsung_pay' ? 'Samsung Pay' : 'Card';
+            toast.success(`You selected the ${plan} plan using ${methodText}! Payment coming soon.`);
             setShowPaywall(false);
           }} />
 
