@@ -388,9 +388,18 @@ export default function RecipeGenerator() {
       const moodPart = selectedMoods.length > 0 ? `for mood: ${moodContext}` : '';
       const mealTypePart = selectedMealTypes.length > 0 ? ` Meal type(s): ${selectedMealTypes.join(', ')}.` : '';
 
+      let filtersContext = [];
+      if (advancedFilters.cuisine) filtersContext.push(`Cuisine: ${advancedFilters.cuisine}`);
+      if (advancedFilters.dietary) filtersContext.push(`Dietary: ${advancedFilters.dietary}`);
+      if (advancedFilters.mealType) filtersContext.push(`Meal Type: ${advancedFilters.mealType}`);
+      if (advancedFilters.maxPrepTime) filtersContext.push(`Max Prep Time: ${advancedFilters.maxPrepTime} mins`);
+      if (advancedFilters.difficulty) filtersContext.push(`Difficulty: ${advancedFilters.difficulty}`);
+      if (advancedFilters.maxCalories) filtersContext.push(`Max Calories: ${advancedFilters.maxCalories}`);
+      const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
+
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
       const quickResponse = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 8 diverse recipe ideas ${moodPart} ${searchContext}.${mealTypePart}${preferencesContext} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Do NOT generate 8 similar recipes - make them varied and interesting.`,
+        prompt: `Generate 8 diverse recipe ideas ${moodPart} ${searchContext}.${mealTypePart}${preferencesContext}${filterString} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Do NOT generate 8 similar recipes - make them varied and interesting.`,
         response_json_schema: {
           type: "object",
           properties: {
