@@ -244,8 +244,14 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto"
+        className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto relative"
       >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-50"
+        >
+          <X className="w-5 h-5" />
+        </button>
         {/* Premium gate */}
         {!currentUser?.is_premium ? (
           <div className="relative py-8">
