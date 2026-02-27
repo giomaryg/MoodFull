@@ -973,6 +973,7 @@ export default function RecipeGenerator() {
               {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
             <RecommendedRecipes
               userPreferences={userPreferences}
+              inventory={inventory}
               onRecipeClick={(recipe) => {
                 setScrollPosition(window.scrollY);
                 setCurrentRecipe(recipe);
