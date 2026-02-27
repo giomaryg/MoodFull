@@ -158,9 +158,10 @@ export default function Paywall({ onClose, onSubscribe }) {
             key={selectedPlan}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
+            className="space-y-3"
           >
             <Button
-              onClick={() => onSubscribe?.(selectedPlan)}
+              onClick={() => onSubscribe?.(selectedPlan, 'card')}
               className="w-full bg-[#6b9b76] hover:bg-[#5a8a65] text-white text-base font-semibold py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
             >
               <Sparkles className="w-4 h-4 mr-2 flex-shrink-0" />
@@ -173,6 +174,25 @@ export default function Paywall({ onClose, onSubscribe }) {
                 <span>Start for $7.99/month</span>
               )}
             </Button>
+            
+            <div className="flex gap-3">
+              <Button
+                onClick={() => onSubscribe?.(selectedPlan, 'apple_pay')}
+                variant="outline"
+                className="flex-1 bg-black hover:bg-gray-900 text-white border-0 py-6 rounded-2xl transition-all"
+              >
+                <svg viewBox="0 0 448 512" className="h-5 w-5 mr-2 fill-white"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                Pay
+              </Button>
+              <Button
+                onClick={() => onSubscribe?.(selectedPlan, 'samsung_pay')}
+                variant="outline"
+                className="flex-1 bg-[#1428a0] hover:bg-[#0f1d7a] text-white border-0 py-6 rounded-2xl transition-all font-bold tracking-tight"
+              >
+                SAMSUNG Pay
+              </Button>
+            </div>
+            
             <p className="text-center text-xs text-gray-400 mt-2">
               Cancel anytime · No commitment
             </p>
