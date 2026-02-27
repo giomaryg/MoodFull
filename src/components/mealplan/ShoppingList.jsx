@@ -1,5 +1,11 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -268,14 +274,11 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     }
   }, [inventory, shoppingList, shoppingByRecipe, checkedItems]);
 
-  const handleOrderGroceries = () => {
-    const service = window.prompt("Enter your preferred grocery delivery service (e.g. 'Instacart', 'Amazon Fresh', 'Walmart'):", "Instacart");
-    if (service) {
-      toast.success(`Pushing ${totalItems - checkedCount} items to your ${service} cart...`);
-      setTimeout(() => {
-        window.open(`https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`, '_blank');
-      }, 1500);
-    }
+  const handleOrderGroceries = (service) => {
+    toast.success(`Pushing ${totalItems - checkedCount} items to your ${service} cart...`);
+    setTimeout(() => {
+      window.open(`https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`, '_blank');
+    }, 1500);
   };
 
   return (
@@ -336,13 +339,27 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
               </p>
             </div>
             <div className="flex gap-2 mr-8">
-              <Button
-                onClick={handleOrderGroceries}
-                disabled={totalItems === 0 || checkedCount === totalItems}
-                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
-              >
-                <ShoppingCart className="w-4 h-4 mr-2 hidden sm:block" /> Order
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    disabled={totalItems === 0 || checkedCount === totalItems}
+                    className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
+                  >
+                    <ShoppingCart className="w-4 h-4 mr-2 hidden sm:block" /> Order
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden">
+                  {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods'].map(service => (
+                    <DropdownMenuItem 
+                      key={service}
+                      onClick={() => handleOrderGroceries(service)}
+                      className="cursor-pointer hover:bg-[#f0f9f2] text-gray-700 focus:bg-[#f0f9f2] focus:text-[#6b9b76] px-4 py-2"
+                    >
+                      Order via {service}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button
                 onClick={downloadList}
                 variant="outline"
