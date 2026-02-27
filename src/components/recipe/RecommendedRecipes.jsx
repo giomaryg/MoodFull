@@ -8,7 +8,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-function RecommendedRecipes({ userPreferences, onRecipeClick }) {
+function RecommendedRecipes({ userPreferences, inventory = [], onRecipeClick }) {
   const [recommendations, setRecommendations] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const queryClient = useQueryClient();
