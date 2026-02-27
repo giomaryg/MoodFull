@@ -551,9 +551,18 @@ export default function RecipeGenerator() {
 
     const inventoryList = inventory.map(i => `${i.name}`).join(', ');
 
+    let filtersContext = [];
+    if (advancedFilters.cuisine) filtersContext.push(`Cuisine: ${advancedFilters.cuisine}`);
+    if (advancedFilters.dietary) filtersContext.push(`Dietary: ${advancedFilters.dietary}`);
+    if (advancedFilters.mealType) filtersContext.push(`Meal Type: ${advancedFilters.mealType}`);
+    if (advancedFilters.maxPrepTime) filtersContext.push(`Max Prep Time: ${advancedFilters.maxPrepTime} mins`);
+    if (advancedFilters.difficulty) filtersContext.push(`Difficulty: ${advancedFilters.difficulty}`);
+    if (advancedFilters.maxCalories) filtersContext.push(`Max Calories: ${advancedFilters.maxCalories}`);
+    const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
+
     try {
       const quickResponse = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 4 realistic recipe ideas using ONLY or MAINLY these ingredients I already have: ${inventoryList}. Try to minimize extra ingredients needed. ${preferencesContext}. Provide varied options.`,
+        prompt: `Generate 4 realistic recipe ideas using ONLY or MAINLY these ingredients I already have: ${inventoryList}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
         response_json_schema: {
           type: "object",
           properties: {
