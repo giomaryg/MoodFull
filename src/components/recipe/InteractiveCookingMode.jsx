@@ -58,8 +58,9 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
   if (!instructions.length) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black text-white flex flex-col">
-      {/* Header */}
+    <div className="fixed inset-0 z-[100] bg-black text-white flex flex-col md:flex-row">
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-800">
         <h2 className="text-2xl font-bold text-[#6b9b76]">{recipe.name}</h2>
         <Button onClick={onClose} variant="ghost" className="text-white hover:bg-gray-800 rounded-full h-12 w-12 p-0">
