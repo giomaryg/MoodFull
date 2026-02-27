@@ -58,9 +58,14 @@ function RecommendedRecipes({ userPreferences, inventory = [], onRecipeClick }) 
     if (mealPlanRecipes) {
       contextParts.push(`Recently planned meals: ${mealPlanRecipes}`);
     }
+    
+    if (inventory && inventory.length > 0) {
+      const inventoryList = inventory.map(i => i.name).join(', ');
+      contextParts.push(`Current pantry inventory (prioritize using these): ${inventoryList}`);
+    }
 
     return contextParts.join('\n');
-  }, [userPreferences, savedRecipes, mealPlans]);
+  }, [userPreferences, savedRecipes, mealPlans, inventory]);
 
   const generateRecommendations = async () => {
     if (!userPreferences) return;
@@ -68,10 +73,16 @@ function RecommendedRecipes({ userPreferences, inventory = [], onRecipeClick }) 
     setIsGenerating(true);
     
     try {
+      const inventoryPrompt = inventory && inventory.length > 0 
+        ? "Make sure at least 3 of these recommendations primarily use ingredients the user currently has in their pantry." 
+        : "";
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Based on this user's preferences, recommend 6 diverse recipes:
 
 ${userContext}
+
+${inventoryPrompt}
 
 Generate 6 personalized recipe recommendations.
 Each recipe must have:
