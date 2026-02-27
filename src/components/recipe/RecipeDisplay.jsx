@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight, FolderPlus } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
@@ -543,6 +543,26 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           recipe={recipe}
           onSave={handleEditSave}
           onClose={() => setShowEditDialog(false)}
+        />
+      )}
+
+      {/* Save to Collection Dialog */}
+      {showSaveDialog && (
+        <SaveToCollectionDialog
+          recipe={recipe}
+          onClose={() => setShowSaveDialog(false)}
+          onSaveComplete={(updatedRecipe) => {
+            if (onUpdate) onUpdate(updatedRecipe);
+            if (!isSaved && onSave) onSave(updatedRecipe);
+          }}
+        />
+      )}
+
+      {/* Interactive Cooking Mode */}
+      {showCookingMode && (
+        <InteractiveCookingMode
+          recipe={recipe}
+          onClose={() => setShowCookingMode(false)}
         />
       )}
     </motion.div>
