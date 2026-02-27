@@ -467,16 +467,18 @@ export default function RecipeGenerator() {
       <div className="min-h-screen bg-[#e8f0ea]">
         {/* Hero Section */}
         {!showIntro && (
-          <div className="fixed top-0 left-0 right-0 bg-[#e8f0ea] border-b border-[#c5d9c9] z-50">
-            <div className="bg-slate-50 mx-auto px-4 py-4 max-w-6xl sm:px-6 sm:py-6">
+          <div className="fixed top-0 left-0 right-0 z-50 glass-header border-b-0 pb-2 pt-6">
+            <div className="mx-auto px-4 max-w-6xl">
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center space-y-3 sm:space-y-4">
-
-                <header className="text-center">
-                  <h1 className="text-[#6b9b76] text-4xl sm:text-5xl md:text-6xl" style={{ fontFamily: 'Brittany Signature, cursive' }}>
-                    MoodFull
+                className="text-center">
+                <header>
+                  <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
+                    ◎ Moodfull
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gradient">
+                    AI Recipe Generator
                   </h1>
                 </header>
               </motion.div>
@@ -485,7 +487,7 @@ export default function RecipeGenerator() {
         )}
 
         {/* Main Content */}
-        <div className="bg-slate-50 mx-auto px-4 pt-32 sm:pt-40 pb-24 sm:px-6 max-w-6xl space-y-8 sm:space-y-12">
+        <div className="mx-auto px-4 pt-28 sm:pt-32 pb-32 sm:px-6 max-w-6xl space-y-6 sm:space-y-8">
           {/* Survey */}
           {showSurvey &&
             <motion.div
