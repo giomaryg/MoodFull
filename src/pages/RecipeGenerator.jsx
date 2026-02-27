@@ -148,6 +148,17 @@ export default function RecipeGenerator() {
       filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
     }
 
+    if (advancedFilters.usePantry && inventory && inventory.length > 0) {
+      const inventoryNames = inventory.map(i => i.name.toLowerCase());
+      filtered = filtered.filter((recipe) => {
+        if (!recipe.ingredients || recipe.ingredients.length === 0) return false;
+        const matchCount = recipe.ingredients.filter(ing => 
+          inventoryNames.some(inv => ing.toLowerCase().includes(inv))
+        ).length;
+        return (matchCount / recipe.ingredients.length) >= 0.5;
+      });
+    }
+
     // Sorting
     const sortBy = advancedFilters.sortBy || 'date_desc';
     filtered.sort((a, b) => {
@@ -250,6 +261,17 @@ export default function RecipeGenerator() {
     if (advancedFilters.maxCalories) {
       const maxCal = parseInt(advancedFilters.maxCalories);
       filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
+    }
+
+    if (advancedFilters.usePantry && inventory && inventory.length > 0) {
+      const inventoryNames = inventory.map(i => i.name.toLowerCase());
+      filtered = filtered.filter((recipe) => {
+        if (!recipe.ingredients || recipe.ingredients.length === 0) return false;
+        const matchCount = recipe.ingredients.filter(ing => 
+          inventoryNames.some(inv => ing.toLowerCase().includes(inv))
+        ).length;
+        return (matchCount / recipe.ingredients.length) >= 0.5;
+      });
     }
 
     // Sorting
