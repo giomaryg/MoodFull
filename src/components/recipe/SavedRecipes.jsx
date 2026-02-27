@@ -71,6 +71,33 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-[#6b9b76]">Your Saved Recipes</h3>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="h-7 text-xs bg-blue-50 text-blue-600 border-blue-200 ml-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              base44.entities.Recipe.create({
+                name: "Sample Feature Recipe " + Math.floor(Math.random() * 100),
+                mood: "Testing",
+                description: "A quick test recipe to view features.",
+                prep_time: "10 min",
+                cook_time: "20 min",
+                servings: 2,
+                difficulty: "easy",
+                ingredients: ["1 cup Flour", "2 Eggs", "1/2 cup Sugar"],
+                instructions: ["Mix ingredients", "Bake for 20 mins at 350F", "Enjoy!"],
+                collections: ["Dev Test"],
+                nutrition: { calories: 350, protein: "10g", carbs: "40g", fat: "15g" },
+                rating: 5
+              }).then(() => {
+                queryClient.invalidateQueries({ queryKey: ['recipes'] });
+                toast.success('Added sample recipe');
+              });
+            }}
+          >
+            Dev: Add Recipe
+          </Button>
         </div>
 
         {onOpenShoppingList && (
@@ -140,7 +167,7 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                   onClick={() => onRecipeClick(recipe)}
                   className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:scale-[1.02] transition-transform duration-200 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
                 >
-                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all z-10">
+                  <div className="absolute top-2 right-2 flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-all z-10">
                     {/* Dev Edit Button for testing */}
                     <button
                       onClick={(e) => {
