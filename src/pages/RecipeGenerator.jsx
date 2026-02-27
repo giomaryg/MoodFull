@@ -187,7 +187,7 @@ export default function RecipeGenerator() {
     });
 
     return filtered;
-  }, [savedRecipes, globalSearchQuery, advancedFilters]);
+  }, [savedRecipes, globalSearchQuery, advancedFilters, inventory]);
 
   const filteredGeneratedRecipes = useMemo(() => {
     let filtered = generatedRecipes.filter((r) => r && r.name);
