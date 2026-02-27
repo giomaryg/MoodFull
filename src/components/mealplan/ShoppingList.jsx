@@ -293,12 +293,9 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                 onClick={downloadList}
                 variant="outline"
                 size="icon"
-                className="border-2 border-[#6b9b76]"
+                className="border-2 border-[#6b9b76] mr-8"
               >
                 <Download className="w-4 h-4 text-[#6b9b76]" />
-              </Button>
-              <Button onClick={onClose} variant="ghost" size="icon">
-                <X className="w-5 h-5" />
               </Button>
             </div>
           </div>
