@@ -181,6 +181,34 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                 </Select>
               </div>
 
+              {/* Allergens */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Allergies</Label>
+                <Select value={filters.allergens || "all"} onValueChange={(val) => handleFilterChange('allergens', val === "all" ? null : val)}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="No restrictions" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">No restrictions</SelectItem>
+                    <SelectItem value="Dairy-Free">Dairy-Free</SelectItem>
+                    <SelectItem value="Nut-Free">Nut-Free</SelectItem>
+                    <SelectItem value="Shellfish-Free">Shellfish-Free</SelectItem>
+                    <SelectItem value="Soy-Free">Soy-Free</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Exclude Ingredients */}
+              <div className="space-y-2 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 mt-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Exclude Ingredients</Label>
+                <Input 
+                  placeholder="e.g. onions, garlic, cilantro (comma separated)" 
+                  value={filters.excludeIngredients || ""}
+                  onChange={(e) => handleFilterChange('excludeIngredients', e.target.value)}
+                  className="h-9 border-[#c5d9c9] focus:border-[#6b9b76]"
+                />
+              </div>
+
             </div>
           </motion.div>
         )}
