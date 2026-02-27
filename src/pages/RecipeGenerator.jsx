@@ -475,10 +475,10 @@ export default function RecipeGenerator() {
                 className="text-center">
                 <header>
                   <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
-                    ◎ Moodfull
+                    ◎ AI Recipe Generator
                   </div>
-                  <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gradient">
-                    AI Recipe Generator
+                  <h1 className="text-4xl sm:text-5xl font-normal tracking-tight text-gradient" style={{ fontFamily: 'Brittany Signature, cursive' }}>
+                    MoodFull
                   </h1>
                 </header>
               </motion.div>

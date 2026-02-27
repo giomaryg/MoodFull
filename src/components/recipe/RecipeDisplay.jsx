@@ -279,27 +279,25 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </div>
 
           {/* Info Badges */}
-          <div className="grid grid-cols-4 gap-2 mt-4 sm:mt-5">
-            <div className="glass-panel py-3 flex flex-col items-center justify-center">
-              <div className="text-sm sm:text-base font-bold text-[#6b9b76]">{recipe.prep_time || '-'}</div>
-              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Prep</div>
-            </div>
-            <div className="glass-panel py-3 flex flex-col items-center justify-center">
-              <div className="text-sm sm:text-base font-bold text-[#6b9b76]">{recipe.cook_time || '-'}</div>
-              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Cook</div>
-            </div>
-            <div className="glass-panel py-3 flex flex-col items-center justify-center">
-              <div className="flex items-center gap-2">
-                <button onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="text-[#c5d9c9] hover:text-[#6b9b76]"><Minus className="w-3 h-3" /></button>
-                <div className="text-sm sm:text-base font-bold text-[#6b9b76]">{currentServings}</div>
-                <button onClick={() => setCurrentServings(currentServings + 1)} className="text-[#c5d9c9] hover:text-[#6b9b76]"><Plus className="w-3 h-3" /></button>
-              </div>
-              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Serves</div>
-            </div>
-            <div className="glass-panel py-3 flex flex-col items-center justify-center">
-              <div className="text-sm sm:text-base font-bold text-[#6b9b76] capitalize">{recipe.difficulty || '-'}</div>
-              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Level</div>
-            </div>
+          <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-6">
+            <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-xl">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+              Prep: {recipe.prep_time || '-'}
+            </Badge>
+            <Badge variant="secondary" className="bg-orange-50 text-orange-700 hover:bg-orange-100 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-xl">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+              Cook: {recipe.cook_time || '-'}
+            </Badge>
+            <Badge variant="secondary" className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-xl flex items-center gap-2">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-1" />
+              <button onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="p-0.5 hover:bg-purple-200 rounded-md"><Minus className="w-3 h-3 sm:w-4 sm:h-4" /></button>
+              <span className="font-bold min-w-[1ch] text-center">{currentServings}</span>
+              <button onClick={() => setCurrentServings(currentServings + 1)} className="p-0.5 hover:bg-purple-200 rounded-md"><Plus className="w-3 h-3 sm:w-4 sm:h-4" /></button>
+            </Badge>
+            <Badge variant="secondary" className="bg-green-50 text-green-700 hover:bg-green-100 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-xl capitalize">
+              <ChefHat className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+              {recipe.difficulty || '-'}
+            </Badge>
           </div>
 
           </CardHeader>
