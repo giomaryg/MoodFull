@@ -198,8 +198,22 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                 </Select>
               </div>
 
+              {/* Use Pantry */}
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Ingredients</Label>
+                <Select value={filters.usePantry ? "yes" : "all"} onValueChange={(val) => handleFilterChange('usePantry', val === "yes")}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="All Ingredients" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Ingredients</SelectItem>
+                    <SelectItem value="yes">In My Pantry</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Exclude Ingredients */}
-              <div className="space-y-2 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 mt-2">
+              <div className="space-y-2 col-span-1 sm:col-span-2 md:col-span-3 mt-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Exclude Ingredients</Label>
                 <Input 
                   placeholder="e.g. onions, garlic, cilantro (comma separated)" 
