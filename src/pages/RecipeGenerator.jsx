@@ -302,7 +302,7 @@ export default function RecipeGenerator() {
     });
 
     return filtered;
-  }, [generatedRecipes, globalSearchQuery, advancedFilters]);
+  }, [generatedRecipes, globalSearchQuery, advancedFilters, inventory]);
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
