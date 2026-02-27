@@ -58,7 +58,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
   if (!instructions.length) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black text-white flex flex-row">
+    <div className="fixed inset-0 z-[100] bg-black text-white flex flex-col">
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-800">
@@ -75,8 +75,39 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 md:p-12 text-center relative overflow-y-auto">
-        <div className="absolute top-4 left-4 sm:top-8 sm:left-8 text-gray-500 font-mono text-base sm:text-xl">
-          Step {currentStep + 1} of {instructions.length}
+        <div className="absolute top-4 left-4 sm:top-8 sm:left-8 flex flex-col items-start gap-3 sm:gap-4 z-10">
+          <div className="text-gray-500 font-mono text-base sm:text-xl">
+            Step {currentStep + 1} of {instructions.length}
+          </div>
+          <div className="flex gap-2 sm:gap-3">
+            <Button 
+              onClick={prevStep} 
+              disabled={currentStep === 0}
+              variant="outline"
+              className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl disabled:opacity-30 transition-all"
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
+              <span>Previous</span>
+            </Button>
+            
+            {currentStep === instructions.length - 1 ? (
+              <Button 
+                onClick={onClose}
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl shadow-[0_0_20px_rgba(107,155,118,0.4)] transition-all"
+              >
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
+                <span>Finish</span>
+              </Button>
+            ) : (
+              <Button 
+                onClick={nextStep}
+                className="bg-white hover:bg-gray-200 text-black h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl transition-all"
+              >
+                <span>Next</span>
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 sm:ml-1" />
+              </Button>
+            )}
+          </div>
         </div>
         
         <AnimatePresence mode="wait">
@@ -112,39 +143,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
       </div>
       </div>
 
-      {/* Navigation Footer / Side Panel */}
-      <motion.div 
-        layout
-        className="p-3 sm:p-6 lg:p-8 border-l border-gray-800 flex flex-col justify-center gap-4 sm:gap-6 bg-gray-950 shrink-0 w-20 sm:w-64 lg:w-80"
-      >
-        <Button 
-          onClick={prevStep} 
-          disabled={currentStep === 0}
-          variant="outline"
-          className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-16 sm:h-16 px-0 sm:px-8 text-xs sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl disabled:opacity-30 w-full order-2 transition-all flex-col sm:flex-row justify-center items-center"
-        >
-          <ChevronLeft className="w-8 h-8 sm:mr-2" />
-          <span className="hidden sm:inline">Previous</span>
-        </Button>
-        
-        {currentStep === instructions.length - 1 ? (
-          <Button 
-            onClick={onClose}
-            className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white h-16 sm:h-16 px-0 sm:px-8 text-xs sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl shadow-[0_0_20px_rgba(107,155,118,0.4)] w-full order-1 transition-all flex-col sm:flex-row justify-center items-center"
-          >
-            <CheckCircle2 className="w-8 h-8 sm:mr-2" />
-            <span className="hidden sm:inline">Finish</span>
-          </Button>
-        ) : (
-          <Button 
-            onClick={nextStep}
-            className="bg-white hover:bg-gray-200 text-black h-16 sm:h-16 px-0 sm:px-8 text-xs sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl w-full order-1 transition-all flex-col sm:flex-row justify-center items-center"
-          >
-            <span className="hidden sm:inline">Next</span>
-            <ChevronRight className="w-8 h-8 sm:ml-2" />
-          </Button>
-        )}
-      </motion.div>
+    </div>
     </div>
   );
 }
