@@ -111,93 +111,76 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      <div className="text-center space-y-2 sm:space-y-3 px-4">
-        <h2 className="text-[#6b9b76] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
-          How are you feeling today?
-        </h2>
-        <p className="text-[#5a6f60] text-sm sm:text-base">Choose your mood(s) and we'll create the perfect recipe for you</p>
-        <p className="text-[#6b9b76] text-xs sm:text-sm font-medium italic pt-1">✨ Where every mood meets its perfect meal ✨</p>
+    <div className="flex flex-col h-full -mx-4 sm:mx-0">
+      <div className="glass-header py-6 sm:py-8 px-4 text-center rounded-t-3xl sm:rounded-3xl mb-4 sm:mb-6">
+        <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-2 opacity-70">
+          ◎ Mood Interface
+        </div>
+        <div className="text-xl sm:text-2xl font-bold tracking-tight text-gradient">
+          How are you feeling?
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-        {moods.map((mood, index) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 px-4 flex-1">
+        {moods.map((mood) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);
 
           return (
-            <motion.button
+            <button
               key={mood.id}
               onClick={() => handleMoodToggle(mood.id)}
-              whileHover={{ scale: 1.05, y: -4 }}
-              whileTap={{ scale: 0.95 }} 
-              className={`p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl relative border-2 transition-all duration-300 shadow-md hover:shadow-xl w-full ${
+              className={`p-4 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200 ${
                 isSelected 
-                  ? 'bg-[#f5e6dc] border-[#c17a7a]' 
-                  : 'bg-white border-[#e8d5c4] hover:border-[#c17a7a]'
+                  ? 'bg-[#6b9b76]/10 border border-[#6b9b76]/50 shadow-[0_2px_12px_rgba(107,155,118,0.15)] relative overflow-hidden' 
+                  : 'glass-panel hover:bg-white/70'
+              }`}
+            >
+              {isSelected && (
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#6b9b76]/50 to-transparent" />
+              )}
+              
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
+                isSelected 
+                  ? 'bg-[#6b9b76]/15 border-[#6b9b76]/30' 
+                  : 'bg-white/40 border-[#c5d9c9]/30'
               }`}>
-
-
-
-
-
-
-
-
-              <div className="flex flex-col items-center gap-3">
-                <div className="bg-[#6b9b76] p-4 rounded-2xl transform transition-transform shadow-md">
-
-
-
-                  <Icon className="text-white w-7 h-7" />
-                </div>
-                <span className={`
-                  text-sm font-semibold tracking-wide
-                  ${isSelected ? 'text-[#6b9b76]' : 'text-[#5a6f60]'}
-                `}>
-                  {mood.label}
-                </span>
+                <Icon className={`w-5 h-5 ${isSelected ? 'text-[#3d5244]' : 'text-[#5a6f60]/80'}`} />
               </div>
-
-              {isSelected &&
-              <motion.div
-                layoutId="mood-indicator"
-                className="absolute -bottom-1.5 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-12 sm:w-16 h-1 sm:h-1.5 bg-[#6b9b76] rounded-full shadow-md"
-                transition={{ type: "spring", stiffness: 500, damping: 30 }} />
-
-              }
-              </motion.button>
-              );
-              })}
-              </div>
+              <span className={`text-xs font-semibold ${isSelected ? 'text-[#3d5244]' : 'text-[#3d5244]/60'}`}>
+                {mood.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
       {/* Meal Type Selector */}
-      <div className="space-y-3">
-        <p className="text-center text-[#5a6f60] text-sm sm:text-base font-medium">What type of meal are you looking for?</p>
-        <div className="flex flex-wrap justify-center gap-3">
+      <div className="px-4 py-8 flex flex-col items-center">
+        <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/40 text-center mb-3 w-full">
+          Meal Type
+        </div>
+        <div className="flex flex-wrap justify-center gap-2">
           {mealTypes.map((type) => {
             const Icon = type.icon;
             const isSelected = selectedMealTypes.includes(type.id);
             return (
-              <motion.button
+              <button
                 key={type.id}
                 onClick={() => handleMealTypeToggle(type.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-full border-2 transition-all duration-200 shadow-sm font-medium text-sm ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs transition-all duration-200 ${
                   isSelected
-                    ? 'bg-[#f5e6dc] border-[#c17a7a] text-[#6b9b76]'
-                    : 'bg-white border-[#e8d5c4] text-[#5a6f60] hover:border-[#c17a7a]'
+                    ? 'bg-[#6b9b76]/10 border-[#6b9b76]/45 text-[#6b9b76] font-medium'
+                    : 'bg-white/50 border-[#c5d9c9]/60 text-[#5a6f60]/50'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 {type.label}
-              </motion.button>
+              </button>
             );
           })}
         </div>
       </div>
-
-              </div>
+    </div>
               );
               }
