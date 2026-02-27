@@ -113,12 +113,15 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
       </div>
 
       {/* Navigation Footer / Side Panel */}
-      <div className="p-4 sm:p-8 md:p-6 lg:p-8 border-t md:border-t-0 md:border-l border-gray-800 flex md:flex-col justify-between items-center md:items-stretch md:justify-center gap-4 md:gap-6 bg-gray-950 shrink-0 md:w-64 lg:w-80 transition-all duration-300">
+      <motion.div 
+        layout
+        className="p-4 sm:p-8 md:p-6 lg:p-8 border-t md:border-t-0 md:border-l border-gray-800 flex md:flex-col justify-between items-center md:items-stretch md:justify-center gap-4 md:gap-6 bg-gray-950 shrink-0 md:w-64 lg:w-80"
+      >
         <Button 
           onClick={prevStep} 
           disabled={currentStep === 0}
           variant="outline"
-          className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-12 sm:h-16 px-4 sm:px-8 text-sm md:text-lg lg:text-xl rounded-xl sm:rounded-2xl disabled:opacity-30 md:w-full md:order-2"
+          className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-12 sm:h-16 px-4 sm:px-8 text-sm md:text-lg lg:text-xl rounded-xl sm:rounded-2xl disabled:opacity-30 md:w-full md:order-2 transition-all"
         >
           <ChevronLeft className="w-5 h-5 sm:w-8 sm:h-8 sm:mr-2 md:mr-0 lg:mr-2" />
           <span className="hidden sm:inline md:inline">Previous</span>
@@ -127,7 +130,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
         {currentStep === instructions.length - 1 ? (
           <Button 
             onClick={onClose}
-            className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white h-12 sm:h-16 px-6 sm:px-12 text-sm md:text-lg lg:text-xl rounded-xl sm:rounded-2xl shadow-[0_0_20px_rgba(107,155,118,0.4)] md:w-full md:order-1"
+            className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white h-12 sm:h-16 px-6 sm:px-12 text-sm md:text-lg lg:text-xl rounded-xl sm:rounded-2xl shadow-[0_0_20px_rgba(107,155,118,0.4)] md:w-full md:order-1 transition-all"
           >
             <CheckCircle2 className="w-5 h-5 sm:w-8 sm:h-8 mr-1.5 sm:mr-2 md:mr-0 lg:mr-2" />
             Finish Cooking
@@ -135,13 +138,13 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
         ) : (
           <Button 
             onClick={nextStep}
-            className="bg-white hover:bg-gray-200 text-black h-12 sm:h-16 px-6 sm:px-12 text-sm md:text-lg lg:text-xl rounded-xl sm:rounded-2xl md:w-full md:order-1"
+            className="bg-white hover:bg-gray-200 text-black h-12 sm:h-16 px-6 sm:px-12 text-sm md:text-lg lg:text-xl rounded-xl sm:rounded-2xl md:w-full md:order-1 transition-all"
           >
             Next Step
             <ChevronRight className="w-5 h-5 sm:w-8 sm:h-8 ml-1.5 sm:ml-2 md:ml-0 lg:ml-2" />
           </Button>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }
