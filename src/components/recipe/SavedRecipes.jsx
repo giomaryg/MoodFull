@@ -26,22 +26,40 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
     deleteRecipeMutation.mutate(recipeId);
   };
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCollection, setSelectedCollection] = useState(null);
   const displayQuery = externalSearchQuery || searchQuery;
+
+  const collections = useMemo(() => {
+    const cols = new Set();
+    if (recipes) {
+      recipes.forEach(r => {
+        if (r.collections) r.collections.forEach(c => cols.add(c));
+      });
+    }
+    return Array.from(cols).sort();
+  }, [recipes]);
 
   const filteredRecipes = useMemo(() => {
     const query = displayQuery.trim();
-    if (!query) return recipes;
     
-    const lowerQuery = query.toLowerCase();
-    return recipes.filter(recipe => 
-      recipe && recipe.name && (
+    return recipes.filter(recipe => {
+      if (!recipe || !recipe.name) return false;
+      
+      if (selectedCollection && (!recipe.collections || !recipe.collections.includes(selectedCollection))) {
+        return false;
+      }
+      
+      if (!query) return true;
+      
+      const lowerQuery = query.toLowerCase();
+      return (
         recipe.name.toLowerCase().includes(lowerQuery) ||
         recipe.description?.toLowerCase().includes(lowerQuery) ||
         recipe.mood?.toLowerCase().includes(lowerQuery) ||
         recipe.ingredients?.some(ing => ing.toLowerCase().includes(lowerQuery))
-      )
-    );
-  }, [recipes, displayQuery]);
+      );
+    });
+  }, [recipes, displayQuery, selectedCollection]);
 
   if (!recipes || recipes.length === 0) return null;
 
@@ -76,6 +94,28 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
           />
         </div>
       </div>
+
+      {collections.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-1">
+          <Badge 
+            onClick={() => setSelectedCollection(null)}
+            variant={selectedCollection === null ? "default" : "outline"}
+            className={`cursor-pointer ${selectedCollection === null ? 'bg-[#6b9b76] hover:bg-[#5a8a65]' : 'text-gray-500 hover:text-[#6b9b76]'}`}
+          >
+            All
+          </Badge>
+          {collections.map(c => (
+            <Badge 
+              key={c}
+              onClick={() => setSelectedCollection(c)}
+              variant={selectedCollection === c ? "default" : "outline"}
+              className={`cursor-pointer ${selectedCollection === c ? 'bg-[#6b9b76] hover:bg-[#5a8a65]' : 'text-gray-500 hover:text-[#6b9b76]'}`}
+            >
+              {c}
+            </Badge>
+          ))}
+        </div>
+      )}
 
       {filteredRecipes.length === 0 ? (
         <div className="text-center py-8">
