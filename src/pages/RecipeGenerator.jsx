@@ -487,7 +487,7 @@ export default function RecipeGenerator() {
         )}
 
         {/* Main Content */}
-        <div className="mx-auto px-4 pt-28 sm:pt-32 pb-32 sm:px-6 max-w-6xl space-y-6 sm:space-y-8">
+        <div className="mx-auto px-4 pt-24 sm:pt-28 pb-32 sm:px-6 max-w-6xl space-y-6 sm:space-y-8">
           {/* Survey */}
           {showSurvey &&
             <motion.div
