@@ -86,6 +86,15 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     }
   };
 
+  const [activeSubstitutions, setActiveSubstitutions] = useState({});
+
+  const toggleSubstitution = (index) => {
+    setActiveSubstitutions(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
   const scaledIngredients = useMemo(() => {
     if (!recipe?.ingredients) return [];
     const factor = currentServings / (recipe.servings || 1);
@@ -385,18 +394,50 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/60 to-transparent"></div>
             </div>
             <div className="space-y-1.5 perspective-1000">
-              {scaledIngredients.map((ingredient, index) =>
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, z: -30, rotateX: 10 }}
-                  animate={{ opacity: 1, z: 0, rotateX: 0 }}
-                  whileHover={{ scale: 1.02, z: 20, rotateX: -5, backgroundColor: 'rgba(255,255,255,0.8)' }}
-                  transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
-                  className="flex items-center gap-3 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none cursor-default transform-gpu">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] shrink-0 shadow-[0_0_6px_rgba(107,155,118,0.8)]" />
-                    <span className="leading-relaxed font-medium">{ingredient}</span>
-                </motion.li>
-              )}
+              {scaledIngredients.map((ingredient, index) => {
+                const hasSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
+                const isSubbed = activeSubstitutions[index];
+                
+                return (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, z: -30, rotateX: 10 }}
+                    animate={{ opacity: 1, z: 0, rotateX: 0 }}
+                    whileHover={{ scale: 1.02, z: 20, rotateX: -5, backgroundColor: 'rgba(255,255,255,0.8)' }}
+                    transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
+                    className="flex flex-col gap-1 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none transform-gpu relative">
+                      <div className="flex items-center gap-3 w-full">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] shrink-0 shadow-[0_0_6px_rgba(107,155,118,0.8)]" />
+                        <span className={`leading-relaxed font-medium flex-1 ${isSubbed ? 'line-through opacity-50' : ''}`}>
+                          {ingredient}
+                        </span>
+                        {hasSub && (
+                          <button 
+                            onClick={() => toggleSubstitution(index)}
+                            className={`p-1.5 rounded-md flex items-center gap-1 transition-colors ${isSubbed ? 'bg-[#c17a7a] text-white' : 'bg-[#f5e6dc] text-[#c17a7a] hover:bg-[#e8d5c4]'}`}
+                            title="Swap ingredient"
+                          >
+                            <RefreshCw className="w-3 h-3" />
+                            <span className="text-[9px] font-bold uppercase tracking-wider">{isSubbed ? 'Revert' : 'Substitute'}</span>
+                          </button>
+                        )}
+                      </div>
+                      <AnimatePresence>
+                        {isSubbed && hasSub && (
+                          <motion.div 
+                            initial={{ opacity: 0, height: 0 }} 
+                            animate={{ opacity: 1, height: 'auto' }} 
+                            exit={{ opacity: 0, height: 0 }}
+                            className="pl-4.5 pt-1 text-[#c17a7a] font-medium flex items-center gap-2"
+                          >
+                            <div className="w-1 h-1 rounded-full bg-[#c17a7a] shrink-0" />
+                            Use: {hasSub.substitute}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                  </motion.li>
+                );
+              })}
               {currentServings !== recipe.servings && (
                 <p className="text-[10px] text-gray-500 mt-2 text-right italic">
                   * Ingredients adjusted for {currentServings} servings
