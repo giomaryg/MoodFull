@@ -527,9 +527,59 @@ Make them balanced, diverse, and delicious. Include:
 
       {/* Calendar Grid */}
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
-          <div className="overflow-x-auto">
-            <div className="min-w-[800px]">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Sidebar for Recipes */}
+          <div className="lg:w-72 w-full bg-white rounded-xl p-4 border-2 border-[#c5d9c9] max-h-[800px] overflow-y-auto hidden lg:block flex-shrink-0">
+            <h3 className="font-bold text-[#6b9b76] mb-4">Drag to Plan</h3>
+            <Droppable droppableId="recipes-list" isDropDisabled={true}>
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-3 min-h-[100px]">
+                  {generatedRecipes.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Generated Ideas</p>
+                      {generatedRecipes.map((recipe, index) => (
+                        <Draggable key={`gen-${index}`} draggableId={`gen-${index}`} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`bg-white border-2 border-[#c5d9c9] rounded-lg p-3 text-sm cursor-grab active:cursor-grabbing mb-2 ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] rotate-2' : 'hover:border-[#6b9b76] transition-colors'}`}
+                            >
+                              <p className="font-semibold text-[#3d5244] line-clamp-2">{recipe.name}</p>
+                              {recipe.prep_time && <p className="text-xs text-gray-500 mt-1">⏱ {recipe.prep_time}</p>}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                    </div>
+                  )}
+
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Saved Collection</p>
+                  {savedRecipes.slice(0, 15).map((recipe, index) => (
+                    <Draggable key={recipe.id} draggableId={recipe.id} index={index + generatedRecipes.length}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`bg-white border-2 border-[#c5d9c9] rounded-lg p-3 text-sm cursor-grab active:cursor-grabbing mb-2 ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] rotate-2' : 'hover:border-[#6b9b76] transition-colors'}`}
+                        >
+                          <p className="font-semibold text-[#3d5244] line-clamp-2">{recipe.name}</p>
+                          {recipe.prep_time && <p className="text-xs text-gray-500 mt-1">⏱ {recipe.prep_time}</p>}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </div>
+
+          <div className="flex-1 bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden min-w-0">
+            <div className="overflow-x-auto">
+              <div className="min-w-[800px]">
               {/* Day Headers */}
               <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
             {weekDays.map((day) => (
