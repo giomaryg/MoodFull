@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { X, Clock, Users, ChefHat } from 'lucide-react';
+import { X, Clock, Users, ChefHat, Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import InteractiveCookingMode from '../recipe/InteractiveCookingMode';
 
 export default function RecipeDetailModal({ recipe, onClose }) {
+  const [showCookingMode, setShowCookingMode] = useState(false);
+
   if (!recipe) return null;
 
   return (
@@ -55,6 +58,16 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           {/* Description */}
           {recipe.description && (
             <p className="text-gray-600">{recipe.description}</p>
+          )}
+
+          {recipe.instructions?.length > 0 && (
+            <Button
+              onClick={() => setShowCookingMode(true)}
+              className="w-full sm:w-auto bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-lg rounded-xl px-4 py-2 mt-2"
+            >
+              <Play className="w-4 h-4 mr-2 fill-white" />
+              Start Interactive Cooking
+            </Button>
           )}
 
           {/* Badges */}
@@ -143,6 +156,13 @@ export default function RecipeDetailModal({ recipe, onClose }) {
         </div>
       </motion.div>
       </div>
+
+      {showCookingMode && (
+        <InteractiveCookingMode
+          recipe={recipe}
+          onClose={() => setShowCookingMode(false)}
+        />
+      )}
     </div>
   );
 }

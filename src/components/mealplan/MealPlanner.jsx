@@ -148,6 +148,39 @@ function MealPlanner({ onOpenShoppingList }) {
       
       const userContext = contextParts.join('\n');
 
+      const mealSchema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          description: { type: "string" },
+          ingredients: { type: "array", items: { type: "string" } },
+          instructions: { type: "array", items: { type: "string" } },
+          prep_time: { type: "string" },
+          cook_time: { type: "string" },
+          servings: { type: "number" },
+          difficulty: { type: "string", enum: ["easy", "medium", "hard"] },
+          nutrition: {
+            type: "object",
+            properties: {
+              calories: { type: "number" },
+              protein: { type: "string" },
+              carbs: { type: "string" },
+              fat: { type: "string" },
+              fiber: { type: "string" },
+              sodium: { type: "string" },
+              sugar: { type: "string" },
+              saturated_fat: { type: "string" },
+              cholesterol: { type: "string" }
+            }
+          },
+          vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
+          health_benefits: { type: "array", items: { type: "string" } },
+          cooking_tips: { type: "array", items: { type: "string" } },
+          substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
+          pairings: { type: "array", items: { type: "string" } }
+        }
+      };
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Create a balanced weekly meal plan (7 days) with breakfast, lunch, and dinner for each day.
 
@@ -177,45 +210,9 @@ For each meal provide:
                 type: "object",
                 properties: {
                   day: { type: "number" },
-                  breakfast: {
-                    type: "object",
-                    properties: {
-                      name: { type: "string" },
-                      description: { type: "string" },
-                      ingredients: { type: "array", items: { type: "string" } },
-                      instructions: { type: "array", items: { type: "string" } },
-                      prep_time: { type: "string" },
-                      cook_time: { type: "string" },
-                      servings: { type: "number" },
-                      difficulty: { type: "string", enum: ["easy", "medium", "hard"] }
-                    }
-                  },
-                  lunch: {
-                    type: "object",
-                    properties: {
-                      name: { type: "string" },
-                      description: { type: "string" },
-                      ingredients: { type: "array", items: { type: "string" } },
-                      instructions: { type: "array", items: { type: "string" } },
-                      prep_time: { type: "string" },
-                      cook_time: { type: "string" },
-                      servings: { type: "number" },
-                      difficulty: { type: "string", enum: ["easy", "medium", "hard"] }
-                    }
-                  },
-                  dinner: {
-                    type: "object",
-                    properties: {
-                      name: { type: "string" },
-                      description: { type: "string" },
-                      ingredients: { type: "array", items: { type: "string" } },
-                      instructions: { type: "array", items: { type: "string" } },
-                      prep_time: { type: "string" },
-                      cook_time: { type: "string" },
-                      servings: { type: "number" },
-                      difficulty: { type: "string", enum: ["easy", "medium", "hard"] }
-                    }
-                  }
+                  breakfast: mealSchema,
+                  lunch: mealSchema,
+                  dinner: mealSchema
                 }
               }
             }
@@ -243,8 +240,24 @@ For each meal provide:
             cook_time: meal.cook_time,
             servings: meal.servings,
             difficulty: meal.difficulty,
+            nutrition: meal.nutrition,
+            vitamins_minerals: meal.vitamins_minerals,
+            health_benefits: meal.health_benefits,
+            cooking_tips: meal.cooking_tips,
+            substitutions: meal.substitutions,
+            pairings: meal.pairings,
             mood: 'meal plan'
           });
+
+          base44.integrations.Core.GenerateImage({
+            prompt: `Professional food photography of ${meal.name}. ${meal.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+          }).then(img => {
+            if (img && img.url) {
+              base44.entities.Recipe.update(recipe.id, { image_url: img.url }).then(() => {
+                queryClient.invalidateQueries({ queryKey: ['recipes'] });
+              });
+            }
+          }).catch(console.error);
 
           // Create meal plan entry
           mealCreations.push(
@@ -298,6 +311,39 @@ For each meal provide:
       
       const userContext = contextParts.join('\n');
 
+      const mealSchema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          description: { type: "string" },
+          ingredients: { type: "array", items: { type: "string" } },
+          instructions: { type: "array", items: { type: "string" } },
+          prep_time: { type: "string" },
+          cook_time: { type: "string" },
+          servings: { type: "number" },
+          difficulty: { type: "string" },
+          nutrition: {
+            type: "object",
+            properties: {
+              calories: { type: "number" },
+              protein: { type: "string" },
+              carbs: { type: "string" },
+              fat: { type: "string" },
+              fiber: { type: "string" },
+              sodium: { type: "string" },
+              sugar: { type: "string" },
+              saturated_fat: { type: "string" },
+              cholesterol: { type: "string" }
+            }
+          },
+          vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
+          health_benefits: { type: "array", items: { type: "string" } },
+          cooking_tips: { type: "array", items: { type: "string" } },
+          substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
+          pairings: { type: "array", items: { type: "string" } }
+        }
+      };
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Create meals for one day: breakfast, lunch, and dinner.
 
@@ -314,45 +360,9 @@ Make them balanced, diverse, and delicious. Include:
         response_json_schema: {
           type: "object",
           properties: {
-            breakfast: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                description: { type: "string" },
-                ingredients: { type: "array", items: { type: "string" } },
-                instructions: { type: "array", items: { type: "string" } },
-                prep_time: { type: "string" },
-                cook_time: { type: "string" },
-                servings: { type: "number" },
-                difficulty: { type: "string" }
-              }
-            },
-            lunch: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                description: { type: "string" },
-                ingredients: { type: "array", items: { type: "string" } },
-                instructions: { type: "array", items: { type: "string" } },
-                prep_time: { type: "string" },
-                cook_time: { type: "string" },
-                servings: { type: "number" },
-                difficulty: { type: "string" }
-              }
-            },
-            dinner: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                description: { type: "string" },
-                ingredients: { type: "array", items: { type: "string" } },
-                instructions: { type: "array", items: { type: "string" } },
-                prep_time: { type: "string" },
-                cook_time: { type: "string" },
-                servings: { type: "number" },
-                difficulty: { type: "string" }
-              }
-            }
+            breakfast: mealSchema,
+            lunch: mealSchema,
+            dinner: mealSchema
           }
         }
       });
@@ -371,8 +381,24 @@ Make them balanced, diverse, and delicious. Include:
           cook_time: meal.cook_time,
           servings: meal.servings,
           difficulty: meal.difficulty,
+          nutrition: meal.nutrition,
+          vitamins_minerals: meal.vitamins_minerals,
+          health_benefits: meal.health_benefits,
+          cooking_tips: meal.cooking_tips,
+          substitutions: meal.substitutions,
+          pairings: meal.pairings,
           mood: 'meal plan'
         });
+
+        base44.integrations.Core.GenerateImage({
+          prompt: `Professional food photography of ${meal.name}. ${meal.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+        }).then(img => {
+          if (img && img.url) {
+            base44.entities.Recipe.update(recipe.id, { image_url: img.url }).then(() => {
+              queryClient.invalidateQueries({ queryKey: ['recipes'] });
+            });
+          }
+        }).catch(console.error);
 
         await createMealMutation.mutateAsync({
           recipe_id: recipe.id,
