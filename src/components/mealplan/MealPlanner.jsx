@@ -747,18 +747,18 @@ Make them balanced, diverse, and delicious. Include:
                         >
                           <Plus className="w-3 h-3" />
                         </Button>
-                      </div>
-                    )}
-                  </Droppable>
-                );
-              })}
-            </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        </div>
-      </DragDropContext>
+                        </div>
+                        )}
+                        </Droppable>
+                        );
+                        })}
+                        </div>
+                        ))}
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </DragDropContext>
 
       {/* Add Meal Dialog */}
       {showAddMeal && (
