@@ -14,10 +14,15 @@ import SimilarRecipes from './SimilarRecipes';
 import RecipeEditDialog from './RecipeEditDialog';
 import NutritionPanel from './NutritionPanel';
 import RecipeReview from './RecipeReview';
+import InteractiveCookingMode from './InteractiveCookingMode';
+import SaveToCollectionDialog from './SaveToCollectionDialog';
+import { Play } from 'lucide-react';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showCookingMode, setShowCookingMode] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const queryClient = useQueryClient();
@@ -279,9 +284,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                 </div>
               )}
             </div>
-            <div className="flex gap-2 w-full sm:w-auto">
+            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
               <Button
-                onClick={onSave}
+                onClick={() => setShowCookingMode(true)}
+                className="flex-1 sm:flex-none bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-lg rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base"
+              >
+                <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 fill-white" />
+                Start Cooking
+              </Button>
+              <Button
+                onClick={() => setShowSaveDialog(true)}
                 variant={isSaved ? "default" : "outline"}
                 className={`
                   flex-1 sm:flex-none shrink-0 transition-all duration-300 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base
@@ -293,8 +305,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
                 {isSaved ?
                 <>
-                    <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                    Saved
+                    <FolderPlus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                    Collections
                   </> :
 
                 <>

@@ -105,6 +105,24 @@ export default function RecipeGenerator() {
       );
     }
 
+    if (advancedFilters.allergens) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.allergens.toLowerCase()))
+      );
+    }
+
+    if (advancedFilters.excludeIngredients) {
+      const exclusions = advancedFilters.excludeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      if (exclusions.length > 0) {
+        filtered = filtered.filter((recipe) => {
+          if (!recipe.ingredients) return true;
+          return !recipe.ingredients.some(ing => exclusions.some(ex => ing.toLowerCase().includes(ex)));
+        });
+      }
+    }
+
     if (advancedFilters.maxPrepTime) {
       const maxMinutes = parseInt(advancedFilters.maxPrepTime);
       filtered = filtered.filter((recipe) => {
@@ -189,6 +207,24 @@ export default function RecipeGenerator() {
       recipe.description?.toLowerCase().includes(advancedFilters.mealType.toLowerCase()) ||
       recipe.name.toLowerCase().includes(advancedFilters.mealType.toLowerCase())
       );
+    }
+
+    if (advancedFilters.allergens) {
+      filtered = filtered.filter((recipe) =>
+        recipe.description?.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+        recipe.name.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.allergens.toLowerCase()))
+      );
+    }
+
+    if (advancedFilters.excludeIngredients) {
+      const exclusions = advancedFilters.excludeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      if (exclusions.length > 0) {
+        filtered = filtered.filter((recipe) => {
+          if (!recipe.ingredients) return true;
+          return !recipe.ingredients.some(ing => exclusions.some(ex => ing.toLowerCase().includes(ex)));
+        });
+      }
     }
 
     if (advancedFilters.maxPrepTime) {
