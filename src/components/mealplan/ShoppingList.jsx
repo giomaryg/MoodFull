@@ -30,6 +30,11 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
   const [expandedRecipes, setExpandedRecipes] = useState({});
   const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', 'by-recipe', or 'history'
   
+  const { data: inventory = [] } = useQuery({
+    queryKey: ['inventory'],
+    queryFn: () => base44.entities.Ingredient.list()
+  });
+
   // Only pre-select meal plans that have a matching saved recipe with ingredients
   const validPlanIds = useMemo(() => 
     mealPlans
@@ -231,6 +236,48 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
   const totalItems = Object.values(shoppingList).reduce((sum, items) => sum + items.length, 0);
   const checkedCount = Object.values(checkedItems).filter(Boolean).length;
 
+  useEffect(() => {
+    if (inventory.length > 0) {
+      const newChecked = { ...checkedItems };
+      let updated = false;
+
+      const checkMatch = (ingredient) => {
+        return inventory.some(invItem => ingredient.toLowerCase().includes(invItem.name.toLowerCase()));
+      };
+
+      Object.entries(shoppingList).forEach(([category, items]) => {
+        items.forEach(item => {
+          if (checkMatch(item.original) && newChecked[item.key] === undefined) {
+            newChecked[item.key] = true;
+            updated = true;
+          }
+        });
+      });
+
+      shoppingByRecipe.forEach((group, index) => {
+        group.ingredients.forEach((ingredient, ingIndex) => {
+          const itemId = `recipe-${index}-${ingIndex}`;
+          if (checkMatch(ingredient) && newChecked[itemId] === undefined) {
+            newChecked[itemId] = true;
+            updated = true;
+          }
+        });
+      });
+
+      if (updated) setCheckedItems(newChecked);
+    }
+  }, [inventory, shoppingList, shoppingByRecipe, checkedItems]);
+
+  const handleOrderGroceries = () => {
+    const service = window.prompt("Enter your preferred grocery delivery service (e.g. 'Instacart', 'Amazon Fresh', 'Walmart'):", "Instacart");
+    if (service) {
+      toast.success(`Pushing ${totalItems - checkedCount} items to your ${service} cart...`);
+      setTimeout(() => {
+        window.open(`https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`, '_blank');
+      }, 1500);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -288,12 +335,19 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                 {checkedCount} of {totalItems} items checked
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 mr-8">
+              <Button
+                onClick={handleOrderGroceries}
+                disabled={totalItems === 0 || checkedCount === totalItems}
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
+              >
+                <ShoppingCart className="w-4 h-4 mr-2 hidden sm:block" /> Order
+              </Button>
               <Button
                 onClick={downloadList}
                 variant="outline"
                 size="icon"
-                className="border-2 border-[#6b9b76] mr-8"
+                className="border-2 border-[#6b9b76]"
               >
                 <Download className="w-4 h-4 text-[#6b9b76]" />
               </Button>

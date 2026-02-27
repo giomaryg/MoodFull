@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Loader2, UtensilsCrossed, Search, X } from 'lucide-react';
+import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
@@ -22,6 +22,7 @@ import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 import Paywall from '../components/paywall/Paywall';
 import ThreeBackground from '../components/ThreeBackground';
+import InventoryManagement from '../components/inventory/InventoryManagement';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
