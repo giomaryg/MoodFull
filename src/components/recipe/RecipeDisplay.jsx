@@ -285,45 +285,27 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </div>
 
           {/* Info Badges */}
-          <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-5">
-            {recipe.prep_time &&
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl">
-                <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mr-1 sm:mr-1.5" />
-                Prep: {recipe.prep_time}
-              </Badge>
-            }
-            {recipe.cook_time &&
-            <Badge variant="secondary" className="bg-orange-50 text-orange-700 border-orange-200 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl">
-                <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mr-1 sm:mr-1.5" />
-                Cook: {recipe.cook_time}
-              </Badge>
-            }
-            {recipe.servings &&
-              <div className="flex items-center bg-green-50 text-green-700 border border-green-200 rounded-lg sm:rounded-xl px-2 sm:px-3 py-1">
-                <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 mr-2" />
-                <button 
-                  onClick={() => setCurrentServings(Math.max(1, currentServings - 1))}
-                  className="p-1 hover:bg-green-100 rounded-full transition-colors focus:outline-none"
-                >
-                  <Minus className="w-3 h-3" />
-                </button>
-                <span className="mx-2 font-bold text-sm sm:text-base min-w-[1.5rem] text-center">
-                  {currentServings}
-                </span>
-                <button 
-                  onClick={() => setCurrentServings(currentServings + 1)}
-                  className="p-1 hover:bg-green-100 rounded-full transition-colors focus:outline-none"
-                >
-                  <Plus className="w-3 h-3" />
-                </button>
-                <span className="ml-1 text-xs sm:text-sm font-medium">servings</span>
+          <div className="grid grid-cols-4 gap-2 mt-4 sm:mt-5">
+            <div className="glass-panel py-3 flex flex-col items-center justify-center">
+              <div className="text-sm sm:text-base font-bold text-[#6b9b76]">{recipe.prep_time || '-'}</div>
+              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Prep</div>
+            </div>
+            <div className="glass-panel py-3 flex flex-col items-center justify-center">
+              <div className="text-sm sm:text-base font-bold text-[#6b9b76]">{recipe.cook_time || '-'}</div>
+              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Cook</div>
+            </div>
+            <div className="glass-panel py-3 flex flex-col items-center justify-center">
+              <div className="flex items-center gap-2">
+                <button onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="text-[#c5d9c9] hover:text-[#6b9b76]"><Minus className="w-3 h-3" /></button>
+                <div className="text-sm sm:text-base font-bold text-[#6b9b76]">{currentServings}</div>
+                <button onClick={() => setCurrentServings(currentServings + 1)} className="text-[#c5d9c9] hover:text-[#6b9b76]"><Plus className="w-3 h-3" /></button>
               </div>
-            }
-            {recipe.difficulty &&
-            <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200 capitalize px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl">
-                {recipe.difficulty}
-              </Badge>
-            }
+              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Serves</div>
+            </div>
+            <div className="glass-panel py-3 flex flex-col items-center justify-center">
+              <div className="text-sm sm:text-base font-bold text-[#6b9b76] capitalize">{recipe.difficulty || '-'}</div>
+              <div className="font-mono text-[8px] sm:text-[9px] text-[#5a6f60]/50 uppercase mt-1">Level</div>
+            </div>
           </div>
 
           </CardHeader>
