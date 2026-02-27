@@ -329,28 +329,25 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           />
 
           {/* Ingredients */}
-          <div className="space-y-3 sm:space-y-4">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-              <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-[#c17a7a] rounded-full" />
-              Ingredients
-            </h3>
-            <div className="bg-[#faf6f2] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-inner border border-[#e8d5c4]">
-              <ul className="space-y-2 sm:space-y-3">
-                {scaledIngredients.map((ingredient, index) =>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/70 mb-2">
+              <span>Ingredients</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/60 to-transparent"></div>
+            </div>
+            <div className="space-y-1.5">
+              {scaledIngredients.map((ingredient, index) =>
                 <motion.li
                   key={index}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="flex items-start gap-2 sm:gap-3 text-gray-800 text-sm sm:text-base">
-
-                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#c17a7a] mt-1.5 sm:mt-2 shrink-0 shadow-sm" />
+                  className="flex items-center gap-3 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none">
+                    <div className="w-1 h-1 rounded-full bg-[#6b9b76] shrink-0 shadow-[0_0_4px_rgba(107,155,118,0.5)]" />
                     <span className="leading-relaxed">{ingredient}</span>
-                  </motion.li>
-                )}
-              </ul>
+                </motion.li>
+              )}
               {currentServings !== recipe.servings && (
-                <p className="text-xs text-gray-500 mt-4 text-right italic">
+                <p className="text-[10px] text-gray-500 mt-2 text-right italic">
                   * Ingredients adjusted for {currentServings} servings
                 </p>
               )}
