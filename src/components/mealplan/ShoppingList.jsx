@@ -253,7 +253,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
           <X className="w-5 h-5" />
         </button>
         {/* Premium gate */}
-        {!currentUser?.is_premium ? (
+        {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
           <div className="relative py-8">
             <div className="blur-sm pointer-events-none select-none space-y-3">
               {[1,2,3].map(i => (
@@ -280,7 +280,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         ) : null}
 
         {/* Header */}
-        <div className={`space-y-4 mb-6 ${!currentUser?.is_premium ? 'hidden' : ''}`}>
+        <div className={`space-y-4 mb-6 ${(!currentUser?.is_premium && currentUser?.role !== 'admin') ? 'hidden' : ''}`}>
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-2xl font-bold text-[#6b9b76]">Shopping List</h3>
@@ -349,7 +349,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
 
         {/* Content — only show for premium */}
         {/* Selection Mode */}
-        {currentUser?.is_premium && viewMode === 'selection' && (
+        {(currentUser?.is_premium || currentUser?.role === 'admin') && viewMode === 'selection' && (
           <div className="space-y-8">
             {/* Meal Plan Selection */}
             <div>
@@ -453,7 +453,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         )}
 
         {/* Shopping List Views */}
-        {currentUser?.is_premium && viewMode === 'history' ? (
+        {(currentUser?.is_premium || currentUser?.role === 'admin') && viewMode === 'history' ? (
           <div className="space-y-3">
             {mealPlans.length === 0 ? (
               <p className="text-center text-gray-500 py-8">No meal history yet.</p>
