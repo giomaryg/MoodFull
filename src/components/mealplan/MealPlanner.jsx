@@ -582,7 +582,7 @@ Make them balanced, diverse, and delicious. Include:
               <div className="min-w-[800px]">
                 {/* Day Headers */}
                 <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
-              {weekDays.map((day) => (
+                  {weekDays.map((day) => (
               <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
                 <p className="text-white font-semibold text-sm">
                   {format(day, 'EEE')}
