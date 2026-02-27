@@ -33,7 +33,7 @@ export default function IntroScreen({ userName, onContinue }) {
           <div className="font-mono text-[8px] tracking-[0.2em] uppercase text-[#6b9b76] mb-3">
             ◎ System Ready
           </div>
-          <div className="text-[28px] font-bold tracking-[-0.03em] leading-[1.1] text-gradient text-center pb-2">
+          <div className="text-4xl font-normal tracking-normal leading-[1.1] text-gradient text-center pb-2" style={{ fontFamily: "'Brittany Signature', cursive" }}>
             Hey, {userName || 'Alex'}.
           </div>
           <div className="text-[11px] text-[#5a6f60]/55 mt-2">
