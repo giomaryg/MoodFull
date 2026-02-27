@@ -1,8 +1,8 @@
 import React from 'react';
 import { Home, BookMarked, User, Calendar, Package } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function BottomNav({ activeTab, onTabChange }) {
+export default function BottomNav({ activeTab, onTabChange, isVisible = true }) {
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'saved', label: 'Saved', icon: BookMarked },
@@ -12,8 +12,16 @@ export default function BottomNav({ activeTab, onTabChange }) {
   ];
 
   return (
-    <div className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 w-[calc(100%-24px)] sm:max-w-md bg-white/80 backdrop-blur-md border border-[#c5d9c9]/60 rounded-3xl p-2 flex items-center justify-around shadow-[0_4px_20px_rgba(107,155,118,0.12)] z-[100]">
-      {tabs.map((tab) => {
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div 
+          initial={{ y: 150, x: "-50%", opacity: 0 }}
+          animate={{ y: 0, x: "-50%", opacity: 1 }}
+          exit={{ y: 150, x: "-50%", opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="fixed bottom-4 sm:bottom-6 left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-white/80 backdrop-blur-md border border-[#c5d9c9]/60 rounded-3xl p-2 flex items-center justify-around shadow-[0_4px_20px_rgba(107,155,118,0.12)] z-[100]"
+        >
+          {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = activeTab === tab.id;
         
@@ -49,6 +57,8 @@ export default function BottomNav({ activeTab, onTabChange }) {
           </button>
         );
       })}
-    </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

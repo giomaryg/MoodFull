@@ -1155,7 +1155,7 @@ export default function RecipeGenerator() {
       </div>
 
       {/* Bottom Navigation */}
-      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />}
+      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} isVisible={!showShoppingList} />}
 
       {/* Paywall Modal */}
       <AnimatePresence>
