@@ -38,6 +38,32 @@ export default function Layout({ children, currentPageName }) {
           backdrop-filter: blur(12px);
           border-bottom: 1px solid rgba(197,217,201,0.5);
         }
+
+        .s1-orbit {
+          position: absolute;
+          border-radius: 50%;
+          border: 1px solid rgba(107,155,118,0.15);
+        }
+        @keyframes orbit-spin { to { transform: rotate(360deg); } }
+        .orbit-anim { animation: orbit-spin 12s linear infinite; }
+        .orbit-anim-rev { animation: orbit-spin 18s linear infinite reverse; }
+
+        .s1-corner {
+          position: absolute;
+          width: 14px; height: 14px;
+          border-color: rgba(107,155,118,0.4);
+          border-style: solid;
+        }
+
+        .nav-dot {
+          position: absolute;
+          bottom: -2px; left: 50%;
+          transform: translateX(-50%);
+          width: 3px; height: 3px;
+          border-radius: 50%;
+          background: #6b9b76;
+          box-shadow: 0 0 5px rgba(107,155,118,0.7);
+        }
       `}</style>
       {children}
     </>
