@@ -140,12 +140,32 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                   onClick={() => onRecipeClick(recipe)}
                   className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:scale-[1.02] transition-transform duration-200 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
                 >
-                  <button
-                    onClick={(e) => handleDelete(e, recipe.id)}
-                    className="absolute top-2 right-2 p-1.5 bg-white/80 rounded-full shadow-sm opacity-0 group-hover:opacity-100 hover:bg-red-50 transition-all z-10"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                  </button>
+                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all z-10">
+                    {/* Dev Edit Button for testing */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const randomData = {
+                          prep_time: Math.floor(Math.random() * 30 + 10) + ' min',
+                          difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]
+                        };
+                        base44.entities.Recipe.update(recipe.id, randomData).then(() => {
+                          queryClient.invalidateQueries({ queryKey: ['recipes'] });
+                          toast.success('Dev: Recipe updated for testing');
+                        });
+                      }}
+                      className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-6 h-6"
+                      title="Dev: Randomly update recipe info"
+                    >
+                      DEV
+                    </button>
+                    <button
+                      onClick={(e) => handleDelete(e, recipe.id)}
+                      className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-red-50"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                    </button>
+                  </div>
                   <div className="w-11 h-11 rounded-[10px] flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65]">
                     🥗
                     {recipe.image_url && (

@@ -73,8 +73,8 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 sm:p-12 text-center relative">
-        <div className="absolute top-8 left-8 text-gray-500 font-mono text-xl">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 md:p-12 text-center relative overflow-y-auto">
+        <div className="absolute top-4 left-4 sm:top-8 sm:left-8 text-gray-500 font-mono text-base sm:text-xl">
           Step {currentStep + 1} of {instructions.length}
         </div>
         
@@ -84,9 +84,9 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
-            className="max-w-4xl"
+            className="max-w-4xl w-full my-auto"
           >
-            <p className="text-3xl sm:text-5xl md:text-6xl font-medium leading-tight text-gray-100">
+            <p className="text-2xl sm:text-4xl md:text-5xl font-medium leading-tight text-gray-100 mt-8 sm:mt-0">
               {instructions[currentStep]}
             </p>
 
@@ -111,32 +111,32 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
       </div>
 
       {/* Navigation Footer */}
-      <div className="p-8 border-t border-gray-800 flex justify-between items-center bg-gray-950">
+      <div className="p-4 sm:p-8 border-t border-gray-800 flex justify-between items-center bg-gray-950 shrink-0">
         <Button 
           onClick={prevStep} 
           disabled={currentStep === 0}
           variant="outline"
-          className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-16 px-8 text-xl rounded-2xl disabled:opacity-30"
+          className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-12 sm:h-16 px-4 sm:px-8 text-sm sm:text-xl rounded-xl sm:rounded-2xl disabled:opacity-30"
         >
-          <ChevronLeft className="w-8 h-8 mr-2" />
-          Previous
+          <ChevronLeft className="w-5 h-5 sm:w-8 sm:h-8 sm:mr-2" />
+          <span className="hidden sm:inline">Previous</span>
         </Button>
         
         {currentStep === instructions.length - 1 ? (
           <Button 
             onClick={onClose}
-            className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white h-16 px-12 text-xl rounded-2xl shadow-[0_0_20px_rgba(107,155,118,0.4)]"
+            className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white h-12 sm:h-16 px-6 sm:px-12 text-sm sm:text-xl rounded-xl sm:rounded-2xl shadow-[0_0_20px_rgba(107,155,118,0.4)]"
           >
-            <CheckCircle2 className="w-8 h-8 mr-2" />
+            <CheckCircle2 className="w-5 h-5 sm:w-8 sm:h-8 mr-1.5 sm:mr-2" />
             Finish Cooking
           </Button>
         ) : (
           <Button 
             onClick={nextStep}
-            className="bg-white hover:bg-gray-200 text-black h-16 px-12 text-xl rounded-2xl"
+            className="bg-white hover:bg-gray-200 text-black h-12 sm:h-16 px-6 sm:px-12 text-sm sm:text-xl rounded-xl sm:rounded-2xl"
           >
             Next Step
-            <ChevronRight className="w-8 h-8 ml-2" />
+            <ChevronRight className="w-5 h-5 sm:w-8 sm:h-8 ml-1.5 sm:ml-2" />
           </Button>
         )}
       </div>
