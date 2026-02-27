@@ -21,6 +21,7 @@ import ShoppingList from '../components/mealplan/ShoppingList';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 import Paywall from '../components/paywall/Paywall';
+import ThreeBackground from '../components/ThreeBackground';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
@@ -464,7 +465,8 @@ export default function RecipeGenerator() {
         }
       </AnimatePresence>
 
-      <div className="min-h-screen bg-[#e8f0ea]">
+      <div className="min-h-screen bg-[#e8f0ea]/80 relative z-10">
+        <ThreeBackground />
         {/* Hero Section */}
         {!showIntro &&
         <div className="pt-1 glass-header fixed top-0 left-0 right-0 z-50 border-b-0">

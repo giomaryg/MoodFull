@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, Loader2 } from 'lucide-react';
 import HighlightedText from './HighlightedText';
+import TiltCard from '../ui/TiltCard';
 
 function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
   const difficultyColors = {
@@ -48,11 +49,12 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ delay: index * 0.05 }}
           >
+            <TiltCard>
             <div
               onClick={() => onRecipeClick(recipe)}
-              className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:scale-[1.02] transition-transform duration-200 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
+              className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:shadow-[0_10px_25px_rgba(107,155,118,0.2)] transition-shadow duration-300 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)] bg-white/70"
             >
-              <div className="w-11 h-11 rounded-[10px] flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65]">
+              <div className="w-11 h-11 rounded-[10px] flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65] shadow-inner">
                 {recipe._loading ? (
                    <Loader2 className="w-4 h-4 text-white animate-spin" />
                  ) : recipe.imageLoading ? (
@@ -78,6 +80,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
                 →
               </div>
             </div>
+            </TiltCard>
           </motion.div>
         ))}
       </div>

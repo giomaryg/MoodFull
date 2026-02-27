@@ -184,22 +184,37 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
       <Card className="overflow-hidden shadow-2xl border-0 bg-[#e8f0ea] rounded-[24px]">
         {/* Header Section with Image */}
-        <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-br from-[#8db894] via-[#5a8a65] to-[#3d5244] relative overflow-hidden flex items-center justify-center text-5xl">
+        <div className="h-48 sm:h-56 md:h-64 bg-gradient-to-br from-[#8db894] via-[#5a8a65] to-[#3d5244] relative overflow-hidden flex items-center justify-center text-5xl perspective-1000">
+          <div className="absolute inset-0 blur-md scale-110 opacity-60">
+             {(recipe.imageUrl || recipe.image_url) && (
+               <img src={recipe.imageUrl || recipe.image_url} className="w-full h-full object-cover" alt="" />
+             )}
+          </div>
+          
           {(recipe.imageUrl || recipe.image_url) ?
-          <>
+          <motion.div 
+            animate={{ rotateY: 360 }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.4)] border-[6px] border-white/30 relative z-10"
+            style={{ transformStyle: "preserve-3d" }}
+          >
               <img
               src={recipe.imageUrl || recipe.image_url}
               alt={recipe.name}
               className="absolute inset-0 w-full h-full object-cover" />
-            </> :
+          </motion.div> :
 
-          <>
+          <motion.div
+            animate={{ rotateY: 360 }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="text-7xl relative z-10"
+          >
               🥗
-            </>
+          </motion.div>
           }
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#e8f0ea]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#e8f0ea] z-20 pointer-events-none" />
           
-          <div className="absolute top-3 left-4 font-mono text-[8px] sm:text-[9px] tracking-[0.12em] uppercase bg-[#6b9b76]/85 text-white px-2.5 py-1 rounded-md backdrop-blur-sm">
+          <div className="absolute top-3 left-4 font-mono text-[8px] sm:text-[9px] tracking-[0.12em] uppercase bg-[#6b9b76]/85 text-white px-2.5 py-1 rounded-md backdrop-blur-sm z-30">
             ◎ {recipe.mood ? recipe.mood.replace(/,/g, ' ·') : 'Recipe'}
           </div>
         </div>
@@ -326,16 +341,17 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               <span>Ingredients</span>
               <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/60 to-transparent"></div>
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 perspective-1000">
               {scaledIngredients.map((ingredient, index) =>
                 <motion.li
                   key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="flex items-center gap-3 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none">
-                    <div className="w-1 h-1 rounded-full bg-[#6b9b76] shrink-0 shadow-[0_0_4px_rgba(107,155,118,0.5)]" />
-                    <span className="leading-relaxed">{ingredient}</span>
+                  initial={{ opacity: 0, z: -30, rotateX: 10 }}
+                  animate={{ opacity: 1, z: 0, rotateX: 0 }}
+                  whileHover={{ scale: 1.02, z: 20, rotateX: -5, backgroundColor: 'rgba(255,255,255,0.8)' }}
+                  transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
+                  className="flex items-center gap-3 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none cursor-default transform-gpu">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] shrink-0 shadow-[0_0_6px_rgba(107,155,118,0.8)]" />
+                    <span className="leading-relaxed font-medium">{ingredient}</span>
                 </motion.li>
               )}
               {currentServings !== recipe.servings && (
