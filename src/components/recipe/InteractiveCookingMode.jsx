@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronRight, ChevronLeft, Play, Pause, CheckCircle2 } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Play, Pause, CheckCircle2, Mic, MicOff, Bot, Loader2, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 
 export default function InteractiveCookingMode({ recipe, onClose }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const [aiQuery, setAiQuery] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const instructions = recipe?.instructions || [];
   const progress = ((currentStep + 1) / instructions.length) * 100;
@@ -53,6 +60,70 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
 
   const prevStep = () => {
     if (currentStep > 0) setCurrentStep(prev => prev - 1);
+  };
+
+  useEffect(() => {
+    let recognition = null;
+    if (isVoiceActive && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      
+      recognition.onstart = () => toast.success('Voice navigation active (say "next", "previous", "start timer")');
+      
+      recognition.onresult = (event) => {
+        const lastResultIndex = event.results.length - 1;
+        const transcript = event.results[lastResultIndex][0].transcript.toLowerCase();
+        
+        if (transcript.includes('next') || transcript.includes('forward')) {
+          setCurrentStep(prev => Math.min(instructions.length - 1, prev + 1));
+        } else if (transcript.includes('previous') || transcript.includes('back')) {
+          setCurrentStep(prev => Math.max(0, prev - 1));
+        } else if (transcript.includes('start timer') || transcript.includes('start the timer')) {
+          setIsTimerRunning(true);
+        } else if (transcript.includes('pause timer') || transcript.includes('stop timer')) {
+          setIsTimerRunning(false);
+        }
+      };
+      
+      recognition.onend = () => {
+         if (isVoiceActive && recognition) {
+             try { recognition.start(); } catch(e) {}
+         }
+      };
+      
+      recognition.start();
+    } else if (isVoiceActive) {
+        toast.error("Voice recognition not supported in this browser.");
+        setIsVoiceActive(false);
+    }
+    
+    return () => {
+      if (recognition) {
+        recognition.onend = null;
+        recognition.stop();
+      }
+    };
+  }, [isVoiceActive, instructions.length]);
+
+  const handleAskAI = async (e) => {
+    if (e) e.preventDefault();
+    if (!aiQuery.trim()) return;
+    setIsAiLoading(true);
+    setAiResponse('');
+    try {
+      const stepText = instructions[currentStep];
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `The user is cooking "${recipe.name}" and is currently on step: "${stepText}". They asked: "${aiQuery}". Provide a very short, concise, and helpful answer (1-2 sentences) about technique clarification or substitutions.`
+      });
+      setAiResponse(response);
+      setAiQuery('');
+    } catch (err) {
+      setAiResponse('Sorry, I could not process your request right now.');
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   if (!instructions.length) return null;
@@ -107,6 +178,15 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 sm:ml-1" />
               </Button>
             )}
+            
+            <Button
+              onClick={() => setIsVoiceActive(!isVoiceActive)}
+              variant="outline"
+              className={`h-10 sm:h-12 px-3 sm:px-4 rounded-xl transition-all ${isVoiceActive ? 'border-red-500 text-red-500 bg-red-500/10' : 'border-gray-700 text-gray-400 bg-gray-900 hover:bg-gray-800'}`}
+              title="Voice Commands"
+            >
+              {isVoiceActive ? <Mic className="w-5 h-5 animate-pulse" /> : <MicOff className="w-5 h-5" />}
+            </Button>
           </div>
         </div>
         
@@ -140,6 +220,37 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
             ) : null}
           </motion.div>
         </AnimatePresence>
+
+        {/* AI Assistant Chat */}
+        <div className="w-full max-w-4xl mx-auto mt-auto p-4 sm:p-8 shrink-0">
+          <div className="bg-gray-900 rounded-2xl border border-gray-700 p-4 shadow-xl">
+            {aiResponse && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-3 bg-gray-800 rounded-xl text-gray-200 text-sm sm:text-base flex items-start gap-3 text-left"
+              >
+                <Bot className="w-5 h-5 text-[#6b9b76] shrink-0 mt-0.5" />
+                <p>{aiResponse}</p>
+              </motion.div>
+            )}
+            <form onSubmit={handleAskAI} className="flex gap-2">
+              <Input 
+                value={aiQuery}
+                onChange={e => setAiQuery(e.target.value)}
+                placeholder="Ask AI about this step, technique, or substitute..."
+                className="bg-gray-800 border-gray-700 text-white focus:border-[#6b9b76] rounded-xl h-12"
+              />
+              <Button 
+                type="submit" 
+                disabled={isAiLoading || !aiQuery.trim()}
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white w-12 h-12 rounded-xl p-0 shrink-0"
+              >
+                {isAiLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+              </Button>
+            </form>
+          </div>
+        </div>
       </div>
       </div>
     </div>

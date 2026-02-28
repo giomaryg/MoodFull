@@ -42,28 +42,43 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
     if (!file) return;
 
     setIsScanning(true);
-    toast.success('Scanning receipt or barcode...');
+    toast.success('Scanning item with AI...');
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Extract the main grocery ingredient from this image. It could be a barcode, a product package, or a receipt. Identify the product name, estimated quantity, and unit. Provide JSON.`,
+        prompt: `Extract the main grocery ingredient from this image. Identify the product name, estimated quantity, unit, standard grocery category (Produce, Dairy, Meat, Pantry, Spices, Frozen, Other), and estimated shelf life in days from today assuming proper storage. Provide JSON.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
           properties: {
             name: { type: "string" },
             quantity: { type: "number" },
-            unit: { type: "string" }
+            unit: { type: "string" },
+            category: { type: "string", enum: ["Produce", "Dairy", "Meat", "Pantry", "Spices", "Frozen", "Other"] },
+            estimated_shelf_life_days: { type: "number" }
           }
         }
       });
-      setNewItem(prev => ({
-        ...prev,
-        name: response.name || '',
+      
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + (response.estimated_shelf_life_days || 14));
+
+      addMutation.mutate({
+        name: response.name || 'Unknown Item',
         quantity: response.quantity || 1,
-        unit: response.unit || 'units'
-      }));
-      toast.success('Scan complete! Review details and click Add.');
+        unit: response.unit || 'units',
+        category: response.category || 'Pantry',
+        expiry_date: expiryDate.toISOString().split('T')[0],
+        min_stock: 0
+      });
+      
+      toast.success(`Scan complete! Added ${response.name || 'item'} to inventory.`);
+      
+      // Proactively suggest recipes based on the new ingredient
+      if (onGenerateFromExpiring && response.name) {
+        toast.success(`Updating recipe suggestions for ${response.name}...`);
+        onGenerateFromExpiring([response.name]);
+      }
     } catch (err) {
       toast.error('Failed to scan image. Please enter manually.');
     } finally {
