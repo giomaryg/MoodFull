@@ -334,6 +334,10 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
         contextParts.push(`Recent meal history (try not to repeat these exact recipes): ${recentMealHistory}`);
       }
 
+      if (prioritizeExpiring) {
+        contextParts.push(`CRITICAL REQUIREMENT: The user specifically requested to use up their expiring ingredients. Center the meal plan around the items marked as URGENT PRIORITY in the inventory.`);
+      }
+
       const mealCounts = mealPlans.reduce((acc, m) => {
         acc[m.recipe_name] = (acc[m.recipe_name] || 0) + 1;
         return acc;
