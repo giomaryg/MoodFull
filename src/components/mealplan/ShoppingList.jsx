@@ -720,7 +720,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                             <p className={`font-medium ${checkedItems[item.key] ? 'line-through text-gray-500' : 'text-[#5a6f60]'}`}>
                               {item.original}
                             </p>
-                            {checkedItems[item.key] && (
+                            {checkedItems[item.key] && !item.key.startsWith('custom-') && (
                               <span className="text-[10px] font-medium bg-[#f0f9f2] text-[#6b9b76] px-1.5 py-0.5 rounded border border-[#6b9b76]/30">In Pantry</span>
                             )}
                           </div>
@@ -729,6 +729,21 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                             {item.recipes.join(', ')}
                           </p>
                         </div>
+                        {item.key.startsWith('custom-') && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCustomItems(prev => prev.filter(c => c.id !== item.key));
+                              const newChecked = { ...checkedItems };
+                              delete newChecked[item.key];
+                              setCheckedItems(newChecked);
+                            }}
+                            className="p-1.5 hover:bg-red-50 text-red-400 hover:text-red-500 rounded-lg transition-colors ml-2"
+                            title="Remove custom item"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
                       </button>
                     ))}
                   </div>
