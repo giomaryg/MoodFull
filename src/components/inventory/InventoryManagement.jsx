@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camera, Mic, PlusCircle, Barcode, Edit2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import PantryAnalytics from './PantryAnalytics';
@@ -16,6 +17,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
   const fileInputRef = React.useRef(null);
 
   const { data: inventory = [], isLoading } = useQuery({
@@ -427,9 +429,16 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
         </div>
       )}
 
-      {expiringItems.length > 0 && (
-        <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 sm:p-6 mb-6">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      {expiringItems.length > 0 && !hideExpiringAlert && (
+        <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 sm:p-6 mb-6 relative">
+          <button 
+            onClick={() => setHideExpiringAlert(true)}
+            className="absolute top-3 right-3 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full p-1 transition-colors"
+            title="Dismiss"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pr-8">
             <div>
               <h3 className="font-bold text-amber-800 flex items-center gap-2 mb-1">
                 <AlertTriangle className="w-5 h-5" />
