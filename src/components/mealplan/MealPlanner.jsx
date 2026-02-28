@@ -71,6 +71,14 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
     return Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
   }, [currentWeekStart]);
 
+  const pastMeals = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return mealPlans
+      .filter(m => new Date(m.date) < today)
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+  }, [mealPlans]);
+
   const getMealsForDay = (date, mealType) => {
     const dateString = format(date, 'yyyy-MM-dd');
     return mealPlans.filter(
@@ -107,7 +115,8 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
     if (source.droppableId === 'sidebar-recipes') {
       const isSaved = draggableId.startsWith('saved-');
       const isGenerated = draggableId.startsWith('generated-');
-      const realId = draggableId.replace('saved-', '').replace('generated-', '');
+      const isHistory = draggableId.startsWith('history-');
+      const realId = draggableId.replace('saved-', '').replace('generated-', '').replace('history-', '');
 
       if (isSaved) {
         const recipe = recipes.find(r => r.id === realId);
@@ -130,6 +139,20 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
             servings: recipe.servings || 4,
             custom_ingredients: recipe.ingredients || [],
             custom_instructions: recipe.instructions || []
+          });
+        }
+      } else if (isHistory) {
+        const historyMeal = mealPlans.find(m => m.id === realId);
+        if (historyMeal) {
+          createMealMutation.mutate({
+            recipe_id: historyMeal.recipe_id,
+            recipe_name: historyMeal.recipe_name,
+            date: destDate,
+            meal_type: destMealType,
+            servings: historyMeal.servings || 4,
+            custom_ingredients: historyMeal.custom_ingredients || [],
+            custom_instructions: historyMeal.custom_instructions || [],
+            notes: historyMeal.notes
           });
         }
       }
@@ -718,18 +741,24 @@ Make them balanced, diverse, and delicious. Include:
             <h3 className="font-bold text-[#6b9b76] mb-2 text-lg">Add to Calendar</h3>
             <p className="text-xs text-gray-500 mb-4 leading-tight">Drag and drop recipes onto the calendar slots.</p>
             
-            <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-lg">
+            <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-lg overflow-x-auto">
               <button
                 onClick={() => setSidebarTab('saved')}
-                className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Saved ({recipes.length})
               </button>
               <button
                 onClick={() => setSidebarTab('generated')}
-                className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Generated ({generatedRecipes.length})
+              </button>
+              <button
+                onClick={() => setSidebarTab('history')}
+                className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'history' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                History ({pastMeals.length})
               </button>
             </div>
 
@@ -759,7 +788,7 @@ Make them balanced, diverse, and delicious. Include:
                         </Draggable>
                       ))
                     )
-                  ) : (
+                  ) : sidebarTab === 'generated' ? (
                     generatedRecipes.length === 0 ? (
                       <p className="text-xs text-gray-400 text-center mt-4">No generated recipes yet.</p>
                     ) : (
@@ -776,6 +805,29 @@ Make them balanced, diverse, and delicious. Include:
                               <div className="flex justify-between items-center mt-2 text-xs text-gray-500 font-medium">
                                 <span>{recipe.prep_time || '30m'}</span>
                                 <span className="bg-white/60 px-2 py-0.5 rounded text-[#d4a373]">{recipe.difficulty || 'medium'}</span>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))
+                    )
+                  ) : (
+                    pastMeals.length === 0 ? (
+                      <p className="text-xs text-gray-400 text-center mt-4">No past meals found.</p>
+                    ) : (
+                      pastMeals.map((meal, index) => (
+                        <Draggable key={`history-${meal.id}`} draggableId={`history-${meal.id}`} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`bg-[#f0f4f8] p-3 rounded-xl border border-[#c5d9c9] transition-shadow ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] scale-105 z-50' : 'hover:shadow-md'}`}
+                            >
+                              <p className="font-semibold text-[#5a6f60] text-sm line-clamp-2 leading-tight">{meal.recipe_name}</p>
+                              <div className="flex justify-between items-center mt-2 text-xs text-gray-500 font-medium">
+                                <span>{format(new Date(meal.date), 'MMM d')}</span>
+                                <span className="bg-white/60 px-2 py-0.5 rounded text-[#6b9b76] capitalize">{meal.meal_type}</span>
                               </div>
                             </div>
                           )}
