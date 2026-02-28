@@ -7,9 +7,11 @@ import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camer
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import PantryAnalytics from './PantryAnalytics';
 
 export default function InventoryManagement({ onGenerateFromExpiring }) {
   const queryClient = useQueryClient();
+  const [viewMode, setViewMode] = useState('list');
   const [newItem, setNewItem] = useState({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0, expiry_date: '' });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -241,14 +243,50 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="text-center space-y-2 mb-8">
+      <div className="text-center space-y-2 mb-6">
         <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold flex items-center justify-center gap-3">
           <Package className="w-8 h-8" /> My Pantry
         </h2>
         <p className="text-gray-600">Track your ingredients to get smarter recipe suggestions</p>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl border-2 border-[#c5d9c9] shadow-sm">
+      <div className="flex justify-center mb-8">
+        <div className="bg-gray-100 p-1 rounded-lg inline-flex shadow-inner">
+          <button
+            onClick={() => setViewMode('list')}
+            className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${
+              viewMode === 'list'
+                ? 'bg-white text-[#6b9b76] shadow-sm'
+                : 'text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            Inventory List
+          </button>
+          <button
+            onClick={() => setViewMode('analytics')}
+            className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${
+              viewMode === 'analytics'
+                ? 'bg-white text-[#6b9b76] shadow-sm'
+                : 'text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            Analytics & Insights
+          </button>
+        </div>
+      </div>
+
+      {viewMode === 'analytics' ? (
+        <PantryAnalytics 
+          onGenerateShoppingList={(items) => {
+            const existing = JSON.parse(localStorage.getItem('shoppingListCustomItems')) || [];
+            const newItems = items.map(i => ({ id: `ai-suggested-${Date.now()}-${Math.random()}`, name: `${i.item} (${i.reason})` }));
+            localStorage.setItem('shoppingListCustomItems', JSON.stringify([...existing, ...newItems]));
+            toast.success(`Added ${items.length} AI suggestions to your Shopping List!`);
+          }} 
+        />
+      ) : (
+        <>
+          <div className="bg-white p-6 rounded-2xl border-2 border-[#c5d9c9] shadow-sm">
         <form onSubmit={handleAdd} className="flex flex-col sm:flex-row flex-wrap gap-4 items-end">
           <div className="flex-1 min-w-[200px] w-full">
             <label className="text-xs font-semibold text-gray-500 mb-1 block uppercase tracking-wider">Ingredient Name</label>
@@ -498,6 +536,8 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
           </div>
         )}
       </div>
+      </>
+      )}
     </div>
   );
 }
