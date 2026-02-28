@@ -757,7 +757,6 @@ Make them balanced, diverse, and delicious. Include:
                         </div>
                         </div>
                         </div>
-                        </div>
                         </DragDropContext>
 
       {/* Add Meal Dialog */}
