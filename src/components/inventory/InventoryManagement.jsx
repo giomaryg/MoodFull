@@ -72,6 +72,102 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
     }
   };
 
+  const handleVoiceInput = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      toast.error('Voice recognition is not supported in this browser.');
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      toast.info('Listening... speak an ingredient to add.');
+    };
+
+    recognition.onresult = async (event) => {
+      const transcript = event.results[0][0].transcript;
+      toast.success(`Heard: "${transcript}". Analyzing...`);
+      setIsAnalyzing(true);
+      try {
+        const response = await base44.integrations.Core.InvokeLLM({
+          prompt: `The user spoke this to add to their pantry inventory: "${transcript}". Identify the product name, estimated quantity (default 1), and unit. Return JSON.`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              quantity: { type: "number" },
+              unit: { type: "string" }
+            }
+          }
+        });
+        setNewItem(prev => ({
+          ...prev,
+          name: response.name || '',
+          quantity: response.quantity || 1,
+          unit: response.unit || 'units'
+        }));
+        toast.success('Voice scan complete! Review details and click Add.');
+      } catch (err) {
+        toast.error('Failed to parse voice input.');
+      } finally {
+        setIsAnalyzing(false);
+      }
+    };
+
+    recognition.onerror = (event) => {
+      toast.error('Voice recognition failed or was cancelled.');
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
+  const handleQuickAdd = async (itemName) => {
+    setIsAnalyzing(true);
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze the grocery item: "${itemName}". Determine its standard grocery category (must be one of: Produce, Dairy, Meat, Pantry, Spices, Frozen, Other). Also estimate its typical shelf life in days from today, assuming proper storage. Return JSON.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            category: { type: "string", enum: ["Produce", "Dairy", "Meat", "Pantry", "Spices", "Frozen", "Other"] },
+            estimated_shelf_life_days: { type: "number" }
+          }
+        }
+      });
+      
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + (response.estimated_shelf_life_days || 14));
+      
+      addMutation.mutate({
+        name: itemName,
+        quantity: 1,
+        unit: 'units',
+        min_stock: 0,
+        category: response.category || 'Pantry',
+        expiry_date: expiryDate.toISOString().split('T')[0]
+      });
+    } catch (err) {
+      addMutation.mutate({
+        name: itemName,
+        quantity: 1,
+        unit: 'units',
+        min_stock: 0,
+        category: 'Pantry'
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   const handleAdd = async (e) => {
     e.preventDefault();
     if (!newItem.name) return;
