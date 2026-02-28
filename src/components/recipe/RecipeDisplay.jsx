@@ -16,7 +16,7 @@ import NutritionPanel from './NutritionPanel';
 import RecipeReview from './RecipeReview';
 import InteractiveCookingMode from './InteractiveCookingMode';
 import SaveToCollectionDialog from './SaveToCollectionDialog';
-import { Play, Flame, Zap } from 'lucide-react';
+import { Play, Flame, Zap, Wand2 } from 'lucide-react';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
@@ -251,16 +251,22 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       .map(item => item.recipe);
   }, [recipe, recipes]);
 
-  const generateVariation = async (type) => {
+  const [customVariation, setCustomVariation] = useState('');
+
+  const generateCustomVariation = async (typeOrPrompt) => {
     setIsGeneratingVariation(true);
     try {
       const promptMap = {
-        'quick': `Provide a 15-minute ultra-quick variation of "${recipe.name}". Simplify the ingredients and instructions drastically.`,
-        'gourmet': `Provide a complex, gourmet, chef-level variation of "${recipe.name}" that takes longer but is extremely elevated.`
+        'quicker': `Provide a quicker variation of "${recipe.name}". Simplify the ingredients and instructions.`,
+        'gourmet': `Provide a complex, gourmet, chef-level variation of "${recipe.name}" that takes longer but is extremely elevated.`,
+        'vegan': `Provide a vegan variation of "${recipe.name}". Replace any animal products with vegan alternatives.`,
+        'spicier': `Provide a spicier variation of "${recipe.name}". Add heat and bold spices.`
       };
 
+      const finalPrompt = promptMap[typeOrPrompt] || `Create a variation of "${recipe.name}" with this specific modification: "${typeOrPrompt}". Adapt the ingredients and instructions accordingly.`;
+
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${promptMap[type]} Include all details.`,
+        prompt: `${finalPrompt} Keep the core identity but apply the requested changes.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -293,15 +299,49 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           ...recipe,
           id: undefined,
           ...response,
-          mood: `${type} variation`,
+          mood: `Variation: ${typeOrPrompt}`,
           image_url: recipe.imageUrl || recipe.imageUrls?.[0]
         });
-        toast.success(`Generated ${type} variation!`);
+        toast.success(`Generated variation!`);
       }
     } catch (e) {
       toast.error('Failed to generate variation');
     }
     setIsGeneratingVariation(false);
+  };
+
+  const [isRegeneratingSteps, setIsRegeneratingSteps] = useState(false);
+  
+  const handleRegenerateSteps = async (mode) => {
+    setIsRegeneratingSteps(true);
+    try {
+      const modePrompt = mode === 'simplify' 
+        ? "Simplify these instructions to be as easy to understand as possible for a beginner. Reduce the number of steps if possible."
+        : "Make these instructions extremely detailed, step-by-step, including visual cues, temperatures, and professional techniques.";
+        
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Here are the current instructions for ${recipe.name}: \n${recipe.instructions.join('\n')}\n\n${modePrompt} Return ONLY a list of strings representing the new steps.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            instructions: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+      
+      if (response.instructions) {
+         if (recipe.id && isSaved) {
+           updateRecipeMutation.mutate({ id: recipe.id, data: { instructions: response.instructions } });
+         }
+         if (onUpdate) {
+           onUpdate({ instructions: response.instructions });
+         }
+         toast.success("Instructions updated!");
+      }
+    } catch (e) {
+      toast.error('Failed to regenerate instructions');
+    }
+    setIsRegeneratingSteps(false);
   };
 
   if (!recipe) return null;
@@ -458,26 +498,56 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               </Button>
             </div>
             
-            {!isSaved && (
-              <div className="flex w-full gap-2 mt-3 pt-3 border-t border-[#c5d9c9]/50">
+            <div className="w-full mt-4 pt-4 border-t border-[#c5d9c9]/50">
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Refine & Create Variations</p>
+              <div className="flex flex-wrap gap-1.5 mb-2">
                 <Button 
-                  onClick={() => generateVariation('quick')}
+                  onClick={() => generateCustomVariation('quicker')}
                   disabled={isGeneratingVariation}
-                  variant="ghost" 
-                  className="flex-1 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-800 text-xs"
+                  variant="outline" 
+                  className="bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100 text-[10px] h-7 px-2"
                 >
-                  <Zap className="w-4 h-4 mr-1" /> Quick Version
+                  <Zap className="w-3 h-3 mr-1" /> Quicker
                 </Button>
                 <Button 
-                  onClick={() => generateVariation('gourmet')}
+                  onClick={() => generateCustomVariation('vegan')}
                   disabled={isGeneratingVariation}
-                  variant="ghost" 
-                  className="flex-1 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-800 text-xs"
+                  variant="outline" 
+                  className="bg-green-50 text-green-700 border-green-200 hover:bg-green-100 text-[10px] h-7 px-2"
                 >
-                  <Flame className="w-4 h-4 mr-1" /> Gourmet Version
+                  <Leaf className="w-3 h-3 mr-1" /> Vegan
+                </Button>
+                <Button 
+                  onClick={() => generateCustomVariation('spicier')}
+                  disabled={isGeneratingVariation}
+                  variant="outline" 
+                  className="bg-red-50 text-red-700 border-red-200 hover:bg-red-100 text-[10px] h-7 px-2"
+                >
+                  <Flame className="w-3 h-3 mr-1" /> Spicier
                 </Button>
               </div>
-            )}
+              <div className="flex gap-1.5">
+                <input 
+                  placeholder="e.g. Make it low carb..." 
+                  value={customVariation}
+                  onChange={e => setCustomVariation(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && customVariation.trim() && !isGeneratingVariation) {
+                      generateCustomVariation(customVariation);
+                    }
+                  }}
+                  className="flex-1 h-7 text-[10px] px-2 rounded-md border border-gray-300 focus:outline-none focus:border-[#6b9b76]"
+                />
+                <Button 
+                  onClick={() => generateCustomVariation(customVariation)}
+                  disabled={isGeneratingVariation || !customVariation.trim()}
+                  className="h-7 w-7 p-0 bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-md shrink-0"
+                  title="Generate Custom Variation"
+                >
+                  {isGeneratingVariation ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Info Badges */}
@@ -556,16 +626,20 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                                 ? 'bg-[#f5e6dc] text-[#c17a7a] hover:bg-[#e8d5c4]'
                                 : 'bg-gray-100 text-gray-400 hover:bg-[#f5e6dc] hover:text-[#c17a7a] opacity-0 group-hover:opacity-100'
                           }`}
-                          title={isSubbed ? "Revert ingredient" : hasSub ? "Use suggested substitute" : "Ask AI for substitute"}
+                          title={isSubbed ? "Revert ingredient" : hasSub ? "Use suggested substitute" : "Ask AI for pantry-based substitute"}
                         >
                           {loadingSubFor === index ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
                           ) : (
-                            <RefreshCw className="w-3 h-3" />
+                            isSubbed || hasSub ? <RefreshCw className="w-3 h-3" /> : <Wand2 className="w-3 h-3 text-[#c17a7a]" />
                           )}
-                          {(isSubbed || hasSub || aiSubstitutions[index]) && (
+                          {(isSubbed || hasSub || aiSubstitutions[index]) ? (
                             <span className="text-[9px] font-bold uppercase tracking-wider">
                               {isSubbed ? 'Revert' : 'Substitute'}
+                            </span>
+                          ) : (
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-[#c17a7a]">
+                              AI Swap
                             </span>
                           )}
                         </button>
@@ -602,6 +676,28 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             <div className="flex items-center gap-3 font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/70 mb-2">
               <span>Instructions</span>
               <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/60 to-transparent"></div>
+              <div className="flex gap-1">
+                 <Button 
+                   variant="ghost" 
+                   size="sm" 
+                   onClick={() => handleRegenerateSteps('simplify')} 
+                   disabled={isRegeneratingSteps}
+                   className="h-6 text-[10px] px-2 text-[#6b9b76] hover:bg-[#6b9b76]/10 font-sans tracking-normal normal-case"
+                   title="Make instructions simpler and easier to follow"
+                 >
+                   {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <RefreshCw className="w-3 h-3 mr-1" />} Simplify
+                 </Button>
+                 <Button 
+                   variant="ghost" 
+                   size="sm" 
+                   onClick={() => handleRegenerateSteps('detail')} 
+                   disabled={isRegeneratingSteps}
+                   className="h-6 text-[10px] px-2 text-[#6b9b76] hover:bg-[#6b9b76]/10 font-sans tracking-normal normal-case"
+                   title="Make instructions extremely detailed with visual cues"
+                 >
+                   {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Sparkles className="w-3 h-3 mr-1" />} Detail
+                 </Button>
+              </div>
             </div>
             <div className="space-y-3">
               {recipe.instructions?.map((instruction, index) =>
