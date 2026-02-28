@@ -36,7 +36,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
           className={`gap-2 ${showFilters || activeFilterCount > 0 ? 'border-[#6b9b76] text-[#6b9b76] bg-[#f0f9f2]' : 'text-gray-600'}`}
         >
           <Filter className="w-4 h-4" />
-          Filters
+          AI Recipe Filters
           {activeFilterCount > 0 && (
             <Badge variant="secondary" className="bg-[#6b9b76] text-white hover:bg-[#5a8a65] ml-1 h-5 px-1.5 min-w-[1.25rem]">
               {activeFilterCount}
@@ -231,7 +231,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                   onKeyDown={handleManualIngredients}
                   className="h-9 border-[#c5d9c9] focus:border-[#6b9b76] bg-[#f0f9f2]"
                 />
-                <p className="text-[10px] text-gray-500">AI will prioritize these in new recipes.</p>
+                <p className="text-[10px] text-gray-500">AI will use these to generate custom variations.</p>
               </div>
 
               {/* Exclude Ingredients */}
@@ -243,6 +243,25 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                   onChange={(e) => handleFilterChange('excludeIngredients', e.target.value)}
                   className="h-9 border-[#c5d9c9] focus:border-[#6b9b76]"
                 />
+              </div>
+
+              {/* Variations Toggle */}
+              <div className="space-y-2 col-span-1 sm:col-span-2 mt-2 flex items-center gap-2">
+                  <div className="flex-1">
+                      <Label className="text-xs font-semibold text-[#6b9b76] uppercase flex items-center gap-1">
+                          <Sparkles className="w-3 h-3" /> Unique Variations
+                      </Label>
+                      <p className="text-[10px] text-gray-500">Allow AI to modify classic recipes based on your criteria.</p>
+                  </div>
+                  <Select value={filters.generateVariations ? "yes" : "no"} onValueChange={(val) => handleFilterChange('generateVariations', val === "yes")}>
+                      <SelectTrigger className="h-9 w-32 border-[#6b9b76] text-[#6b9b76]">
+                          <SelectValue placeholder="No" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="no">Standard</SelectItem>
+                          <SelectItem value="yes">Creative AI</SelectItem>
+                      </SelectContent>
+                  </Select>
               </div>
 
             </div>
