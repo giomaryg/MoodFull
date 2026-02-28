@@ -11,7 +11,7 @@ import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
 import RecipeDetailModal from './RecipeDetailModal';
 
-function MealPlanner({ onOpenShoppingList, savedRecipes = [], generatedRecipes = [] }) {
+function MealPlanner({ onOpenShoppingList }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -95,55 +95,6 @@ function MealPlanner({ onOpenShoppingList, savedRecipes = [], generatedRecipes =
 
     if (!destination) return;
     if (source.droppableId === destination.droppableId) return;
-
-    if (source.droppableId === 'recipes-list') {
-      const isGenerated = draggableId.startsWith('gen-');
-      const realId = isGenerated ? draggableId.replace('gen-', '') : draggableId;
-      
-      let recipe = null;
-      if (isGenerated) {
-        recipe = generatedRecipes[parseInt(realId)];
-      } else {
-        recipe = savedRecipes.find(r => r.id === realId) || recipes.find(r => r.id === realId);
-      }
-
-      if (!recipe) return;
-
-      const [destDate, destMealType] = destination.droppableId.split('|');
-
-      let finalRecipeId = recipe.id;
-
-      if (isGenerated && !recipe.id) {
-        try {
-          const saved = await base44.entities.Recipe.create({
-            name: recipe.name,
-            description: recipe.description,
-            ingredients: recipe.ingredients,
-            instructions: recipe.instructions,
-            prep_time: recipe.prep_time,
-            cook_time: recipe.cook_time,
-            servings: recipe.servings,
-            difficulty: recipe.difficulty,
-            nutrition: recipe.nutrition,
-            image_url: recipe.imageUrl || (recipe.imageUrls ? recipe.imageUrls[0] : null),
-            mood: recipe.mood || 'generated'
-          });
-          finalRecipeId = saved.id;
-          queryClient.invalidateQueries({ queryKey: ['recipes'] });
-        } catch (e) {
-          console.error("Failed to save generated recipe", e);
-        }
-      }
-
-      createMealMutation.mutate({
-        recipe_id: finalRecipeId,
-        recipe_name: recipe.name,
-        date: destDate,
-        meal_type: destMealType,
-        servings: recipe.servings || 4
-      });
-      return;
-    }
 
     const [destDate, destMealType] = destination.droppableId.split('|');
 
@@ -527,93 +478,43 @@ Make them balanced, diverse, and delicious. Include:
 
       {/* Calendar Grid */}
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Sidebar for Recipes */}
-          <div className="lg:w-72 w-full bg-white rounded-xl p-4 border-2 border-[#c5d9c9] max-h-[800px] overflow-y-auto hidden lg:block flex-shrink-0">
-            <h3 className="font-bold text-[#6b9b76] mb-4">Drag to Plan</h3>
-            <Droppable droppableId="recipes-list" isDropDisabled={true}>
-              {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-3 min-h-[100px]">
-                  {generatedRecipes.length > 0 && (
-                    <div className="mb-4">
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Generated Ideas</p>
-                      {generatedRecipes.map((recipe, index) => (
-                        <Draggable key={`gen-${index}`} draggableId={`gen-${index}`} index={index}>
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className={`bg-white border-2 border-[#c5d9c9] rounded-lg p-3 text-sm cursor-grab active:cursor-grabbing mb-2 ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] rotate-2' : 'hover:border-[#6b9b76] transition-colors'}`}
-                            >
-                              <p className="font-semibold text-[#3d5244] line-clamp-2">{recipe.name}</p>
-                              {recipe.prep_time && <p className="text-xs text-gray-500 mt-1">⏱ {recipe.prep_time}</p>}
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                    </div>
+        <div className="bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
+          <div className="overflow-x-auto">
+            <div className="min-w-[800px]">
+              {/* Day Headers */}
+              <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
+            {weekDays.map((day) => (
+              <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
+                <p className="text-white font-semibold text-sm">
+                  {format(day, 'EEE')}
+                </p>
+                <p className="text-white text-xs">
+                  {format(day, 'MMM d')}
+                </p>
+                <Button
+                  onClick={() => regenerateDay(day)}
+                  disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
+                >
+                  {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
+                    <Loader2 className="w-3 h-3 text-white animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-3 h-3 text-white" />
                   )}
-
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Saved Collection</p>
-                  {savedRecipes.slice(0, 15).map((recipe, index) => (
-                    <Draggable key={recipe.id} draggableId={recipe.id} index={index + generatedRecipes.length}>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className={`bg-white border-2 border-[#c5d9c9] rounded-lg p-3 text-sm cursor-grab active:cursor-grabbing mb-2 ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] rotate-2' : 'hover:border-[#6b9b76] transition-colors'}`}
-                        >
-                          <p className="font-semibold text-[#3d5244] line-clamp-2">{recipe.name}</p>
-                          {recipe.prep_time && <p className="text-xs text-gray-500 mt-1">⏱ {recipe.prep_time}</p>}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+                </Button>
+              </div>
+            ))}
           </div>
 
-          <div className="flex-1 bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden min-w-0">
-            <div className="overflow-x-auto">
-              <div className="min-w-[800px]">
-                {/* Day Headers */}
-                  <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
-                  {weekDays.map((day) => (
-                    <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
-                      <p className="text-white font-semibold text-sm">
-                        {format(day, 'EEE')}
-                      </p>
-                      <p className="text-white text-xs">
-                        {format(day, 'MMM d')}
-                      </p>
-                      <Button
-                        onClick={() => regenerateDay(day)}
-                        disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
-                        size="sm"
-                        variant="ghost"
-                        className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
-                      >
-                        {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
-                          <Loader2 className="w-3 h-3 text-white animate-spin" />
-                        ) : (
-                          <RefreshCw className="w-3 h-3 text-white" />
-                        )}
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-
-                      {/* Meal Rows */}
-                {mealTypes.map((mealType) => (
-                  <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
-                    {weekDays.map((day) => {
-                      const meals = getMealsForDay(day, mealType);
-                      const isToday = isSameDay(day, new Date());
-                      const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
+          {/* Meal Rows */}
+              {mealTypes.map((mealType) => (
+                <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
+                  {weekDays.map((day) => {
+                const meals = getMealsForDay(day, mealType);
+                const isToday = isSameDay(day, new Date());
+                const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
 
                 return (
                   <Droppable key={dropId} droppableId={dropId}>
@@ -747,19 +648,19 @@ Make them balanced, diverse, and delicious. Include:
                         >
                           <Plus className="w-3 h-3" />
                         </Button>
-                        </div>
-                        )}
-                        </Droppable>
-                        );
-                        })}
-                        </div>
-                        ))}
-                        </div>
-                        </div>
-                        </div>
-                        </DragDropContext>
+                      </div>
+                    )}
+                  </Droppable>
+                );
+              })}
+            </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </DragDropContext>
 
-                        {/* Add Meal Dialog */}
+      {/* Add Meal Dialog */}
       {showAddMeal && (
         <AddMealDialog
           date={selectedDate}
