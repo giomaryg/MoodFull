@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone, Languages, CreditCard } from 'lucide-react';
+import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone, Languages, CreditCard, MessageCircle, Bot } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
