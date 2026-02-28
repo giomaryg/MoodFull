@@ -187,6 +187,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       'Meat & Poultry': [],
       'Dairy & Eggs': [],
       'Pantry': [],
+      'Custom Items': [],
       'Other': []
     };
 
@@ -207,8 +208,17 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       }
     });
 
+    customItems.forEach((item) => {
+      categorized['Custom Items'].push({
+        key: item.id,
+        original: item.name,
+        count: 1,
+        recipes: ['Added Manually']
+      });
+    });
+
     return categorized;
-  }, [selectedMeals, selectedExtraRecipes, recipes]);
+  }, [selectedMeals, selectedExtraRecipes, recipes, customItems]);
 
   const toggleItem = (key) => {
     setCheckedItems((prev) => ({
