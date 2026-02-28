@@ -684,7 +684,7 @@ Make them balanced, diverse, and delicious. Include:
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <Button
             onClick={() => setShowGoalsDialog(true)}
-            className="bg-indigo-500 hover:bg-indigo-600 text-white flex-1 sm:flex-none"
+            className="bg-[#f2b769] hover:bg-[#e6a245] text-white flex-1 sm:flex-none"
           >
             <Target className="w-4 h-4 mr-2" />
             Set Goals

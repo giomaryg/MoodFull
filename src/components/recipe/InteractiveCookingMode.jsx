@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronRight, ChevronLeft, Play, Pause, CheckCircle2, Mic, MicOff, Bot, Loader2, Send } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Play, Pause, CheckCircle2, Mic, MicOff, Bot, Loader2, Send, ChefHat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
@@ -14,6 +14,8 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
   const [aiQuery, setAiQuery] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [stepTip, setStepTip] = useState('');
+  const [isTipLoading, setIsTipLoading] = useState(false);
 
   const instructions = recipe?.instructions || [];
   const progress = ((currentStep + 1) / instructions.length) * 100;
@@ -35,6 +37,26 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
       setIsTimerRunning(false);
     }
   }, [currentStep, instructions]);
+
+  useEffect(() => {
+    const generateTip = async () => {
+      setIsTipLoading(true);
+      setStepTip('');
+      try {
+        const stepText = instructions[currentStep];
+        const response = await base44.integrations.Core.InvokeLLM({
+          prompt: `You are an AI Cooking Coach. The user is about to perform this step: "${stepText}" for the recipe "${recipe.name}". Provide ONE very short, pro cooking tip or safety advice specifically for this step (max 1 sentence). If it's a simple step, you can just be encouraging.`
+        });
+        setStepTip(response);
+      } catch (err) {
+        setStepTip('');
+      }
+      setIsTipLoading(false);
+    };
+    if (instructions.length > 0) {
+      generateTip();
+    }
+  }, [currentStep, instructions, recipe.name]);
 
   useEffect(() => {
     let interval = null;
@@ -115,7 +137,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
     try {
       const stepText = instructions[currentStep];
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `The user is cooking "${recipe.name}" and is currently on step: "${stepText}". They asked: "${aiQuery}". Provide a very short, concise, and helpful answer (1-2 sentences) about technique clarification or substitutions.`
+        prompt: `You are an AI Cooking Coach. The user is cooking "${recipe.name}" and is currently on step: "${stepText}". The full recipe instructions are: ${JSON.stringify(instructions)}. They asked: "${aiQuery}". Provide a helpful, concise answer. If they ask to adapt the step based on missing equipment or feedback, provide the adapted instructions clearly.`
       });
       setAiResponse(response);
       setAiQuery('');
@@ -205,10 +227,29 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
               exit={{ opacity: 0, x: -50 }}
               className="max-w-5xl w-full flex flex-col items-center text-center"
             >
-              <div className="max-h-[50vh] overflow-y-auto px-4 w-full custom-scrollbar">
+              <div className="max-h-[50vh] overflow-y-auto px-4 w-full custom-scrollbar flex flex-col items-center">
                 <p className="text-xl sm:text-3xl md:text-5xl font-medium leading-normal sm:leading-relaxed text-gray-100">
                   {instructions[currentStep]}
                 </p>
+                
+                {/* Proactive Tip */}
+                <AnimatePresence>
+                  {stepTip && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-8 p-4 bg-[#6b9b76]/20 border border-[#6b9b76]/40 rounded-xl text-[#a3c4a8] flex items-start gap-3 max-w-2xl text-left"
+                    >
+                      <ChefHat className="w-5 h-5 shrink-0 mt-0.5 text-[#6b9b76]" />
+                      <p className="text-sm sm:text-base leading-relaxed">{stepTip}</p>
+                    </motion.div>
+                  )}
+                  {isTipLoading && !stepTip && (
+                     <div className="mt-8 flex items-center text-[#6b9b76]/60 text-sm gap-2">
+                       <Loader2 className="w-4 h-4 animate-spin" /> Coach is thinking...
+                     </div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Timer if applicable */}

@@ -18,6 +18,8 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
   const [isScanning, setIsScanning] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
+  const [restockSuggestions, setRestockSuggestions] = useState([]);
+  const [isGeneratingRestock, setIsGeneratingRestock] = useState(false);
   const fileInputRef = React.useRef(null);
 
   const { data: inventory = [], isLoading } = useQuery({
@@ -237,6 +239,27 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
 
   const expiringItems = getExpiringSoon();
 
+  const generateRestockSuggestions = async () => {
+    setIsGeneratingRestock(true);
+    try {
+      const inventoryNames = inventory.map(i => i.name).join(', ');
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on this current pantry inventory: ${inventoryNames}. What are 5 common pantry staples this user is missing or low on that they should restock?`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            suggestions: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+      setRestockSuggestions(response.suggestions || []);
+      toast.success("Generated restock suggestions!");
+    } catch (e) {
+      toast.error("Failed to generate restock suggestions.");
+    }
+    setIsGeneratingRestock(false);
+  };
+
   const recentlyAddedItems = React.useMemo(() => {
     return [...inventory]
       .sort((a, b) => new Date(b.created_date || 0) - new Date(a.created_date || 0))
@@ -413,21 +436,36 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
         </div>
       )}
 
-      {inventory.some(i => i.min_stock > 0 && i.quantity < i.min_stock) && (
-        <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 sm:p-6 mb-6">
-          <h3 className="font-bold text-red-800 flex items-center gap-2 mb-1">
-            <AlertTriangle className="w-5 h-5" />
-            Low Stock Alerts
-          </h3>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {inventory.filter(i => i.min_stock > 0 && i.quantity < i.min_stock).map(item => (
-              <span key={item.id} className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-md font-medium border border-red-200">
-                {item.name} ({item.quantity} / {item.min_stock} {item.unit})
-              </span>
-            ))}
+      <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 sm:p-6 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h3 className="font-bold text-red-800 flex items-center gap-2 mb-1">
+              <AlertTriangle className="w-5 h-5" />
+              Low Stock & AI Restock Suggestions
+            </h3>
+            <p className="text-sm text-red-700">See what you're running low on or ask AI what you might be missing.</p>
           </div>
+          <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto" onClick={generateRestockSuggestions} disabled={isGeneratingRestock}>
+            {isGeneratingRestock ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Sparkles className="w-4 h-4 mr-1" />}
+            Suggest Restocks
+          </Button>
         </div>
-      )}
+        <div className="flex flex-wrap gap-2 mt-4">
+          {inventory.filter(i => i.min_stock > 0 && i.quantity < i.min_stock).map(item => (
+            <span key={item.id} className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-md font-medium border border-red-200">
+              {item.name} ({item.quantity} / {item.min_stock} {item.unit})
+            </span>
+          ))}
+          {restockSuggestions.map((item, idx) => (
+            <span key={idx} className="text-xs bg-white text-red-700 px-2.5 py-1.5 rounded-md font-medium border border-red-300 border-dashed flex items-center gap-1 cursor-pointer hover:bg-red-50 shadow-sm" onClick={() => handleQuickAdd(item)} title="Click to Add">
+              {item} <Plus className="w-3 h-3" />
+            </span>
+          ))}
+          {inventory.filter(i => i.min_stock > 0 && i.quantity < i.min_stock).length === 0 && restockSuggestions.length === 0 && (
+            <span className="text-xs text-red-600/70 italic">All min-stock levels met. Generate suggestions to see what to restock.</span>
+          )}
+        </div>
+      </div>
 
       {expiringItems.length > 0 && !hideExpiringAlert && (
         <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 sm:p-6 mb-6 relative">
