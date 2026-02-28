@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2 } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -230,9 +230,9 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
        const response = await base44.integrations.Core.InvokeLLM({
           prompt: `Analyze this shopping list: ${itemsToAnalyze.join(', ')}.
 1. Categorize these items into logical grocery aisles (e.g. Produce, Meat, Dairy, Pantry, Frozen, etc).
-2. Estimate the total cost in USD.
+2. Estimate the total cost in USD and provide a breakdown per category.
 3. Suggest 2-3 smart substitutions (for health or budget).
-4. Suggest what local deals to look for based on these items.
+4. Suggest item-specific bulk buying opportunities or promotions based on these items.
 Return JSON.`,
           response_json_schema: {
              type: "object",
@@ -244,6 +244,16 @@ Return JSON.`,
                       properties: {
                          categoryName: { type: "string" },
                          items: { type: "array", items: { type: "string" } }
+                      }
+                   }
+                },
+                categoryCosts: {
+                   type: "array",
+                   items: {
+                      type: "object",
+                      properties: {
+                         category: { type: "string" },
+                         cost: { type: "string" }
                       }
                    }
                 },
@@ -259,7 +269,7 @@ Return JSON.`,
                 },
                 estimatedTotalCost: { type: "string" },
                 substitutions: { type: "array", items: { type: "string" } },
-                dealsToLookFor: { type: "array", items: { type: "string" } }
+                bulkOpportunities: { type: "array", items: { type: "string" } }
              }
           }
        });
@@ -393,10 +403,45 @@ Return JSON.`,
   }, [inventory, shoppingList, shoppingByRecipe, checkedItems]);
 
   const handleOrderGroceries = (service) => {
-    toast.success(`Pushing ${totalItems - checkedCount} items to your ${service} cart...`);
+    toast.success(`Searching items on ${service}...`);
+    const query = Object.values(shoppingList).flat().filter(i => !checkedItems[i.key]).map(i => i.original).join(' ');
     setTimeout(() => {
-      window.open(`https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`, '_blank');
+      let url = '';
+      if (service === 'Instacart') url = `https://www.instacart.com/store/s?k=${encodeURIComponent(query)}`;
+      else if (service === 'Walmart') url = `https://www.walmart.com/search?q=${encodeURIComponent(query)}`;
+      else if (service === 'Amazon Fresh') url = `https://www.amazon.com/s?k=${encodeURIComponent(query)}&i=amazonfresh`;
+      else url = `https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
+      window.open(url, '_blank');
     }, 1500);
+  };
+
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const handlePurchaseToPantry = async () => {
+    const itemsToBuy = displayCategories.flatMap(c => c.items).filter(item => !checkedItems[item.key]);
+    if (itemsToBuy.length === 0) return;
+    
+    setIsPurchasing(true);
+    try {
+      const promises = itemsToBuy.map(item => 
+        base44.entities.Ingredient.create({
+          name: item.original,
+          quantity: item.count || 1,
+          unit: 'units',
+          category: 'Pantry'
+        })
+      );
+      await Promise.all(promises);
+      
+      const newChecked = { ...checkedItems };
+      itemsToBuy.forEach(i => newChecked[i.key] = true);
+      setCheckedItems(newChecked);
+      
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      toast.success(`Added ${itemsToBuy.length} items directly to your Pantry!`);
+    } catch (e) {
+      toast.error("Failed to add items to pantry.");
+    }
+    setIsPurchasing(false);
   };
 
   return (
@@ -813,20 +858,46 @@ Return JSON.`,
                       ))}
                     </ul>
                   </div>
+                  {aiInsights.categoryCosts && (
+                    <div className="pt-3 border-t border-[#c5d9c9]/50">
+                      <p className="text-sm font-bold text-[#5a6f60] mb-2">Category Breakdown</p>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {aiInsights.categoryCosts.map((cat, i) => (
+                          <div key={i} className="bg-white p-2 rounded-lg border border-[#c5d9c9] text-xs flex justify-between">
+                            <span className="text-gray-600 font-medium">{cat.category}</span>
+                            <span className="text-[#6b9b76] font-bold">{cat.cost}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="pt-3 border-t border-[#c5d9c9]/50">
                     <p className="text-sm font-bold text-[#5a6f60] mb-2 flex items-center gap-1.5">
-                      <span>🏷️</span> Local Deals to Watch For
+                      <Tag className="w-4 h-4 text-blue-500" /> Bulk Opportunities & Promos
                     </p>
                     <ul className="text-sm text-gray-600 space-y-1.5">
-                      {aiInsights.dealsToLookFor.map((deal, i) => (
+                      {aiInsights.bulkOpportunities?.map((deal, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#c17a7a] mt-1.5 shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 shrink-0" />
                           <span>{deal}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {displayCategories.length > 0 && (
+              <div className="flex justify-end mb-4">
+                <Button 
+                  onClick={handlePurchaseToPantry}
+                  disabled={isPurchasing}
+                  className="bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 shadow-sm"
+                >
+                  {isPurchasing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <PackagePlus className="w-4 h-4 mr-2" />}
+                  Mark Remaining as Purchased & Add to Pantry
+                </Button>
               </div>
             )}
 

@@ -540,8 +540,8 @@ export default function RecipeGenerator() {
     }
   };
 
-  const generateFromInventory = async () => {
-    if (inventory.length === 0) {
+  const generateFromInventory = async (expiringItemsList = null) => {
+    if (inventory.length === 0 && !expiringItemsList) {
       toast.error('Add items to your pantry first!');
       setActiveTab('inventory');
       return;
@@ -573,6 +573,7 @@ export default function RecipeGenerator() {
     }
 
     const inventoryList = inventory.map(i => `${i.name}`).join(', ');
+    const priorityItems = expiringItemsList ? `URGENT - MUST USE these expiring items: ${expiringItemsList.join(', ')}` : `Prioritize using: ${inventoryList}`;
 
     let filtersContext = [];
     if (advancedFilters.cuisine) filtersContext.push(`Cuisine: ${advancedFilters.cuisine}`);
@@ -587,7 +588,7 @@ export default function RecipeGenerator() {
 
     try {
       const quickResponse = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 4 realistic recipe ideas using ONLY or MAINLY these ingredients I already have: ${inventoryList}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
+        prompt: `Generate 4 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -634,7 +635,7 @@ export default function RecipeGenerator() {
 
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
         const detail = await base44.integrations.Core.InvokeLLM({
-          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). Prioritize using: ${inventoryList}. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
+          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). ${priorityItems}. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
           response_json_schema: {
             type: "object",
             properties: {
@@ -1162,7 +1163,12 @@ export default function RecipeGenerator() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}>
-              <InventoryManagement />
+              <InventoryManagement 
+                onGenerateFromExpiring={(items) => {
+                  setActiveTab('home');
+                  generateFromInventory(items);
+                }}
+              />
             </motion.div>
           }
 

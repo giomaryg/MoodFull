@@ -16,9 +16,10 @@ import NutritionPanel from './NutritionPanel';
 import RecipeReview from './RecipeReview';
 import InteractiveCookingMode from './InteractiveCookingMode';
 import SaveToCollectionDialog from './SaveToCollectionDialog';
-import { Play } from 'lucide-react';
+import { Play, Flame, Zap } from 'lucide-react';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
+  const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showCookingMode, setShowCookingMode] = useState(false);
@@ -250,6 +251,59 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       .map(item => item.recipe);
   }, [recipe, recipes]);
 
+  const generateVariation = async (type) => {
+    setIsGeneratingVariation(true);
+    try {
+      const promptMap = {
+        'quick': `Provide a 15-minute ultra-quick variation of "${recipe.name}". Simplify the ingredients and instructions drastically.`,
+        'gourmet': `Provide a complex, gourmet, chef-level variation of "${recipe.name}" that takes longer but is extremely elevated.`
+      };
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `${promptMap[type]} Include all details.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            ingredients: { type: "array", items: { type: "string" } },
+            instructions: { type: "array", items: { type: "string" } },
+            prep_time: { type: "string" },
+            cook_time: { type: "string" },
+            servings: { type: "number" },
+            difficulty: { type: "string" },
+            nutrition: {
+              type: "object",
+              properties: {
+                calories: { type: "number" },
+                protein: { type: "string" },
+                carbs: { type: "string" },
+                fat: { type: "string" },
+                fiber: { type: "string" },
+                sodium: { type: "string" },
+                sugar: { type: "string" }
+              }
+            }
+          }
+        }
+      });
+
+      if (onSimilarRecipeClick) {
+        onSimilarRecipeClick({
+          ...recipe,
+          id: undefined,
+          ...response,
+          mood: `${type} variation`,
+          image_url: recipe.imageUrl || recipe.imageUrls?.[0]
+        });
+        toast.success(`Generated ${type} variation!`);
+      }
+    } catch (e) {
+      toast.error('Failed to generate variation');
+    }
+    setIsGeneratingVariation(false);
+  };
+
   if (!recipe) return null;
 
   return (
@@ -403,6 +457,27 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                 Add to Plan
               </Button>
             </div>
+            
+            {!isSaved && (
+              <div className="flex w-full gap-2 mt-3 pt-3 border-t border-[#c5d9c9]/50">
+                <Button 
+                  onClick={() => generateVariation('quick')}
+                  disabled={isGeneratingVariation}
+                  variant="ghost" 
+                  className="flex-1 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-800 text-xs"
+                >
+                  <Zap className="w-4 h-4 mr-1" /> Quick Version
+                </Button>
+                <Button 
+                  onClick={() => generateVariation('gourmet')}
+                  disabled={isGeneratingVariation}
+                  variant="ghost" 
+                  className="flex-1 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-800 text-xs"
+                >
+                  <Flame className="w-4 h-4 mr-1" /> Gourmet Version
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Info Badges */}

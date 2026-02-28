@@ -3,13 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2, Package } from 'lucide-react';
+import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat } from 'lucide-react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function InventoryManagement() {
+export default function InventoryManagement({ onGenerateFromExpiring }) {
   const queryClient = useQueryClient();
   const [newItem, setNewItem] = useState({ name: '', quantity: 1, unit: '', category: 'Pantry' });
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const { data: inventory = [], isLoading } = useQuery({
     queryKey: ['inventory'],
@@ -33,11 +34,54 @@ export default function InventoryManagement() {
     }
   });
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     if (!newItem.name) return;
-    addMutation.mutate(newItem);
+    
+    setIsAnalyzing(true);
+    try {
+      // Use AI to categorize and predict expiration
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze the grocery item: "${newItem.name}". Determine its standard grocery category (must be one of: Produce, Dairy, Meat, Pantry, Spices, Frozen, Other). Also estimate its typical shelf life in days from today, assuming proper storage. Return JSON.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            category: { type: "string", enum: ["Produce", "Dairy", "Meat", "Pantry", "Spices", "Frozen", "Other"] },
+            estimated_shelf_life_days: { type: "number" }
+          }
+        }
+      });
+      
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + (response.estimated_shelf_life_days || 14));
+      
+      addMutation.mutate({
+        ...newItem,
+        category: response.category || 'Pantry',
+        expiry_date: expiryDate.toISOString().split('T')[0]
+      });
+    } catch (err) {
+      console.error(err);
+      // Fallback
+      addMutation.mutate(newItem);
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
+
+  const getExpiringSoon = () => {
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+    
+    return inventory.filter(item => {
+      if (!item.expiry_date) return false;
+      const exp = new Date(item.expiry_date);
+      return exp <= nextWeek;
+    });
+  };
+
+  const expiringItems = getExpiringSoon();
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -80,12 +124,43 @@ export default function InventoryManagement() {
                 className="border-2 focus:border-[#6b9b76]"
               />
             </div>
-            <Button type="submit" className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap h-10 mt-auto" disabled={addMutation.isPending || !newItem.name}>
-              <Plus className="w-4 h-4 mr-2" /> Add Item
+            <Button type="submit" className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap h-10 mt-auto" disabled={addMutation.isPending || isAnalyzing || !newItem.name}>
+              {isAnalyzing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+              {isAnalyzing ? 'Analyzing...' : 'Add Item'}
             </Button>
           </div>
         </form>
       </div>
+
+      {expiringItems.length > 0 && (
+        <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div>
+              <h3 className="font-bold text-amber-800 flex items-center gap-2 mb-1">
+                <AlertTriangle className="w-5 h-5" />
+                Expiring Soon ({expiringItems.length})
+              </h3>
+              <p className="text-sm text-amber-700">These items might go bad soon. Let's use them up!</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {expiringItems.map(item => (
+                  <span key={item.id} className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-md font-medium border border-amber-200">
+                    {item.name} ({new Date(item.expiry_date).toLocaleDateString()})
+                  </span>
+                ))}
+              </div>
+            </div>
+            {onGenerateFromExpiring && (
+              <Button 
+                onClick={() => onGenerateFromExpiring(expiringItems.map(i => i.name))}
+                className="bg-amber-500 hover:bg-amber-600 text-white whitespace-nowrap shadow-sm w-full sm:w-auto"
+              >
+                <ChefHat className="w-4 h-4 mr-2" />
+                Generate Recipes
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl border-2 border-[#c5d9c9] overflow-hidden">
         {isLoading ? (
@@ -107,8 +182,18 @@ export default function InventoryManagement() {
                 className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
                 <div>
-                  <p className="font-semibold text-gray-900 text-lg">{item.name}</p>
-                  <p className="text-sm text-[#6b9b76] font-medium">{item.quantity} {item.unit}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-gray-900 text-lg">{item.name}</p>
+                    {item.category && <span className="text-[10px] uppercase tracking-wider bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{item.category}</span>}
+                  </div>
+                  <div className="flex items-center gap-3 mt-1">
+                    <p className="text-sm text-[#6b9b76] font-medium">{item.quantity} {item.unit}</p>
+                    {item.expiry_date && (
+                      <p className={`text-xs ${new Date(item.expiry_date) < new Date(new Date().setDate(new Date().getDate() + 7)) ? 'text-amber-600 font-semibold' : 'text-gray-400'}`}>
+                        Expires: {new Date(item.expiry_date).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <Button 
                   variant="ghost" 

@@ -13,6 +13,13 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
     onFiltersChange({ ...filters, [key]: value });
   };
 
+  const handleManualIngredients = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      // Keep it simple
+    }
+  };
+
   const clearFilters = () => {
     onFiltersChange({});
   };
@@ -214,13 +221,17 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
 
               {/* Include Ingredients */}
               <div className="space-y-2 col-span-1 sm:col-span-2 mt-2">
-                <Label className="text-xs font-semibold text-gray-500 uppercase">Include Ingredients</Label>
+                <Label className="text-xs font-semibold text-[#6b9b76] uppercase flex items-center gap-1">
+                  <Sparkles className="w-3 h-3"/> Ingredients on Hand
+                </Label>
                 <Input 
-                  placeholder="e.g. chicken, spinach" 
+                  placeholder="e.g. chicken, spinach, rice" 
                   value={filters.includeIngredients || ""}
                   onChange={(e) => handleFilterChange('includeIngredients', e.target.value)}
-                  className="h-9 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  onKeyDown={handleManualIngredients}
+                  className="h-9 border-[#c5d9c9] focus:border-[#6b9b76] bg-[#f0f9f2]"
                 />
+                <p className="text-[10px] text-gray-500">AI will prioritize these in new recipes.</p>
               </div>
 
               {/* Exclude Ingredients */}
