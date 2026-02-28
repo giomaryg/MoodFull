@@ -1125,7 +1125,10 @@ export default function RecipeGenerator() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}>
 
-              <MealPlanner onOpenShoppingList={() => setShowShoppingList(true)} />
+              <MealPlanner 
+                onOpenShoppingList={() => setShowShoppingList(true)} 
+                generatedRecipes={generatedRecipes}
+              />
             </motion.div>
           }
 
