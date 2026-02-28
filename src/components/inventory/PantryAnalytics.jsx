@@ -70,12 +70,19 @@ export default function PantryAnalytics({ onGenerateShoppingList }) {
       const inventorySummary = inventory.map(i => `${i.name} (${i.category}, exp: ${i.expiry_date || 'N/A'}, qty: ${i.quantity})`).join('; ');
       
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze this pantry inventory: ${inventorySummary}. Provide insights on ingredient usage patterns, identify any imbalances (e.g. too many carbs, lack of fresh produce), and suggest 3 specific waste reduction opportunities focusing on items expiring soon. Return JSON.`,
+        prompt: `Analyze this pantry inventory: ${inventorySummary}. 
+        Provide insights on ingredient usage patterns.
+        Identify any nutritional imbalances (e.g. too many carbs, lack of fresh produce, low protein) based on the current stock.
+        Suggest 3 specific waste reduction opportunities focusing on items expiring soon.
+        Estimate potential cost savings if expiring items are used instead of wasted.
+        Return JSON.`,
         response_json_schema: {
           type: "object",
           properties: {
             usage_patterns: { type: "string" },
+            nutritional_summary: { type: "string" },
             waste_reduction: { type: "array", items: { type: "string" } },
+            cost_savings_opportunities: { type: "string" },
             overall_health_score: { type: "string" }
           }
         }
@@ -208,9 +215,23 @@ export default function PantryAnalytics({ onGenerateShoppingList }) {
             </span>
           </div>
           
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded-xl border border-[#e0ede4]">
+              <h4 className="font-bold text-gray-800 mb-2">Usage Patterns</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">{aiInsights.usage_patterns}</p>
+            </div>
+            
+            <div className="bg-white p-4 rounded-xl border border-[#e0ede4]">
+              <h4 className="font-bold text-gray-800 mb-2">Nutritional Summary</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">{aiInsights.nutritional_summary}</p>
+            </div>
+          </div>
+
           <div className="bg-white p-4 rounded-xl border border-[#e0ede4]">
-            <h4 className="font-bold text-gray-800 mb-2">Usage Patterns & Balance</h4>
-            <p className="text-gray-600 text-sm leading-relaxed">{aiInsights.usage_patterns}</p>
+            <h4 className="font-bold text-green-700 mb-2 flex items-center gap-2">
+              <Sparkles className="w-5 h-5" /> Cost Saving Opportunities
+            </h4>
+            <p className="text-gray-600 text-sm leading-relaxed">{aiInsights.cost_savings_opportunities}</p>
           </div>
           
           <div className="bg-white p-4 rounded-xl border border-[#e0ede4]">
