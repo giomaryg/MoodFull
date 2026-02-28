@@ -661,6 +661,36 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Add Custom Item Input */}
+            <div className="flex gap-2 mb-4 bg-[#f0f9f2] p-3 rounded-xl border border-[#c5d9c9]">
+              <input
+                type="text"
+                placeholder="Add a custom item (e.g., Paper towels)..."
+                value={newCustomItem}
+                onChange={(e) => setNewCustomItem(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && newCustomItem.trim()) {
+                    const newItem = { id: `custom-${Date.now()}-${Math.random()}`, name: newCustomItem.trim() };
+                    setCustomItems(prev => [...prev, newItem]);
+                    setNewCustomItem('');
+                  }
+                }}
+                className="flex-1 px-4 py-2 rounded-lg border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] text-sm"
+              />
+              <Button
+                onClick={() => {
+                  if (newCustomItem.trim()) {
+                    const newItem = { id: `custom-${Date.now()}-${Math.random()}`, name: newCustomItem.trim() };
+                    setCustomItems(prev => [...prev, newItem]);
+                    setNewCustomItem('');
+                  }
+                }}
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Add
+              </Button>
+            </div>
+
             {Object.entries(shoppingList).map(([category, items]) => {
               if (items.length === 0) return null;
 
