@@ -542,7 +542,7 @@ Make them balanced, diverse, and delicious. Include:
             ))}
           </div>
 
-          {/* Meal Rows */}
+              {/* Meal Rows */}
               {mealTypes.map((mealType) => (
                 <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
                   {weekDays.map((day) => {
