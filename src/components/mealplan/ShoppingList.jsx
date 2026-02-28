@@ -32,9 +32,23 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     toast.success(`${plan.recipe_name} added to today's meal plan!`);
     setReaddingId(null);
   };
-  const [checkedItems, setCheckedItems] = useState({});
+  const [checkedItems, setCheckedItems] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('shoppingListCheckedItems')) || {}; } catch { return {}; }
+  });
+  const [customItems, setCustomItems] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('shoppingListCustomItems')) || []; } catch { return []; }
+  });
+  const [newCustomItem, setNewCustomItem] = useState('');
   const [expandedRecipes, setExpandedRecipes] = useState({});
   const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', 'by-recipe', or 'history'
+
+  useEffect(() => {
+    localStorage.setItem('shoppingListCheckedItems', JSON.stringify(checkedItems));
+  }, [checkedItems]);
+
+  useEffect(() => {
+    localStorage.setItem('shoppingListCustomItems', JSON.stringify(customItems));
+  }, [customItems]);
   
   const { data: inventory = [] } = useQuery({
     queryKey: ['inventory'],
