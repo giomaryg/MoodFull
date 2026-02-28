@@ -163,7 +163,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
 
       {/* Meal Type Selector */}
       <div className="px-4 py-8 flex flex-col items-center">
-        <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/40 text-center mb-3 w-full">
+        <div className="text-[#6f8f66] mb-3 font-mono text-center uppercase tracking-[0.15em] sm:text-[10px] w-full">
           Meal Type
         </div>
         <div className="bg-transparent flex flex-wrap justify-center gap-2">
@@ -173,7 +173,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
             return (
               <button
                 key={type.id}
-                onClick={() => handleMealTypeToggle(type.id)} className="bg-slate-100 text-[#8c8c8c] px-4 py-1.5 text-xs opacity-100 rounded-full flex items-center gap-1.5 border transition-all duration-200 border-[#c5d9c9]/60">
+                onClick={() => handleMealTypeToggle(type.id)} className="bg-transparent text-[#8c8c8c] px-4 py-1.5 text-xs opacity-100 rounded-full flex items-center gap-1.5 border transition-all duration-200 border-[#c5d9c9]/60">
 
 
 
