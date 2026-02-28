@@ -155,6 +155,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
               onClick={prevStep} 
               disabled={currentStep === 0}
               variant="outline"
+              type="button"
               className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl disabled:opacity-30 transition-all"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
@@ -164,6 +165,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
             {currentStep === instructions.length - 1 ? (
               <Button 
                 onClick={onClose}
+                type="button"
                 className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl shadow-[0_0_20px_rgba(107,155,118,0.4)] transition-all"
               >
                 <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
@@ -171,7 +173,8 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
               </Button>
             ) : (
               <Button 
-                onClick={nextStep}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); nextStep(); }}
+                type="button"
                 className="bg-white hover:bg-gray-200 text-black h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl transition-all"
               >
                 <span>Next</span>
@@ -181,6 +184,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
             
             <Button
               onClick={() => setIsVoiceActive(!isVoiceActive)}
+              type="button"
               variant="outline"
               className={`h-10 sm:h-12 px-3 sm:px-4 rounded-xl transition-all ${isVoiceActive ? 'border-red-500 text-red-500 bg-red-500/10' : 'border-gray-700 text-gray-400 bg-gray-900 hover:bg-gray-800'}`}
               title="Voice Commands"
