@@ -163,6 +163,15 @@ export default function RecipeGenerator() {
       filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
     }
 
+    if (advancedFilters.nutritionalGoals) {
+      const goals = advancedFilters.nutritionalGoals.toLowerCase();
+      filtered = filtered.filter((recipe) => 
+        recipe.description?.toLowerCase().includes(goals) ||
+        recipe.health_benefits?.some(b => b.toLowerCase().includes(goals)) ||
+        recipe.vitamins_minerals?.some(v => v.name.toLowerCase().includes(goals))
+      );
+    }
+
     if (advancedFilters.usePantry && inventory && inventory.length > 0) {
       const inventoryNames = inventory.map((i) => i.name.toLowerCase());
       filtered = filtered.filter((recipe) => {
@@ -286,6 +295,15 @@ export default function RecipeGenerator() {
     if (advancedFilters.maxCalories) {
       const maxCal = parseInt(advancedFilters.maxCalories);
       filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
+    }
+
+    if (advancedFilters.nutritionalGoals) {
+      const goals = advancedFilters.nutritionalGoals.toLowerCase();
+      filtered = filtered.filter((recipe) => 
+        recipe.description?.toLowerCase().includes(goals) ||
+        recipe.health_benefits?.some(b => b.toLowerCase().includes(goals)) ||
+        recipe.vitamins_minerals?.some(v => v.name.toLowerCase().includes(goals))
+      );
     }
 
     if (advancedFilters.usePantry && inventory && inventory.length > 0) {
