@@ -583,6 +583,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           enableDateSelection={true}
           recipes={isSaved ? recipes : [...recipes, recipe]}
           onClose={() => setShowAddMeal(false)}
+          initialRecipe={recipe}
+          initialServings={currentServings}
         />
       )}
 
