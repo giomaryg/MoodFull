@@ -25,6 +25,7 @@ import CombinationCookingDialog from '../components/recipe/CombinationCookingDia
 import ThreeBackground from '../components/ThreeBackground';
 import InventoryManagement from '../components/inventory/InventoryManagement';
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
+import AICoach from '../components/recipe/AICoach';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
@@ -49,6 +50,7 @@ export default function RecipeGenerator() {
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
   const [showCombineDialog, setShowCombineDialog] = useState(false);
+  const [showAICoach, setShowAICoach] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1375,6 +1377,35 @@ export default function RecipeGenerator() {
         onGenerate={handleCombineAndGenerate}
         isGenerating={isGenerating} />
 
+
+      {/* Floating AI Coach Button */}
+      {!showIntro && !showShoppingList && !showSurvey && (
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          onClick={() => setShowAICoach(true)}
+          className="fixed bottom-24 right-6 sm:bottom-8 sm:right-8 bg-gradient-to-r from-[#f2b769] to-[#e6a245] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-40 group flex items-center justify-center border-2 border-white/20"
+        >
+          <Sparkles className="w-6 h-6 animate-pulse" />
+          <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap font-bold pl-0 group-hover:pl-2">
+            AI Coach
+          </span>
+        </motion.button>
+      )}
+
+      {/* AI Coach Drawer */}
+      <AICoach 
+        isOpen={showAICoach} 
+        onClose={() => setShowAICoach(false)} 
+        userPreferences={userPreferences}
+        mealPlans={mealPlans}
+        inventory={inventory}
+        onSuggestRecipe={(recipeName) => {
+          setActiveTab('home');
+          setGlobalSearchQuery(recipeName);
+          generateRecipe();
+        }}
+      />
 
       {/* Global Shopping List Modal */}
       {showShoppingList &&
