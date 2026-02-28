@@ -768,7 +768,7 @@ Make them balanced, diverse, and delicious. Include:
 
        {/* Clickable content area */}
        <div
-         className="pl-5 pr-8 py-2 cursor-pointer"
+         className="pl-5 pr-8 py-2 cursor-pointer flex flex-col h-full justify-center"
          onClick={async () => {
            if (linkedRecipe) {
              setSelectedRecipe(linkedRecipe);
@@ -813,9 +813,16 @@ Make them balanced, diverse, and delicious. Include:
          <p className="font-medium text-[#5a6f60] break-words text-xs leading-normal hover:underline">
            {loadingRecipeId === meal.id ? '...' : meal.recipe_name}
          </p>
-         {meal.servings && (
-           <p className="text-gray-500 text-xs">{meal.servings} servings</p>
-         )}
+         {linkedRecipe?.nutrition ? (
+           <div className="flex gap-1.5 text-[10px] text-gray-500 mt-1 font-medium flex-wrap">
+             <span className="text-orange-600">{linkedRecipe.nutrition.calories || 0} cal</span>
+             <span>{parseMacro(linkedRecipe.nutrition.protein)}p</span>
+             <span>{parseMacro(linkedRecipe.nutrition.carbs)}c</span>
+             <span>{parseMacro(linkedRecipe.nutrition.fat)}f</span>
+           </div>
+         ) : meal.servings ? (
+           <p className="text-gray-500 text-[10px] mt-0.5">{meal.servings} servings</p>
+         ) : null}
        </div>
 
        <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
