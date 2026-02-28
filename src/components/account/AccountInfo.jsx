@@ -300,6 +300,28 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
                 </div>
               )}
 
+              {user.cooking_skill && (
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Cooking Skill</div>
+                  <Badge className="bg-[#f5e6dc] text-[#c17a7a] border-0">
+                    {user.cooking_skill}
+                  </Badge>
+                </div>
+              )}
+
+              {user.equipment && user.equipment.length > 0 && (
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Available Equipment</div>
+                  <div className="flex flex-wrap gap-2">
+                    {user.equipment.map((item, i) => (
+                      <Badge key={i} variant="secondary" className="bg-gray-100 text-gray-700">
+                        {item}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <Button
                 onClick={onUpdatePreferences}
                 variant="outline"

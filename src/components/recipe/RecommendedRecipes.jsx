@@ -69,6 +69,12 @@ function RecommendedRecipes({ userPreferences, inventory = [], onRecipeClick }) 
     if (userPreferences.preferred_cuisines?.length > 0) {
       contextParts.push(`Preferred cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
     }
+    if (userPreferences.cooking_skill) {
+      contextParts.push(`Skill level: ${userPreferences.cooking_skill}`);
+    }
+    if (userPreferences.equipment?.length > 0) {
+      contextParts.push(`Available equipment: ${userPreferences.equipment.join(', ')}`);
+    }
     if (savedRecipeNames) {
       contextParts.push(`Recently saved recipes: ${savedRecipeNames}`);
     }
