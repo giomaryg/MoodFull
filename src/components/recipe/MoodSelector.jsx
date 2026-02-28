@@ -90,6 +90,14 @@ const moods = [
   color: 'from-teal-400 to-cyan-500',
   bg: 'bg-teal-50 hover:bg-teal-100',
   border: 'border-teal-300'
+},
+{
+  id: 'family_friendly',
+  label: 'Family',
+  icon: Users,
+  color: 'from-blue-400 to-cyan-500',
+  bg: 'bg-blue-50 hover:bg-blue-100',
+  border: 'border-blue-300'
 }];
 
 
