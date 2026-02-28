@@ -41,6 +41,11 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
     queryFn: () => base44.auth.me()
   });
 
+  const { data: inventory = [] } = useQuery({
+    queryKey: ['inventory'],
+    queryFn: () => base44.entities.Ingredient.list()
+  });
+
   const deleteMealMutation = useMutation({
     mutationFn: (id) => base44.entities.MealPlan.delete(id),
     onSuccess: () => {
@@ -177,6 +182,16 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
       }
       if (currentUser.preferred_cuisines?.length > 0) {
         contextParts.push(`Preferred cuisines: ${currentUser.preferred_cuisines.join(', ')}`);
+      }
+
+      const recentMealHistory = mealPlans.slice(0, 15).map(m => m.recipe_name).join(', ');
+      if (recentMealHistory) {
+        contextParts.push(`Recent meal history (try not to repeat these too much): ${recentMealHistory}`);
+      }
+
+      if (inventory && inventory.length > 0) {
+        const inventoryItems = inventory.map(i => i.name).join(', ');
+        contextParts.push(`Current pantry inventory (PRIORITIZE using these ingredients): ${inventoryItems}`);
       }
       
       const userContext = contextParts.join('\n');
@@ -340,6 +355,11 @@ For each meal provide:
       }
       if (currentUser.blood_sugar_friendly) {
         contextParts.push(`Blood sugar friendly meals required`);
+      }
+
+      if (inventory && inventory.length > 0) {
+        const inventoryItems = inventory.map(i => i.name).join(', ');
+        contextParts.push(`Current pantry inventory (PRIORITIZE using these ingredients): ${inventoryItems}`);
       }
       
       const userContext = contextParts.join('\n');
