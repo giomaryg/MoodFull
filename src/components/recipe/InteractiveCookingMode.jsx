@@ -145,9 +145,10 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 md:p-12 text-center relative overflow-y-auto">
-        <div className="absolute top-4 left-4 sm:top-8 sm:left-8 flex flex-col items-start gap-3 sm:gap-4 z-10">
-          <div className="text-gray-500 font-mono text-base sm:text-xl">
+      <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative">
+        {/* Navigation Section */}
+        <div className="w-full flex flex-col items-center sm:items-start p-4 sm:p-8 shrink-0 z-20">
+          <div className="text-gray-500 font-mono text-base sm:text-xl mb-3 sm:mb-4">
             Step {currentStep + 1} of {instructions.length}
           </div>
           <div className="flex gap-2 sm:gap-3">
@@ -159,7 +160,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
               className="border-gray-700 text-gray-800 bg-gray-100 hover:bg-gray-300 h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl disabled:opacity-30 transition-all"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-1" />
-              <span>Previous</span>
+              <span className="hidden sm:inline">Previous</span>
             </Button>
             
             {currentStep === instructions.length - 1 ? (
@@ -177,7 +178,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
                 type="button"
                 className="bg-white hover:bg-gray-200 text-black h-10 sm:h-12 px-3 sm:px-5 text-xs sm:text-sm rounded-xl transition-all"
               >
-                <span>Next</span>
+                <span className="hidden sm:inline">Next</span>
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 sm:ml-1" />
               </Button>
             )}
@@ -194,41 +195,44 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
           </div>
         </div>
         
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="max-w-4xl w-full my-auto flex flex-col items-center"
-          >
-            <div className="max-h-[40vh] sm:max-h-[50vh] overflow-y-auto px-4 w-full mt-16 sm:mt-0 custom-scrollbar">
-              <p className="text-xl sm:text-3xl md:text-4xl font-medium leading-relaxed text-gray-100">
-                {instructions[currentStep]}
-              </p>
-            </div>
-
-            {/* Timer if applicable */}
-            {timeLeft > 0 || isTimerRunning ? (
-              <div className="mt-12 flex flex-col items-center">
-                <div className="text-6xl sm:text-8xl font-mono text-[#6b9b76] mb-6">
-                  {formatTime(timeLeft)}
-                </div>
-                <Button 
-                  size="lg" 
-                  onClick={() => setIsTimerRunning(!isTimerRunning)}
-                  className={`rounded-full px-8 py-6 text-xl ${isTimerRunning ? 'bg-orange-500 hover:bg-orange-600' : 'bg-[#6b9b76] hover:bg-[#5a8a65]'}`}
-                >
-                  {isTimerRunning ? <Pause className="mr-2" /> : <Play className="mr-2" />}
-                  {isTimerRunning ? 'Pause Timer' : 'Start Timer'}
-                </Button>
+        {/* Instruction Section */}
+        <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 w-full z-10">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              className="max-w-5xl w-full flex flex-col items-center text-center"
+            >
+              <div className="max-h-[50vh] overflow-y-auto px-4 w-full custom-scrollbar">
+                <p className="text-xl sm:text-3xl md:text-5xl font-medium leading-normal sm:leading-relaxed text-gray-100">
+                  {instructions[currentStep]}
+                </p>
               </div>
-            ) : null}
-          </motion.div>
-        </AnimatePresence>
+
+              {/* Timer if applicable */}
+              {timeLeft > 0 || isTimerRunning ? (
+                <div className="mt-8 sm:mt-12 flex flex-col items-center shrink-0">
+                  <div className="text-5xl sm:text-7xl font-mono text-[#6b9b76] mb-4 sm:mb-6">
+                    {formatTime(timeLeft)}
+                  </div>
+                  <Button 
+                    size="lg" 
+                    onClick={() => setIsTimerRunning(!isTimerRunning)}
+                    className={`rounded-full px-6 py-4 sm:px-8 sm:py-6 text-lg sm:text-xl ${isTimerRunning ? 'bg-orange-500 hover:bg-orange-600' : 'bg-[#6b9b76] hover:bg-[#5a8a65]'}`}
+                  >
+                    {isTimerRunning ? <Pause className="mr-2" /> : <Play className="mr-2" />}
+                    {isTimerRunning ? 'Pause' : 'Start'}
+                  </Button>
+                </div>
+              ) : null}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
         {/* AI Assistant Chat */}
-        <div className="w-full max-w-4xl mx-auto mt-auto p-4 sm:p-8 shrink-0">
+        <div className="w-full max-w-4xl mx-auto p-4 sm:p-8 mt-auto shrink-0 z-20">
           <div className="bg-gray-900 rounded-2xl border border-gray-700 p-4 shadow-xl">
             {aiResponse && (
               <motion.div 
