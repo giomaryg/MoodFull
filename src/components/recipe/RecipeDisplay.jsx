@@ -603,6 +603,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                 const hasSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
                 const isSubbed = activeSubstitutions[index];
                 
+                const words = ingredient.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(w => w.length > 2);
+                const invMatch = inventory.find(i => {
+                   const iName = i.name.toLowerCase();
+                   return words.some(w => iName.includes(w)) || iName.includes(words[words.length-1]);
+                });
+                const isMissingOrLow = inventory.length > 0 && (!invMatch || invMatch.quantity <= (invMatch.min_stock || 0));
+                
                 return (
                   <motion.li
                     key={index}
