@@ -403,6 +403,8 @@ export default function RecipeGenerator() {
       if (userPreferences.diet_preferences) prefs.push(`Diet: ${userPreferences.diet_preferences}`);
       if (userPreferences.blood_sugar_friendly) prefs.push(`Low glycemic`);
       if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+      if (userPreferences.cooking_skill) prefs.push(`Skill Level: ${userPreferences.cooking_skill}`);
+      if (userPreferences.equipment?.length > 0) prefs.push(`Available Equipment: ${userPreferences.equipment.join(', ')}`);
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
@@ -576,6 +578,8 @@ export default function RecipeGenerator() {
       if (userPreferences.diet_preferences) prefs.push(`Diet: ${userPreferences.diet_preferences}`);
       if (userPreferences.blood_sugar_friendly) prefs.push(`Low glycemic`);
       if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+      if (userPreferences.cooking_skill) prefs.push(`Skill Level: ${userPreferences.cooking_skill}`);
+      if (userPreferences.equipment?.length > 0) prefs.push(`Available Equipment: ${userPreferences.equipment.join(', ')}`);
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
@@ -726,6 +730,8 @@ export default function RecipeGenerator() {
       if (userPreferences.diet_preferences) prefs.push(`Diet: ${userPreferences.diet_preferences}`);
       if (userPreferences.blood_sugar_friendly) prefs.push(`Low glycemic`);
       if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+      if (userPreferences.cooking_skill) prefs.push(`Skill Level: ${userPreferences.cooking_skill}`);
+      if (userPreferences.equipment?.length > 0) prefs.push(`Available Equipment: ${userPreferences.equipment.join(', ')}`);
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
