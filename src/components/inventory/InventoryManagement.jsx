@@ -332,6 +332,22 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
         </div>
       </div>
 
+      {recentlyAddedItems.length > 0 && (
+        <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6">
+          <h3 className="font-bold text-blue-800 flex items-center gap-2 mb-3">
+            <Sparkles className="w-5 h-5" />
+            What's New in Pantry
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {recentlyAddedItems.map(item => (
+              <span key={item.id} className="text-xs bg-white text-blue-700 px-2.5 py-1.5 rounded-md font-medium border border-blue-200 shadow-sm flex items-center gap-1.5">
+                {item.name} <span className="text-blue-400">({item.quantity} {item.unit})</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {expiringItems.length > 0 && (
         <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 sm:p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
