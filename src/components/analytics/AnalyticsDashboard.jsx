@@ -168,15 +168,18 @@ export default function AnalyticsDashboard() {
   const generateAIReport = async () => {
     setIsGeneratingReport(true);
     try {
-      const dataStr = JSON.stringify({
-        totalMeals: mealPlans.length,
-        avgCalories: stats.avgCalories,
-        topRecipes: stats.frequentRecipes,
-        avgNutrition: stats.avgNutrition,
-        spendingData: stats.spendingData
-      });
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Act as an expert nutritionist and financial advisor. Analyze this user's meal planning data and provide a concise, insightful report on their trends, performance metrics (nutrition/spending), and actionable advice. Format using markdown. Data: ${dataStr}`,
+        prompt: `Act as an expert nutritionist and financial advisor. Analyze this user's meal planning data:
+- Dietary Goals: ${currentUser?.daily_calorie_target || 'Not set'} calories/day, ${currentUser?.macro_protein_ratio || 'Not set'}% protein, ${currentUser?.macro_carbs_ratio || 'Not set'}% carbs, ${currentUser?.macro_fat_ratio || 'Not set'}% fat.
+- Compliance Rate: ${stats.complianceRate}% (days within 15% of calorie target).
+- Average Daily Calories: ${stats.avgCalories}
+- Recent Weekly Spending: ${JSON.stringify(stats.spendingData)}
+- Recent Daily Nutrition: ${JSON.stringify(stats.intakeOverTime.filter(d => d.Calories > 0).slice(-7))}
+
+Provide a detailed, structured report in markdown offering:
+1. Assessment of dietary compliance with their goals.
+2. Financial analysis and spending patterns on groceries based on the weekly data.
+3. Actionable optimization suggestions for future meal plans to better hit targets and save money.`,
       });
       setAiReport(response);
     } catch (e) {
@@ -228,11 +231,11 @@ export default function AnalyticsDashboard() {
         <Card className="border-2 border-[#c5d9c9] bg-white">
           <CardContent className="p-6 flex items-center gap-4">
             <div className="p-3 bg-[#f0f9f2] rounded-xl">
-              <Utensils className="w-6 h-6 text-[#6b9b76]" />
+              <Target className="w-6 h-6 text-[#6b9b76]" />
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">Total Meals Planned</p>
-              <h4 className="text-2xl font-bold text-gray-900">{mealPlans.length}</h4>
+              <p className="text-sm text-gray-500 font-medium">Goal Compliance</p>
+              <h4 className="text-2xl font-bold text-gray-900">{stats.complianceRate}%</h4>
             </div>
           </CardContent>
         </Card>
@@ -243,7 +246,7 @@ export default function AnalyticsDashboard() {
               <Activity className="w-6 h-6 text-[#c17a7a]" />
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">Avg Calories / Meal</p>
+              <p className="text-sm text-gray-500 font-medium">Avg Cals / Meal</p>
               <h4 className="text-2xl font-bold text-gray-900">{stats.avgCalories} <span className="text-sm font-normal text-gray-500">kcal</span></h4>
             </div>
           </CardContent>
@@ -255,7 +258,7 @@ export default function AnalyticsDashboard() {
               <DollarSign className="w-6 h-6 text-[#5a6f60]" />
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">Est. Monthly Spend</p>
+              <p className="text-sm text-gray-500 font-medium">Est. Weekly Spend</p>
               <h4 className="text-2xl font-bold text-gray-900">${stats.spendingData.length > 0 ? stats.spendingData[stats.spendingData.length-1].cost : 0}</h4>
             </div>
           </CardContent>
@@ -275,6 +278,27 @@ export default function AnalyticsDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="border-2 border-[#c5d9c9] lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-lg text-[#5a6f60]">Caloric Intake vs Goal (Last 14 Days)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={stats.intakeOverTime} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="Calories" stroke="#c17a7a" strokeWidth={3} dot={{ r: 4, fill: '#c17a7a' }} activeDot={{ r: 6 }} />
+                  {currentUser?.daily_calorie_target && (
+                    <ReferenceLine y={currentUser.daily_calorie_target} label="Daily Target" stroke="#6b9b76" strokeDasharray="3 3" />
+                  )}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
         <Card className="border-2 border-[#c5d9c9]">
           <CardHeader>
             <CardTitle className="text-lg text-[#5a6f60]">Most Frequent Recipes</CardTitle>
