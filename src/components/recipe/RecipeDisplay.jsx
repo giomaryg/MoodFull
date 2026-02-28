@@ -619,9 +619,10 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
                     className="group flex flex-col gap-1 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none transform-gpu relative">
                       <div className="flex items-center gap-3 w-full">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] shrink-0 shadow-[0_0_6px_rgba(107,155,118,0.8)]" />
-                        <span className={`leading-relaxed font-medium flex-1 ${isSubbed ? 'line-through opacity-50' : ''}`}>
+                        <div className={`w-1.5 h-1.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(107,155,118,0.8)] ${isMissingOrLow && !isSubbed ? 'bg-amber-500' : 'bg-[#6b9b76]'}`} />
+                        <span className={`leading-relaxed font-medium flex-1 ${isSubbed ? 'line-through opacity-50' : ''} ${isMissingOrLow && !isSubbed ? 'text-amber-700' : ''}`}>
                           {ingredient}
+                          {isMissingOrLow && !isSubbed && <span className="inline-block ml-2 text-[9px] uppercase tracking-wider text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded">Low/Missing</span>}
                         </span>
                         <button 
                           onClick={() => toggleSubstitution(index, ingredient)}
