@@ -581,7 +581,7 @@ Return JSON.`,
                   : 'text-gray-600 hover:text-gray-900 disabled:opacity-50'
               }`}
             >
-              By Recipe
+              By Meal
             </button>
             <button
               onClick={() => setViewMode('history')}
