@@ -1,8 +1,28 @@
-import React from 'react';
-import { Home, BookMarked, User, Calendar, Package, BarChart2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Home, BookMarked, User, Calendar, Package, BarChart2, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BottomNav({ activeTab, onTabChange, isVisible = true }) {
+  const [isMinimized, setIsMinimized] = useState(false);
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      if (navRef.current && navRef.current.contains(e.target)) {
+        return;
+      }
+      setIsMinimized(true);
+    };
+
+    document.addEventListener('mousedown', handleDocumentClick);
+    document.addEventListener('touchstart', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentClick);
+      document.removeEventListener('touchstart', handleDocumentClick);
+    };
+  }, []);
+
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'saved', label: 'Saved', icon: BookMarked },
@@ -16,13 +36,24 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true }) 
     <AnimatePresence>
       {isVisible && (
         <motion.div 
+          ref={navRef}
           initial={{ y: 150, x: "-50%", opacity: 0 }}
-          animate={{ y: 0, x: "-50%", opacity: 1 }}
+          animate={{ 
+            y: isMinimized ? "75%" : 0, 
+            x: "-50%", 
+            opacity: isMinimized ? 0.7 : 1 
+          }}
           exit={{ y: 150, x: "-50%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed bottom-4 sm:bottom-6 left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-white/80 backdrop-blur-md border border-[#c5d9c9]/60 rounded-3xl shadow-[0_4px_20px_rgba(107,155,118,0.12)] z-[100] overflow-hidden"
+          onClick={() => isMinimized && setIsMinimized(false)}
+          className={`fixed bottom-4 sm:bottom-6 left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-white/80 backdrop-blur-md border border-[#c5d9c9]/60 rounded-3xl shadow-[0_4px_20px_rgba(107,155,118,0.12)] z-[100] overflow-hidden ${isMinimized ? 'cursor-pointer hover:opacity-100' : ''}`}
         >
-          <div className="flex items-center gap-1 overflow-x-auto scroll-smooth px-2 py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {isMinimized && (
+            <div className="absolute top-0 left-0 w-full flex justify-center py-0.5">
+              <ChevronUp className="w-4 h-4 text-[#6b9b76]" />
+            </div>
+          )}
+          <div className={`flex items-center gap-1 overflow-x-auto scroll-smooth px-2 py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isMinimized ? 'pointer-events-none opacity-20' : ''}`}>
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
