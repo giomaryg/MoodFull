@@ -289,6 +289,16 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
               >
                 {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
               </Button>
+              <Button 
+                type="button" 
+                onClick={handleVoiceInput}
+                disabled={isListening}
+                variant="outline"
+                className={`border-2 px-3 ${isListening ? 'border-red-500 text-red-500 animate-pulse' : 'border-[#6b9b76] text-[#6b9b76]'}`}
+                title="Voice Input"
+              >
+                <Mic className="w-4 h-4" />
+              </Button>
               <Button type="submit" className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap" disabled={addMutation.isPending || isAnalyzing || !newItem.name}>
                 {isAnalyzing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
                 <span className="hidden sm:inline">{isAnalyzing ? 'Analyzing...' : 'Add Item'}</span>
@@ -297,6 +307,23 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
             </div>
           </div>
         </form>
+
+        <div className="mt-6 pt-4 border-t border-gray-100">
+          <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wider">Quick Add Staples</p>
+          <div className="flex flex-wrap gap-2">
+            {['Milk', 'Eggs', 'Butter', 'Bread', 'Cheese', 'Onion', 'Garlic', 'Chicken Breast', 'Apples', 'Olive Oil'].map(item => (
+              <button
+                key={item}
+                onClick={() => handleQuickAdd(item)}
+                disabled={isAnalyzing}
+                className="flex items-center gap-1.5 text-xs font-medium bg-gray-50 hover:bg-[#f0f9f2] hover:text-[#6b9b76] border border-gray-200 hover:border-[#6b9b76] text-gray-600 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
+              >
+                <PlusCircle className="w-3 h-3" />
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {expiringItems.length > 0 && (
