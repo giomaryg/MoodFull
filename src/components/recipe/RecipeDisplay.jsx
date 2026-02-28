@@ -816,7 +816,11 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
       {/* Similar Recipes Section */}
       {similarRecipes.length > 0 && (
-        <div className="mt-8">
+        <div className="mt-12 mb-8 bg-white/50 p-6 rounded-3xl border-2 border-[#c5d9c9]/50 shadow-inner">
+          <div className="flex items-center gap-3 mb-6">
+            <Sparkles className="w-6 h-6 text-[#f2b769]" />
+            <h3 className="text-2xl font-bold text-[#5a6f60]">You Might Also Like</h3>
+          </div>
           <SimilarRecipes
             recipes={similarRecipes}
             onRecipeClick={onSimilarRecipeClick}
