@@ -234,7 +234,7 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
     <div className="space-y-6 sm:space-y-8">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-md">
+          <div className="p-2 bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] rounded-xl shadow-md">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -250,7 +250,7 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
         <Button
           onClick={generateFeed}
           disabled={isGenerating}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg w-full sm:w-auto"
+          className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-md hover:shadow-lg w-full sm:w-auto"
         >
           {isGenerating ? (
             <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Refreshing Feed...</>
@@ -263,7 +263,7 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
       {!hasInitialLoad && isGenerating && (
         <Card className="border-2 border-dashed border-[#c5d9c9] bg-[#f8faf8]">
           <CardContent className="p-12 text-center">
-            <Loader2 className="w-10 h-10 text-indigo-500 animate-spin mx-auto mb-4" />
+            <Loader2 className="w-10 h-10 text-[#6b9b76] animate-spin mx-auto mb-4" />
             <p className="text-gray-600 font-medium">Curating your personalized recipe feed...</p>
           </CardContent>
         </Card>
@@ -278,19 +278,19 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
           </div>
           <Card
             onClick={() => onRecipeClick(recipeOfDay)}
-            className="cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50 overflow-hidden relative"
+            className="cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 border-[#c5d9c9] bg-gradient-to-br from-[#f0f9f2] to-[#e8f0ea] overflow-hidden relative"
           >
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-2/5 h-56 md:h-auto bg-gray-200 relative overflow-hidden">
                 {recipeOfDay.imageLoading ? (
-                  <div className="absolute inset-0 flex items-center justify-center bg-indigo-100/50">
-                    <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
+                    <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
                   </div>
                 ) : recipeOfDay.imageUrl ? (
                   <img src={recipeOfDay.imageUrl} alt={recipeOfDay.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-indigo-100">
-                    <ChefHat className="w-16 h-16 text-indigo-300" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]">
+                    <ChefHat className="w-16 h-16 text-[#6b9b76]/50" />
                   </div>
                 )}
               </div>
@@ -299,10 +299,10 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
                 <p className="text-gray-600 mb-6">{recipeOfDay.description}</p>
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="bg-white/80 border-indigo-200 text-indigo-700">
+                    <Badge variant="outline" className="bg-white/80 border-[#c5d9c9] text-[#5a8a65]">
                       <Clock className="w-3 h-3 mr-1" /> {recipeOfDay.prep_time} prep
                     </Badge>
-                    <Badge variant="outline" className="bg-white/80 border-indigo-200 text-indigo-700">
+                    <Badge variant="outline" className="bg-white/80 border-[#c5d9c9] text-[#5a8a65]">
                       <Clock className="w-3 h-3 mr-1" /> {recipeOfDay.cook_time} cook
                     </Badge>
                   </div>
@@ -310,7 +310,7 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
                     onClick={(e) => handleQuickAdd(e, recipeOfDay)}
                     disabled={createMealMutation.isPending}
                     size="sm"
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md"
+                    className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-full shadow-md"
                   >
                     <CalendarPlus className="w-4 h-4 mr-1.5" /> Quick Add to Plan
                   </Button>
@@ -359,7 +359,7 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
                         onClick={(e) => handleQuickAdd(e, recipe)}
                         size="icon"
                         variant="secondary"
-                        className="h-8 w-8 rounded-full bg-white/90 hover:bg-white text-indigo-600 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0"
+                        className="h-8 w-8 rounded-full bg-white/90 hover:bg-white text-[#6b9b76] shadow-sm opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0"
                         title="Quick Add to Meal Plan"
                       >
                         <CalendarPlus className="w-4 h-4" />
@@ -369,7 +369,7 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
 
                   <CardContent className="p-4 sm:p-5 flex flex-col flex-1">
                     <div className="flex-1">
-                      <h4 className="font-bold text-base sm:text-lg text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">
+                      <h4 className="font-bold text-base sm:text-lg text-gray-900 group-hover:text-[#6b9b76] transition-colors line-clamp-2 mb-2">
                         {recipe.name}
                       </h4>
                       <p className="text-sm text-gray-600 line-clamp-2">

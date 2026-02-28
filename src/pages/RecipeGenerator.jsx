@@ -1181,6 +1181,20 @@ export default function RecipeGenerator() {
               }
               </AnimatePresence>
 
+              {/* Personalized Recommendations - Only show when not searching */}
+              {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
+                <RecommendedRecipes
+                  userPreferences={userPreferences}
+                  inventory={inventory}
+                  onRecipeClick={(recipe) => {
+                    setScrollPosition(window.scrollY);
+                    setCurrentRecipe(recipe);
+                    setSavedRecipeId(null);
+                    window.scrollTo({ top: 0, behavior: 'auto' });
+                  }} 
+                />
+              }
+
               {/* Personalized Discovery Feed - Only show when not searching for specific generated recipes */}
               {!currentRecipe && generatedRecipes.length === 0 &&
             <DiscoveryFeed
