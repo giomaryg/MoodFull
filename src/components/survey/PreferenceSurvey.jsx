@@ -25,6 +25,8 @@ const cuisines = [
 ];
 
 const mealOptions = ['1-3 meals', '4-7 meals', '8-14 meals', '15+ meals'];
+const cookingSkills = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+const equipmentList = ['Oven', 'Stove', 'Microwave', 'Air Fryer', 'Slow Cooker', 'Instant Pot', 'Blender', 'Food Processor', 'Stand Mixer', 'Grill'];
 
 export default function PreferenceSurvey({ onComplete, onSkip, initialData = {}, currentUser = {} }) {
   const [step, setStep] = useState(1);
@@ -39,10 +41,12 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
     open_to_new_cuisines: initialData.open_to_new_cuisines ?? null,
     preferred_cuisines: initialData.preferred_cuisines || [],
     otherCuisine: '',
-    meals_per_week: initialData.meals_per_week || ''
+    meals_per_week: initialData.meals_per_week || '',
+    cooking_skill: initialData.cooking_skill || '',
+    equipment: initialData.equipment || []
   });
 
-  const totalSteps = 8;
+  const totalSteps = 10;
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -84,6 +88,8 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
       case 6: return formData.open_to_new_cuisines !== null;
       case 7: return formData.preferred_cuisines.length > 0;
       case 8: return formData.meals_per_week !== '';
+      case 9: return formData.cooking_skill !== '';
+      case 10: return true; // equipment is optional
       default: return false;
     }
   };
@@ -405,6 +411,71 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
                         {isSelected && <Check className="w-6 h-6 text-[#6b9b76]" />}
                       </div>
                     </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 9:
+        return (
+          <div className="space-y-4">
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">
+                How would you describe your cooking skills?
+              </Label>
+              <div className="grid grid-cols-1 gap-3 mt-4">
+                {cookingSkills.map((skill) => {
+                  const isSelected = formData.cooking_skill === skill;
+                  return (
+                    <motion.button
+                      key={skill}
+                      onClick={() => setFormData({ ...formData, cooking_skill: skill })}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`p-5 rounded-xl border-2 transition-all ${
+                        isSelected
+                          ? 'bg-[#f5e8e8] border-[#6b9b76] shadow-md'
+                          : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-base">{skill}</span>
+                        {isSelected && <Check className="w-6 h-6 text-[#6b9b76]" />}
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+
+      case 10:
+        return (
+          <div className="space-y-4">
+            <div className="space-y-3">
+              <Label className="text-base font-semibold">
+                What cooking equipment do you have access to?
+              </Label>
+              <p className="text-sm text-gray-500 mb-4">Select all that apply</p>
+              <div className="flex flex-wrap gap-2 max-h-80 overflow-y-auto mb-4">
+                {equipmentList.map((item) => {
+                  const isSelected = formData.equipment.includes(item);
+                  return (
+                    <Badge
+                      key={item}
+                      onClick={() => toggleInArray('equipment', item)}
+                      className={`cursor-pointer px-4 py-2 text-sm transition-all ${
+                        isSelected
+                          ? 'bg-[#6b9b76] hover:bg-[#5a8a65] text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {item}
+                      {isSelected && <Check className="w-3 h-3 ml-1 inline" />}
+                    </Badge>
                   );
                 })}
               </div>
