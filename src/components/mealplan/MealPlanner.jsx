@@ -511,10 +511,11 @@ Make them balanced, diverse, and delicious. Include:
 
       {/* Calendar Grid */}
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
-          <div className="overflow-x-auto">
-            <div className="min-w-[800px]">
-              {/* Day Headers */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex-1 bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
+            <div className="overflow-x-auto">
+              <div className="min-w-[800px]">
+                {/* Day Headers */}
               <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
             {weekDays.map((day) => (
               <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
