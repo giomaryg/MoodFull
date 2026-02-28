@@ -1326,7 +1326,8 @@ export default function RecipeGenerator() {
 
               <MealPlanner
               onOpenShoppingList={() => setShowShoppingList(true)}
-              generatedRecipes={generatedRecipes} />
+              generatedRecipes={generatedRecipes}
+              onRequirePremium={() => setShowPaywall(true)} />
 
             </motion.div>
           }
@@ -1349,8 +1350,27 @@ export default function RecipeGenerator() {
           {!showSurvey && activeTab === 'analytics' &&
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}>
-              <AnalyticsDashboard />
+            animate={{ opacity: 1 }}
+            className="space-y-6">
+              {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
+                <div className="relative">
+                  <div className="blur-sm pointer-events-none select-none">
+                     <AnalyticsDashboard />
+                  </div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 rounded-2xl z-10">
+                    <div className="text-center px-6 py-8 bg-white rounded-2xl shadow-lg border border-[#c5d9c9] max-w-xs mx-auto">
+                      <span className="text-4xl mb-3 block">🔒</span>
+                      <h3 className="text-[#6b9b76] font-bold text-lg mb-1">Advanced Insights — Premium</h3>
+                      <p className="text-gray-500 text-sm mb-4">Unlock detailed nutritional analytics, ingredient usage trends, and cost savings.</p>
+                      <Button onClick={() => setShowPaywall(true)} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl w-full">
+                        Unlock Premium
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <AnalyticsDashboard />
+              )}
             </motion.div>
           }
 

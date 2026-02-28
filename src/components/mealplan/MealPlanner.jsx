@@ -13,7 +13,7 @@ import RepeatMealDialog from './RepeatMealDialog';
 import RecipeDetailModal from './RecipeDetailModal';
 import WeeklyGoalsDialog from './WeeklyGoalsDialog';
 
-function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
+function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremium }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [sidebarTab, setSidebarTab] = useState('saved');
@@ -693,31 +693,45 @@ Make them balanced, diverse, and delicious. Include:
         <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Meal Planner</h2>
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <Button
-            onClick={() => setShowGoalsDialog(true)}
+            onClick={() => {
+              if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+                if (onRequirePremium) onRequirePremium();
+                return;
+              }
+              setShowGoalsDialog(true);
+            }}
             className="bg-[#f2b769] hover:bg-[#e6a245] text-white flex-1 sm:flex-none"
           >
             <Target className="w-4 h-4 mr-2" />
             Set Goals
+            {(!currentUser?.is_premium && currentUser?.role !== 'admin') && <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>}
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white flex-1 sm:flex-none">
-                {isGeneratingPlan ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
-                ) : (
-                  <><Sparkles className="w-4 h-4 mr-2" /> Generate Plan <ChevronDown className="w-4 h-4 ml-1" /></>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => generateWeeklyPlan(false)} className="cursor-pointer">
-                Weekly Plan (Balanced)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => generateWeeklyPlan(true)} className="cursor-pointer text-amber-600">
-                Prioritize Expiring Items
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+
+          {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
+            <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white flex-1 sm:flex-none">
+              <Sparkles className="w-4 h-4 mr-2" /> Generate Plan <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
+            </Button>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white flex-1 sm:flex-none">
+                  {isGeneratingPlan ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
+                  ) : (
+                    <><Sparkles className="w-4 h-4 mr-2" /> Generate Plan <ChevronDown className="w-4 h-4 ml-1" /></>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => generateWeeklyPlan(false)} className="cursor-pointer">
+                  Weekly Plan (Balanced)
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => generateWeeklyPlan(true)} className="cursor-pointer text-amber-600">
+                  Prioritize Expiring Items
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <Button
             onClick={onOpenShoppingList}
             className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none"
