@@ -123,8 +123,17 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       servings: recipe.servings
     }));
 
-    return [...fromPlans, ...fromRecipes];
-  }, [selectedMeals, selectedExtraRecipes, recipes]);
+    const fromCustom = customItems.length > 0 ? [{
+      id: 'custom-items-group',
+      recipeName: 'Custom Items',
+      details: 'Added Manually',
+      ingredients: customItems.map(c => c.name),
+      isCustomGroup: true,
+      servings: null
+    }] : [];
+
+    return [...fromPlans, ...fromRecipes, ...fromCustom];
+  }, [selectedMeals, selectedExtraRecipes, recipes, customItems]);
 
   const shoppingList = useMemo(() => {
     const ingredientMap = {};
