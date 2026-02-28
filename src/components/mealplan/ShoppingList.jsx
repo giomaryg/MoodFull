@@ -792,10 +792,10 @@ Return JSON.`,
         ) : (
           <div className="space-y-6">
             {/* Add Custom Item Input */}
-            <div className="flex gap-2 mb-4 bg-[#f0f9f2] p-3 rounded-xl border border-[#c5d9c9]">
+            <div className="flex gap-2 mb-4 bg-[#f0f9f2] p-2 sm:p-3 rounded-xl border border-[#c5d9c9]">
               <input
                 type="text"
-                placeholder="Add a custom item (e.g., Paper towels)..."
+                placeholder="Add a custom item..."
                 value={newCustomItem}
                 onChange={(e) => setNewCustomItem(e.target.value)}
                 onKeyDown={(e) => {
@@ -805,7 +805,7 @@ Return JSON.`,
                     setNewCustomItem('');
                   }
                 }}
-                className="flex-1 px-4 py-2 rounded-lg border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] text-sm"
+                className="flex-1 min-w-0 px-3 sm:px-4 py-2 rounded-lg border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] text-sm"
               />
               <Button
                 onClick={() => {
@@ -815,9 +815,9 @@ Return JSON.`,
                     setNewCustomItem('');
                   }
                 }}
-                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white"
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shrink-0 px-3 sm:px-4"
               >
-                <Plus className="w-4 h-4 mr-1" /> Add
+                <Plus className="w-4 h-4 sm:mr-1" /> <span className="hidden sm:inline">Add</span>
               </Button>
             </div>
 
@@ -825,10 +825,10 @@ Return JSON.`,
               <Button 
                 onClick={getAIInsights} 
                 disabled={isGeneratingInsights} 
-                className="w-full bg-gradient-to-r from-[#6b9b76] to-[#5a8a65] text-white shadow-md hover:shadow-lg transition-all border-none py-6 rounded-xl"
+                className="w-full bg-gradient-to-r from-[#6b9b76] to-[#5a8a65] text-white shadow-md hover:shadow-lg transition-all border-none py-4 sm:py-6 rounded-xl h-auto"
               >
-                {isGeneratingInsights ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Sparkles className="w-5 h-5 mr-2" />}
-                <span className="font-bold text-lg">Generate AI Shopping Insights</span>
+                {isGeneratingInsights ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin shrink-0" /> : <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2 shrink-0" />}
+                <span className="font-bold text-sm sm:text-lg whitespace-normal leading-tight text-center">Generate AI Shopping Insights</span>
               </Button>
             )}
 
@@ -893,10 +893,10 @@ Return JSON.`,
                 <Button 
                   onClick={handlePurchaseToPantry}
                   disabled={isPurchasing}
-                  className="bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 shadow-sm"
+                  className="bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 shadow-sm w-full sm:w-auto h-auto py-2.5 px-3 sm:px-4 whitespace-normal text-left sm:text-center text-xs sm:text-sm flex items-center justify-center gap-2 leading-tight"
                 >
-                  {isPurchasing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <PackagePlus className="w-4 h-4 mr-2" />}
-                  Mark Remaining as Purchased & Add to Pantry
+                  {isPurchasing ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <PackagePlus className="w-4 h-4 shrink-0" />}
+                  <span className="flex-1 sm:flex-none">Mark Remaining as Purchased & Add to Pantry</span>
                 </Button>
               </div>
             )}
