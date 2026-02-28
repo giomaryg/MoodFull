@@ -140,8 +140,8 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
               className="border-2 focus:border-[#6b9b76]"
             />
           </div>
-          <div className="flex gap-4 w-full sm:w-auto">
-            <div className="w-24">
+          <div className="flex flex-wrap gap-4 w-full sm:w-auto">
+            <div className="w-20">
               <label className="text-xs font-semibold text-gray-500 mb-1 block uppercase tracking-wider">Qty</label>
               <Input 
                 type="number" 
@@ -152,19 +152,52 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 className="border-2 focus:border-[#6b9b76]"
               />
             </div>
-            <div className="w-32">
+            <div className="w-20">
+              <label className="text-xs font-semibold text-gray-500 mb-1 block uppercase tracking-wider">Min</label>
+              <Input 
+                type="number" 
+                min="0"
+                step="0.1" 
+                title="Minimum stock level"
+                value={newItem.min_stock} 
+                onChange={e => setNewItem({...newItem, min_stock: parseFloat(e.target.value) || 0})} 
+                className="border-2 focus:border-[#6b9b76]"
+              />
+            </div>
+            <div className="w-24">
               <label className="text-xs font-semibold text-gray-500 mb-1 block uppercase tracking-wider">Unit</label>
               <Input 
-                placeholder="pcs, cups, lbs" 
+                placeholder="pcs, cups" 
                 value={newItem.unit} 
                 onChange={e => setNewItem({...newItem, unit: e.target.value})} 
                 className="border-2 focus:border-[#6b9b76]"
               />
             </div>
-            <Button type="submit" className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap h-10 mt-auto" disabled={addMutation.isPending || isAnalyzing || !newItem.name}>
-              {isAnalyzing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-              {isAnalyzing ? 'Analyzing...' : 'Add Item'}
-            </Button>
+            <div className="flex gap-2 h-10 mt-auto">
+              <input 
+                type="file" 
+                accept="image/*" 
+                capture="environment"
+                ref={fileInputRef}
+                onChange={handleScan}
+                className="hidden" 
+              />
+              <Button 
+                type="button" 
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isScanning}
+                variant="outline"
+                className="border-2 border-[#6b9b76] text-[#6b9b76] px-3"
+                title="Scan Barcode / Receipt"
+              >
+                {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+              </Button>
+              <Button type="submit" className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap" disabled={addMutation.isPending || isAnalyzing || !newItem.name}>
+                {isAnalyzing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+                <span className="hidden sm:inline">{isAnalyzing ? 'Analyzing...' : 'Add Item'}</span>
+                <span className="sm:hidden">{isAnalyzing ? '...' : 'Add'}</span>
+              </Button>
+            </div>
           </div>
         </form>
       </div>
@@ -225,6 +258,11 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                   </div>
                   <div className="flex items-center gap-3 mt-1">
                     <p className="text-sm text-[#6b9b76] font-medium">{item.quantity} {item.unit}</p>
+                    {item.min_stock > 0 && (
+                      <p className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${item.quantity < item.min_stock ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-500'}`}>
+                        Min: {item.min_stock}
+                      </p>
+                    )}
                     {item.expiry_date && (
                       <p className={`text-xs ${new Date(item.expiry_date) < new Date(new Date().setDate(new Date().getDate() + 7)) ? 'text-amber-600 font-semibold' : 'text-gray-400'}`}>
                         Expires: {new Date(item.expiry_date).toLocaleDateString()}
