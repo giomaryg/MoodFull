@@ -757,9 +757,10 @@ Make them balanced, diverse, and delicious. Include:
                         </div>
                         </div>
                         </div>
+                        </div>
                         </DragDropContext>
 
-      {/* Add Meal Dialog */}
+                        {/* Add Meal Dialog */}
       {showAddMeal && (
         <AddMealDialog
           date={selectedDate}
