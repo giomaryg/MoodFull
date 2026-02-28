@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat } from 'lucide-react';
+import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camera } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -23,7 +23,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
     mutationFn: (data) => base44.entities.Ingredient.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['inventory'] });
-      setNewItem({ name: '', quantity: 1, unit: '', category: 'Pantry' });
+      setNewItem({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0 });
       toast.success('Ingredient added to inventory');
     }
   });
@@ -35,6 +35,41 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
       toast.success('Ingredient removed');
     }
   });
+
+  const handleScan = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsScanning(true);
+    toast.success('Scanning receipt or barcode...');
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Extract the main grocery ingredient from this image. It could be a barcode, a product package, or a receipt. Identify the product name, estimated quantity, and unit. Provide JSON.`,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            quantity: { type: "number" },
+            unit: { type: "string" }
+          }
+        }
+      });
+      setNewItem(prev => ({
+        ...prev,
+        name: response.name || '',
+        quantity: response.quantity || 1,
+        unit: response.unit || 'units'
+      }));
+      toast.success('Scan complete! Review details and click Add.');
+    } catch (err) {
+      toast.error('Failed to scan image. Please enter manually.');
+    } finally {
+      setIsScanning(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleAdd = async (e) => {
     e.preventDefault();
