@@ -28,6 +28,8 @@ import InventoryManagement from '../components/inventory/InventoryManagement';
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
 import AICoach from '../components/recipe/AICoach';
 
+const ENABLE_PANTRY_FEATURE = false;
+
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [selectedMealTypes, setSelectedMealTypes] = useState([]);
@@ -55,6 +57,10 @@ export default function RecipeGenerator() {
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
 
   useEffect(() => {
+    if (activeTab === 'inventory' && !ENABLE_PANTRY_FEATURE) {
+      setActiveTab('home');
+      return;
+    }
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [activeTab]);
 
@@ -935,6 +941,7 @@ export default function RecipeGenerator() {
           <>
               {/* Proactive Expiring Items Alert */}
               {(() => {
+                if (!ENABLE_PANTRY_FEATURE) return null;
                 if (hideExpiringAlert) return null;
                 const expiringItems = inventory.filter(item => {
                   if (!item.expiry_date) return false;
@@ -1088,12 +1095,14 @@ export default function RecipeGenerator() {
                       {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</> : <>✦ Generate Recipes</>}
                     </Button>
 
-                    <Button
-                  onClick={generateFromInventory}
-                  disabled={isGenerating}
-                  className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
-                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Package className="w-5 h-5" /> Use My Pantry</>}
-                    </Button>
+                    {ENABLE_PANTRY_FEATURE && (
+                      <Button
+                        onClick={generateFromInventory}
+                        disabled={isGenerating}
+                        className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
+                        {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Package className="w-5 h-5" /> Use My Pantry</>}
+                      </Button>
+                    )}
 
                     <Button
                   onClick={() => setShowCombineDialog(true)}
@@ -1196,7 +1205,7 @@ export default function RecipeGenerator() {
               }
 
               {/* Personalized Discovery Feed - Only show when not searching for specific generated recipes */}
-              {!currentRecipe && generatedRecipes.length === 0 &&
+              {ENABLE_PANTRY_FEATURE && !currentRecipe && generatedRecipes.length === 0 &&
             <DiscoveryFeed
               userPreferences={userPreferences}
               inventory={inventory}
@@ -1362,7 +1371,7 @@ export default function RecipeGenerator() {
       </div>
 
       {/* Bottom Navigation */}
-      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} isVisible={!showShoppingList} />}
+      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} isVisible={!showShoppingList} enablePantry={ENABLE_PANTRY_FEATURE} />}
 
       {/* Paywall Modal */}
       <AnimatePresence>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Home, BookMarked, User, Calendar, Package, BarChart2, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function BottomNav({ activeTab, onTabChange, isVisible = true }) {
+export default function BottomNav({ activeTab, onTabChange, isVisible = true, enablePantry = true }) {
   const [isMinimized, setIsMinimized] = useState(false);
   const navRef = useRef(null);
 
@@ -27,7 +27,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true }) 
     { id: 'home', label: 'Home', icon: Home },
     { id: 'saved', label: 'Saved', icon: BookMarked },
     { id: 'planner', label: 'Planner', icon: Calendar },
-    { id: 'inventory', label: 'Pantry', icon: Package },
+    ...(enablePantry ? [{ id: 'inventory', label: 'Pantry', icon: Package }] : []),
     { id: 'analytics', label: 'Insights', icon: BarChart2 },
     { id: 'account', label: 'Account', icon: User }
   ];
