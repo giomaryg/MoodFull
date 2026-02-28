@@ -21,6 +21,7 @@ import ShoppingList from '../components/mealplan/ShoppingList';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 import Paywall from '../components/paywall/Paywall';
+import CombinationCookingDialog from '../components/recipe/CombinationCookingDialog';
 import ThreeBackground from '../components/ThreeBackground';
 import InventoryManagement from '../components/inventory/InventoryManagement';
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
@@ -47,6 +48,7 @@ export default function RecipeGenerator() {
   const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
+  const [showCombineDialog, setShowCombineDialog] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -710,6 +712,133 @@ export default function RecipeGenerator() {
     }
   };
 
+  const handleCombineAndGenerate = async ({ ingredients, recipes }) => {
+    setShowCombineDialog(false);
+    setIsGenerating(true);
+    setSavedRecipeId(null);
+    setGlobalSearchQuery('');
+    setAdvancedFilters({});
+
+    let preferencesContext = '';
+    if (userPreferences?.survey_completed) {
+      const prefs = [];
+      if (userPreferences.allergies) prefs.push(`AVOID: ${userPreferences.allergies}`);
+      if (userPreferences.diet_preferences) prefs.push(`Diet: ${userPreferences.diet_preferences}`);
+      if (userPreferences.blood_sugar_friendly) prefs.push(`Low glycemic`);
+      if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
+      if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
+    }
+
+    let combinePrompt = [];
+    if (ingredients.length > 0) combinePrompt.push(`Must incorporate these ingredients: ${ingredients.join(', ')}`);
+    if (recipes.length > 0) combinePrompt.push(`Draw inspiration from or combine elements of these dishes: ${recipes.join(', ')}`);
+
+    try {
+      const quickResponse = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate 3 completely new, creative recipe ideas by combining these elements: ${combinePrompt.join('. ')}. Make sure they are coherent and tasty. ${preferencesContext}`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            recipes: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  prep_time: { type: "string" },
+                  cook_time: { type: "string" },
+                  servings: { type: "number" },
+                  difficulty: { type: "string", enum: ["easy", "medium", "hard"] },
+                  cuisine_type: { type: "string" },
+                  main_ingredients: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const quickRecipes = (quickResponse.recipes || [])
+        .filter((r) => r && r.name && r.description)
+        .map((recipe) => ({
+          ...recipe,
+          mood: 'Combined Creation',
+          ingredients: [],
+          instructions: [],
+          _loading: true
+        }));
+
+      setGeneratedRecipes(quickRecipes);
+      setIsGenerating(false);
+
+      const enrichPromises = quickRecipes.map(async (recipe, index) => {
+        const detail = await base44.integrations.Core.InvokeLLM({
+          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). It is a fusion/combination recipe. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              ingredients: { type: "array", items: { type: "string" } },
+              instructions: { type: "array", items: { type: "string" } },
+              nutrition: {
+                type: "object",
+                properties: {
+                  calories: { type: "number" },
+                  protein: { type: "string" },
+                  carbs: { type: "string" },
+                  fat: { type: "string" },
+                  fiber: { type: "string" },
+                  sodium: { type: "string" },
+                  sugar: { type: "string" },
+                  saturated_fat: { type: "string" },
+                  cholesterol: { type: "string" }
+                }
+              },
+              vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
+              health_benefits: { type: "array", items: { type: "string" } },
+              cooking_tips: { type: "array", items: { type: "string" } },
+              substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
+              pairings: { type: "array", items: { type: "string" } }
+            }
+          }
+        });
+        return { index, detail };
+      });
+
+      enrichPromises.forEach(async (promise) => {
+        const { index, detail } = await promise;
+        setGeneratedRecipes((prev) => prev.map((r, i) =>
+          i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
+        ));
+
+        try {
+          const recipe = quickRecipes[index];
+          const [img1, img2, img3] = await Promise.all([
+            base44.integrations.Core.GenerateImage({
+              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+            }),
+            base44.integrations.Core.GenerateImage({
+              prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
+            }),
+            base44.integrations.Core.GenerateImage({
+              prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
+            })
+          ]);
+          setGeneratedRecipes((prev) => prev.map((r, i) =>
+            i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
+          ));
+        } catch {
+          setGeneratedRecipes((prev) => prev.map((r, i) =>
+            i === index ? { ...r, imageLoading: false } : r
+          ));
+        }
+      });
+    } catch (error) {
+      toast.error('Failed to generate combined recipes.');
+      setIsGenerating(false);
+    }
+  };
+
   const handleSaveRecipe = () => {
     if (currentRecipe && !savedRecipeId) {
       // Persist the photo URL under image_url field
@@ -964,6 +1093,13 @@ export default function RecipeGenerator() {
                   disabled={isGenerating}
                   className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
                       {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Package className="w-5 h-5" /> Use My Pantry</>}
+                    </Button>
+
+                    <Button
+                  onClick={() => setShowCombineDialog(true)}
+                  disabled={isGenerating}
+                  className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
+                      <UtensilsCrossed className="w-5 h-5" /> Combine & Create
                     </Button>
                   </motion.div>
               }
@@ -1224,6 +1360,15 @@ export default function RecipeGenerator() {
 
         }
       </AnimatePresence>
+
+      <CombinationCookingDialog
+        isOpen={showCombineDialog}
+        onClose={() => setShowCombineDialog(false)}
+        inventory={inventory}
+        savedRecipes={savedRecipes}
+        onGenerate={handleCombineAndGenerate}
+        isGenerating={isGenerating}
+      />
 
       {/* Global Shopping List Modal */}
       {showShoppingList &&
