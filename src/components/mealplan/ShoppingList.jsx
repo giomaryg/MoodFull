@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText, Barcode, MoreHorizontal } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -41,6 +41,16 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
   const [newCustomItem, setNewCustomItem] = useState('');
   const [expandedRecipes, setExpandedRecipes] = useState({});
   const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', 'by-recipe', or 'history'
+
+  const [itemCategories, setItemCategories] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('shoppingListItemCategories')) || {}; } catch { return {}; }
+  });
+  const fileInputRef = React.useRef(null);
+  const [isScanning, setIsScanning] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('shoppingListItemCategories', JSON.stringify(itemCategories));
+  }, [itemCategories]);
 
   useEffect(() => {
     localStorage.setItem('shoppingListCheckedItems', JSON.stringify(checkedItems));
@@ -181,6 +191,12 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       });
     });
 
+    const AISLES = [
+      'Produce (Aisle)', 'Meat & Seafood (Aisle)', 'Dairy & Eggs (Aisle)', 
+      'Bakery (Aisle)', 'Frozen (Aisle)', 'Pantry (Aisle)', 
+      'Beverages (Aisle)', 'Snacks (Aisle)', 'Household (Aisle)', 'Other'
+    ];
+
     // Group by category
     const categorized = {
       'Produce (Aisle)': [],
@@ -189,6 +205,9 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       'Bakery (Aisle)': [],
       'Frozen (Aisle)': [],
       'Pantry (Aisle)': [],
+      'Beverages (Aisle)': [],
+      'Snacks (Aisle)': [],
+      'Household (Aisle)': [],
       'Custom Items': [],
       'Other': []
     };
@@ -197,7 +216,9 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       const item = { key, ...data };
       const lower = key.toLowerCase();
 
-      if (lower.match(/lettuce|tomato|onion|pepper|carrot|celery|cucumber|spinach|kale|fruit|vegetable|potato|garlic|herb|basil|parsley/)) {
+      if (itemCategories[item.original] && categorized[itemCategories[item.original]]) {
+        categorized[itemCategories[item.original]].push(item);
+      } else if (lower.match(/lettuce|tomato|onion|pepper|carrot|celery|cucumber|spinach|kale|fruit|vegetable|potato|garlic|herb|basil|parsley/)) {
         categorized['Produce (Aisle)'].push(item);
       } else if (lower.match(/chicken|beef|pork|turkey|steak|fish|salmon|meat|poultry|bacon|sausage|ham/)) {
         categorized['Meat & Seafood (Aisle)'].push(item);
@@ -215,12 +236,21 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     });
 
     customItems.forEach((item) => {
-      categorized['Custom Items'].push({
-        key: item.id,
-        original: item.name,
-        count: 1,
-        recipes: ['Added Manually']
-      });
+      if (itemCategories[item.name] && categorized[itemCategories[item.name]]) {
+        categorized[itemCategories[item.name]].push({
+          key: item.id,
+          original: item.name,
+          count: 1,
+          recipes: ['Added Manually']
+        });
+      } else {
+        categorized['Custom Items'].push({
+          key: item.id,
+          original: item.name,
+          count: 1,
+          recipes: ['Added Manually']
+        });
+      }
     });
 
     if (inventory && inventory.length > 0) {
@@ -492,12 +522,50 @@ Return JSON.`,
       if (service === 'Instacart') url = `https://www.instacart.com/store/s?k=${encodeURIComponent(query)}`;
       else if (service === 'Walmart') url = `https://www.walmart.com/search?q=${encodeURIComponent(query)}`;
       else if (service === 'Amazon Fresh') url = `https://www.amazon.com/s?k=${encodeURIComponent(query)}&i=amazonfresh`;
+      else if (service === 'Kroger') url = `https://www.kroger.com/search?query=${encodeURIComponent(query)}`;
+      else if (service === 'Safeway') url = `https://www.safeway.com/shop/search-results.html?q=${encodeURIComponent(query)}`;
+      else if (service === 'Aldi') url = `https://new.aldi.us/results?q=${encodeURIComponent(query)}`;
+      else if (service === 'Costco') url = `https://www.costco.com/CatalogSearch?keyword=${encodeURIComponent(query)}`;
+      else if (service === 'H-E-B') url = `https://www.heb.com/search/?q=${encodeURIComponent(query)}`;
+      else if (service === 'Wegmans') url = `https://shop.wegmans.com/search?search_term=${encodeURIComponent(query)}`;
       else url = `https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
       window.open(url, '_blank');
     }, 1500);
   };
 
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const handleScan = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsScanning(true);
+    toast.success('Scanning barcode / item...');
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Identify the grocery product from this image or barcode. Return the product name. JSON format.`,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" }
+          }
+        }
+      });
+      
+      if (response.name) {
+        const newItem = { id: `custom-${Date.now()}-${Math.random()}`, name: response.name };
+        setCustomItems(prev => [...prev, newItem]);
+        toast.success(`Added ${response.name} to shopping list!`);
+      }
+    } catch (err) {
+      toast.error('Failed to scan item.');
+    } finally {
+      setIsScanning(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const handlePurchaseToPantry = async () => {
     const itemsToBuy = displayCategories.flatMap(c => c.items).filter(item => !checkedItems[item.key]);
     if (itemsToBuy.length === 0) return;
@@ -594,7 +662,7 @@ Return JSON.`,
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden">
-                  {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods'].map(service => (
+                  {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods', 'Kroger', 'Safeway', 'Aldi', 'Costco', 'H-E-B', 'Wegmans'].map(service => (
                     <DropdownMenuItem 
                       key={service}
                       onClick={() => handleOrderGroceries(service)}
@@ -900,6 +968,23 @@ Return JSON.`,
                 }}
                 className="flex-1 min-w-0 px-3 sm:px-4 py-2 rounded-lg border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] text-sm"
               />
+              <input 
+                type="file" 
+                accept="image/*" 
+                capture="environment"
+                ref={fileInputRef}
+                onChange={handleScan}
+                className="hidden" 
+              />
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isScanning}
+                variant="outline"
+                className="border-[#c5d9c9] text-[#6b9b76] hover:bg-[#e8f0ea] px-3 bg-white shrink-0"
+                title="Scan Barcode / Item"
+              >
+                {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Barcode className="w-4 h-4" />}
+              </Button>
               <Button
                 onClick={() => {
                   if (newCustomItem.trim()) {
@@ -1024,6 +1109,27 @@ Return JSON.`,
                           {item.recipes.length > 1 ? `Used in ${item.recipes.length} recipes: ` : 'Used in: '}
                           {item.recipes.join(', ')}
                         </p>
+                      </div>
+                      <div className="flex items-center" onClick={e => e.stopPropagation()}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-[#6b9b76]">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500">Move to Aisle</div>
+                            {['Produce (Aisle)', 'Meat & Seafood (Aisle)', 'Dairy & Eggs (Aisle)', 'Bakery (Aisle)', 'Frozen (Aisle)', 'Pantry (Aisle)', 'Beverages (Aisle)', 'Snacks (Aisle)', 'Household (Aisle)', 'Other'].map(aisle => (
+                              <DropdownMenuItem 
+                                key={aisle} 
+                                onClick={() => setItemCategories(prev => ({...prev, [item.original || item.name]: aisle}))}
+                                className="text-sm cursor-pointer"
+                              >
+                                {aisle}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                       {item.key.startsWith('custom-') && (
                         <button

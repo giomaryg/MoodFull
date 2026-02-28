@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camera, Mic, PlusCircle } from 'lucide-react';
+import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camera, Mic, PlusCircle, Barcode } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -46,7 +46,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Extract the main grocery ingredient from this image. Identify the product name, estimated quantity, unit, standard grocery category (Produce, Dairy, Meat, Pantry, Spices, Frozen, Other), and estimated shelf life in days from today assuming proper storage. Provide JSON.`,
+        prompt: `Extract the main grocery ingredient from this image or barcode. Identify the product name, estimated quantity, unit, standard grocery category (Produce, Dairy, Meat, Pantry, Spices, Frozen, Other), and estimated shelf life in days from today assuming proper storage. Provide JSON.`,
         file_urls: [file_url],
         response_json_schema: {
           type: "object",
@@ -306,9 +306,9 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 disabled={isScanning}
                 variant="outline"
                 className="border-2 border-[#6b9b76] text-[#6b9b76] px-3"
-                title="Scan Barcode / Receipt"
+                title="Scan Barcode / Item"
               >
-                {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+                {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Barcode className="w-4 h-4" />}
               </Button>
               <Button 
                 type="button" 
