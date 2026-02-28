@@ -548,14 +548,39 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                 <CalendarPlus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
                 Add to Plan
               </Button>
-              <Button
-                onClick={handleShare}
-                variant="outline"
-                className="flex-1 sm:flex-none border-2 border-blue-300 text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base"
-              >
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                Share
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex-1 sm:flex-none border-2 border-blue-300 text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base"
+                  >
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                    Share
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => {
+                    const text = encodeURIComponent(`Check out this amazing recipe for ${recipe.name}!`);
+                    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+                  }}>
+                    <Twitter className="w-4 h-4 mr-2" /> Share on X
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+                  }}>
+                    <Facebook className="w-4 h-4 mr-2" /> Share on Facebook
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const text = encodeURIComponent(`Check out this amazing recipe for ${recipe.name}! \n\nIngredients: ${recipe.ingredients?.join(', ')}`);
+                    window.open(`https://wa.me/?text=${text}`, '_blank');
+                  }}>
+                    <Send className="w-4 h-4 mr-2" /> Share on WhatsApp
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleShare}>
+                    <LinkIcon className="w-4 h-4 mr-2" /> Copy Link
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             
             <div className="w-full mt-4 pt-4 border-t border-[#c5d9c9]/50">
@@ -664,6 +689,12 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             isSaved={isSaved}
             onRate={handleRate}
             onReviewSave={handleReviewSave}
+          />
+
+          {/* Public Community Comments */}
+          <RecipeComments 
+            recipe={recipe}
+            currentUser={currentUser}
           />
 
           {/* Ingredients */}
