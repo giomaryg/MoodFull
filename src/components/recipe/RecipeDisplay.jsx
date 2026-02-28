@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight, FolderPlus, Loader2 } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight, FolderPlus, Loader2, Share2 } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
@@ -312,6 +312,19 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
   const [isRegeneratingSteps, setIsRegeneratingSteps] = useState(false);
   
+  const handleShare = () => {
+    const shareText = `Check out this recipe: ${recipe.name}\n\nIngredients:\n${recipe.ingredients.join('\n')}\n\nInstructions:\n${recipe.instructions.join('\n')}`;
+    if (navigator.share) {
+      navigator.share({
+        title: recipe.name,
+        text: shareText,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(shareText);
+      toast.success('Recipe copied to clipboard!');
+    }
+  };
+
   const handleRegenerateSteps = async (mode) => {
     setIsRegeneratingSteps(true);
     try {
@@ -495,6 +508,14 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               >
                 <CalendarPlus className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
                 Add to Plan
+              </Button>
+              <Button
+                onClick={handleShare}
+                variant="outline"
+                className="flex-1 sm:flex-none border-2 border-blue-300 text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base"
+              >
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                Share
               </Button>
             </div>
             

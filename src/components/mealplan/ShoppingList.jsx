@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -338,6 +338,67 @@ Return JSON.`,
     }));
   };
 
+  const downloadListPDF = async () => {
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF();
+      let y = 20;
+      doc.setFontSize(18);
+      doc.setTextColor(107, 155, 118);
+      doc.text('My Grocery List', 20, y);
+      y += 15;
+      
+      displayCategories.forEach(({ category, items }) => {
+        if (items.length > 0) {
+          doc.setFontSize(14);
+          doc.setTextColor(90, 111, 96);
+          doc.setFont(undefined, 'bold');
+          doc.text(category, 20, y);
+          y += 8;
+          
+          doc.setFontSize(11);
+          doc.setTextColor(50, 50, 50);
+          doc.setFont(undefined, 'normal');
+          items.forEach((item) => {
+            const isChecked = checkedItems[item.key];
+            doc.text(`${isChecked ? '[X]' : '[ ]'} ${item.original}`, 25, y);
+            y += 6;
+            
+            if (y > 280) {
+              doc.addPage();
+              y = 20;
+            }
+          });
+          y += 5;
+        }
+      });
+
+      if (inPantryItems.length > 0) {
+        doc.setFontSize(14);
+        doc.setTextColor(90, 111, 96);
+        doc.setFont(undefined, 'bold');
+        doc.text('Already In Pantry', 20, y);
+        y += 8;
+        doc.setFontSize(11);
+        doc.setTextColor(150, 150, 150);
+        doc.setFont(undefined, 'normal');
+        inPantryItems.forEach((item) => {
+          doc.text(`[X] ${item.original}`, 25, y);
+          y += 6;
+          if (y > 280) {
+            doc.addPage();
+            y = 20;
+          }
+        });
+      }
+
+      doc.save('shopping-list.pdf');
+      toast.success('PDF Downloaded!');
+    } catch (e) {
+      toast.error('Failed to generate PDF. Make sure jspdf is installed.');
+    }
+  };
+
   const downloadList = () => {
     let text = '🛒 Shopping List\n\n';
     
@@ -538,14 +599,25 @@ Return JSON.`,
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button
-                onClick={downloadList}
-                variant="outline"
-                size="icon"
-                className="border-2 border-[#6b9b76]"
-              >
-                <Download className="w-4 h-4 text-[#6b9b76]" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="border-2 border-[#6b9b76] text-[#6b9b76]"
+                  >
+                    <Download className="w-4 h-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Export</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden">
+                  <DropdownMenuItem onClick={downloadList} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
+                    <FileText className="w-4 h-4 mr-2" /> Text File
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={downloadListPDF} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
+                    <Download className="w-4 h-4 mr-2" /> PDF Document
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           

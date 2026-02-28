@@ -4,12 +4,27 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone, Languages, CreditCard, MessageCircle, Bot } from 'lucide-react';
+import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone, Languages, CreditCard, MessageCircle, Bot, Users, UserPlus } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
 
 export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) {
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [isInviting, setIsInviting] = useState(false);
+
+  const handleInvite = async () => {
+    if (!inviteEmail) return;
+    setIsInviting(true);
+    try {
+      await base44.users.inviteUser(inviteEmail, "user");
+      toast.success(`Invitation sent to ${inviteEmail} for collaborative meal planning!`);
+      setInviteEmail('');
+    } catch (e) {
+      toast.error('Failed to send invitation. Make sure you have admin rights.');
+    }
+    setIsInviting(false);
+  };
   const [isEditing, setIsEditing] = useState(false);
   const [isBillingOpen, setIsBillingOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -451,6 +466,45 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
               >
                 Update Preferences
               </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* Household / Collaboration Card */}
+      {user?.role === 'admin' && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18 }}
+        >
+          <Card className="bg-white border-2 border-[#c5d9c9] rounded-2xl">
+            <CardHeader>
+              <CardTitle className="text-xl text-[#6b9b76] flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Family & Household
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-gray-600">
+                Invite family members to collaborate on your meal plan and shopping list. Everyone in your household will share the same pantry and meal calendar.
+              </p>
+              <div className="flex gap-2">
+                <Input 
+                  placeholder="Family member's email" 
+                  value={inviteEmail}
+                  onChange={e => setInviteEmail(e.target.value)}
+                  className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                />
+                <Button 
+                  onClick={handleInvite} 
+                  disabled={isInviting || !inviteEmail}
+                  className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white shrink-0"
+                >
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Invite
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
