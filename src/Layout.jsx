@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
 
 export default function Layout({ children, currentPageName }) {
+  useEffect(() => {
+    if (currentPageName) {
+      base44.analytics.track({
+        eventName: "app_opened",
+        properties: { page_name: currentPageName }
+      });
+    }
+  }, [currentPageName]);
+
   return (
     <>
       <style>{`
