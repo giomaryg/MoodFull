@@ -255,11 +255,60 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
         </Card>
       </motion.div>
 
-      {/* Account Settings / Billing Card */}
+      {/* AI Assistants Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
+      >
+        <Card className="bg-white border-2 border-[#c5d9c9] rounded-2xl">
+          <CardHeader>
+            <CardTitle className="text-xl text-[#6b9b76] flex items-center gap-2">
+              <Bot className="w-5 h-5" />
+              Your AI Assistants
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-[#f0f9f2] rounded-xl border border-[#c5d9c9]">
+              <div>
+                <p className="font-semibold text-gray-800">Kitchen Assistant</p>
+                <p className="text-sm text-gray-500">Manages pantry & meal plans</p>
+              </div>
+              <a 
+                href={base44.agents.getWhatsAppConnectURL('kitchen_assistant')} 
+                target="_blank" 
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#e8f0ea]"
+              >
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp
+              </a>
+            </div>
+            
+            <div className="flex items-center justify-between p-4 bg-[#fffcf7] rounded-xl border border-[#f2b769]">
+              <div>
+                <p className="font-semibold text-gray-800">Data Analyst</p>
+                <p className="text-sm text-gray-500">Provides planning insights</p>
+              </div>
+              <a 
+                href={base44.agents.getWhatsAppConnectURL('data_analyst')} 
+                target="_blank" 
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 border-2 border-[#f2b769] text-[#d4a373] hover:bg-[#fffcf7]"
+              >
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Account Settings / Billing Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
       >
         <Card className="bg-white border-2 border-[#c5d9c9] rounded-2xl">
           <CardHeader>
