@@ -341,7 +341,7 @@ Return JSON.`,
   const downloadList = () => {
     let text = '🛒 Shopping List\n\n';
     
-    text += '=== BY RECIPE ===\n\n';
+    text += '=== BY MEAL ===\n\n';
     shoppingByRecipe.forEach((group) => {
       text += `${group.recipeName}\n`;
       text += `${group.details}\n`;
