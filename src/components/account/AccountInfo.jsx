@@ -344,7 +344,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.15 }}
         >
           <Card className="bg-white border-2 border-[#c5d9c9] rounded-2xl">
             <CardHeader>
