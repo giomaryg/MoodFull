@@ -84,12 +84,92 @@ export default function AnalyticsDashboard() {
 
   const COLORS = ['#6b9b76', '#c17a7a', '#e8d5c4', '#5a6f60'];
 
+  const exportToCSV = () => {
+    const headers = "Recipe,Count\n";
+    const csvContent = "data:text/csv;charset=utf-8," + headers + stats.frequentRecipes.map(e => `${e.name},${e.count}`).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "meal_plan_report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToPDF = () => {
+    import('jspdf').then(({ jsPDF }) => {
+      const doc = new jsPDF();
+      doc.setFontSize(20);
+      doc.text('Analytics & Reporting', 20, 20);
+      doc.setFontSize(12);
+      doc.text(`Total Meals Planned: ${mealPlans.length}`, 20, 30);
+      doc.text(`Average Calories per Meal: ${stats.avgCalories}`, 20, 40);
+      doc.text('Top Recipes:', 20, 50);
+      stats.frequentRecipes.forEach((r, idx) => {
+        doc.text(`${idx + 1}. ${r.name} (${r.count} times)`, 30, 60 + (idx * 10));
+      });
+      doc.save('analytics_report.pdf');
+    });
+  };
+
+  const generateAIReport = async () => {
+    setIsGeneratingReport(true);
+    try {
+      const dataStr = JSON.stringify({
+        totalMeals: mealPlans.length,
+        avgCalories: stats.avgCalories,
+        topRecipes: stats.frequentRecipes,
+        avgNutrition: stats.avgNutrition,
+        spendingData: stats.spendingData
+      });
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Act as an expert nutritionist and financial advisor. Analyze this user's meal planning data and provide a concise, insightful report on their trends, performance metrics (nutrition/spending), and actionable advice. Format using markdown. Data: ${dataStr}`,
+      });
+      setAiReport(response);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsGeneratingReport(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div className="text-center space-y-2 mb-8">
-        <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Insights & Analytics</h2>
-        <p className="text-gray-600">Track your meal planning habits, nutrition, and spending</p>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="text-center md:text-left space-y-2">
+          <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Insights & Analytics</h2>
+          <p className="text-gray-600">Track your meal planning habits, nutrition, and spending</p>
+        </div>
+        <div className="flex gap-2 flex-wrap justify-center">
+          <Button variant="outline" onClick={exportToCSV} className="border-2 border-[#c5d9c9] text-[#5a6f60] hover:bg-[#f0f9f2] bg-white">
+            <FileSpreadsheet className="w-4 h-4 mr-2" />
+            CSV Export
+          </Button>
+          <Button variant="outline" onClick={exportToPDF} className="border-2 border-[#c5d9c9] text-[#5a6f60] hover:bg-[#f0f9f2] bg-white">
+            <FileText className="w-4 h-4 mr-2" />
+            PDF Export
+          </Button>
+          <Button onClick={generateAIReport} disabled={isGeneratingReport} className="bg-[#f2b769] hover:bg-[#e6a245] text-white">
+            {isGeneratingReport ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Bot className="w-4 h-4 mr-2" />}
+            AI Report
+          </Button>
+        </div>
       </div>
+
+      {aiReport && (
+        <Card className="border-2 border-[#f2b769] bg-[#fffcf7] mb-8">
+          <CardHeader>
+            <CardTitle className="text-lg text-[#d4a373] flex items-center gap-2">
+              <Bot className="w-5 h-5" /> AI Analytical Report
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="prose prose-sm prose-p:leading-relaxed prose-headings:text-[#5a6f60] max-w-none text-gray-700">
+              <ReactMarkdown>{aiReport}</ReactMarkdown>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-2 border-[#c5d9c9] bg-white">
