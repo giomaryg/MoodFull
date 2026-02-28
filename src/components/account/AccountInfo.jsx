@@ -344,11 +344,35 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
                 </div>
               )}
 
+              {user.advanced_dietary && (
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Advanced Dietary Restrictions</div>
+                  <Badge className="bg-red-50 text-red-700 border-0">
+                    {user.advanced_dietary}
+                  </Badge>
+                </div>
+              )}
               {user.cooking_skill && (
                 <div>
                   <div className="text-sm font-semibold text-gray-700 mb-2">Cooking Skill</div>
                   <Badge className="bg-[#f5e6dc] text-[#c17a7a] border-0">
                     {user.cooking_skill}
+                  </Badge>
+                </div>
+              )}
+              {user.techniques_to_practice && (
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Techniques to Practice</div>
+                  <Badge className="bg-purple-50 text-purple-700 border-0">
+                    {user.techniques_to_practice}
+                  </Badge>
+                </div>
+              )}
+              {user.vitamin_targets && (
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Nutritional Goals</div>
+                  <Badge className="bg-blue-50 text-blue-700 border-0">
+                    {user.vitamin_targets}
                   </Badge>
                 </div>
               )}
