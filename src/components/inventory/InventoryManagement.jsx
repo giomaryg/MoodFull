@@ -12,6 +12,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
   const [newItem, setNewItem] = useState({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0 });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const fileInputRef = React.useRef(null);
 
   const { data: inventory = [], isLoading } = useQuery({
