@@ -583,31 +583,31 @@ Make them balanced, diverse, and delicious. Include:
                 {/* Day Headers */}
                 <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
                   {weekDays.map((day) => (
-              <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
-                <p className="text-white font-semibold text-sm">
-                  {format(day, 'EEE')}
-                </p>
-                <p className="text-white text-xs">
-                  {format(day, 'MMM d')}
-                </p>
-                <Button
-                  onClick={() => regenerateDay(day)}
-                  disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
-                  size="sm"
-                  variant="ghost"
-                  className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
-                >
-                  {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
-                    <Loader2 className="w-3 h-3 text-white animate-spin" />
-                  ) : (
-                    <RefreshCw className="w-3 h-3 text-white" />
-                  )}
-                </Button>
-              </div>
-            ))}
-          </div>
+                    <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
+                      <p className="text-white font-semibold text-sm">
+                        {format(day, 'EEE')}
+                      </p>
+                      <p className="text-white text-xs">
+                        {format(day, 'MMM d')}
+                      </p>
+                      <Button
+                        onClick={() => regenerateDay(day)}
+                        disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
+                        size="sm"
+                        variant="ghost"
+                        className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
+                      >
+                        {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
+                          <Loader2 className="w-3 h-3 text-white animate-spin" />
+                        ) : (
+                          <RefreshCw className="w-3 h-3 text-white" />
+                        )}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
 
-          {/* Meal Rows */}
+                {/* Meal Rows */}
               {mealTypes.map((mealType) => (
                 <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
                   {weekDays.map((day) => {
