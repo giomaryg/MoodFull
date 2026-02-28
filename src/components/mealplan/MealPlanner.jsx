@@ -607,13 +607,13 @@ Make them balanced, diverse, and delicious. Include:
                   ))}
                 </div>
 
-                {/* Meal Rows */}
-              {mealTypes.map((mealType) => (
-                <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
-                  {weekDays.map((day) => {
-                const meals = getMealsForDay(day, mealType);
-                const isToday = isSameDay(day, new Date());
-                const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
+                      {/* Meal Rows */}
+                {mealTypes.map((mealType) => (
+                  <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
+                    {weekDays.map((day) => {
+                      const meals = getMealsForDay(day, mealType);
+                      const isToday = isSameDay(day, new Date());
+                      const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
 
                 return (
                   <Droppable key={dropId} droppableId={dropId}>
