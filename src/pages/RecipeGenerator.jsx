@@ -614,7 +614,7 @@ export default function RecipeGenerator() {
 
     try {
       const quickResponse = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 4 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
+        prompt: `Generate 4 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options. Include recipes that specifically use the expiring ingredients.`,
         response_json_schema: {
           type: "object",
           properties: {
