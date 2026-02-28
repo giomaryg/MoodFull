@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight, Target } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -10,6 +10,7 @@ import AddMealDialog from './AddMealDialog';
 import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
 import RecipeDetailModal from './RecipeDetailModal';
+import WeeklyGoalsDialog from './WeeklyGoalsDialog';
 
 function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
@@ -23,6 +24,7 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
   const [repeatingMeal, setRepeatingMeal] = useState(null);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [loadingRecipeId, setLoadingRecipeId] = useState(null);
+  const [showGoalsDialog, setShowGoalsDialog] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -543,7 +545,14 @@ Make them balanced, diverse, and delicious. Include:
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Meal Planner</h2>
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+          <Button
+            onClick={() => setShowGoalsDialog(true)}
+            className="bg-indigo-500 hover:bg-indigo-600 text-white flex-1 sm:flex-none"
+          >
+            <Target className="w-4 h-4 mr-2" />
+            Set Goals
+          </Button>
           <Button
             onClick={generateWeeklyPlan}
             disabled={isGeneratingPlan}
@@ -923,6 +932,15 @@ Make them balanced, diverse, and delicious. Include:
         <RecipeDetailModal
           recipe={selectedRecipe}
           onClose={() => setSelectedRecipe(null)}
+        />
+      )}
+
+      {showGoalsDialog && (
+        <WeeklyGoalsDialog
+          currentUser={currentUser}
+          isOpen={showGoalsDialog}
+          onClose={() => setShowGoalsDialog(false)}
+          onUpdated={() => queryClient.invalidateQueries({ queryKey: ['currentUser'] })}
         />
       )}
     </div>
