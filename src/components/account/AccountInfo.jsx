@@ -46,7 +46,11 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
       full_name: user?.full_name || '',
       email: user?.email || '',
       phone_number: user?.phone_number || '',
-      preferred_language: user?.preferred_language || 'en'
+      preferred_language: user?.preferred_language || 'en',
+      advanced_dietary: user?.advanced_dietary || '',
+      techniques_to_practice: user?.techniques_to_practice || '',
+      extra_equipment: user?.extra_equipment || '',
+      vitamin_targets: user?.vitamin_targets || ''
     });
     setIsEditing(false);
   };
