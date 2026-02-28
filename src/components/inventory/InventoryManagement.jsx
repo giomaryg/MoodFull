@@ -9,6 +9,7 @@ import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import PantryAnalytics from './PantryAnalytics';
+import SmartRestock from './SmartRestock';
 
 export default function InventoryManagement({ onGenerateFromExpiring }) {
   const queryClient = useQueryClient();
@@ -25,6 +26,11 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
   const { data: inventory = [], isLoading } = useQuery({
     queryKey: ['inventory'],
     queryFn: () => base44.entities.Ingredient.list()
+  });
+
+  const { data: mealPlans = [] } = useQuery({
+    queryKey: ['mealPlans'],
+    queryFn: () => base44.entities.MealPlan.list('-date', 50)
   });
 
   const addMutation = useMutation({
@@ -297,6 +303,16 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
           >
             Analytics & Insights
           </button>
+          <button
+            onClick={() => setViewMode('restock')}
+            className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${
+              viewMode === 'restock'
+                ? 'bg-white text-[#6b9b76] shadow-sm'
+                : 'text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            Smart Restock
+          </button>
         </div>
       </div>
 
@@ -308,6 +324,17 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
             localStorage.setItem('shoppingListCustomItems', JSON.stringify([...existing, ...newItems]));
             toast.success(`Added ${items.length} AI suggestions to your Shopping List!`);
           }} 
+        />
+      ) : viewMode === 'restock' ? (
+        <SmartRestock 
+          inventory={inventory}
+          mealPlans={mealPlans}
+          onGenerateShoppingList={(items) => {
+            const existing = JSON.parse(localStorage.getItem('shoppingListCustomItems')) || [];
+            const newItems = items.map(i => ({ id: `ai-suggested-${Date.now()}-${Math.random()}`, name: `${i.item} (${i.reason})` }));
+            localStorage.setItem('shoppingListCustomItems', JSON.stringify([...existing, ...newItems]));
+            toast.success(`Added ${items.length} AI suggestions to your Shopping List!`);
+          }}
         />
       ) : (
         <>
