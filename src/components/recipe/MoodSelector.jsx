@@ -173,13 +173,13 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
             return (
               <button
                 key={type.id}
-                onClick={() => handleMealTypeToggle(type.id)} className="bg-transparent text-[#8c8c8c] px-4 py-1.5 text-xs opacity-100 rounded-full flex items-center gap-1.5 border transition-all duration-200 border-[#c5d9c9]/60">
-
-
-
-
-
-
+                onClick={() => handleMealTypeToggle(type.id)} 
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs transition-all duration-200 ${
+                  isSelected
+                    ? 'bg-[#6b9b76]/20 border-[#6b9b76]/45 text-[#6b9b76] font-medium'
+                    : 'bg-transparent border-[#c5d9c9]/60 text-[#8c8c8c]'
+                }`}
+              >
                 <Icon className="w-3.5 h-3.5" />
                 {type.label}
               </button>);
