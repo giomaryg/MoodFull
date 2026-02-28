@@ -1142,6 +1142,15 @@ export default function RecipeGenerator() {
             </motion.div>
           }
 
+          {/* Analytics Tab */}
+          {!showSurvey && activeTab === 'analytics' &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}>
+              <AnalyticsDashboard currentUser={currentUser} />
+            </motion.div>
+          }
+
           {/* Account Tab */}
           {!showSurvey && activeTab === 'account' &&
           <motion.div
