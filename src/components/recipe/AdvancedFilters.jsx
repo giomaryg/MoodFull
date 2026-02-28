@@ -212,11 +212,22 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                 </Select>
               </div>
 
+              {/* Include Ingredients */}
+              <div className="space-y-2 col-span-1 sm:col-span-2 mt-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Include Ingredients</Label>
+                <Input 
+                  placeholder="e.g. chicken, spinach" 
+                  value={filters.includeIngredients || ""}
+                  onChange={(e) => handleFilterChange('includeIngredients', e.target.value)}
+                  className="h-9 border-[#c5d9c9] focus:border-[#6b9b76]"
+                />
+              </div>
+
               {/* Exclude Ingredients */}
-              <div className="space-y-2 col-span-1 sm:col-span-2 md:col-span-3 mt-2">
+              <div className="space-y-2 col-span-1 sm:col-span-2 mt-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Exclude Ingredients</Label>
                 <Input 
-                  placeholder="e.g. onions, garlic, cilantro (comma separated)" 
+                  placeholder="e.g. onions, garlic" 
                   value={filters.excludeIngredients || ""}
                   onChange={(e) => handleFilterChange('excludeIngredients', e.target.value)}
                   className="h-9 border-[#c5d9c9] focus:border-[#6b9b76]"

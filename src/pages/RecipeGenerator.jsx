@@ -120,6 +120,16 @@ export default function RecipeGenerator() {
       );
     }
 
+    if (advancedFilters.includeIngredients) {
+      const inclusions = advancedFilters.includeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      if (inclusions.length > 0) {
+        filtered = filtered.filter((recipe) => {
+          if (!recipe.ingredients) return false;
+          return inclusions.every(inc => recipe.ingredients.some(ing => ing.toLowerCase().includes(inc)));
+        });
+      }
+    }
+
     if (advancedFilters.excludeIngredients) {
       const exclusions = advancedFilters.excludeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
       if (exclusions.length > 0) {
@@ -233,6 +243,16 @@ export default function RecipeGenerator() {
         recipe.name.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
         recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.allergens.toLowerCase()))
       );
+    }
+
+    if (advancedFilters.includeIngredients) {
+      const inclusions = advancedFilters.includeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      if (inclusions.length > 0) {
+        filtered = filtered.filter((recipe) => {
+          if (!recipe.ingredients) return false;
+          return inclusions.every(inc => recipe.ingredients.some(ing => ing.toLowerCase().includes(inc)));
+        });
+      }
     }
 
     if (advancedFilters.excludeIngredients) {
@@ -396,6 +416,8 @@ export default function RecipeGenerator() {
       if (advancedFilters.maxPrepTime) filtersContext.push(`Max Prep Time: ${advancedFilters.maxPrepTime} mins`);
       if (advancedFilters.difficulty) filtersContext.push(`Difficulty: ${advancedFilters.difficulty}`);
       if (advancedFilters.maxCalories) filtersContext.push(`Max Calories: ${advancedFilters.maxCalories}`);
+      if (advancedFilters.includeIngredients) filtersContext.push(`MUST Include: ${advancedFilters.includeIngredients}`);
+      if (advancedFilters.excludeIngredients) filtersContext.push(`MUST AVOID: ${advancedFilters.excludeIngredients}`);
       const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
@@ -559,6 +581,8 @@ export default function RecipeGenerator() {
     if (advancedFilters.maxPrepTime) filtersContext.push(`Max Prep Time: ${advancedFilters.maxPrepTime} mins`);
     if (advancedFilters.difficulty) filtersContext.push(`Difficulty: ${advancedFilters.difficulty}`);
     if (advancedFilters.maxCalories) filtersContext.push(`Max Calories: ${advancedFilters.maxCalories}`);
+    if (advancedFilters.includeIngredients) filtersContext.push(`MUST Include: ${advancedFilters.includeIngredients}`);
+    if (advancedFilters.excludeIngredients) filtersContext.push(`MUST AVOID: ${advancedFilters.excludeIngredients}`);
     const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
 
     try {

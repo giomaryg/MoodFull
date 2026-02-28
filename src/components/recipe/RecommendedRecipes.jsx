@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, Sparkles, RefreshCw, Loader2 } from 'lucide-react';
+import { Clock, Users, ChefHat, Sparkles, RefreshCw, Loader2, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -11,7 +11,27 @@ import { toast } from 'sonner';
 function RecommendedRecipes({ userPreferences, inventory = [], onRecipeClick }) {
   const [recommendations, setRecommendations] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [feedback, setFeedback] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('recipeRecommendationsFeedback')) || { liked: [], disliked: [] }; } catch { return { liked: [], disliked: [] }; }
+  });
   const queryClient = useQueryClient();
+
+  const handleFeedback = (recipe, type, e) => {
+    e.stopPropagation();
+    const newFeedback = { ...feedback };
+    if (type === 'dislike') {
+      newFeedback.disliked.push(recipe.name);
+      setRecommendations(prev => prev.filter(r => r.name !== recipe.name));
+      toast.success('Got it! We will show you less recipes like this.');
+    } else {
+      if (!newFeedback.liked.includes(recipe.name)) {
+        newFeedback.liked.push(recipe.name);
+      }
+      toast.success('Awesome! We will show you more recipes like this.');
+    }
+    setFeedback(newFeedback);
+    localStorage.setItem('recipeRecommendationsFeedback', JSON.stringify(newFeedback));
+  };
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
@@ -62,6 +82,13 @@ function RecommendedRecipes({ userPreferences, inventory = [], onRecipeClick }) 
     if (inventory && inventory.length > 0) {
       const inventoryList = inventory.map(i => i.name).join(', ');
       contextParts.push(`Current pantry inventory (prioritize using these): ${inventoryList}`);
+    }
+
+    if (feedback.liked.length > 0) {
+      contextParts.push(`User recently LIKED these recommendations: ${feedback.liked.slice(-10).join(', ')}`);
+    }
+    if (feedback.disliked.length > 0) {
+      contextParts.push(`User recently DISLIKED these recommendations: ${feedback.disliked.slice(-10).join(', ')}. Do NOT recommend these again.`);
     }
 
     return contextParts.join('\n');
@@ -245,6 +272,22 @@ Each recipe must have:
                       <Sparkles className="w-3 h-3 mr-1" />
                       For You
                     </Badge>
+                  </div>
+                  <div className="absolute top-2 left-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      onClick={(e) => handleFeedback(recipe, 'like', e)} 
+                      className={`p-1.5 rounded-full shadow-sm transition-colors ${feedback.liked.includes(recipe.name) ? 'bg-green-100 text-green-700' : 'bg-white/90 hover:bg-white text-gray-600 hover:text-green-600'}`}
+                      title="Show more like this"
+                    >
+                      <ThumbsUp className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={(e) => handleFeedback(recipe, 'dislike', e)} 
+                      className="p-1.5 bg-white/90 hover:bg-white rounded-full text-gray-600 hover:text-red-600 shadow-sm transition-colors"
+                      title="Show less like this"
+                    >
+                      <ThumbsDown className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
 
