@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -220,6 +220,85 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     return categorized;
   }, [selectedMeals, selectedExtraRecipes, recipes, customItems]);
 
+  const [aiInsights, setAiInsights] = useState(null);
+  const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
+
+  const getAIInsights = async () => {
+    setIsGeneratingInsights(true);
+    try {
+       const itemsToAnalyze = Object.values(shoppingList).flat().map(i => i.original);
+       const response = await base44.integrations.Core.InvokeLLM({
+          prompt: `Analyze this shopping list: ${itemsToAnalyze.join(', ')}.
+1. Categorize these items into logical grocery aisles (e.g. Produce, Meat, Dairy, Pantry, Frozen, etc).
+2. Estimate the total cost in USD.
+3. Suggest 2-3 smart substitutions (for health or budget).
+4. Suggest what local deals to look for based on these items.
+Return JSON.`,
+          response_json_schema: {
+             type: "object",
+             properties: {
+                categories: {
+                   type: "array",
+                   items: {
+                      type: "object",
+                      properties: {
+                         categoryName: { type: "string" },
+                         items: { type: "array", items: { type: "string" } }
+                      }
+                   }
+                },
+                itemCosts: {
+                   type: "array",
+                   items: {
+                      type: "object",
+                      properties: {
+                         item: { type: "string" },
+                         estimatedCost: { type: "string" }
+                      }
+                   }
+                },
+                estimatedTotalCost: { type: "string" },
+                substitutions: { type: "array", items: { type: "string" } },
+                dealsToLookFor: { type: "array", items: { type: "string" } }
+             }
+          }
+       });
+       setAiInsights(response);
+    } catch (e) {
+       toast.error("Failed to generate AI insights");
+    }
+    setIsGeneratingInsights(false);
+  };
+
+  const { displayCategories, inPantryItems } = useMemo(() => {
+    const flat = Object.values(shoppingList).flat();
+    const result = [];
+    
+    if (aiInsights && aiInsights.categories) {
+      aiInsights.categories.forEach(cat => {
+        const catItems = cat.items.map(orig => flat.find(f => f.original === orig)).filter(Boolean);
+        if (catItems.length > 0) {
+          result.push({ category: cat.categoryName, items: catItems });
+        }
+      });
+      const aiMissed = flat.filter(f => !aiInsights.categories.some(c => c.items.includes(f.original)));
+      if (aiMissed.length > 0) result.push({ category: 'Other', items: aiMissed });
+    } else {
+      Object.entries(shoppingList).forEach(([category, items]) => {
+        if (items.length > 0) result.push({ category, items });
+      });
+    }
+
+    const toBuy = result.map(c => ({
+      category: c.category,
+      items: c.items.filter(item => !checkedItems[item.key])
+    })).filter(c => c.items.length > 0);
+
+    const pantry = flat.filter(item => checkedItems[item.key]);
+
+    return { displayCategories: toBuy, inPantryItems: pantry };
+  }, [shoppingList, aiInsights, checkedItems]);
+
   const toggleItem = (key) => {
     setCheckedItems((prev) => ({
       ...prev,
@@ -240,20 +319,19 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     text += '=== BY RECIPE ===\n\n';
     shoppingByRecipe.forEach((group) => {
       text += `${group.recipeName}\n`;
-      text += `${group.mealType} on ${new Date(group.mealDate).toLocaleDateString()}\n`;
+      text += `${group.details}\n`;
       group.ingredients.forEach(ingredient => {
         text += `  - ${ingredient}\n`;
       });
       text += '\n';
     });
 
-    text += '\n=== CONSOLIDATED LIST ===\n\n';
-    Object.entries(shoppingList).forEach(([category, items]) => {
+    text += '\n=== TO BUY ===\n\n';
+    displayCategories.forEach(({ category, items }) => {
       if (items.length > 0) {
         text += `${category}\n`;
         items.forEach((item) => {
-          const check = checkedItems[item.key] ? '✓' : '○';
-          text += `  ${check} ${item.original}`;
+          text += `  ○ ${item.original}`;
           if (item.recipes.length > 1) {
             text += ` (${item.recipes.length} recipes)`;
           }
@@ -262,6 +340,13 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         text += '\n';
       }
     });
+
+    if (inPantryItems.length > 0) {
+       text += '\n=== ALREADY IN PANTRY ===\n\n';
+       inPantryItems.forEach((item) => {
+          text += `  ✓ ${item.original}\n`;
+       });
+    }
 
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -691,65 +776,138 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
               </Button>
             </div>
 
-            {Object.entries(shoppingList).map(([category, items]) => {
-              if (items.length === 0) return null;
+            {!aiInsights && (
+              <Button 
+                onClick={getAIInsights} 
+                disabled={isGeneratingInsights} 
+                className="w-full bg-gradient-to-r from-[#6b9b76] to-[#5a8a65] text-white shadow-md hover:shadow-lg transition-all border-none py-6 rounded-xl"
+              >
+                {isGeneratingInsights ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Sparkles className="w-5 h-5 mr-2" />}
+                <span className="font-bold text-lg">Generate AI Shopping Insights</span>
+              </Button>
+            )}
 
-              return (
-                <div key={category}>
-                  <h4 className="text-lg font-semibold text-[#6b9b76] mb-3 pb-2 border-b-2 border-[#c5d9c9]">
-                    {category}
+            {aiInsights && (
+              <div className="bg-[#f8faf8] p-5 rounded-2xl border-2 border-[#c5d9c9] mb-8">
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="font-bold text-[#6b9b76] flex items-center gap-2">
+                    <Sparkles className="w-5 h-5"/> AI Shopping Assistant
                   </h4>
-                  <div className="space-y-2">
-                    {items.map((item) => (
-                      <button
-                        key={item.key}
-                        onClick={() => toggleItem(item.key)}
-                        className={`w-full text-left p-3 rounded-xl border-2 transition-all flex items-start gap-3 ${
-                          checkedItems[item.key]
-                            ? 'bg-gray-50 border-gray-300 opacity-60'
-                            : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
-                        }`}
-                      >
-                        {checkedItems[item.key] ? (
-                          <CheckSquare className="w-5 h-5 text-[#6b9b76] flex-shrink-0 mt-0.5" />
-                        ) : (
-                          <Square className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                        )}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className={`font-medium ${checkedItems[item.key] ? 'line-through text-gray-500' : 'text-[#5a6f60]'}`}>
-                              {item.original}
-                            </p>
-                            {checkedItems[item.key] && !item.key.startsWith('custom-') && (
-                              <span className="text-[10px] font-medium bg-[#f0f9f2] text-[#6b9b76] px-1.5 py-0.5 rounded border border-[#6b9b76]/30">In Pantry</span>
-                            )}
-                          </div>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {item.recipes.length > 1 ? `Used in ${item.recipes.length} recipes: ` : 'Used in: '}
-                            {item.recipes.join(', ')}
-                          </p>
-                        </div>
-                        {item.key.startsWith('custom-') && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setCustomItems(prev => prev.filter(c => c.id !== item.key));
-                              const newChecked = { ...checkedItems };
-                              delete newChecked[item.key];
-                              setCheckedItems(newChecked);
-                            }}
-                            className="p-1.5 hover:bg-red-50 text-red-400 hover:text-red-500 rounded-lg transition-colors ml-2"
-                            title="Remove custom item"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                      </button>
-                    ))}
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Estimated Total</p>
+                    <p className="font-bold text-2xl text-[#5a6f60]">{aiInsights.estimatedTotalCost}</p>
                   </div>
                 </div>
-              );
-            })}
+                
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-bold text-[#5a6f60] mb-2 flex items-center gap-1.5">
+                      <span>💡</span> Smart Substitutions
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-1.5">
+                      {aiInsights.substitutions.map((sub, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] mt-1.5 shrink-0" />
+                          <span>{sub}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="pt-3 border-t border-[#c5d9c9]/50">
+                    <p className="text-sm font-bold text-[#5a6f60] mb-2 flex items-center gap-1.5">
+                      <span>🏷️</span> Local Deals to Watch For
+                    </p>
+                    <ul className="text-sm text-gray-600 space-y-1.5">
+                      {aiInsights.dealsToLookFor.map((deal, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#c17a7a] mt-1.5 shrink-0" />
+                          <span>{deal}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {displayCategories.map(({ category, items }) => (
+              <div key={category}>
+                <h4 className="text-lg font-semibold text-[#6b9b76] mb-3 pb-2 border-b-2 border-[#c5d9c9]">
+                  {category}
+                </h4>
+                <div className="space-y-2">
+                  {items.map((item) => {
+                    const aiCost = aiInsights?.itemCosts?.find(c => c.item === item.original)?.estimatedCost;
+                    return (
+                    <button
+                      key={item.key}
+                      onClick={() => toggleItem(item.key)}
+                      className="w-full text-left p-3 rounded-xl border-2 transition-all flex items-start gap-3 bg-white border-[#c5d9c9] hover:border-[#6b9b76] group"
+                    >
+                      <Square className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5 group-hover:text-[#6b9b76]" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-medium text-[#5a6f60]">
+                            {item.original}
+                          </p>
+                          {aiCost && (
+                            <span className="text-xs font-semibold text-[#6b9b76] bg-[#f0f9f2] px-2 py-0.5 rounded-md border border-[#c5d9c9]">
+                              {aiCost}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {item.recipes.length > 1 ? `Used in ${item.recipes.length} recipes: ` : 'Used in: '}
+                          {item.recipes.join(', ')}
+                        </p>
+                      </div>
+                      {item.key.startsWith('custom-') && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCustomItems(prev => prev.filter(c => c.id !== item.key));
+                            const newChecked = { ...checkedItems };
+                            delete newChecked[item.key];
+                            setCheckedItems(newChecked);
+                          }}
+                          className="p-1.5 hover:bg-red-50 text-red-400 hover:text-red-500 rounded-lg transition-colors ml-2"
+                          title="Remove custom item"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                    </button>
+                  )})}
+                </div>
+              </div>
+            ))}
+
+            {inPantryItems.length > 0 && (
+              <div className="mt-10 opacity-70 hover:opacity-100 transition-opacity bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                <h4 className="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider flex items-center gap-2">
+                  <CheckSquare className="w-4 h-4" /> Already in Pantry ({inPantryItems.length})
+                </h4>
+                <div className="space-y-2">
+                  {inPantryItems.map((item) => (
+                    <button
+                      key={item.key}
+                      onClick={() => toggleItem(item.key)}
+                      className="w-full text-left px-3 py-2 rounded-xl border border-transparent hover:border-gray-300 transition-all flex items-center gap-3 bg-white shadow-sm"
+                    >
+                      <CheckSquare className="w-4 h-4 text-[#6b9b76] flex-shrink-0" />
+                      <div className="flex-1 flex items-center gap-2">
+                        <p className="text-sm font-medium line-through text-gray-500">
+                          {item.original}
+                        </p>
+                        {!item.key.startsWith('custom-') && (
+                          <span className="text-[10px] font-medium bg-[#f0f9f2] text-[#6b9b76] px-1.5 py-0.5 rounded border border-[#6b9b76]/30">In Pantry</span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </motion.div>
