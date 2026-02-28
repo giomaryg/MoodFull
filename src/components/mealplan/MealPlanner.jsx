@@ -81,12 +81,48 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
       .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [mealPlans]);
 
+  const parseMacro = (str) => {
+    if (!str) return 0;
+    const match = str.match(/(\d+)/);
+    return match ? parseInt(match[1]) : 0;
+  };
+
+  const getDayNutrition = (day) => {
+    let cals = 0, protein = 0, carbs = 0, fat = 0;
+    const dateString = format(day, 'yyyy-MM-dd');
+    const daysMeals = mealPlans.filter(p => p.date === dateString);
+    daysMeals.forEach(meal => {
+      const recipe = recipes.find(r => r.id === meal.recipe_id);
+      if (recipe && recipe.nutrition) {
+        cals += (recipe.nutrition.calories || 0);
+        protein += parseMacro(recipe.nutrition.protein);
+        carbs += parseMacro(recipe.nutrition.carbs);
+        fat += parseMacro(recipe.nutrition.fat);
+      }
+    });
+    return { calories: cals, protein, carbs, fat };
+  };
+
   const getMealsForDay = (date, mealType) => {
     const dateString = format(date, 'yyyy-MM-dd');
     return mealPlans.filter(
       (plan) => plan.date === dateString && plan.meal_type === mealType
     );
   };
+
+  const weeklyAverages = useMemo(() => {
+    let tCals = 0, tPro = 0, tCarb = 0, tFat = 0;
+    weekDays.forEach(day => {
+      const d = getDayNutrition(day);
+      tCals += d.calories; tPro += d.protein; tCarb += d.carbs; tFat += d.fat;
+    });
+    return {
+      calories: Math.round(tCals / 7),
+      protein: Math.round(tPro / 7),
+      carbs: Math.round(tCarb / 7),
+      fat: Math.round(tFat / 7)
+    };
+  }, [weekDays, mealPlans, recipes]);
 
   const handleAddMeal = (date, mealType) => {
     setSelectedDate(date);
