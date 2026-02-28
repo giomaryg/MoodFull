@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts';
-import { TrendingUp, Utensils, DollarSign, Activity, FileSpreadsheet, FileText, Bot, Loader2 } from 'lucide-react';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line, ReferenceLine } from 'recharts';
+import { TrendingUp, Utensils, DollarSign, Activity, FileSpreadsheet, FileText, Bot, Loader2, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -11,6 +11,12 @@ import ReactMarkdown from 'react-markdown';
 export default function AnalyticsDashboard() {
   const [aiReport, setAiReport] = useState('');
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+  
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   const { data: mealPlans = [] } = useQuery({
     queryKey: ['mealPlans'],
     queryFn: () => base44.entities.MealPlan.list('-date', 200)
@@ -57,30 +63,77 @@ export default function AnalyticsDashboard() {
     
     const avgCalories = mealsWithNutrition > 0 ? Math.round(totalCals / mealsWithNutrition) : 0;
 
-    // 3. Spending patterns (Mocked based on ingredient counts across shopping lists / meal plans)
-    // Estimate cost per meal plan: each ingredient roughly $2.50 per serving
+    // 3. Daily Nutritional Intake (last 14 days)
+    const last14Days = Array.from({length: 14}, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (13 - i));
+      return d.toISOString().split('T')[0];
+    });
+
+    const intakeOverTime = last14Days.map(date => {
+      const dayPlans = mealPlans.filter(p => p.date === date);
+      let cals = 0, pro = 0, carbs = 0, fat = 0;
+      dayPlans.forEach(plan => {
+        const recipe = recipes.find(r => r.id === plan.recipe_id);
+        if (recipe && recipe.nutrition) {
+          cals += (recipe.nutrition.calories || 0);
+          pro += parseInt(recipe.nutrition.protein) || 0;
+          carbs += parseInt(recipe.nutrition.carbs) || 0;
+          fat += parseInt(recipe.nutrition.fat) || 0;
+        }
+      });
+      return { 
+        date: date.substring(5).replace('-', '/'), 
+        fullDate: date,
+        Calories: cals, 
+        Protein: pro, 
+        Carbs: carbs, 
+        Fat: fat 
+      };
+    });
+
+    // 4. Compliance Rate
+    let daysWithMeals = 0;
+    let daysHitGoal = 0;
+    const targetCals = currentUser?.daily_calorie_target || 2000;
+    
+    intakeOverTime.forEach(day => {
+      if (day.Calories > 0) {
+        daysWithMeals++;
+        if (Math.abs(day.Calories - targetCals) <= targetCals * 0.15) {
+          daysHitGoal++;
+        }
+      }
+    });
+    
+    const complianceRate = daysWithMeals > 0 ? Math.round((daysHitGoal / daysWithMeals) * 100) : 0;
+
+    // 5. Spending patterns (Weekly for better granularity)
     const spendingData = [];
-    const monthlySpending = {};
+    const weeklySpending = {};
     
     mealPlans.forEach(plan => {
       if (!plan.date) return;
-      const month = plan.date.substring(0, 7); // YYYY-MM
+      const d = new Date(plan.date);
+      const startOfWeek = new Date(d.setDate(d.getDate() - d.getDay()));
+      const weekLabel = startOfWeek.toISOString().substring(0, 10);
+      
       const recipe = recipes.find(r => r.id === plan.recipe_id);
       const ingredientCount = recipe?.ingredients?.length || plan.custom_ingredients?.length || 5;
-      const estimatedCost = ingredientCount * 2.5 * ((plan.servings || 2) / 2); // basic scaling
+      const estimatedCost = ingredientCount * 2.5 * ((plan.servings || 2) / 2);
       
-      monthlySpending[month] = (monthlySpending[month] || 0) + estimatedCost;
+      weeklySpending[weekLabel] = (weeklySpending[weekLabel] || 0) + estimatedCost;
     });
 
-    Object.entries(monthlySpending)
+    Object.entries(weeklySpending)
       .sort(([a], [b]) => a.localeCompare(b))
-      .slice(-6)
-      .forEach(([month, cost]) => {
-        spendingData.push({ month: month.substring(5) + '/' + month.substring(2,4), cost: Math.round(cost) });
+      .slice(-8) // last 8 weeks
+      .forEach(([week, cost]) => {
+        spendingData.push({ week: week.substring(5).replace('-', '/'), cost: Math.round(cost) });
       });
 
-    return { frequentRecipes, avgNutrition, avgCalories, spendingData };
-  }, [mealPlans, recipes]);
+    return { frequentRecipes, avgNutrition, avgCalories, intakeOverTime, complianceRate, spendingData };
+  }, [mealPlans, recipes, currentUser]);
 
   const COLORS = ['#6b9b76', '#c17a7a', '#e8d5c4', '#5a6f60'];
 
