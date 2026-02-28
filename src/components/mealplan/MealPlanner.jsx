@@ -861,6 +861,13 @@ Make them balanced, diverse, and delicious. Include:
 
        <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
          <button
+           onClick={(e) => markAsCooked(e, meal)}
+           className="p-1 hover:bg-white/50 rounded"
+           title="Mark as Cooked (Deduct Inventory)"
+         >
+           <Check className="w-3 h-3 text-green-600" />
+         </button>
+         <button
            onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
            className="p-1 hover:bg-white/50 rounded"
            title="Swap Meal"
