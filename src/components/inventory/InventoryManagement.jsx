@@ -217,6 +217,12 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
 
   const expiringItems = getExpiringSoon();
 
+  const recentlyAddedItems = React.useMemo(() => {
+    return [...inventory]
+      .sort((a, b) => new Date(b.created_date || 0) - new Date(a.created_date || 0))
+      .slice(0, 5);
+  }, [inventory]);
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="text-center space-y-2 mb-8">
