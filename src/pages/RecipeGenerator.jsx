@@ -116,28 +116,28 @@ export default function RecipeGenerator() {
 
     if (advancedFilters.allergens) {
       filtered = filtered.filter((recipe) =>
-        recipe.description?.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
-        recipe.name.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
-        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.allergens.toLowerCase()))
+      recipe.description?.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+      recipe.name.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+      recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.allergens.toLowerCase()))
       );
     }
 
     if (advancedFilters.includeIngredients) {
-      const inclusions = advancedFilters.includeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      const inclusions = advancedFilters.includeIngredients.toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
       if (inclusions.length > 0) {
         filtered = filtered.filter((recipe) => {
           if (!recipe.ingredients) return false;
-          return inclusions.every(inc => recipe.ingredients.some(ing => ing.toLowerCase().includes(inc)));
+          return inclusions.every((inc) => recipe.ingredients.some((ing) => ing.toLowerCase().includes(inc)));
         });
       }
     }
 
     if (advancedFilters.excludeIngredients) {
-      const exclusions = advancedFilters.excludeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      const exclusions = advancedFilters.excludeIngredients.toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
       if (exclusions.length > 0) {
         filtered = filtered.filter((recipe) => {
           if (!recipe.ingredients) return true;
-          return !recipe.ingredients.some(ing => exclusions.some(ex => ing.toLowerCase().includes(ex)));
+          return !recipe.ingredients.some((ing) => exclusions.some((ex) => ing.toLowerCase().includes(ex)));
         });
       }
     }
@@ -162,13 +162,13 @@ export default function RecipeGenerator() {
     }
 
     if (advancedFilters.usePantry && inventory && inventory.length > 0) {
-      const inventoryNames = inventory.map(i => i.name.toLowerCase());
+      const inventoryNames = inventory.map((i) => i.name.toLowerCase());
       filtered = filtered.filter((recipe) => {
         if (!recipe.ingredients || recipe.ingredients.length === 0) return false;
-        const matchCount = recipe.ingredients.filter(ing => 
-          inventoryNames.some(inv => ing.toLowerCase().includes(inv))
+        const matchCount = recipe.ingredients.filter((ing) =>
+        inventoryNames.some((inv) => ing.toLowerCase().includes(inv))
         ).length;
-        return (matchCount / recipe.ingredients.length) >= 0.5;
+        return matchCount / recipe.ingredients.length >= 0.5;
       });
     }
 
@@ -241,28 +241,28 @@ export default function RecipeGenerator() {
 
     if (advancedFilters.allergens) {
       filtered = filtered.filter((recipe) =>
-        recipe.description?.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
-        recipe.name.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
-        recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.allergens.toLowerCase()))
+      recipe.description?.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+      recipe.name.toLowerCase().includes(advancedFilters.allergens.toLowerCase()) ||
+      recipe.ingredients?.some((ing) => ing.toLowerCase().includes(advancedFilters.allergens.toLowerCase()))
       );
     }
 
     if (advancedFilters.includeIngredients) {
-      const inclusions = advancedFilters.includeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      const inclusions = advancedFilters.includeIngredients.toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
       if (inclusions.length > 0) {
         filtered = filtered.filter((recipe) => {
           if (!recipe.ingredients) return false;
-          return inclusions.every(inc => recipe.ingredients.some(ing => ing.toLowerCase().includes(inc)));
+          return inclusions.every((inc) => recipe.ingredients.some((ing) => ing.toLowerCase().includes(inc)));
         });
       }
     }
 
     if (advancedFilters.excludeIngredients) {
-      const exclusions = advancedFilters.excludeIngredients.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+      const exclusions = advancedFilters.excludeIngredients.toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
       if (exclusions.length > 0) {
         filtered = filtered.filter((recipe) => {
           if (!recipe.ingredients) return true;
-          return !recipe.ingredients.some(ing => exclusions.some(ex => ing.toLowerCase().includes(ex)));
+          return !recipe.ingredients.some((ing) => exclusions.some((ex) => ing.toLowerCase().includes(ex)));
         });
       }
     }
@@ -287,13 +287,13 @@ export default function RecipeGenerator() {
     }
 
     if (advancedFilters.usePantry && inventory && inventory.length > 0) {
-      const inventoryNames = inventory.map(i => i.name.toLowerCase());
+      const inventoryNames = inventory.map((i) => i.name.toLowerCase());
       filtered = filtered.filter((recipe) => {
         if (!recipe.ingredients || recipe.ingredients.length === 0) return false;
-        const matchCount = recipe.ingredients.filter(ing => 
-          inventoryNames.some(inv => ing.toLowerCase().includes(inv))
+        const matchCount = recipe.ingredients.filter((ing) =>
+        inventoryNames.some((inv) => ing.toLowerCase().includes(inv))
         ).length;
-        return (matchCount / recipe.ingredients.length) >= 0.5;
+        return matchCount / recipe.ingredients.length >= 0.5;
       });
     }
 
@@ -406,7 +406,7 @@ export default function RecipeGenerator() {
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
-    const recentMeals = mealPlans.filter(m => new Date(m.date) <= new Date()).slice(0, 15).map(m => m.recipe_name).join(', ');
+    const recentMeals = mealPlans.filter((m) => new Date(m.date) <= new Date()).slice(0, 15).map((m) => m.recipe_name).join(', ');
     if (recentMeals) {
       preferencesContext += ` History (AVOID repeats, learn preferences): ${recentMeals}.`;
     }
@@ -521,16 +521,16 @@ export default function RecipeGenerator() {
         try {
           const recipe = quickRecipes[index];
           const [img1, img2, img3] = await Promise.all([
-            base44.integrations.Core.GenerateImage({
-              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
-            }),
-            base44.integrations.Core.GenerateImage({
-              prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
-            }),
-            base44.integrations.Core.GenerateImage({
-              prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
-            })
-          ]);
+          base44.integrations.Core.GenerateImage({
+            prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+          }),
+          base44.integrations.Core.GenerateImage({
+            prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
+          }),
+          base44.integrations.Core.GenerateImage({
+            prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
+          })]
+          );
           setGeneratedRecipes((prev) => prev.map((r, i) =>
           i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
           ));
@@ -553,7 +553,7 @@ export default function RecipeGenerator() {
       setActiveTab('inventory');
       return;
     }
-    
+
     if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
       const today = new Date().toISOString().slice(0, 10);
       const lastReset = currentUser?.daily_mood_reset_date;
@@ -579,12 +579,12 @@ export default function RecipeGenerator() {
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
-    const recentMeals = mealPlans.filter(m => new Date(m.date) <= new Date()).slice(0, 15).map(m => m.recipe_name).join(', ');
+    const recentMeals = mealPlans.filter((m) => new Date(m.date) <= new Date()).slice(0, 15).map((m) => m.recipe_name).join(', ');
     if (recentMeals) {
       preferencesContext += ` History (AVOID repeats, learn preferences): ${recentMeals}.`;
     }
 
-    const inventoryList = inventory.map(i => `${i.name}`).join(', ');
+    const inventoryList = inventory.map((i) => `${i.name}`).join(', ');
     const priorityItems = expiringItemsList ? `URGENT - MUST USE these expiring items: ${expiringItemsList.join(', ')}` : `Prioritize using: ${inventoryList}`;
 
     let filtersContext = [];
@@ -624,15 +624,15 @@ export default function RecipeGenerator() {
         }
       });
 
-      const quickRecipes = (quickResponse.recipes || [])
-        .filter((r) => r && r.name && r.description)
-        .map((recipe) => ({
-          ...recipe,
-          mood: 'From Pantry',
-          ingredients: [],
-          instructions: [],
-          _loading: true
-        }));
+      const quickRecipes = (quickResponse.recipes || []).
+      filter((r) => r && r.name && r.description).
+      map((recipe) => ({
+        ...recipe,
+        mood: 'From Pantry',
+        ingredients: [],
+        instructions: [],
+        _loading: true
+      }));
 
       if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
         const today = new Date().toISOString().slice(0, 10);
@@ -681,28 +681,28 @@ export default function RecipeGenerator() {
       enrichPromises.forEach(async (promise) => {
         const { index, detail } = await promise;
         setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
+        i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
         ));
 
         try {
           const recipe = quickRecipes[index];
           const [img1, img2, img3] = await Promise.all([
-            base44.integrations.Core.GenerateImage({
-              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
-            }),
-            base44.integrations.Core.GenerateImage({
-              prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
-            }),
-            base44.integrations.Core.GenerateImage({
-              prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
-            })
-          ]);
+          base44.integrations.Core.GenerateImage({
+            prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+          }),
+          base44.integrations.Core.GenerateImage({
+            prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
+          }),
+          base44.integrations.Core.GenerateImage({
+            prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
+          })]
+          );
           setGeneratedRecipes((prev) => prev.map((r, i) =>
-            i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
+          i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
           ));
         } catch {
           setGeneratedRecipes((prev) => prev.map((r, i) =>
-            i === index ? { ...r, imageLoading: false } : r
+          i === index ? { ...r, imageLoading: false } : r
           ));
         }
       });
@@ -759,15 +759,15 @@ export default function RecipeGenerator() {
         }
       });
 
-      const quickRecipes = (quickResponse.recipes || [])
-        .filter((r) => r && r.name && r.description)
-        .map((recipe) => ({
-          ...recipe,
-          mood: 'Combined Creation',
-          ingredients: [],
-          instructions: [],
-          _loading: true
-        }));
+      const quickRecipes = (quickResponse.recipes || []).
+      filter((r) => r && r.name && r.description).
+      map((recipe) => ({
+        ...recipe,
+        mood: 'Combined Creation',
+        ingredients: [],
+        instructions: [],
+        _loading: true
+      }));
 
       setGeneratedRecipes(quickRecipes);
       setIsGenerating(false);
@@ -808,28 +808,28 @@ export default function RecipeGenerator() {
       enrichPromises.forEach(async (promise) => {
         const { index, detail } = await promise;
         setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
+        i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
         ));
 
         try {
           const recipe = quickRecipes[index];
           const [img1, img2, img3] = await Promise.all([
-            base44.integrations.Core.GenerateImage({
-              prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
-            }),
-            base44.integrations.Core.GenerateImage({
-              prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
-            }),
-            base44.integrations.Core.GenerateImage({
-              prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
-            })
-          ]);
+          base44.integrations.Core.GenerateImage({
+            prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
+          }),
+          base44.integrations.Core.GenerateImage({
+            prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.`
+          }),
+          base44.integrations.Core.GenerateImage({
+            prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.`
+          })]
+          );
           setGeneratedRecipes((prev) => prev.map((r, i) =>
-            i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
+          i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
           ));
         } catch {
           setGeneratedRecipes((prev) => prev.map((r, i) =>
-            i === index ? { ...r, imageLoading: false } : r
+          i === index ? { ...r, imageLoading: false } : r
           ));
         }
       });
@@ -1033,14 +1033,14 @@ export default function RecipeGenerator() {
                       <div>
                         <p className="font-semibold text-amber-800">Daily limit reached</p>
                         <p className="text-amber-700 text-xs">You've used your 3 free generations for today. Resets in 24 hours — or <button onClick={() => setShowPaywall(true)} className="underline font-semibold">upgrade for unlimited</button>.</p>
-                        <button 
-                          onClick={async () => {
-                            await base44.auth.updateMe({ daily_mood_count: 0, daily_mood_reset_date: null });
-                            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-                            toast.success('Daily limit reset for testing!');
-                          }} 
-                          className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 px-2 py-1 rounded hover:bg-amber-200 transition-colors"
-                        >
+                        <button
+                        onClick={async () => {
+                          await base44.auth.updateMe({ daily_mood_count: 0, daily_mood_reset_date: null });
+                          queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+                          toast.success('Daily limit reset for testing!');
+                        }}
+                        className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 px-2 py-1 rounded hover:bg-amber-200 transition-colors">
+
                           Reset Limit (Dev)
                         </button>
                       </div>
@@ -1097,8 +1097,8 @@ export default function RecipeGenerator() {
 
                     <Button
                   onClick={() => setShowCombineDialog(true)}
-                  disabled={isGenerating}
-                  className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
+                  disabled={isGenerating} className="bg-[#f2b769] text-white px-8 py-6 text-sm font-bold tracking-tight rounded-[20px] whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-9 from-purple-500 to-indigo-500 shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 sm:text-base sm:px-12 sm:py-7 w-full sm:w-auto flex items-center justify-center gap-2">
+
                       <UtensilsCrossed className="w-5 h-5" /> Combine & Create
                     </Button>
                   </motion.div>
@@ -1210,7 +1210,7 @@ export default function RecipeGenerator() {
                 <p className="text-gray-600">Browse and manage your collection</p>
               </div>
 
-              {(!currentUser?.is_premium && currentUser?.role !== 'admin') ?
+              {!currentUser?.is_premium && currentUser?.role !== 'admin' ?
             <div className="relative">
                   {/* Blurred preview */}
                   <div className="blur-sm pointer-events-none select-none">
@@ -1297,10 +1297,10 @@ export default function RecipeGenerator() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}>
 
-              <MealPlanner 
-                onOpenShoppingList={() => setShowShoppingList(true)} 
-                generatedRecipes={generatedRecipes}
-              />
+              <MealPlanner
+              onOpenShoppingList={() => setShowShoppingList(true)}
+              generatedRecipes={generatedRecipes} />
+
             </motion.div>
           }
 
@@ -1309,12 +1309,12 @@ export default function RecipeGenerator() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}>
-              <InventoryManagement 
-                onGenerateFromExpiring={(items) => {
-                  setActiveTab('home');
-                  generateFromInventory(items);
-                }}
-              />
+              <InventoryManagement
+              onGenerateFromExpiring={(items) => {
+                setActiveTab('home');
+                generateFromInventory(items);
+              }} />
+
             </motion.div>
           }
 
@@ -1367,8 +1367,8 @@ export default function RecipeGenerator() {
         inventory={inventory}
         savedRecipes={savedRecipes}
         onGenerate={handleCombineAndGenerate}
-        isGenerating={isGenerating}
-      />
+        isGenerating={isGenerating} />
+
 
       {/* Global Shopping List Modal */}
       {showShoppingList &&
