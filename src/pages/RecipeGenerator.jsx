@@ -20,6 +20,7 @@ import MealPlanner from '../components/mealplan/MealPlanner';
 import ShoppingList from '../components/mealplan/ShoppingList';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
+import DiscoveryFeed from '../components/recipe/DiscoveryFeed';
 import Paywall from '../components/paywall/Paywall';
 import CombinationCookingDialog from '../components/recipe/CombinationCookingDialog';
 import ThreeBackground from '../components/ThreeBackground';
@@ -1016,71 +1017,7 @@ export default function RecipeGenerator() {
 
               </div>
 
-              {/* Show Saved Recipes when searching or when no generated recipes */}
-              {(globalSearchQuery || Object.keys(advancedFilters).length > 0) && !currentRecipe && generatedRecipes.length === 0 &&
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-4">
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <h3 className="text-xl sm:text-2xl font-bold text-[#6b9b76]">
-                      Search Results ({filteredSavedRecipes.length})
-                    </h3>
-                    <Button
-                  onClick={() => generateRecipe()}
-                  disabled={isGenerating}
-                  variant="outline"
-                  className="border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] w-full sm:w-auto">
-
-                      {isGenerating ?
-                  <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Generating...
-                        </> :
-
-                  <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          Generate "{globalSearchQuery}" recipes
-                        </>
-                  }
-                    </Button>
-                  </div>
-                  {filteredSavedRecipes.length > 0 ?
-              <SavedRecipes
-                recipes={filteredSavedRecipes}
-                onRecipeClick={(recipe) => {
-                  handleSavedRecipeClick(recipe);
-                }}
-                searchQuery={globalSearchQuery} /> :
-
-
-              <div className="text-center py-12 bg-white rounded-2xl border-2 border-[#c5d9c9]">
-                      <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                      <p className="text-gray-600 text-lg mb-2">No saved recipes found matching "{globalSearchQuery}"</p>
-                      <p className="text-gray-500 text-sm mb-6">But you can generate new ones!</p>
-                      
-                      <Button
-                  onClick={() => generateRecipe()}
-                  disabled={isGenerating}
-                  className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white">
-
-                        {isGenerating ?
-                  <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Generating "{globalSearchQuery}" recipes...
-                          </> :
-
-                  <>
-                            <Sparkles className="w-4 h-4 mr-2" />
-                            Generate recipes for "{globalSearchQuery}"
-                          </>
-                  }
-                      </Button>
-                    </div>
-              }
-                </motion.div>
-            }
 
               {/* Daily limit notice */}
               {!currentUser?.is_premium && currentUser?.role !== 'admin' && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (() => {
@@ -1244,11 +1181,15 @@ export default function RecipeGenerator() {
               }
               </AnimatePresence>
 
-              {/* Personalized Recommendations - Only show when not searching */}
-              {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
-            <RecommendedRecipes
+              {/* Personalized Discovery Feed - Only show when not searching for specific generated recipes */}
+              {!currentRecipe && generatedRecipes.length === 0 &&
+            <DiscoveryFeed
               userPreferences={userPreferences}
               inventory={inventory}
+              searchQuery={globalSearchQuery}
+              advancedFilters={advancedFilters}
+              selectedMoods={selectedMoods}
+              selectedMealTypes={selectedMealTypes}
               onRecipeClick={(recipe) => {
                 setScrollPosition(window.scrollY);
                 setCurrentRecipe(recipe);
