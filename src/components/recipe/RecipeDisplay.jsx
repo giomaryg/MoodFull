@@ -385,18 +385,28 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               </button>
             )}
             
-            <motion.div 
-              animate={{ rotateY: 360 }}
-              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-              className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.4)] border-[6px] border-white/30 relative z-10"
-              style={{ transformStyle: "preserve-3d" }}
-            >
+            {currentImageIndex === 0 ? (
+              <motion.div 
+                animate={{ rotateY: 360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.4)] border-[6px] border-white/30 relative z-10"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                  <img
+                  key={images[currentImageIndex]}
+                  src={images[currentImageIndex]}
+                  alt={recipe.name}
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+              </motion.div>
+            ) : (
+              <div className="w-full h-full relative z-10">
                 <img
-                key={images[currentImageIndex]}
-                src={images[currentImageIndex]}
-                alt={recipe.name}
-                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
-            </motion.div>
+                  key={images[currentImageIndex]}
+                  src={images[currentImageIndex]}
+                  alt={recipe.name}
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+              </div>
+            )}
 
             {images.length > 1 && (
               <button 
