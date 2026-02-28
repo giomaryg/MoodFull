@@ -44,12 +44,40 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
     if (mode === 'select') {
       if (!selectedRecipe) return;
 
+      let finalIngredients = selectedRecipe.ingredients || [];
+      const newServings = servings ? parseInt(servings) : selectedRecipe.servings;
+      
+      if (newServings && selectedRecipe.servings && newServings !== selectedRecipe.servings) {
+        const ratio = newServings / selectedRecipe.servings;
+        finalIngredients = finalIngredients.map(ing => {
+          return ing.replace(/^([\d\s\.\/]+)/, (match) => {
+            try {
+              const val = match.trim().split(' ').reduce((acc, part) => {
+                if (part.includes('/')) {
+                  const [num, den] = part.split('/');
+                  return acc + (Number(num) / Number(den));
+                }
+                return acc + Number(part);
+              }, 0);
+              if (isNaN(val) || val === 0) return match;
+              
+              let newVal = val * ratio;
+              newVal = Math.round(newVal * 100) / 100;
+              return newVal + ' ';
+            } catch (e) {
+              return match;
+            }
+          });
+        });
+      }
+
       addMealMutation.mutate({
         recipe_id: selectedRecipe.id,
         recipe_name: selectedRecipe.name,
         date: format(selectedDate, 'yyyy-MM-dd'),
         meal_type: selectedMealType,
-        servings: servings ? parseInt(servings) : selectedRecipe.servings,
+        servings: newServings,
+        custom_ingredients: finalIngredients,
         notes
       });
     } else {

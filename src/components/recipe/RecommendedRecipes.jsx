@@ -204,7 +204,7 @@ Each recipe must have:
               Discover recipes tailored just for you!
             </p>
             <p className="text-sm text-gray-500">
-              Based on your preferences, saved recipes, and meal planning history
+              Based on your preferences, saved recipes, meal planning history, and pantry inventory
             </p>
           </CardContent>
         </Card>
