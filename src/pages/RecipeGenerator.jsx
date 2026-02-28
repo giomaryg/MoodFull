@@ -404,6 +404,11 @@ export default function RecipeGenerator() {
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
+    const recentMeals = mealPlans.filter(m => new Date(m.date) <= new Date()).slice(0, 15).map(m => m.recipe_name).join(', ');
+    if (recentMeals) {
+      preferencesContext += ` History (AVOID repeats, learn preferences): ${recentMeals}.`;
+    }
+
     try {
       const searchContext = globalSearchQuery ? `matching "${globalSearchQuery}"` : '';
       const moodPart = selectedMoods.length > 0 ? `for mood: ${moodContext}` : '';
@@ -570,6 +575,11 @@ export default function RecipeGenerator() {
       if (userPreferences.blood_sugar_friendly) prefs.push(`Low glycemic`);
       if (userPreferences.preferred_cuisines?.length > 0) prefs.push(`Cuisines: ${userPreferences.preferred_cuisines.join(', ')}`);
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
+    }
+
+    const recentMeals = mealPlans.filter(m => new Date(m.date) <= new Date()).slice(0, 15).map(m => m.recipe_name).join(', ');
+    if (recentMeals) {
+      preferencesContext += ` History (AVOID repeats, learn preferences): ${recentMeals}.`;
     }
 
     const inventoryList = inventory.map(i => `${i.name}`).join(', ');
