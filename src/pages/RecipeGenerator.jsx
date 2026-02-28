@@ -163,15 +163,6 @@ export default function RecipeGenerator() {
       filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
     }
 
-    if (advancedFilters.nutritionalGoals) {
-      const goals = advancedFilters.nutritionalGoals.toLowerCase();
-      filtered = filtered.filter((recipe) => 
-        recipe.description?.toLowerCase().includes(goals) ||
-        recipe.health_benefits?.some(b => b.toLowerCase().includes(goals)) ||
-        recipe.vitamins_minerals?.some(v => v.name.toLowerCase().includes(goals))
-      );
-    }
-
     if (advancedFilters.usePantry && inventory && inventory.length > 0) {
       const inventoryNames = inventory.map((i) => i.name.toLowerCase());
       filtered = filtered.filter((recipe) => {
@@ -295,15 +286,6 @@ export default function RecipeGenerator() {
     if (advancedFilters.maxCalories) {
       const maxCal = parseInt(advancedFilters.maxCalories);
       filtered = filtered.filter((recipe) => (recipe.nutrition?.calories || 0) <= maxCal);
-    }
-
-    if (advancedFilters.nutritionalGoals) {
-      const goals = advancedFilters.nutritionalGoals.toLowerCase();
-      filtered = filtered.filter((recipe) => 
-        recipe.description?.toLowerCase().includes(goals) ||
-        recipe.health_benefits?.some(b => b.toLowerCase().includes(goals)) ||
-        recipe.vitamins_minerals?.some(v => v.name.toLowerCase().includes(goals))
-      );
     }
 
     if (advancedFilters.usePantry && inventory && inventory.length > 0) {
@@ -451,7 +433,6 @@ export default function RecipeGenerator() {
       if (advancedFilters.maxCalories) filtersContext.push(`Max Calories: ${advancedFilters.maxCalories}`);
       if (advancedFilters.includeIngredients) filtersContext.push(`MUST Include: ${advancedFilters.includeIngredients}`);
       if (advancedFilters.excludeIngredients) filtersContext.push(`MUST AVOID: ${advancedFilters.excludeIngredients}`);
-      if (advancedFilters.nutritionalGoals) filtersContext.push(`Specific Nutritional Goals: ${advancedFilters.nutritionalGoals}`);
       const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
@@ -629,12 +610,11 @@ export default function RecipeGenerator() {
     if (advancedFilters.maxCalories) filtersContext.push(`Max Calories: ${advancedFilters.maxCalories}`);
     if (advancedFilters.includeIngredients) filtersContext.push(`MUST Include: ${advancedFilters.includeIngredients}`);
     if (advancedFilters.excludeIngredients) filtersContext.push(`MUST AVOID: ${advancedFilters.excludeIngredients}`);
-    if (advancedFilters.nutritionalGoals) filtersContext.push(`Specific Nutritional Goals: ${advancedFilters.nutritionalGoals}`);
     const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
 
     try {
       const quickResponse = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate 4 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options. Include recipes that specifically use the expiring ingredients.`,
+        prompt: `Generate 4 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
         response_json_schema: {
           type: "object",
           properties: {
