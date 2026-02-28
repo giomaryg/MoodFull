@@ -245,6 +245,17 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                 />
               </div>
 
+              {/* Nutritional Goals */}
+              <div className="space-y-2 col-span-1 sm:col-span-2 mt-2">
+                <Label className="text-xs font-semibold text-gray-500 uppercase">Specific Nutritional Goals</Label>
+                <Input 
+                  placeholder="e.g. High Iron, Low Sodium" 
+                  value={filters.nutritionalGoals || ""}
+                  onChange={(e) => handleFilterChange('nutritionalGoals', e.target.value)}
+                  className="h-9 border-[#c5d9c9] focus:border-[#6b9b76]"
+                />
+              </div>
+
             </div>
           </motion.div>
         )}
