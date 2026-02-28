@@ -377,15 +377,20 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
                 </div>
               )}
 
-              {user.equipment && user.equipment.length > 0 && (
+              {(user.equipment?.length > 0 || user.extra_equipment) && (
                 <div>
                   <div className="text-sm font-semibold text-gray-700 mb-2">Available Equipment</div>
                   <div className="flex flex-wrap gap-2">
-                    {user.equipment.map((item, i) => (
+                    {user.equipment?.map((item, i) => (
                       <Badge key={i} variant="secondary" className="bg-gray-100 text-gray-700">
                         {item}
                       </Badge>
                     ))}
+                    {user.extra_equipment && (
+                      <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+                        {user.extra_equipment}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               )}
