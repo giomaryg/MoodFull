@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Filter, X, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdvancedFilters({ filters, onFiltersChange, showFilters, setShowFilters }) {
