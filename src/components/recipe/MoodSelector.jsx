@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple } from 'lucide-react';
 
 const mealTypes = [
-  { id: 'breakfast', label: 'Breakfast', icon: Sun, color: 'from-yellow-400 to-orange-300' },
-  { id: 'lunch', label: 'Lunch', icon: Salad, color: 'from-green-400 to-teal-400' },
-  { id: 'dinner', label: 'Dinner', icon: Utensils, color: 'from-indigo-400 to-purple-500' },
-  { id: 'dessert', label: 'Dessert', icon: Cookie, color: 'from-pink-400 to-rose-400' },
-  { id: 'snack', label: 'Snacks', icon: Apple, color: 'from-amber-400 to-orange-400' },
-];
+{ id: 'breakfast', label: 'Breakfast', icon: Sun, color: 'from-yellow-400 to-orange-300' },
+{ id: 'lunch', label: 'Lunch', icon: Salad, color: 'from-green-400 to-teal-400' },
+{ id: 'dinner', label: 'Dinner', icon: Utensils, color: 'from-indigo-400 to-purple-500' },
+{ id: 'dessert', label: 'Dessert', icon: Cookie, color: 'from-pink-400 to-rose-400' },
+{ id: 'snack', label: 'Snacks', icon: Apple, color: 'from-amber-400 to-orange-400' }];
+
 
 const moods = [
 {
@@ -96,7 +96,7 @@ const moods = [
 export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName }) {
   const handleMoodToggle = (moodId) => {
     if (selectedMoods.includes(moodId)) {
-      onMoodSelect(selectedMoods.filter(m => m !== moodId));
+      onMoodSelect(selectedMoods.filter((m) => m !== moodId));
     } else {
       onMoodSelect([...selectedMoods, moodId]);
     }
@@ -104,7 +104,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
 
   const handleMealTypeToggle = (typeId) => {
     if (selectedMealTypes.includes(typeId)) {
-      onMealTypeSelect && onMealTypeSelect(selectedMealTypes.filter(t => t !== typeId));
+      onMealTypeSelect && onMealTypeSelect(selectedMealTypes.filter((t) => t !== typeId));
     } else {
       onMealTypeSelect && onMealTypeSelect([...selectedMealTypes, typeId]);
     }
@@ -131,33 +131,33 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
               key={mood.id}
               onClick={() => handleMoodToggle(mood.id)}
               className={`p-4 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200 ${
-                isSelected 
-                  ? 'bg-[#6b9b76]/10 border border-[#6b9b76]/50 shadow-[0_2px_12px_rgba(107,155,118,0.15)] relative overflow-hidden' 
-                  : 'glass-panel hover:bg-white/70'
-              }`}
-            >
-              {isSelected && (
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#6b9b76]/50 to-transparent" />
-              )}
+              isSelected ?
+              'bg-[#6b9b76]/10 border border-[#6b9b76]/50 shadow-[0_2px_12px_rgba(107,155,118,0.15)] relative overflow-hidden' :
+              'glass-panel hover:bg-white/70'}`
+              }>
+
+              {isSelected &&
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#6b9b76]/50 to-transparent" />
+              }
               
               <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 relative ${
-                isSelected 
-                  ? 'border border-transparent scale-105 shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.05),_inset_2px_2px_6px_rgba(255,255,255,0.5),_0_0_10px_rgba(107,155,118,0.2)]' 
-                  : 'bg-white/40 border border-[#c5d9c9]/30 shadow-[inset_-1px_-1px_4px_rgba(0,0,0,0.03),_inset_1px_1px_4px_rgba(255,255,255,0.4)] hover:shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.06),_inset_2px_2px_5px_rgba(255,255,255,0.5)]'
-              }`}
+              isSelected ?
+              'border border-transparent scale-105 shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.05),_inset_2px_2px_6px_rgba(255,255,255,0.5),_0_0_10px_rgba(107,155,118,0.2)]' :
+              'bg-white/40 border border-[#c5d9c9]/30 shadow-[inset_-1px_-1px_4px_rgba(0,0,0,0.03),_inset_1px_1px_4px_rgba(255,255,255,0.4)] hover:shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.06),_inset_2px_2px_5px_rgba(255,255,255,0.5)]'}`
+              }
               style={{
                 background: isSelected ? 'radial-gradient(circle at 30% 30%, #e8f0ea 0%, #8db894 100%)' : ''
               }}>
-                {isSelected && (
-                  <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${mood.color} mix-blend-overlay opacity-50`} />
-                )}
+                {isSelected &&
+                <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${mood.color} mix-blend-overlay opacity-50`} />
+                }
                 <Icon className={`w-6 h-6 relative z-10 transition-transform duration-300 ${isSelected ? 'text-[#3d5244] scale-110 drop-shadow-md' : 'text-[#5a6f60]/80'}`} />
               </div>
               <span className={`text-xs font-semibold ${isSelected ? 'text-[#3d5244]' : 'text-[#3d5244]/60'}`}>
                 {mood.label}
               </span>
-            </button>
-          );
+            </button>);
+
         })}
       </div>
 
@@ -166,27 +166,27 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
         <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/40 text-center mb-3 w-full">
           Meal Type
         </div>
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="bg-transparent flex flex-wrap justify-center gap-2">
           {mealTypes.map((type) => {
             const Icon = type.icon;
             const isSelected = selectedMealTypes.includes(type.id);
             return (
               <button
                 key={type.id}
-                onClick={() => handleMealTypeToggle(type.id)}
-                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs transition-all duration-200 ${
-                  isSelected
-                    ? 'bg-[#6b9b76]/10 border-[#6b9b76]/45 text-[#6b9b76] font-medium'
-                    : 'bg-white/50 border-[#c5d9c9]/60 text-[#5a6f60]/50'
-                }`}
-              >
+                onClick={() => handleMealTypeToggle(type.id)} className="bg-slate-100 text-[#8c8c8c] px-4 py-1.5 text-xs opacity-100 rounded-full flex items-center gap-1.5 border transition-all duration-200 border-[#c5d9c9]/60">
+
+
+
+
+
+
                 <Icon className="w-3.5 h-3.5" />
                 {type.label}
-              </button>
-            );
+              </button>);
+
           })}
         </div>
       </div>
-    </div>
-              );
-              }
+    </div>);
+
+}
