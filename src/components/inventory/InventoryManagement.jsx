@@ -34,7 +34,13 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
   });
 
   const addMutation = useMutation({
-    mutationFn: (data) => base44.entities.Ingredient.create(data),
+    mutationFn: (data) => {
+      base44.analytics.track({
+        eventName: "inventory_updated",
+        properties: { item_name: data.name, category: data.category }
+      });
+      return base44.entities.Ingredient.create(data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['inventory'] });
       setNewItem({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0 });

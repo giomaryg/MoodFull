@@ -59,7 +59,13 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
   });
 
   const createMealMutation = useMutation({
-    mutationFn: (mealData) => base44.entities.MealPlan.create(mealData),
+    mutationFn: (mealData) => {
+      base44.analytics.track({
+        eventName: "meal_added_to_plan",
+        properties: { recipe_name: mealData.recipe_name, meal_type: mealData.meal_type }
+      });
+      return base44.entities.MealPlan.create(mealData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
     }
@@ -174,6 +180,10 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
   const markAsCooked = async (e, meal) => {
     e.stopPropagation();
     try {
+      base44.analytics.track({
+        eventName: "recipe_marked_cooked",
+        properties: { recipe_id: meal.recipe_id, recipe_name: meal.recipe_name }
+      });
       const recipe = recipes.find(r => r.id === meal.recipe_id);
       let ingredientsToDeduct = recipe?.ingredients || meal.custom_ingredients || [];
       if (!ingredientsToDeduct.length) {

@@ -25,7 +25,13 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
   const queryClient = useQueryClient();
 
   const addMealMutation = useMutation({
-    mutationFn: (mealData) => base44.entities.MealPlan.create(mealData),
+    mutationFn: (mealData) => {
+      base44.analytics.track({
+        eventName: "meal_added_to_plan",
+        properties: { recipe_name: mealData.recipe_name, meal_type: mealData.meal_type }
+      });
+      return base44.entities.MealPlan.create(mealData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
       toast.success('Meal added to plan!');
