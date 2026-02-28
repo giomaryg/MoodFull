@@ -3,13 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camera, Mic, PlusCircle, Barcode } from 'lucide-react';
+import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camera, Mic, PlusCircle, Barcode, Edit2 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function InventoryManagement({ onGenerateFromExpiring }) {
   const queryClient = useQueryClient();
-  const [newItem, setNewItem] = useState({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0 });
+  const [newItem, setNewItem] = useState({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0, expiry_date: '' });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -207,7 +208,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
       addMutation.mutate({
         ...newItem,
         category: response.category || 'Pantry',
-        expiry_date: expiryDate.toISOString().split('T')[0]
+        expiry_date: newItem.expiry_date || expiryDate.toISOString().split('T')[0]
       });
     } catch (err) {
       console.error(err);
@@ -291,6 +292,15 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 className="border-2 focus:border-[#6b9b76]"
               />
             </div>
+            <div className="w-32">
+              <label className="text-xs font-semibold text-gray-500 mb-1 block uppercase tracking-wider">Expiry</label>
+              <Input 
+                type="date"
+                value={newItem.expiry_date} 
+                onChange={e => setNewItem({...newItem, expiry_date: e.target.value})} 
+                className="border-2 focus:border-[#6b9b76]"
+              />
+            </div>
             <div className="flex gap-2 h-10 mt-auto">
               <input 
                 type="file" 
@@ -363,6 +373,22 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
         </div>
       )}
 
+      {inventory.some(i => i.min_stock > 0 && i.quantity < i.min_stock) && (
+        <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 sm:p-6 mb-6">
+          <h3 className="font-bold text-red-800 flex items-center gap-2 mb-1">
+            <AlertTriangle className="w-5 h-5" />
+            Low Stock Alerts
+          </h3>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {inventory.filter(i => i.min_stock > 0 && i.quantity < i.min_stock).map(item => (
+              <span key={item.id} className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-md font-medium border border-red-200">
+                {item.name} ({item.quantity} / {item.min_stock} {item.unit})
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {expiringItems.length > 0 && (
         <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 sm:p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
@@ -415,7 +441,34 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="font-semibold text-gray-900 text-lg">{item.name}</p>
-                    {item.category && <span className="text-[10px] uppercase tracking-wider bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{item.category}</span>}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="text-[10px] uppercase tracking-wider bg-gray-100 hover:bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full transition-colors cursor-pointer flex items-center gap-1">
+                          {item.category || 'Uncategorized'}
+                          <Edit2 className="w-2 h-2" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {["Produce", "Dairy", "Meat", "Pantry", "Spices", "Frozen", "Other"].map(cat => (
+                          <DropdownMenuItem 
+                            key={cat}
+                            onClick={() => {
+                              const updatePromise = base44.entities.Ingredient.update(item.id, { category: cat });
+                              toast.promise(updatePromise, {
+                                loading: 'Updating category...',
+                                success: () => {
+                                  queryClient.invalidateQueries({ queryKey: ['inventory'] });
+                                  return 'Category updated!';
+                                },
+                                error: 'Failed to update'
+                              });
+                            }}
+                          >
+                            {cat}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   <div className="flex items-center gap-3 mt-1">
                     <p className="text-sm text-[#6b9b76] font-medium">{item.quantity} {item.unit}</p>

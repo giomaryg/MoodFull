@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight, Target, Check } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight, Target, Check, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -25,6 +25,8 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [loadingRecipeId, setLoadingRecipeId] = useState(null);
   const [showGoalsDialog, setShowGoalsDialog] = useState(false);
+  const [aiNutritionAdvice, setAiNutritionAdvice] = useState(null);
+  const [isAnalyzingNutrition, setIsAnalyzingNutrition] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -89,6 +91,7 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
 
   const getDayNutrition = (day) => {
     let cals = 0, protein = 0, carbs = 0, fat = 0;
+    const micros = {};
     const dateString = format(day, 'yyyy-MM-dd');
     const daysMeals = mealPlans.filter(p => p.date === dateString);
     daysMeals.forEach(meal => {
@@ -99,8 +102,13 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
         carbs += parseMacro(recipe.nutrition.carbs);
         fat += parseMacro(recipe.nutrition.fat);
       }
+      if (recipe && recipe.vitamins_minerals) {
+        recipe.vitamins_minerals.forEach(vm => {
+          micros[vm.name] = (micros[vm.name] || 0) + parseMacro(vm.daily_value || vm.amount || '0');
+        });
+      }
     });
-    return { calories: cals, protein, carbs, fat };
+    return { calories: cals, protein, carbs, fat, micros };
   };
 
   const getMealsForDay = (date, mealType) => {
@@ -110,17 +118,55 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
     );
   };
 
+  const analyzeNutrition = async () => {
+    setIsAnalyzingNutrition(true);
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze the following weekly nutrition averages for the user:
+Calories: ${weeklyAverages.calories} (Goal: ${currentUser?.daily_calorie_target || 'None'})
+Protein: ${weeklyAverages.protein}g
+Carbs: ${weeklyAverages.carbs}g
+Fat: ${weeklyAverages.fat}g
+Avg Daily Micronutrients (% of Daily Value): ${JSON.stringify(weeklyAverages.micros)}
+
+Provide a concise, encouraging nutritional analysis, assessing if they meet their goals, their macro balance, potential micronutrient deficiencies/strengths, and 2-3 specific suggestions to improve their diet based on these numbers. Provide JSON.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            analysis: { type: "string" },
+            suggestions: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+      setAiNutritionAdvice(response);
+    } catch (e) {
+      toast.error('Failed to analyze nutrition.');
+    }
+    setIsAnalyzingNutrition(false);
+  };
+
   const weeklyAverages = useMemo(() => {
     let tCals = 0, tPro = 0, tCarb = 0, tFat = 0;
+    const tMicros = {};
     weekDays.forEach(day => {
       const d = getDayNutrition(day);
       tCals += d.calories; tPro += d.protein; tCarb += d.carbs; tFat += d.fat;
+      if (d.micros) {
+        Object.entries(d.micros).forEach(([name, val]) => {
+          tMicros[name] = (tMicros[name] || 0) + val;
+        });
+      }
     });
+    
+    // Average out micros
+    Object.keys(tMicros).forEach(k => tMicros[k] = Math.round(tMicros[k] / 7));
+
     return {
       calories: Math.round(tCals / 7),
       protein: Math.round(tPro / 7),
       carbs: Math.round(tCarb / 7),
-      fat: Math.round(tFat / 7)
+      fat: Math.round(tFat / 7),
+      micros: tMicros
     };
   }, [weekDays, mealPlans, recipes]);
 
@@ -691,7 +737,40 @@ Make them balanced, diverse, and delicious. Include:
               <p className="font-medium text-gray-500 mb-1">Fat</p>
               <p className="font-bold text-xl text-gray-800">{weeklyAverages.fat}g</p>
             </div>
+            
+            <div className="flex flex-col gap-2 border-l border-gray-200 pl-4 sm:pl-8 ml-2 sm:ml-4">
+              <Button 
+                onClick={analyzeNutrition} 
+                disabled={isAnalyzingNutrition}
+                variant="outline" 
+                size="sm"
+                className="bg-white border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2]"
+              >
+                {isAnalyzingNutrition ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
+                Analyze Balance
+              </Button>
+            </div>
           </div>
+        </div>
+      )}
+
+      {aiNutritionAdvice && (
+        <div className="bg-[#f8faf8] border-2 border-[#c5d9c9] rounded-xl p-5 relative">
+          <button onClick={() => setAiNutritionAdvice(null)} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+            <X className="w-4 h-4" />
+          </button>
+          <h4 className="font-bold text-[#6b9b76] flex items-center gap-2 mb-2">
+            <Sparkles className="w-5 h-5" /> AI Nutrition Insights
+          </h4>
+          <p className="text-sm text-gray-700 mb-3">{aiNutritionAdvice.analysis}</p>
+          <ul className="text-sm text-gray-600 space-y-1">
+            {aiNutritionAdvice.suggestions?.map((s, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] mt-1.5 shrink-0" />
+                {s}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
