@@ -689,7 +689,84 @@ Make them balanced, diverse, and delicious. Include:
               })}
             </div>
               ))}
+              </div>
             </div>
+          </div>
+
+          {/* Sidebar for Drag and Drop */}
+          <div className="w-full lg:w-72 bg-white rounded-xl border-2 border-[#c5d9c9] p-4 flex flex-col h-[600px] lg:h-auto">
+            <h3 className="font-bold text-[#6b9b76] mb-2 text-lg">Add to Calendar</h3>
+            <p className="text-xs text-gray-500 mb-4 leading-tight">Drag and drop recipes onto the calendar slots.</p>
+            
+            <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-lg">
+              <button
+                onClick={() => setSidebarTab('saved')}
+                className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Saved ({recipes.length})
+              </button>
+              <button
+                onClick={() => setSidebarTab('generated')}
+                className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Generated ({generatedRecipes.length})
+              </button>
+            </div>
+
+            <Droppable droppableId="sidebar-recipes" isDropDisabled={true}>
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps} className="flex-1 overflow-y-auto space-y-3 pr-1 pb-4">
+                  {sidebarTab === 'saved' ? (
+                    recipes.length === 0 ? (
+                      <p className="text-xs text-gray-400 text-center mt-4">No saved recipes.</p>
+                    ) : (
+                      recipes.map((recipe, index) => (
+                        <Draggable key={`saved-${recipe.id}`} draggableId={`saved-${recipe.id}`} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`bg-[#f0f9f2] p-3 rounded-xl border border-[#c5d9c9] transition-shadow ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] scale-105 z-50' : 'hover:shadow-md'}`}
+                            >
+                              <p className="font-semibold text-[#5a6f60] text-sm line-clamp-2 leading-tight">{recipe.name}</p>
+                              <div className="flex justify-between items-center mt-2 text-xs text-gray-500 font-medium">
+                                <span>{recipe.prep_time || '20m'}</span>
+                                <span className="bg-white/60 px-2 py-0.5 rounded text-[#6b9b76]">{recipe.difficulty || 'medium'}</span>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))
+                    )
+                  ) : (
+                    generatedRecipes.length === 0 ? (
+                      <p className="text-xs text-gray-400 text-center mt-4">No generated recipes yet.</p>
+                    ) : (
+                      generatedRecipes.map((recipe, index) => (
+                        <Draggable key={`generated-${index}`} draggableId={`generated-${index}`} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`bg-[#fdf6f0] p-3 rounded-xl border border-[#e8d5c4] transition-shadow ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#d4a373] scale-105 z-50' : 'hover:shadow-md'}`}
+                            >
+                              <p className="font-semibold text-[#8a6849] text-sm line-clamp-2 leading-tight">{recipe.name}</p>
+                              <div className="flex justify-between items-center mt-2 text-xs text-gray-500 font-medium">
+                                <span>{recipe.prep_time || '30m'}</span>
+                                <span className="bg-white/60 px-2 py-0.5 rounded text-[#d4a373]">{recipe.difficulty || 'medium'}</span>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))
+                    )
+                  )}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
           </div>
         </div>
       </DragDropContext>
