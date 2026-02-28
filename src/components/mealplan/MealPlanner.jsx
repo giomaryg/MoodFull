@@ -509,7 +509,7 @@ Make them balanced, diverse, and delicious. Include:
         </Button>
       </div>
 
-      {/* Calendar Grid */}
+      {/* Calendar Grid - Visual Planner */}
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1 bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
