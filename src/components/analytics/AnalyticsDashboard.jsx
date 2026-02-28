@@ -360,7 +360,7 @@ Provide a detailed, structured report in markdown offering:
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={stats.spendingData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="week" />
                   <YAxis tickFormatter={(val) => `$${val}`} />
                   <Tooltip formatter={(value) => [`$${value}`, 'Est. Cost']} />
                   <Line type="monotone" dataKey="cost" stroke="#c17a7a" strokeWidth={3} dot={{ r: 4, fill: '#c17a7a' }} activeDot={{ r: 6 }} />
