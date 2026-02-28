@@ -200,11 +200,13 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
-            className="max-w-4xl w-full my-auto"
+            className="max-w-4xl w-full my-auto flex flex-col items-center"
           >
-            <p className="text-2xl sm:text-4xl md:text-5xl font-medium leading-tight text-gray-100 mt-8 sm:mt-0">
-              {instructions[currentStep]}
-            </p>
+            <div className="max-h-[40vh] sm:max-h-[50vh] overflow-y-auto px-4 w-full mt-16 sm:mt-0 custom-scrollbar">
+              <p className="text-xl sm:text-3xl md:text-4xl font-medium leading-relaxed text-gray-100">
+                {instructions[currentStep]}
+              </p>
+            </div>
 
             {/* Timer if applicable */}
             {timeLeft > 0 || isTimerRunning ? (
