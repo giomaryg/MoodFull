@@ -23,6 +23,7 @@ import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 import Paywall from '../components/paywall/Paywall';
 import ThreeBackground from '../components/ThreeBackground';
 import InventoryManagement from '../components/inventory/InventoryManagement';
+import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
