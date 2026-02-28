@@ -142,6 +142,42 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
                     <option value="he">עברית</option>
                   </select>
                 </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Specific Dietary Restrictions</label>
+                  <Input
+                    placeholder="e.g., Low FODMAP, Autoimmune Protocol"
+                    value={formData.advanced_dietary}
+                    onChange={(e) => setFormData({ ...formData, advanced_dietary: e.target.value })}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Cooking Techniques to Practice</label>
+                  <Input
+                    placeholder="e.g., Knife skills, Braising, Fermentation"
+                    value={formData.techniques_to_practice}
+                    onChange={(e) => setFormData({ ...formData, techniques_to_practice: e.target.value })}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Extra Kitchen Equipment</label>
+                  <Input
+                    placeholder="e.g., Sous Vide, Air Fryer, Dutch Oven"
+                    value={formData.extra_equipment}
+                    onChange={(e) => setFormData({ ...formData, extra_equipment: e.target.value })}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Specific Nutritional Goals</label>
+                  <Input
+                    placeholder="e.g., High Iron, Vitamin D Focus, Low Sodium"
+                    value={formData.vitamin_targets}
+                    onChange={(e) => setFormData({ ...formData, vitamin_targets: e.target.value })}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
                 <div className="flex gap-3 pt-2">
                   <Button
                     onClick={handleSave}
