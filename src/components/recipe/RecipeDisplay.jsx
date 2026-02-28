@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight, FolderPlus } from 'lucide-react';
+import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight, FolderPlus, Loader2 } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
@@ -87,12 +87,72 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   };
 
   const [activeSubstitutions, setActiveSubstitutions] = useState({});
+  const [aiSubstitutions, setAiSubstitutions] = useState({});
+  const [loadingSubFor, setLoadingSubFor] = useState(null);
 
-  const toggleSubstitution = (index) => {
-    setActiveSubstitutions(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: inventory = [] } = useQuery({
+    queryKey: ['inventory'],
+    queryFn: () => base44.entities.Ingredient.list()
+  });
+
+  const handleAISubstitution = async (index, ingredient) => {
+    // If we already have a generated AI substitution for this index, just toggle it on
+    if (aiSubstitutions[index]) {
+      setActiveSubstitutions(prev => ({ ...prev, [index]: true }));
+      return;
+    }
+
+    setLoadingSubFor(index);
+    try {
+      const inventoryContext = inventory.length > 0 
+        ? `\nPrioritize using these ingredients from their pantry if possible: ${inventory.map(i => i.name).join(', ')}` 
+        : '';
+        
+      const dietaryContext = currentUser?.diet_preferences || currentUser?.allergies 
+        ? `\nDietary restrictions: ${currentUser.diet_preferences || 'None'}. Allergies: ${currentUser.allergies || 'None'}` 
+        : '';
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Suggest ONE single best substitution for "${ingredient}" in the recipe "${recipe.name}".${dietaryContext}${inventoryContext}\nReturn ONLY the name of the substitute ingredient and the amount to use. Keep it very concise.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            substitute: { type: "string" }
+          }
+        }
+      });
+
+      setAiSubstitutions(prev => ({
+        ...prev,
+        [index]: { ingredient, substitute: response.substitute }
+      }));
+      setActiveSubstitutions(prev => ({ ...prev, [index]: true }));
+      
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingSubFor(null);
+    }
+  };
+
+  const toggleSubstitution = (index, ingredient) => {
+    const hasPredefinedSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
+    
+    if (activeSubstitutions[index]) {
+      // Revert back to original
+      setActiveSubstitutions(prev => ({ ...prev, [index]: false }));
+    } else if (hasPredefinedSub) {
+      // Use predefined sub
+      setActiveSubstitutions(prev => ({ ...prev, [index]: true }));
+    } else {
+      // Generate AI sub
+      handleAISubstitution(index, ingredient);
+    }
   };
 
   const scaledIngredients = useMemo(() => {
@@ -405,33 +465,49 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     animate={{ opacity: 1, z: 0, rotateX: 0 }}
                     whileHover={{ scale: 1.02, z: 20, rotateX: -5, backgroundColor: 'rgba(255,255,255,0.8)' }}
                     transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
-                    className="flex flex-col gap-1 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none transform-gpu relative">
+                    className="group flex flex-col gap-1 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none transform-gpu relative">
                       <div className="flex items-center gap-3 w-full">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] shrink-0 shadow-[0_0_6px_rgba(107,155,118,0.8)]" />
                         <span className={`leading-relaxed font-medium flex-1 ${isSubbed ? 'line-through opacity-50' : ''}`}>
                           {ingredient}
                         </span>
-                        {hasSub && (
-                          <button 
-                            onClick={() => toggleSubstitution(index)}
-                            className={`p-1.5 rounded-md flex items-center gap-1 transition-colors ${isSubbed ? 'bg-[#c17a7a] text-white' : 'bg-[#f5e6dc] text-[#c17a7a] hover:bg-[#e8d5c4]'}`}
-                            title="Swap ingredient"
-                          >
+                        <button 
+                          onClick={() => toggleSubstitution(index, ingredient)}
+                          disabled={loadingSubFor === index}
+                          className={`p-1.5 rounded-md flex items-center gap-1 transition-colors ${
+                            isSubbed 
+                              ? 'bg-[#c17a7a] text-white' 
+                              : hasSub || aiSubstitutions[index]
+                                ? 'bg-[#f5e6dc] text-[#c17a7a] hover:bg-[#e8d5c4]'
+                                : 'bg-gray-100 text-gray-400 hover:bg-[#f5e6dc] hover:text-[#c17a7a] opacity-0 group-hover:opacity-100'
+                          }`}
+                          title={isSubbed ? "Revert ingredient" : hasSub ? "Use suggested substitute" : "Ask AI for substitute"}
+                        >
+                          {loadingSubFor === index ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
                             <RefreshCw className="w-3 h-3" />
-                            <span className="text-[9px] font-bold uppercase tracking-wider">{isSubbed ? 'Revert' : 'Substitute'}</span>
-                          </button>
-                        )}
+                          )}
+                          {(isSubbed || hasSub || aiSubstitutions[index]) && (
+                            <span className="text-[9px] font-bold uppercase tracking-wider">
+                              {isSubbed ? 'Revert' : 'Substitute'}
+                            </span>
+                          )}
+                        </button>
                       </div>
                       <AnimatePresence>
-                        {isSubbed && hasSub && (
+                        {isSubbed && (hasSub || aiSubstitutions[index]) && (
                           <motion.div 
                             initial={{ opacity: 0, height: 0 }} 
                             animate={{ opacity: 1, height: 'auto' }} 
                             exit={{ opacity: 0, height: 0 }}
-                            className="pl-4.5 pt-1 text-[#c17a7a] font-medium flex items-center gap-2"
+                            className="pl-4.5 pt-1 text-[#c17a7a] font-medium flex items-center gap-2 text-xs"
                           >
                             <div className="w-1 h-1 rounded-full bg-[#c17a7a] shrink-0" />
-                            Use: {hasSub.substitute}
+                            <span className="flex-1">
+                              Use: {hasSub ? hasSub.substitute : aiSubstitutions[index].substitute}
+                            </span>
+                            {!hasSub && <Sparkles className="w-3 h-3 opacity-50 shrink-0" title="AI Suggested" />}
                           </motion.div>
                         )}
                       </AnimatePresence>
