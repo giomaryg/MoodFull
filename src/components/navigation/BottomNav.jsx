@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookMarked, User, Calendar, Package } from 'lucide-react';
+import { Home, BookMarked, User, Calendar, Package, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BottomNav({ activeTab, onTabChange, isVisible = true }) {
@@ -8,6 +8,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true }) 
     { id: 'saved', label: 'Saved', icon: BookMarked },
     { id: 'planner', label: 'Planner', icon: Calendar },
     { id: 'inventory', label: 'Pantry', icon: Package },
+    { id: 'analytics', label: 'Analytics', icon: Activity },
     { id: 'account', label: 'Account', icon: User }
   ];
 
