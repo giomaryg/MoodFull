@@ -472,7 +472,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             </div>
             <div className="flex flex-wrap gap-2 w-full sm:w-auto">
               <Button
-                onClick={() => setShowCookingMode(true)}
+                onClick={() => {
+                  setShowCookingMode(true);
+                  base44.analytics.track({
+                    eventName: "recipe_cooking_started",
+                    properties: { recipe_id: recipe.id, recipe_name: recipe.name }
+                  });
+                }}
                 className="flex-1 sm:flex-none bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-lg rounded-xl sm:rounded-2xl px-4 sm:px-6 py-2.5 text-sm sm:text-base"
               >
                 <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 fill-white" />
