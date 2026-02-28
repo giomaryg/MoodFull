@@ -103,6 +103,10 @@ export default function DiscoveryFeed({
       if (advancedFilters.maxCalories) contextParts.push(`Max Calories: ${advancedFilters.maxCalories}`);
       if (advancedFilters.includeIngredients) contextParts.push(`MUST Include: ${advancedFilters.includeIngredients}`);
       if (advancedFilters.excludeIngredients) contextParts.push(`MUST AVOID: ${advancedFilters.excludeIngredients}`);
+      
+      if (advancedFilters.generateVariations) {
+         contextParts.push(`CRITICAL: The user wants UNIQUE, CREATIVE AI VARIATIONS. Do not just return standard recipes. Combine cuisines, invent new flavor profiles, or completely reimagine classic dishes based on the constraints above.`);
+      }
 
       // Past history & Pantry
       const savedRecipeNames = savedRecipes.slice(0, 10).map((r) => r.name).join(', ');
