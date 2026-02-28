@@ -99,6 +99,38 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
 
     const [destDate, destMealType] = destination.droppableId.split('|');
 
+    if (source.droppableId === 'sidebar-recipes') {
+      const isSaved = draggableId.startsWith('saved-');
+      const isGenerated = draggableId.startsWith('generated-');
+      const realId = draggableId.replace('saved-', '').replace('generated-', '');
+
+      if (isSaved) {
+        const recipe = recipes.find(r => r.id === realId);
+        if (recipe) {
+          createMealMutation.mutate({
+            recipe_id: recipe.id,
+            recipe_name: recipe.name,
+            date: destDate,
+            meal_type: destMealType,
+            servings: recipe.servings || 4
+          });
+        }
+      } else if (isGenerated) {
+        const recipe = generatedRecipes[parseInt(realId, 10)];
+        if (recipe) {
+          createMealMutation.mutate({
+            recipe_name: recipe.name,
+            date: destDate,
+            meal_type: destMealType,
+            servings: recipe.servings || 4,
+            custom_ingredients: recipe.ingredients || [],
+            custom_instructions: recipe.instructions || []
+          });
+        }
+      }
+      return;
+    }
+
     const meal = mealPlans.find(m => m.id === draggableId);
     if (!meal) return;
 
