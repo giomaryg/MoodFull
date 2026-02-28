@@ -209,12 +209,33 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
 
       const recentMealHistory = mealPlans.slice(0, 15).map(m => m.recipe_name).join(', ');
       if (recentMealHistory) {
-        contextParts.push(`Recent meal history (try not to repeat these too much): ${recentMealHistory}`);
+        contextParts.push(`Recent meal history (try not to repeat these exact recipes): ${recentMealHistory}`);
+      }
+
+      const mealCounts = mealPlans.reduce((acc, m) => {
+        acc[m.recipe_name] = (acc[m.recipe_name] || 0) + 1;
+        return acc;
+      }, {});
+      const frequentMeals = Object.entries(mealCounts)
+        .filter(([_, count]) => count >= 2)
+        .map(([name]) => name)
+        .slice(0, 5)
+        .join(', ');
+      
+      if (frequentMeals) {
+        contextParts.push(`User frequently enjoys: ${frequentMeals}. Feel free to suggest exciting variations or new takes on these favorites!`);
       }
 
       if (inventory && inventory.length > 0) {
-        const inventoryItems = inventory.map(i => i.name).join(', ');
-        contextParts.push(`Current pantry inventory (PRIORITIZE using these ingredients): ${inventoryItems}`);
+        const inventoryItems = inventory.map(i => {
+          let itemStr = i.name;
+          if (i.expiry_date) {
+            const days = Math.ceil((new Date(i.expiry_date) - new Date()) / (1000 * 60 * 60 * 24));
+            if (days <= 7) itemStr += ` (EXPIRING in ${days} days - URGENT PRIORITY)`;
+          }
+          return itemStr;
+        }).join(', ');
+        contextParts.push(`Current pantry inventory (PRIORITIZE using these ingredients, especially the urgent expiring ones): ${inventoryItems}`);
       }
       
       const userContext = contextParts.join('\n');
@@ -380,9 +401,30 @@ For each meal provide:
         contextParts.push(`Blood sugar friendly meals required`);
       }
 
+      const mealCounts = mealPlans.reduce((acc, m) => {
+        acc[m.recipe_name] = (acc[m.recipe_name] || 0) + 1;
+        return acc;
+      }, {});
+      const frequentMeals = Object.entries(mealCounts)
+        .filter(([_, count]) => count >= 2)
+        .map(([name]) => name)
+        .slice(0, 5)
+        .join(', ');
+      
+      if (frequentMeals) {
+        contextParts.push(`User frequently enjoys: ${frequentMeals}. Feel free to suggest exciting variations or new takes on these favorites!`);
+      }
+
       if (inventory && inventory.length > 0) {
-        const inventoryItems = inventory.map(i => i.name).join(', ');
-        contextParts.push(`Current pantry inventory (PRIORITIZE using these ingredients): ${inventoryItems}`);
+        const inventoryItems = inventory.map(i => {
+          let itemStr = i.name;
+          if (i.expiry_date) {
+            const days = Math.ceil((new Date(i.expiry_date) - new Date()) / (1000 * 60 * 60 * 24));
+            if (days <= 7) itemStr += ` (EXPIRING in ${days} days - URGENT PRIORITY)`;
+          }
+          return itemStr;
+        }).join(', ');
+        contextParts.push(`Current pantry inventory (PRIORITIZE using these ingredients, especially the urgent expiring ones): ${inventoryItems}`);
       }
       
       const userContext = contextParts.join('\n');
