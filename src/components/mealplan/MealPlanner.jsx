@@ -124,6 +124,40 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [] }) {
     };
   }, [weekDays, mealPlans, recipes]);
 
+  const markAsCooked = async (e, meal) => {
+    e.stopPropagation();
+    try {
+      const recipe = recipes.find(r => r.id === meal.recipe_id);
+      let ingredientsToDeduct = recipe?.ingredients || meal.custom_ingredients || [];
+      if (!ingredientsToDeduct.length) {
+         toast.error("No ingredients found for this meal.");
+         return;
+      }
+      
+      const servingsRatio = (meal.servings || recipe?.servings || 1) / (recipe?.servings || 1);
+      
+      let deductedCount = 0;
+      for (const ing of ingredientsToDeduct) {
+        const words = ing.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(w => w.length > 2);
+        const invMatch = inventory.find(i => {
+           const iName = i.name.toLowerCase();
+           return words.some(w => iName.includes(w)) || iName.includes(words[words.length-1]);
+        });
+        
+        if (invMatch && invMatch.quantity > 0) {
+           const newQuant = Math.max(0, Number((invMatch.quantity - (1 * servingsRatio)).toFixed(2)));
+           await base44.entities.Ingredient.update(invMatch.id, { quantity: newQuant });
+           deductedCount++;
+        }
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      toast.success(`Marked as cooked! Deducted ${deductedCount} items from inventory.`);
+    } catch (err) {
+      toast.error("Failed to update inventory.");
+    }
+  };
+
   const handleAddMeal = (date, mealType) => {
     setSelectedDate(date);
     setSelectedMealType(mealType);
