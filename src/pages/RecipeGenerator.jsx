@@ -918,6 +918,39 @@ export default function RecipeGenerator() {
 
           {!showSurvey && activeTab === 'home' &&
           <>
+              {/* Proactive Expiring Items Alert */}
+              {(() => {
+                const expiringItems = inventory.filter(item => {
+                  if (!item.expiry_date) return false;
+                  return new Date(item.expiry_date) <= new Date(Date.now() + 7 * 86400000);
+                });
+                if (expiringItems.length === 0 || globalSearchQuery || Object.keys(advancedFilters).length > 0) return null;
+                return (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  >
+                    <div>
+                      <h4 className="font-bold text-amber-800 flex items-center gap-2">
+                        <span className="text-xl">⚠️</span> Expiring Soon!
+                      </h4>
+                      <p className="text-sm text-amber-700 mt-1">
+                        You have {expiringItems.length} items expiring soon (e.g. {expiringItems[0].name}).
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={() => generateFromInventory(expiringItems.map(i => i.name))}
+                      disabled={isGenerating}
+                      className="bg-amber-500 hover:bg-amber-600 text-white shadow-sm w-full sm:w-auto whitespace-nowrap"
+                    >
+                      {isGenerating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
+                      Use Them Up
+                    </Button>
+                  </motion.div>
+                );
+              })()}
+
               {/* Search & Preferences */}
               <div className="space-y-3">
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
