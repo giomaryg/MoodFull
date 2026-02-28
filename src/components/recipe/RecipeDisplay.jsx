@@ -14,9 +14,11 @@ import SimilarRecipes from './SimilarRecipes';
 import RecipeEditDialog from './RecipeEditDialog';
 import NutritionPanel from './NutritionPanel';
 import RecipeReview from './RecipeReview';
+import RecipeComments from './RecipeComments';
 import InteractiveCookingMode from './InteractiveCookingMode';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import SaveToCollectionDialog from './SaveToCollectionDialog';
-import { Play, Flame, Zap, Wand2 } from 'lucide-react';
+import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send } from 'lucide-react';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
@@ -325,6 +327,11 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     }
   };
 
+  const authorRecipesCount = useMemo(() => {
+    if (!recipe.created_by) return 0;
+    return recipes.filter(r => r.created_by === recipe.created_by).length;
+  }, [recipes, recipe.created_by]);
+
   const handleRegenerateSteps = async (mode) => {
     setIsRegeneratingSteps(true);
     try {
@@ -447,7 +454,23 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-2 sm:mb-3">
                 {recipe.name}
               </CardTitle>
-              <p ref={descriptionRef} className="text-gray-600 text-sm sm:text-base md:text-lg mt-2 sm:mt-3 leading-relaxed">{recipe.description}</p>
+              
+              {/* Basic Author Profile Stats */}
+              <div className="flex items-center gap-3 mt-3 mb-2 bg-white/50 p-2.5 rounded-xl inline-flex border border-[#c5d9c9]/50 shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] flex items-center justify-center text-white font-bold text-sm shadow-inner">
+                  {(recipe.created_by || 'C').charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-gray-800">Chef {recipe.created_by ? recipe.created_by.split('@')[0] : 'Community'}</p>
+                  <div className="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                    <span className="flex items-center gap-1"><ChefHat className="w-3 h-3 text-[#6b9b76]"/> {authorRecipesCount > 0 ? authorRecipesCount : 1} recipes</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1"><Users className="w-3 h-3 text-blue-500"/> Community Member</span>
+                  </div>
+                </div>
+              </div>
+
+              <p ref={descriptionRef} className="text-gray-600 text-sm sm:text-base md:text-lg mt-3 leading-relaxed">{recipe.description}</p>
             </div>
             <div className="flex items-center gap-4">
               {isSaved && (
