@@ -217,8 +217,23 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       });
     });
 
+    if (inventory && inventory.length > 0) {
+      const lowStockItems = inventory.filter(i => i.min_stock > 0 && i.quantity < i.min_stock);
+      if (lowStockItems.length > 0) {
+        categorized['Restock Needed'] = [];
+        lowStockItems.forEach(item => {
+          categorized['Restock Needed'].push({
+            key: `restock-${item.id}`,
+            original: item.name,
+            count: item.min_stock - item.quantity,
+            recipes: ['Low Inventory']
+          });
+        });
+      }
+    }
+
     return categorized;
-  }, [selectedMeals, selectedExtraRecipes, recipes, customItems]);
+  }, [selectedMeals, selectedExtraRecipes, recipes, customItems, inventory]);
 
   const [aiInsights, setAiInsights] = useState(null);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(false);
