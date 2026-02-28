@@ -230,6 +230,19 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
                     onChange={(e) => setServings(e.target.value)}
                     className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
                   />
+                  {servings && parseInt(servings) !== selectedRecipe.servings && (
+                    <div className="mt-3 bg-[#f0f9f2] border border-[#c5d9c9] rounded-xl p-3">
+                      <p className="text-xs font-semibold text-[#6b9b76] mb-2">Ingredients scaled for {servings} servings:</p>
+                      <ul className="space-y-1 max-h-24 overflow-y-auto">
+                        {scaledIngredients.map((ing, i) => (
+                          <li key={i} className="text-xs text-gray-600 flex items-start gap-1">
+                            <span className="text-[#6b9b76] mt-0.5">•</span>
+                            {ing}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#5a6f60] mb-2">
