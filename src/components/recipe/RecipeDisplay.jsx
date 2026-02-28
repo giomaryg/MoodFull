@@ -632,7 +632,9 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                               ? 'bg-[#c17a7a] text-white' 
                               : hasSub || aiSubstitutions[index]
                                 ? 'bg-[#f5e6dc] text-[#c17a7a] hover:bg-[#e8d5c4]'
-                                : 'bg-gray-100 text-gray-400 hover:bg-[#f5e6dc] hover:text-[#c17a7a] opacity-0 group-hover:opacity-100'
+                                : isMissingOrLow 
+                                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 opacity-100' 
+                                  : 'bg-gray-100 text-gray-400 hover:bg-[#f5e6dc] hover:text-[#c17a7a] opacity-0 group-hover:opacity-100'
                           }`}
                           title={isSubbed ? "Revert ingredient" : hasSub ? "Use suggested substitute" : "Ask AI for pantry-based substitute"}
                         >
