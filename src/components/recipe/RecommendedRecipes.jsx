@@ -94,6 +94,9 @@ function RecommendedRecipes({ userPreferences, inventory = [], onRecipeClick }) 
     return contextParts.join('\n');
   }, [userPreferences, savedRecipes, mealPlans, inventory]);
 
+  const [isGeneratingNext, setIsGeneratingNext] = useState(false);
+  const [cookNextRecipe, setCookNextRecipe] = useState(null);
+
   const generateRecommendations = async () => {
     if (!userPreferences) return;
 
@@ -177,6 +180,79 @@ Each recipe must have:
     }
   };
 
+  const generateCookNext = async () => {
+    if (!userPreferences) return;
+
+    setIsGeneratingNext(true);
+    
+    try {
+      const inventoryContext = inventory && inventory.length > 0 
+        ? `Current pantry: ${inventory.map(i => {
+            let itemStr = i.name;
+            if (i.expiry_date) {
+              const days = Math.ceil((new Date(i.expiry_date) - new Date()) / (1000 * 60 * 60 * 24));
+              if (days <= 7) itemStr += ` (EXPIRING in ${days} days - URGENT)`;
+            }
+            return itemStr;
+          }).join(', ')}. You MUST prioritize using the expiring ingredients.`
+        : "";
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on the user's preferences and inventory, suggest EXACTLY ONE highly optimized recipe they should "Cook This Next".
+        
+${userContext}
+
+${inventoryContext}
+
+The recipe should be practical, use what they have (especially expiring items), and be exciting.
+Generate the recipe with Name, Description, Ingredients, Instructions, Prep time, and Cook time.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            recipe: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                description: { type: "string" },
+                ingredients: { type: "array", items: { type: "string" }},
+                instructions: { type: "array", items: { type: "string" }},
+                prep_time: { type: "string" },
+                cook_time: { type: "string" }
+              }
+            }
+          }
+        }
+      });
+
+      if (response.recipe) {
+        const generatedRecipe = {
+          ...response.recipe,
+          mood: 'Cook This Next',
+          imageUrl: null,
+          imageLoading: true
+        };
+        
+        setCookNextRecipe(generatedRecipe);
+
+        try {
+          const imageResponse = await base44.integrations.Core.GenerateImage({
+            prompt: `Professional food photography of ${generatedRecipe.name}. ${generatedRecipe.description}. Beautiful plating, natural lighting, appetizing, high quality, detailed.`
+          });
+          setCookNextRecipe(prev => ({ ...prev, imageUrl: imageResponse.url, imageLoading: false }));
+        } catch (error) {
+          setCookNextRecipe(prev => ({ ...prev, imageLoading: false }));
+        }
+        
+        toast.success("We found the perfect next meal for you!");
+      }
+
+    } catch (error) {
+      toast.error('Failed to generate Cook This Next recommendation');
+    } finally {
+      setIsGeneratingNext(false);
+    }
+  };
+
   const difficultyColors = {
     easy: 'bg-green-50 text-green-700 border-green-200',
     medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
@@ -204,23 +280,36 @@ Each recipe must have:
           </div>
         </div>
 
-        <Button
-          onClick={generateRecommendations}
-          disabled={isGenerating}
-          className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white w-full sm:w-auto"
-        >
-          {isGenerating ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Generating...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              {recommendations.length > 0 ? 'Refresh' : 'Get Recommendations'}
-            </>
-          )}
-        </Button>
+        <div className="flex gap-2 w-full sm:w-auto flex-col sm:flex-row">
+          <Button
+            onClick={generateCookNext}
+            disabled={isGeneratingNext || isGenerating}
+            className="bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white border-0"
+          >
+            {isGeneratingNext ? (
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Thinking...</>
+            ) : (
+              <><ChefHat className="w-4 h-4 mr-2" /> Cook This Next</>
+            )}
+          </Button>
+          <Button
+            onClick={generateRecommendations}
+            disabled={isGenerating || isGeneratingNext}
+            className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white w-full sm:w-auto"
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                {recommendations.length > 0 ? 'Refresh' : 'Get Recommendations'}
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {recommendations.length === 0 && !isGenerating && (
@@ -235,6 +324,46 @@ Each recipe must have:
             </p>
           </CardContent>
         </Card>
+      )}
+
+      {cookNextRecipe && (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+          <Card
+            onClick={() => onRecipeClick(cookNextRecipe)}
+            className="cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 border-orange-400 bg-gradient-to-br from-orange-50 to-amber-50 overflow-hidden relative"
+          >
+            <div className="absolute top-0 right-0 bg-orange-400 text-white px-4 py-1 font-bold text-sm rounded-bl-xl z-10 flex items-center gap-1 shadow-md">
+              <Sparkles className="w-4 h-4" /> COOK THIS NEXT
+            </div>
+            <div className="flex flex-col md:flex-row">
+              <div className="w-full md:w-2/5 h-48 md:h-auto bg-gray-200 relative overflow-hidden">
+                {cookNextRecipe.imageLoading ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-orange-100/50">
+                    <Loader2 className="w-8 h-8 text-orange-400 animate-spin" />
+                  </div>
+                ) : cookNextRecipe.imageUrl ? (
+                  <img src={cookNextRecipe.imageUrl} alt={cookNextRecipe.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-orange-100">
+                    <ChefHat className="w-16 h-16 text-orange-300" />
+                  </div>
+                )}
+              </div>
+              <div className="p-6 md:w-3/5 flex flex-col justify-center">
+                <h4 className="font-bold text-2xl text-gray-900 mb-2">{cookNextRecipe.name}</h4>
+                <p className="text-gray-600 mb-4">{cookNextRecipe.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline" className="bg-white/80 border-orange-200 text-orange-700">
+                    <Clock className="w-3 h-3 mr-1" /> {cookNextRecipe.prep_time} prep
+                  </Badge>
+                  <Badge variant="outline" className="bg-white/80 border-orange-200 text-orange-700">
+                    <Clock className="w-3 h-3 mr-1" /> {cookNextRecipe.cook_time} cook
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
       )}
 
       {recommendations.length > 0 && (
