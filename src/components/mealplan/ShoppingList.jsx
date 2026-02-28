@@ -108,9 +108,9 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       const recipe = recipes.find((r) => r.id === plan.recipe_id);
       return {
         id: `plan-${plan.id}`,
-        recipeName: recipe?.name || 'Unknown Recipe',
+        recipeName: plan.recipe_name || recipe?.name || 'Unknown Recipe',
         details: `${plan.meal_type} on ${new Date(plan.date).toLocaleDateString()}`,
-        ingredients: recipe?.ingredients || [],
+        ingredients: plan.custom_ingredients?.length > 0 ? plan.custom_ingredients : (recipe?.ingredients || []),
         servings: plan.servings
       };
     });
