@@ -3,9 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts';
-import { TrendingUp, Utensils, DollarSign, Activity } from 'lucide-react';
+import { TrendingUp, Utensils, DollarSign, Activity, FileSpreadsheet, FileText, Bot, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export default function AnalyticsDashboard() {
+  const [aiReport, setAiReport] = useState('');
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const { data: mealPlans = [] } = useQuery({
     queryKey: ['mealPlans'],
     queryFn: () => base44.entities.MealPlan.list('-date', 200)
