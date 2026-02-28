@@ -628,6 +628,39 @@ Make them balanced, diverse, and delicious. Include:
         </div>
       </div>
 
+      {/* Weekly Nutrition Summary */}
+      {currentUser?.daily_calorie_target > 0 && (
+        <div className="bg-gradient-to-r from-[#f0f9f2] to-white rounded-xl p-5 border-2 border-[#c5d9c9] flex flex-col md:flex-row gap-6 items-center justify-between shadow-sm">
+          <div>
+            <h4 className="font-bold text-[#6b9b76] flex items-center gap-2">
+              <Target className="w-5 h-5" />
+              Weekly Nutrition Average
+            </h4>
+            <p className="text-sm text-gray-500 mt-1">Daily average based on planned meals</p>
+          </div>
+          <div className="flex gap-4 sm:gap-8 text-sm">
+            <div className="text-center">
+              <p className="font-medium text-gray-500 mb-1">Calories</p>
+              <p className={`font-bold text-xl ${weeklyAverages.calories > currentUser.daily_calorie_target * 1.1 ? 'text-red-500' : weeklyAverages.calories < currentUser.daily_calorie_target * 0.9 ? 'text-orange-400' : 'text-[#6b9b76]'}`}>
+                {weeklyAverages.calories} <span className="text-sm font-normal text-gray-400">/ {currentUser.daily_calorie_target}</span>
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="font-medium text-gray-500 mb-1">Protein</p>
+              <p className="font-bold text-xl text-gray-800">{weeklyAverages.protein}g</p>
+            </div>
+            <div className="text-center">
+              <p className="font-medium text-gray-500 mb-1">Carbs</p>
+              <p className="font-bold text-xl text-gray-800">{weeklyAverages.carbs}g</p>
+            </div>
+            <div className="text-center">
+              <p className="font-medium text-gray-500 mb-1">Fat</p>
+              <p className="font-bold text-xl text-gray-800">{weeklyAverages.fat}g</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Week Navigation */}
       <div className="flex items-center justify-between bg-white rounded-xl p-4 border-2 border-[#c5d9c9]">
         <Button
