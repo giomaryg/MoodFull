@@ -433,6 +433,7 @@ export default function RecipeGenerator() {
       if (advancedFilters.maxCalories) filtersContext.push(`Max Calories: ${advancedFilters.maxCalories}`);
       if (advancedFilters.includeIngredients) filtersContext.push(`MUST Include: ${advancedFilters.includeIngredients}`);
       if (advancedFilters.excludeIngredients) filtersContext.push(`MUST AVOID: ${advancedFilters.excludeIngredients}`);
+      if (advancedFilters.nutritionalGoals) filtersContext.push(`Specific Nutritional Goals: ${advancedFilters.nutritionalGoals}`);
       const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
