@@ -2,8 +2,9 @@ import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight, Target, Check, X } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight, Target, Check, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AddMealDialog from './AddMealDialog';
@@ -304,7 +305,7 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
     }
   };
 
-  const generateWeeklyPlan = async () => {
+  const generateWeeklyPlan = async (prioritizeExpiring = false) => {
     if (!currentUser) return;
     
     setIsGeneratingPlan(true);
@@ -312,6 +313,9 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
     try {
       // Build user context
       let contextParts = [];
+      if (currentUser.techniques_to_practice) {
+        contextParts.push(`Planned cooking techniques to practice: ${currentUser.techniques_to_practice}`);
+      }
       if (currentUser.diet_preferences) {
         contextParts.push(`Dietary preferences: ${currentUser.diet_preferences}`);
       }
@@ -681,23 +685,25 @@ Make them balanced, diverse, and delicious. Include:
             <Target className="w-4 h-4 mr-2" />
             Set Goals
           </Button>
-          <Button
-            onClick={generateWeeklyPlan}
-            disabled={isGeneratingPlan}
-            className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white flex-1 sm:flex-none"
-          >
-            {isGeneratingPlan ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Generate Plan
-              </>
-            )}
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white flex-1 sm:flex-none">
+                {isGeneratingPlan ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
+                ) : (
+                  <><Sparkles className="w-4 h-4 mr-2" /> Generate Plan <ChevronDown className="w-4 h-4 ml-1" /></>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => generateWeeklyPlan(false)} className="cursor-pointer">
+                Weekly Plan (Balanced)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => generateWeeklyPlan(true)} className="cursor-pointer text-amber-600">
+                Prioritize Expiring Items
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             onClick={onOpenShoppingList}
             className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none"

@@ -278,12 +278,19 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     setIsGeneratingInsights(true);
     try {
        const itemsToAnalyze = Object.values(shoppingList).flat().map(i => i.original);
+       const inventoryNames = inventory.map(i => i.name).join(', ');
+       const upcomingMeals = mealPlans.filter(m => new Date(m.date) >= new Date()).slice(0, 7).map(m => m.recipe_name).join(', ');
+
        const response = await base44.integrations.Core.InvokeLLM({
           prompt: `Analyze this shopping list: ${itemsToAnalyze.join(', ')}.
-1. Categorize these items into logical grocery aisles (e.g. Produce, Meat, Dairy, Pantry, Frozen, etc).
-2. Estimate the total cost in USD and provide a breakdown per category.
-3. Suggest 2-3 smart substitutions (for health or budget).
-4. Suggest item-specific bulk buying opportunities or promotions based on these items.
+Current Pantry Inventory: ${inventoryNames || 'None'}
+Upcoming Meals (next 7 days): ${upcomingMeals || 'None'}
+
+1. Categorize these items into logical grocery aisles (e.g. Produce, Meat, Dairy, Pantry, Frozen, etc) to optimize for grocery store layout.
+2. Estimate the total cost in USD and provide a breakdown per category to optimize for cost-efficiency.
+3. Suggest 2-3 smart substitutions specifically based on what they already have in their Pantry Inventory.
+4. Suggest 2-3 proactive items they might need for their Upcoming Meals but forgot to add to the list.
+5. Suggest item-specific bulk buying opportunities or promotions based on these items.
 Return JSON.`,
           response_json_schema: {
              type: "object",
@@ -320,6 +327,7 @@ Return JSON.`,
                 },
                 estimatedTotalCost: { type: "string" },
                 substitutions: { type: "array", items: { type: "string" } },
+                proactiveSuggestions: { type: "array", items: { type: "string" } },
                 bulkOpportunities: { type: "array", items: { type: "string" } }
              }
           }
@@ -1025,7 +1033,7 @@ Return JSON.`,
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm font-bold text-[#5a6f60] mb-2 flex items-center gap-1.5">
-                      <span>💡</span> Smart Substitutions
+                      <span>💡</span> Smart Substitutions (from Pantry)
                     </p>
                     <ul className="text-sm text-gray-600 space-y-1.5">
                       {aiInsights.substitutions.map((sub, i) => (
@@ -1036,6 +1044,21 @@ Return JSON.`,
                       ))}
                     </ul>
                   </div>
+                  {aiInsights.proactiveSuggestions && aiInsights.proactiveSuggestions.length > 0 && (
+                    <div className="pt-3 border-t border-[#c5d9c9]/50">
+                      <p className="text-sm font-bold text-[#5a6f60] mb-2 flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-[#6b9b76]" /> Proactive Additions for Meals
+                      </p>
+                      <ul className="text-sm text-gray-600 space-y-1.5">
+                        {aiInsights.proactiveSuggestions.map((sug, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#6b9b76] mt-1.5 shrink-0" />
+                            <span>{sug}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   {aiInsights.categoryCosts && (
                     <div className="pt-3 border-t border-[#c5d9c9]/50">
                       <p className="text-sm font-bold text-[#5a6f60] mb-2">Category Breakdown</p>
