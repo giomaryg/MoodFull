@@ -40,6 +40,41 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
     )
   );
 
+  const scaledIngredients = useMemo(() => {
+    if (!selectedRecipe || !selectedRecipe.ingredients || !selectedRecipe.servings) return [];
+    const originalServings = selectedRecipe.servings;
+    const newServings = servings ? parseInt(servings) : originalServings;
+    
+    if (originalServings === newServings) return selectedRecipe.ingredients;
+    
+    return selectedRecipe.ingredients.map(ing => {
+      const match = ing.match(/^(\d*\.?\d+(?:\/\d+)?|\d+\s+\d+\/\d+)\s+(.*)/);
+      if (match) {
+        try {
+          let amount = match[1];
+          if (amount.includes('/')) {
+            const parts = amount.split(' ');
+            if (parts.length === 2) {
+              const [num, den] = parts[1].split('/');
+              amount = parseInt(parts[0]) + (parseInt(num) / parseInt(den));
+            } else {
+              const [num, den] = amount.split('/');
+              amount = parseInt(num) / parseInt(den);
+            }
+          } else {
+            amount = parseFloat(amount);
+          }
+          const scaled = (amount * newServings) / originalServings;
+          const formatted = Number.isInteger(scaled) ? scaled.toString() : scaled.toFixed(1).replace(/\.0$/, '');
+          return `${formatted} ${match[2]}`;
+        } catch {
+          return ing;
+        }
+      }
+      return ing;
+    });
+  }, [selectedRecipe, servings]);
+
   const handleAddMeal = () => {
     if (mode === 'select') {
       if (!selectedRecipe) return;
@@ -50,6 +85,7 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
         date: format(selectedDate, 'yyyy-MM-dd'),
         meal_type: selectedMealType,
         servings: servings ? parseInt(servings) : selectedRecipe.servings,
+        custom_ingredients: scaledIngredients !== selectedRecipe.ingredients ? scaledIngredients : undefined,
         notes
       });
     } else {
