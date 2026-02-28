@@ -51,6 +51,7 @@ export default function RecipeGenerator() {
   const [showPaywall, setShowPaywall] = useState(false);
   const [showCombineDialog, setShowCombineDialog] = useState(false);
   const [showAICoach, setShowAICoach] = useState(false);
+  const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -933,6 +934,7 @@ export default function RecipeGenerator() {
           <>
               {/* Proactive Expiring Items Alert */}
               {(() => {
+                if (hideExpiringAlert) return null;
                 const expiringItems = inventory.filter(item => {
                   if (!item.expiry_date) return false;
                   return new Date(item.expiry_date) <= new Date(Date.now() + 7 * 86400000);
@@ -942,9 +944,16 @@ export default function RecipeGenerator() {
                   <motion.div 
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                    className="relative bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
                   >
-                    <div>
+                    <button 
+                      onClick={() => setHideExpiringAlert(true)}
+                      className="absolute top-3 right-3 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full p-1 transition-colors"
+                      title="Dismiss notification"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                    <div className="pr-6">
                       <h4 className="font-bold text-amber-800 flex items-center gap-2">
                         <span className="text-xl">⚠️</span> Expiring Soon!
                       </h4>
