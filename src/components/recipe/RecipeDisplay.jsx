@@ -358,15 +358,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             <Badge variant="secondary" className="bg-purple-50 text-purple-700 hover:bg-purple-100 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-xl flex items-center gap-2">
               <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-1" />
               <button onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="p-0.5 hover:bg-purple-200 rounded-md"><Minus className="w-3 h-3 sm:w-4 sm:h-4" /></button>
-              <input 
-                type="number" 
-                value={currentServings}
-                onChange={(e) => {
-                  const val = parseInt(e.target.value);
-                  if (!isNaN(val) && val > 0) setCurrentServings(val);
-                }}
-                className="font-bold w-10 text-center bg-transparent border-none focus:outline-none p-0 text-sm sm:text-base appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-              />
+              <span className="font-bold min-w-[1ch] text-center">{currentServings}</span>
               <button onClick={() => setCurrentServings(currentServings + 1)} className="p-0.5 hover:bg-purple-200 rounded-md"><Plus className="w-3 h-3 sm:w-4 sm:h-4" /></button>
             </Badge>
             <Badge variant="secondary" className="bg-green-50 text-green-700 hover:bg-green-100 px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-xl capitalize">
@@ -583,8 +575,6 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           enableDateSelection={true}
           recipes={isSaved ? recipes : [...recipes, recipe]}
           onClose={() => setShowAddMeal(false)}
-          initialRecipe={recipe}
-          initialServings={currentServings}
         />
       )}
 

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -40,41 +40,6 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
     )
   );
 
-  const scaledIngredients = useMemo(() => {
-    if (!selectedRecipe || !selectedRecipe.ingredients || !selectedRecipe.servings) return [];
-    const originalServings = selectedRecipe.servings;
-    const newServings = servings ? parseInt(servings) : originalServings;
-    
-    if (originalServings === newServings) return selectedRecipe.ingredients;
-    
-    return selectedRecipe.ingredients.map(ing => {
-      const match = ing.match(/^(\d*\.?\d+(?:\/\d+)?|\d+\s+\d+\/\d+)\s+(.*)/);
-      if (match) {
-        try {
-          let amount = match[1];
-          if (amount.includes('/')) {
-            const parts = amount.split(' ');
-            if (parts.length === 2) {
-              const [num, den] = parts[1].split('/');
-              amount = parseInt(parts[0]) + (parseInt(num) / parseInt(den));
-            } else {
-              const [num, den] = amount.split('/');
-              amount = parseInt(num) / parseInt(den);
-            }
-          } else {
-            amount = parseFloat(amount);
-          }
-          const scaled = (amount * newServings) / originalServings;
-          const formatted = Number.isInteger(scaled) ? scaled.toString() : scaled.toFixed(1).replace(/\.0$/, '');
-          return `${formatted} ${match[2]}`;
-        } catch {
-          return ing;
-        }
-      }
-      return ing;
-    });
-  }, [selectedRecipe, servings]);
-
   const handleAddMeal = () => {
     if (mode === 'select') {
       if (!selectedRecipe) return;
@@ -85,7 +50,6 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
         date: format(selectedDate, 'yyyy-MM-dd'),
         meal_type: selectedMealType,
         servings: servings ? parseInt(servings) : selectedRecipe.servings,
-        custom_ingredients: scaledIngredients !== selectedRecipe.ingredients ? scaledIngredients : undefined,
         notes
       });
     } else {
@@ -230,19 +194,6 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
                     onChange={(e) => setServings(e.target.value)}
                     className="border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl"
                   />
-                  {servings && parseInt(servings) !== selectedRecipe.servings && (
-                    <div className="mt-3 bg-[#f0f9f2] border border-[#c5d9c9] rounded-xl p-3">
-                      <p className="text-xs font-semibold text-[#6b9b76] mb-2">Ingredients scaled for {servings} servings:</p>
-                      <ul className="space-y-1 max-h-24 overflow-y-auto">
-                        {scaledIngredients.map((ing, i) => (
-                          <li key={i} className="text-xs text-gray-600 flex items-start gap-1">
-                            <span className="text-[#6b9b76] mt-0.5">•</span>
-                            {ing}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#5a6f60] mb-2">

@@ -108,9 +108,9 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       const recipe = recipes.find((r) => r.id === plan.recipe_id);
       return {
         id: `plan-${plan.id}`,
-        recipeName: plan.recipe_name || recipe?.name || 'Unknown Recipe',
+        recipeName: recipe?.name || 'Unknown Recipe',
         details: `${plan.meal_type} on ${new Date(plan.date).toLocaleDateString()}`,
-        ingredients: plan.custom_ingredients?.length > 0 ? plan.custom_ingredients : (recipe?.ingredients || []),
+        ingredients: recipe?.ingredients || [],
         servings: plan.servings
       };
     });
@@ -141,15 +141,11 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     // Process meal plans
     selectedMeals.forEach((plan) => {
       const recipe = recipes.find((r) => r.id === plan.recipe_id);
-      if (!recipe && !plan.custom_ingredients?.length) return;
-      
-      const ingredientsToProcess = plan.custom_ingredients?.length > 0 ? plan.custom_ingredients : recipe?.ingredients;
-      if (!ingredientsToProcess) return;
+      if (!recipe || !recipe.ingredients) return;
 
-      // If we are using custom scaled ingredients, we don't need the multiplier
-      const servingMultiplier = plan.custom_ingredients?.length > 0 ? 1 : ((plan.servings || recipe?.servings || 1) / (recipe?.servings || 1));
+      const servingMultiplier = (plan.servings || recipe.servings) / (recipe.servings || 1);
       
-      ingredientsToProcess.forEach((ingredient) => {
+      recipe.ingredients.forEach((ingredient) => {
         const cleanIngredient = ingredient.toLowerCase().trim();
         if (!ingredientMap[cleanIngredient]) {
           ingredientMap[cleanIngredient] = {
