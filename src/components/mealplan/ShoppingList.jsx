@@ -183,10 +183,12 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
 
     // Group by category
     const categorized = {
-      'Produce': [],
-      'Meat & Poultry': [],
-      'Dairy & Eggs': [],
-      'Pantry': [],
+      'Produce (Aisle)': [],
+      'Meat & Seafood (Aisle)': [],
+      'Dairy & Eggs (Aisle)': [],
+      'Bakery (Aisle)': [],
+      'Frozen (Aisle)': [],
+      'Pantry (Aisle)': [],
       'Custom Items': [],
       'Other': []
     };
@@ -196,13 +198,17 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
       const lower = key.toLowerCase();
 
       if (lower.match(/lettuce|tomato|onion|pepper|carrot|celery|cucumber|spinach|kale|fruit|vegetable|potato|garlic|herb|basil|parsley/)) {
-        categorized['Produce'].push(item);
+        categorized['Produce (Aisle)'].push(item);
       } else if (lower.match(/chicken|beef|pork|turkey|steak|fish|salmon|meat|poultry|bacon|sausage|ham/)) {
-        categorized['Meat & Poultry'].push(item);
+        categorized['Meat & Seafood (Aisle)'].push(item);
       } else if (lower.match(/milk|cheese|yogurt|butter|cream|egg/)) {
-        categorized['Dairy & Eggs'].push(item);
+        categorized['Dairy & Eggs (Aisle)'].push(item);
+      } else if (lower.match(/bread|bun|roll|bagel|croissant|pastry/)) {
+        categorized['Bakery (Aisle)'].push(item);
+      } else if (lower.match(/frozen|ice cream|pizza/)) {
+        categorized['Frozen (Aisle)'].push(item);
       } else if (lower.match(/flour|sugar|salt|pepper|oil|rice|pasta|spice|sauce|stock|broth|canned|bean|lentil|vinegar|soy/)) {
-        categorized['Pantry'].push(item);
+        categorized['Pantry (Aisle)'].push(item);
       } else {
         categorized['Other'].push(item);
       }
