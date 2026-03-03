@@ -1136,6 +1136,15 @@ export default function RecipeGenerator() {
                     setGlobalSearchQuery('');
                     setAdvancedFilters({});
                   }}
+                  onRefresh={() => {
+                    if (generatedRecipes[0]?.mood === 'From Pantry') {
+                      generateFromInventory();
+                    } else if (generatedRecipes[0]?.mood === 'Combined Creation') {
+                      setShowCombineDialog(true);
+                    } else {
+                      generateRecipe();
+                    }
+                  }}
                   searchQuery={globalSearchQuery} />
 
                   </motion.div>

@@ -4,11 +4,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, Loader2 } from 'lucide-react';
+import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, RefreshCw, Loader2 } from 'lucide-react';
 import HighlightedText from './HighlightedText';
 import TiltCard from '../ui/TiltCard';
 
-function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
+function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuery = '' }) {
   const difficultyColors = {
     easy: 'bg-green-50 text-green-700 border-green-200',
     medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
@@ -27,16 +27,28 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, searchQuery = '' }) {
           <p className="text-[#5a6f60] mt-1 text-sm sm:text-base">Showing {recipes.length} recipe{recipes.length !== 1 ? 's' : ''}</p>
         </div>
 
-        {onStartOver && (
-          <Button
-            onClick={onStartOver}
-            variant="outline"
-            className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm w-full sm:w-auto"
-          >
-            <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
-            Start Over
-          </Button>
-        )}
+        <div className="flex gap-2 w-full sm:w-auto">
+          {onRefresh && (
+            <Button
+              onClick={onRefresh}
+              variant="outline"
+              className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm flex-1 sm:flex-none"
+            >
+              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
+              Refresh Ideas
+            </Button>
+          )}
+          {onStartOver && (
+            <Button
+              onClick={onStartOver}
+              variant="outline"
+              className="border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-600 text-sm flex-1 sm:flex-none"
+            >
+              <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
+              Start Over
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Recipe Grid */}
