@@ -672,10 +672,6 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           {/* Similar Recipes Section - Prominently Displayed */}
           {similarRecipes.length > 0 && (
             <div className="bg-gradient-to-br from-[#f0f9f2] to-white rounded-2xl p-4 sm:p-6 shadow-sm border-2 border-[#c5d9c9] my-6">
-              <h3 className="text-xl font-bold text-[#6b9b76] mb-4 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#f2b769]" />
-                Similar Recipes You Might Like
-              </h3>
               <SimilarRecipes
                 recipes={similarRecipes}
                 onRecipeClick={onSimilarRecipeClick}
