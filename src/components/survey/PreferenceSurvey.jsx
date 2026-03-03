@@ -19,9 +19,8 @@ const priorities = [
 
 
 const cuisines = [
-'Italian', 'Mexican', 'Chinese', 'Japanese', 'Indian', 'Thai',
-'Mediterranean', 'French', 'Middle Eastern', 'Korean', 'Vietnamese',
-'American', 'Greek', 'Spanish', 'Caribbean', 'Other'];
+  'Afghan', 'African', 'American', 'Argentine', 'Armenian', 'Asian', 'Australian', 'Austrian', 'Bangladeshi', 'BBQ', 'Belgian', 'Brazilian', 'British', 'Burmese', 'Cajun', 'Cambodian', 'Canadian', 'Caribbean', 'Chilean', 'Chinese', 'Colombian', 'Cuban', 'Danish', 'Dutch', 'Eastern European', 'Ecuadorian', 'Egyptian', 'Ethiopian', 'Filipino', 'French', 'Georgian', 'German', 'Greek', 'Guatemalan', 'Hawaiian', 'Honduran', 'Hungarian', 'Indian', 'Indonesian', 'Irish', 'Israeli', 'Italian', 'Jamaican', 'Japanese', 'Jewish', 'Korean', 'Latin American', 'Lebanese', 'Malaysian', 'Mediterranean', 'Mexican', 'Middle Eastern', 'Moroccan', 'Native American', 'Nepalese', 'New American', 'Nigerian', 'Norwegian', 'Pakistani', 'Persian', 'Peruvian', 'Polish', 'Portuguese', 'Puerto Rican', 'Romanian', 'Russian', 'Salvadoran', 'Scandinavian', 'Scottish', 'Seafood', 'Senegalese', 'Somali', 'Soul Food', 'Southern', 'Spanish', 'Sri Lankan', 'Swedish', 'Swiss', 'Syrian', 'Taiwanese', 'Thai', 'Tibetan', 'Turkish', 'Ukrainian', 'Vegan', 'Vegetarian', 'Venezuelan', 'Vietnamese', 'Welsh', 'Other'
+];
 
 
 const mealOptions = ['1-3 meals', '4-7 meals', '8-14 meals', '15+ meals'];
@@ -30,6 +29,7 @@ const equipmentList = ['Oven', 'Stove', 'Microwave', 'Air Fryer', 'Slow Cooker',
 
 export default function PreferenceSurvey({ onComplete, onSkip, initialData = {}, currentUser = {} }) {
   const [step, setStep] = useState(1);
+  const [cuisineSearch, setCuisineSearch] = useState('');
   const [formData, setFormData] = useState({
     gender: initialData.gender || currentUser.gender || '',
     phone_number: initialData.phone_number || currentUser.phone_number || '',
@@ -333,6 +333,7 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
 
 
       case 7:
+        const filteredCuisines = cuisines.filter(c => c.toLowerCase().includes(cuisineSearch.toLowerCase()));
         return (
           <div className="space-y-4">
             <div className="space-y-3">
@@ -340,17 +341,25 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
                 Please select cuisines you are interested in trying!
               </Label>
               <p className="text-sm text-gray-500 mb-4">Choose your favorites</p>
-              <div className="flex flex-wrap gap-2 max-h-80 overflow-y-auto mb-4">
-                {cuisines.map((cuisine) => {
+              
+              <Input 
+                placeholder="Search cuisines..." 
+                value={cuisineSearch}
+                onChange={(e) => setCuisineSearch(e.target.value)}
+                className="mb-4 border-[#c5d9c9] focus:border-[#6b9b76]"
+              />
+
+              <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto mb-4 p-1">
+                {filteredCuisines.map((cuisine) => {
                   const isSelected = formData.preferred_cuisines.includes(cuisine);
                   return (
                     <Badge
                       key={cuisine}
                       onClick={() => toggleInArray('preferred_cuisines', cuisine)}
-                      className={`cursor-pointer px-4 py-2 text-sm transition-all ${
+                      className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
                       isSelected ?
-                      'bg-[#6b9b76] hover:bg-[#5a8a65] text-white' :
-                      'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
+                      'bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-md scale-105' :
+                      'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-[#6b9b76]'}`
                       }>
 
                       {cuisine}
@@ -358,6 +367,9 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
                     </Badge>);
 
                 })}
+                {filteredCuisines.length === 0 && (
+                  <p className="text-sm text-gray-500 italic">No cuisines found matching "{cuisineSearch}".</p>
+                )}
               </div>
               
               {formData.preferred_cuisines.includes('Other') &&

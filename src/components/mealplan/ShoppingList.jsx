@@ -536,7 +536,13 @@ Return JSON.`,
       else if (service === 'Costco') url = `https://www.costco.com/CatalogSearch?keyword=${encodeURIComponent(query)}`;
       else if (service === 'H-E-B') url = `https://www.heb.com/search/?q=${encodeURIComponent(query)}`;
       else if (service === 'Wegmans') url = `https://shop.wegmans.com/search?search_term=${encodeURIComponent(query)}`;
-      else url = `https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
+      else if (service === 'Uber Eats') url = `https://www.ubereats.com/search?q=${encodeURIComponent(query)}`;
+      else if (service === 'DoorDash') url = `https://www.doordash.com/search/${encodeURIComponent(query)}/`;
+      else if (service === 'Shipt') url = `https://www.shipt.com/search?q=${encodeURIComponent(query)}`;
+      else if (service === 'Target') url = `https://www.target.com/s?searchTerm=${encodeURIComponent(query)}`;
+      else if (service === 'Sprouts') url = `https://shop.sprouts.com/search?search_term=${encodeURIComponent(query)}`;
+      else if (service === 'Whole Foods') url = `https://www.wholefoodsmarket.com/search?text=${encodeURIComponent(query)}`;
+      else url = `https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/search?q=${encodeURIComponent(query)}`;
       window.open(url, '_blank');
     }, 1500);
   };
@@ -669,8 +675,8 @@ Return JSON.`,
                     <ShoppingCart className="w-4 h-4 mr-2 hidden sm:block" /> Order
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden">
-                  {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods', 'Kroger', 'Safeway', 'Aldi', 'Costco', 'H-E-B', 'Wegmans'].map(service => (
+                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden max-h-80 overflow-y-auto">
+                  {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods', 'Kroger', 'Safeway', 'Aldi', 'Costco', 'H-E-B', 'Wegmans', 'Uber Eats', 'DoorDash', 'Shipt', 'Peapod', 'FreshDirect', 'Gopuff', 'Meijer', 'Publix', 'Albertsons', 'Vons', 'Jewel-Osco', 'Stop & Shop', 'Giant', 'Food Lion', 'Hannaford', 'Ralphs', 'Smith\'s', 'Fred Meyer', 'Fry\'s', 'King Soopers'].sort().map(service => (
                     <DropdownMenuItem 
                       key={service}
                       onClick={() => handleOrderGroceries(service)}
