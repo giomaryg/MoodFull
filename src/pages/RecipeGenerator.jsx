@@ -1165,6 +1165,10 @@ export default function RecipeGenerator() {
                   recipe={currentRecipe}
                   onSave={handleSaveRecipe}
                   isSaved={!!savedRecipeId}
+                  onBack={() => {
+                    setCurrentRecipe(null);
+                    setSavedRecipeId(null);
+                  }}
                   onUpdate={(updatedRecipe) => {
                     // Update the current recipe with the new data
                     setCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
@@ -1177,24 +1181,6 @@ export default function RecipeGenerator() {
                     const savedVersion = savedRecipes.find((r) => r.id === recipe.id);
                     setSavedRecipeId(savedVersion ? savedVersion.id : null);
                   }} />
-
-
-
-                    {!isGenerating &&
-                <div className="flex justify-center gap-4">
-                        <Button
-                    onClick={() => {
-                      // The useLayoutEffect will restore the scroll position automatically
-                      setCurrentRecipe(null);
-                      setSavedRecipeId(null);
-                    }}
-                    variant="outline"
-                    className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] rounded-2xl px-6 sm:px-8 py-4 sm:py-6 text-sm sm:text-base font-semibold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
-
-                          Back to Results
-                        </Button>
-                      </div>
-                }
                   </motion.div>
               }
               </AnimatePresence>

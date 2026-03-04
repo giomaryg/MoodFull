@@ -20,7 +20,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import SaveToCollectionDialog from './SaveToCollectionDialog';
 import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send } from 'lucide-react';
 
-function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate }) {
+function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -380,7 +380,12 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       className="bg-[#fdf8f4] rounded-[2rem] overflow-hidden shadow-2xl relative"
     >
       {/* Top Section */}
-      <div className="pt-8 px-6 sm:px-10 relative z-10 min-h-[320px] sm:min-h-[400px]">
+      <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-[320px] sm:min-h-[400px]">
+        {onBack && (
+          <button onClick={onBack} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 hover:bg-gray-50 transition-colors">
+            <ChevronLeft className="w-5 h-5 text-gray-700" />
+          </button>
+        )}
         <div className="flex justify-between relative h-full">
           <div className="w-[55%] sm:w-1/2 z-10 flex flex-col">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8">
