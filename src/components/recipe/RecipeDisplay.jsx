@@ -615,46 +615,45 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </div>
 
           {/* Instructions */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/70 mb-2">
-              <span>Instructions</span>
-              <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/60 to-transparent"></div>
-              <div className="flex gap-1">
+          <div className="space-y-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-900">Instructions</h2>
+              <div className="flex gap-2">
                  <Button 
-                   variant="ghost" 
+                   variant="outline" 
                    size="sm" 
                    onClick={() => handleRegenerateSteps('simplify')} 
                    disabled={isRegeneratingSteps}
-                   className="h-6 text-[10px] px-2 text-[#6b9b76] hover:bg-[#6b9b76]/10 font-sans tracking-normal normal-case"
+                   className="h-8 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
                    title="Make instructions simpler and easier to follow"
                  >
-                   {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <RefreshCw className="w-3 h-3 mr-1" />} Simplify
+                   {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <RefreshCw className="w-3 h-3 mr-1.5" />} Simplify
                  </Button>
                  <Button 
-                   variant="ghost" 
+                   variant="outline" 
                    size="sm" 
                    onClick={() => handleRegenerateSteps('detail')} 
                    disabled={isRegeneratingSteps}
-                   className="h-6 text-[10px] px-2 text-[#6b9b76] hover:bg-[#6b9b76]/10 font-sans tracking-normal normal-case"
+                   className="h-8 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
                    title="Make instructions extremely detailed with visual cues"
                  >
-                   {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Sparkles className="w-3 h-3 mr-1" />} Detail
+                   {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <Sparkles className="w-3 h-3 mr-1.5" />} Detail
                  </Button>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {recipe.instructions?.map((instruction, index) =>
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
-                className="flex gap-3 items-start group glass-panel p-3 sm:p-4 rounded-[14px] transition-all duration-200">
+                className="flex gap-4 items-start group p-4 bg-[#fdf8f4] rounded-2xl transition-all duration-200">
 
-                  <div className="bg-[#6b9b76] text-white font-mono text-[10px] sm:text-xs font-bold rounded-xl shrink-0 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center shadow-md">
+                  <div className="bg-white text-gray-900 font-bold rounded-xl shrink-0 w-10 h-10 flex items-center justify-center shadow-sm text-lg">
                     {index + 1}
                   </div>
-                  <p className="flex-1 text-[#3d5244]/80 leading-relaxed pt-0.5 text-[11px] sm:text-xs">
+                  <p className="flex-1 text-gray-700 leading-relaxed pt-1 text-sm sm:text-base">
                     {instruction}
                   </p>
                 </motion.div>
