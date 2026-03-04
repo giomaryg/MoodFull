@@ -292,7 +292,9 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
               ) : recipeOfDay.imageUrl ? (
                 <img src={recipeOfDay.imageUrl} alt={recipeOfDay.name} className="w-full h-full object-cover" />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50 text-6xl">🥗</div>
+                <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
+                  <ChefHat className="w-16 h-16 text-[#6b9b76]/50" />
+                </div>
               )}
               
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
