@@ -381,6 +381,10 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
         contextParts.push(`CRITICAL: Ensure that the sum of breakfast + lunch + dinner calories for each day is close to ${currentUser.daily_calorie_target} calories, and fits the macros.`);
       }
 
+      if (customPlanPrompt) {
+        contextParts.push(`USER'S CUSTOM REQUEST: "${customPlanPrompt}". This is the highest priority requirement!`);
+      }
+
       const userContext = contextParts.join('\n');
 
       const mealSchema = {
@@ -574,6 +578,10 @@ For each meal provide:
         contextParts.push(`TARGET NUTRITION PER DAY: Roughly ${currentUser.daily_calorie_target} calories total for the day.`);
         contextParts.push(`TARGET MACROS: ${currentUser.macro_protein_ratio || 30}% protein, ${currentUser.macro_carbs_ratio || 40}% carbs, ${currentUser.macro_fat_ratio || 30}% fat.`);
         contextParts.push(`CRITICAL: Ensure that the sum of breakfast + lunch + dinner calories for each day is close to ${currentUser.daily_calorie_target} calories, and fits the macros.`);
+      }
+
+      if (customPlanPrompt) {
+        contextParts.push(`USER'S CUSTOM REQUEST: "${customPlanPrompt}". This is the highest priority requirement!`);
       }
 
       const userContext = contextParts.join('\n');
