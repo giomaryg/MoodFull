@@ -282,43 +282,54 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
           </div>
           <Card
             onClick={() => onRecipeClick(recipeOfDay)}
-            className="cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 border-[#c5d9c9] bg-gradient-to-br from-[#f0f9f2] to-[#e8f0ea] overflow-hidden relative"
+            className="cursor-pointer rounded-[2rem] overflow-hidden border-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)] bg-white hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-shadow duration-300"
           >
-            <div className="flex flex-col md:flex-row">
-              <div className="w-full md:w-2/5 h-56 md:h-auto bg-gray-200 relative overflow-hidden">
-                {recipeOfDay.imageLoading ? (
-                  <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
-                    <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
-                  </div>
-                ) : recipeOfDay.imageUrl ? (
-                  <img src={recipeOfDay.imageUrl} alt={recipeOfDay.name} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]">
-                    <ChefHat className="w-16 h-16 text-[#6b9b76]/50" />
-                  </div>
-                )}
-              </div>
-              <div className="p-6 md:w-3/5 flex flex-col justify-center">
-                <h4 className="font-bold text-2xl text-gray-900 mb-2">{recipeOfDay.name}</h4>
-                <p className="text-gray-600 mb-6">{recipeOfDay.description}</p>
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="bg-white/80 border-[#c5d9c9] text-[#5a8a65]">
-                      <Clock className="w-3 h-3 mr-1" /> {recipeOfDay.prep_time} prep
-                    </Badge>
-                    <Badge variant="outline" className="bg-white/80 border-[#c5d9c9] text-[#5a8a65]">
-                      <Clock className="w-3 h-3 mr-1" /> {recipeOfDay.cook_time} cook
-                    </Badge>
-                  </div>
-                  <Button 
-                    onClick={(e) => handleQuickAdd(e, recipeOfDay)}
-                    disabled={createMealMutation.isPending}
-                    size="sm"
-                    className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-full shadow-md"
-                  >
-                    <CalendarPlus className="w-4 h-4 mr-1.5" /> Quick Add to Plan
-                  </Button>
+            <div className="relative h-64 sm:h-80 bg-gray-100">
+              {recipeOfDay.imageLoading ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
+                  <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
                 </div>
+              ) : recipeOfDay.imageUrl ? (
+                <img src={recipeOfDay.imageUrl} alt={recipeOfDay.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50 text-6xl">🥗</div>
+              )}
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              
+              <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                <div className="flex-1 pr-4">
+                  <h3 className="text-white font-bold text-2xl sm:text-3xl leading-tight mb-2">
+                    {recipeOfDay.name}
+                  </h3>
+                  <p className="text-white/80 text-sm sm:text-base line-clamp-2">
+                    {recipeOfDay.description}
+                  </p>
+                </div>
+                <button 
+                  onClick={(e) => handleQuickAdd(e, recipeOfDay)}
+                  className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform"
+                  title="Quick Add to Meal Plan"
+                >
+                  <CalendarPlus className="w-6 h-6 text-gray-700" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6 flex justify-around items-center bg-white">
+              <div className="text-center">
+                <p className="font-bold text-xl text-gray-900">{recipeOfDay.nutrition?.calories || 320}</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">Calories</p>
+              </div>
+              <div className="w-px h-10 bg-gray-100"></div>
+              <div className="text-center">
+                <p className="font-bold text-xl text-gray-900">{recipeOfDay.nutrition?.protein ? String(recipeOfDay.nutrition.protein).match(/(\d+)/)?.[1] : 24}g</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">Protein</p>
+              </div>
+              <div className="w-px h-10 bg-gray-100"></div>
+              <div className="text-center">
+                <p className="font-bold text-xl text-gray-900">{recipeOfDay.nutrition?.carbs ? String(recipeOfDay.nutrition.carbs).match(/(\d+)/)?.[1] : 45}g</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">Carbs</p>
               </div>
             </div>
           </Card>
