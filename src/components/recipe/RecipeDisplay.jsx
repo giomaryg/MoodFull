@@ -424,7 +424,9 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             {images.length > 0 ? (
               <img src={images[currentImageIndex]} alt={recipe.name} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center text-6xl">🥗</div>
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <ChefHat className="w-24 h-24 text-gray-400" />
+              </div>
             )}
           </div>
         </div>
@@ -559,8 +561,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     transition={{ delay: index * 0.05 }}
                     className="flex items-center gap-4 p-4 bg-[#fdf8f4] rounded-2xl group"
                   >
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm text-xl shrink-0">
-                      🥗
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                      <Leaf className="w-6 h-6 text-[#6b9b76]" />
                     </div>
                     <div className="flex-1">
                       <h4 className={`font-bold text-gray-900 text-sm sm:text-base ${isSubbed ? 'line-through opacity-50' : ''}`}>
