@@ -329,8 +329,15 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
       {feed.length > 0 && (
         <div>
           <h4 className="font-bold text-lg text-gray-800 mb-4 px-1">Discover New Favorites</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {feed.map((recipe, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {feed.map((recipe, index) => {
+              const parseMacro = (str) => {
+                if (!str) return 0;
+                const match = String(str).match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+              };
+              
+              return (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -339,66 +346,63 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
               >
                 <Card
                   onClick={() => onRecipeClick(recipe)}
-                  className="cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 bg-white group rounded-2xl overflow-hidden h-full flex flex-col"
+                  className="cursor-pointer rounded-[2rem] overflow-hidden border-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)] bg-white h-full flex flex-col hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-shadow duration-300"
                 >
-                  <div className="relative h-44 bg-gray-100 overflow-hidden shrink-0">
+                  <div className="relative h-56 sm:h-64 shrink-0 bg-gray-100">
                     {recipe.imageLoading ? (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
+                        <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
                       </div>
                     ) : recipe.imageUrl ? (
                       <img
                         src={recipe.imageUrl}
                         alt={recipe.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <ChefHat className="w-12 h-12 text-gray-300" />
-                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50 text-6xl">🥗</div>
                     )}
                     
-                    <div className="absolute top-2 right-2">
-                      <Button
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    
+                    <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                      <div className="flex-1 pr-4">
+                        <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
+                          {recipe.name}
+                        </h3>
+                        <p className="text-white/80 text-xs sm:text-sm line-clamp-1">
+                          {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
+                        </p>
+                      </div>
+                      <button 
                         onClick={(e) => handleQuickAdd(e, recipe)}
-                        size="icon"
-                        variant="secondary"
-                        className="h-8 w-8 rounded-full bg-white/90 hover:bg-white text-[#6b9b76] shadow-sm opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0"
+                        className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform"
                         title="Quick Add to Meal Plan"
                       >
-                        <CalendarPlus className="w-4 h-4" />
-                      </Button>
+                        <CalendarPlus className="w-5 h-5 text-gray-700" />
+                      </button>
                     </div>
                   </div>
 
-                  <CardContent className="p-4 sm:p-5 flex flex-col flex-1">
-                    <div className="flex-1">
-                      <h4 className="font-bold text-base sm:text-lg text-gray-900 group-hover:text-[#6b9b76] transition-colors line-clamp-2 mb-2">
-                        {recipe.name}
-                      </h4>
-                      <p className="text-sm text-gray-600 line-clamp-2">
-                        {recipe.description}
-                      </p>
+                  <div className="p-5 flex justify-between items-center bg-white mt-auto">
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-gray-900">{recipe.nutrition?.calories || 290}</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Calories</p>
                     </div>
-
-                    <div className="flex flex-wrap gap-2 pt-4 mt-auto border-t border-gray-100">
-                      <Badge
-                        variant="secondary"
-                        className={`capitalize text-xs px-2 py-1 rounded-lg font-medium border ${difficultyColors[recipe.difficulty] || 'bg-gray-50 text-gray-700 border-gray-200'}`}
-                      >
-                        {recipe.difficulty || 'medium'}
-                      </Badge>
-                      {recipe.prep_time && (
-                        <Badge variant="secondary" className="bg-gray-50 text-gray-700 border-gray-200 text-xs px-2 py-1 rounded-lg">
-                          <Clock className="w-3 h-3 mr-1 text-gray-400" />
-                          {recipe.prep_time}
-                        </Badge>
-                      )}
+                    <div className="w-px h-8 bg-gray-100"></div>
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Protein</p>
                     </div>
-                  </CardContent>
+                    <div className="w-px h-8 bg-gray-100"></div>
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Carbs</p>
+                    </div>
+                  </div>
                 </Card>
               </motion.div>
-            ))}
+            )})}
           </div>
         </div>
       )}
