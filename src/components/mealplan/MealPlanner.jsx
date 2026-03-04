@@ -28,6 +28,7 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
   const [showGoalsDialog, setShowGoalsDialog] = useState(false);
   const [aiNutritionAdvice, setAiNutritionAdvice] = useState(null);
   const [isAnalyzingNutrition, setIsAnalyzingNutrition] = useState(false);
+  const [customPlanPrompt, setCustomPlanPrompt] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -707,31 +708,39 @@ Make them balanced, diverse, and delicious. Include:
             {(!currentUser?.is_premium && currentUser?.role !== 'admin') && <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>}
           </Button>
 
-          {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
-            <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white flex-1 sm:flex-none">
-              <Sparkles className="w-4 h-4 mr-2" /> Generate Plan <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
-            </Button>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white flex-1 sm:flex-none">
-                  {isGeneratingPlan ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
-                  ) : (
-                    <><Sparkles className="w-4 h-4 mr-2" /> Generate Plan <ChevronDown className="w-4 h-4 ml-1" /></>
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => generateWeeklyPlan(false)} className="cursor-pointer">
-                  Weekly Plan (Balanced)
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => generateWeeklyPlan(true)} className="cursor-pointer text-amber-600">
-                  Prioritize Expiring Items
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <div className="flex items-center gap-2 flex-1 sm:flex-none">
+            <input 
+              placeholder="e.g. high-protein under $80" 
+              value={customPlanPrompt}
+              onChange={(e) => setCustomPlanPrompt(e.target.value)}
+              className="w-full sm:w-64 h-10 px-3 py-2 text-sm rounded-md border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent"
+            />
+            {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
+              <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap">
+                <Sparkles className="w-4 h-4 mr-2" /> Generate Plan <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
+              </Button>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap">
+                    {isGeneratingPlan ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
+                    ) : (
+                      <><Sparkles className="w-4 h-4 mr-2" /> Generate Plan <ChevronDown className="w-4 h-4 ml-1" /></>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => generateWeeklyPlan(false)} className="cursor-pointer">
+                    Weekly Plan (Balanced)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => generateWeeklyPlan(true)} className="cursor-pointer text-amber-600">
+                    Prioritize Expiring Items
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
           <Button
             onClick={onOpenShoppingList}
             className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none"

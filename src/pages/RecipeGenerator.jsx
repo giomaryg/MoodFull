@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package } from 'lucide-react';
+import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
@@ -55,6 +55,136 @@ export default function RecipeGenerator() {
   const [showCombineDialog, setShowCombineDialog] = useState(false);
   const [showAICoach, setShowAICoach] = useState(false);
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleFridgeScan = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastReset = currentUser?.daily_mood_reset_date;
+      const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
+      if (dailyCount >= 3) {
+        setShowPaywall(true);
+        return;
+      }
+    }
+
+    setIsGenerating(true);
+    setSavedRecipeId(null);
+    setGlobalSearchQuery('');
+    setAdvancedFilters({});
+    
+    try {
+      const uploadRes = await base44.integrations.Core.UploadFile({ file });
+      
+      if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+        const today = new Date().toISOString().slice(0, 10);
+        const lastReset = currentUser?.daily_mood_reset_date;
+        const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
+        await base44.auth.updateMe({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
+        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      }
+
+      const quickResponse = await base44.integrations.Core.InvokeLLM({
+        prompt: `Look at this photo of a fridge/pantry. Identify the ingredients and generate 4 realistic recipe ideas using them. Provide varied options.`,
+        file_urls: [uploadRes.file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            recipes: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  prep_time: { type: "string" },
+                  cook_time: { type: "string" },
+                  servings: { type: "number" },
+                  difficulty: { type: "string", enum: ["easy", "medium", "hard"] },
+                  cuisine_type: { type: "string" },
+                  main_ingredients: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const quickRecipes = (quickResponse.recipes || []).filter((r) => r && r.name && r.description).map((recipe) => ({
+        ...recipe,
+        mood: 'Fridge Scan',
+        ingredients: [],
+        instructions: [],
+        _loading: true
+      }));
+
+      setGeneratedRecipes(quickRecipes);
+      setIsGenerating(false);
+
+      const enrichPromises = quickRecipes.map(async (recipe, index) => {
+        const detail = await base44.integrations.Core.InvokeLLM({
+          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              ingredients: { type: "array", items: { type: "string" } },
+              instructions: { type: "array", items: { type: "string" } },
+              nutrition: {
+                type: "object",
+                properties: {
+                  calories: { type: "number" },
+                  protein: { type: "string" },
+                  carbs: { type: "string" },
+                  fat: { type: "string" },
+                  fiber: { type: "string" },
+                  sodium: { type: "string" },
+                  sugar: { type: "string" },
+                  saturated_fat: { type: "string" },
+                  cholesterol: { type: "string" }
+                }
+              },
+              vitamins_minerals: { type: "array", items: { type: "object", properties: { name: { type: "string" }, amount: { type: "string" }, daily_value: { type: "string" } } } },
+              health_benefits: { type: "array", items: { type: "string" } },
+              cooking_tips: { type: "array", items: { type: "string" } },
+              substitutions: { type: "array", items: { type: "object", properties: { ingredient: { type: "string" }, substitute: { type: "string" } } } },
+              pairings: { type: "array", items: { type: "string" } }
+            }
+          }
+        });
+        return { index, detail };
+      });
+
+      enrichPromises.forEach(async (promise) => {
+        const { index, detail } = await promise;
+        setGeneratedRecipes((prev) => prev.map((r, i) =>
+          i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
+        ));
+
+        try {
+          const recipe = quickRecipes[index];
+          const [img1, img2, img3] = await Promise.all([
+            base44.integrations.Core.GenerateImage({ prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.` }),
+            base44.integrations.Core.GenerateImage({ prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.` }),
+            base44.integrations.Core.GenerateImage({ prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.` })
+          ]);
+          setGeneratedRecipes((prev) => prev.map((r, i) =>
+            i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
+          ));
+        } catch {
+          setGeneratedRecipes((prev) => prev.map((r, i) =>
+            i === index ? { ...r, imageLoading: false } : r
+          ));
+        }
+      });
+
+    } catch (error) {
+      toast.error('Failed to scan fridge. Please try again.');
+      setIsGenerating(false);
+    }
+  };
 
   useEffect(() => {
     if (activeTab === 'inventory' && !ENABLE_PANTRY_FEATURE) {
@@ -1109,6 +1239,15 @@ export default function RecipeGenerator() {
                   disabled={isGenerating} className="bg-[#f2b769] text-white px-8 py-6 text-sm font-bold tracking-tight rounded-[20px] whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-9 from-purple-500 to-indigo-500 shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 sm:text-base sm:px-12 sm:py-7 w-full sm:w-auto flex items-center justify-center gap-2">
 
                       <UtensilsCrossed className="w-5 h-5" /> Combine & Create
+                    </Button>
+
+                    <input type="file" accept="image/*" capture="environment" ref={fileInputRef} className="hidden" onChange={handleFridgeScan} />
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isGenerating}
+                      className="bg-white text-gray-800 border-2 border-gray-200 shadow-[0_0_18px_rgba(0,0,0,0.05)] hover:bg-gray-50 transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2"
+                    >
+                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Camera className="w-5 h-5" /> AI Fridge Scan</>}
                     </Button>
                   </motion.div>
               }
