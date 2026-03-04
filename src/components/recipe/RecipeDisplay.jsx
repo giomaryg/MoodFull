@@ -388,7 +388,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         )}
         <div className="flex justify-between relative h-full">
           <div className="w-[55%] sm:w-1/2 z-10 flex flex-col">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8 pr-4">
               {recipe.name}
             </h1>
             
