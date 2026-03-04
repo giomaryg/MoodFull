@@ -521,12 +521,15 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           />
 
           {/* Ingredients */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 font-mono text-[9px] sm:text-[10px] tracking-[0.15em] uppercase text-[#6b9b76]/70 mb-2">
-              <span>Ingredients</span>
-              <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/60 to-transparent"></div>
+          <div className="space-y-4">
+            <div className="flex justify-between items-end mb-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Ingredients</h2>
+                <p className="text-sm text-gray-500">{scaledIngredients.length} healthy ingredients</p>
+              </div>
             </div>
-            <div className="space-y-1.5 perspective-1000">
+            
+            <div className="space-y-3">
               {scaledIngredients.map((ingredient, index) => {
                 const hasSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
                 const isSubbed = activeSubstitutions[index];
@@ -538,59 +541,39 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                 });
                 const isMissingOrLow = inventory.length > 0 && (!invMatch || invMatch.quantity <= (invMatch.min_stock || 0));
                 
+                // Try to extract amount and name for better display
+                const match = ingredient.match(/^((?:\d+(?:[\/.]\d+)?)(?:\s*-\s*\d+(?:[\/.]\d+)?)?(?:\s*[a-zA-Z]+)?)\s+(.*)$/);
+                const amount = match ? match[1] : '';
+                const name = match ? match[2] : ingredient;
+                
                 return (
-                  <motion.li
+                  <motion.div
                     key={index}
-                    initial={{ opacity: 0, z: -30, rotateX: 10 }}
-                    animate={{ opacity: 1, z: 0, rotateX: 0 }}
-                    whileHover={{ scale: 1.02, z: 20, rotateX: -5, backgroundColor: 'rgba(255,255,255,0.8)' }}
-                    transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
-                    className="group flex flex-col gap-1 text-[11px] sm:text-xs text-[#3d5244]/80 p-2 sm:p-2.5 bg-white/40 rounded-[10px] border border-[#c5d9c9]/30 list-none transform-gpu relative">
-                      <div className="flex items-center gap-3 w-full">
-                        <div className={`w-1.5 h-1.5 rounded-full shrink-0 shadow-[0_0_6px_rgba(107,155,118,0.8)] ${isMissingOrLow && !isSubbed ? 'bg-amber-500' : 'bg-[#6b9b76]'}`} />
-                        <span className={`leading-relaxed font-medium flex-1 ${isSubbed ? 'line-through opacity-50' : ''} ${isMissingOrLow && !isSubbed ? 'text-amber-700' : ''}`}>
-                          {ingredient}
-                          {isMissingOrLow && !isSubbed && <span className="inline-block ml-2 text-[9px] uppercase tracking-wider text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded">Low/Missing</span>}
-                        </span>
-                        <button 
-                          onClick={() => toggleSubstitution(index, ingredient)}
-                          disabled={loadingSubFor === index}
-                          className={`p-1.5 rounded-md flex items-center gap-1 transition-colors ${
-                            isSubbed 
-                              ? 'bg-[#c17a7a] text-white' 
-                              : hasSub || aiSubstitutions[index]
-                                ? 'bg-[#f5e6dc] text-[#c17a7a] hover:bg-[#e8d5c4]'
-                                : isMissingOrLow 
-                                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 opacity-100' 
-                                  : 'bg-gray-100 text-gray-400 hover:bg-[#f5e6dc] hover:text-[#c17a7a] opacity-0 group-hover:opacity-100'
-                          }`}
-                          title={isSubbed ? "Revert ingredient" : hasSub ? "Use suggested substitute" : "Ask AI for pantry-based substitute"}
-                        >
-                          {loadingSubFor === index ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                          ) : (
-                            isSubbed || hasSub ? <RefreshCw className="w-3 h-3" /> : <Wand2 className="w-3 h-3 text-[#c17a7a]" />
-                          )}
-                          {(isSubbed || hasSub || aiSubstitutions[index]) ? (
-                            <span className="text-[9px] font-bold uppercase tracking-wider">
-                              {isSubbed ? 'Revert' : 'Substitute'}
-                            </span>
-                          ) : (
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-[#c17a7a]">
-                              AI Swap
-                            </span>
-                          )}
-                        </button>
-                      </div>
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex items-center gap-4 p-4 bg-[#fdf8f4] rounded-2xl group"
+                  >
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm text-xl shrink-0">
+                      🥗
+                    </div>
+                    <div className="flex-1">
+                      <h4 className={`font-bold text-gray-900 text-sm sm:text-base ${isSubbed ? 'line-through opacity-50' : ''}`}>
+                        {name.charAt(0).toUpperCase() + name.slice(1)}
+                      </h4>
+                      <p className={`text-xs sm:text-sm text-gray-500 ${isSubbed ? 'line-through opacity-50' : ''}`}>
+                        {amount || ingredient}
+                        {isMissingOrLow && !isSubbed && <span className="inline-block ml-2 text-[10px] uppercase tracking-wider text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded">Low/Missing</span>}
+                      </p>
+                      
                       <AnimatePresence>
                         {isSubbed && (hasSub || aiSubstitutions[index]) && (
                           <motion.div 
                             initial={{ opacity: 0, height: 0 }} 
                             animate={{ opacity: 1, height: 'auto' }} 
                             exit={{ opacity: 0, height: 0 }}
-                            className="pl-4.5 pt-1 text-[#c17a7a] font-medium flex items-center gap-2 text-xs"
+                            className="pt-1 text-[#c17a7a] font-medium flex items-center gap-2 text-xs"
                           >
-                            <div className="w-1 h-1 rounded-full bg-[#c17a7a] shrink-0" />
                             <span className="flex-1">
                               Use: {hasSub ? hasSub.substitute : aiSubstitutions[index].substitute}
                             </span>
@@ -598,11 +581,33 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                           </motion.div>
                         )}
                       </AnimatePresence>
-                  </motion.li>
+                    </div>
+                    
+                    <button 
+                      onClick={() => toggleSubstitution(index, ingredient)}
+                      disabled={loadingSubFor === index}
+                      className={`p-2 rounded-xl flex items-center justify-center transition-colors ${
+                        isSubbed 
+                          ? 'bg-[#c17a7a] text-white' 
+                          : hasSub || aiSubstitutions[index]
+                            ? 'bg-white text-[#c17a7a] hover:bg-gray-50'
+                            : isMissingOrLow 
+                              ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' 
+                              : 'bg-white text-gray-400 hover:text-[#c17a7a] opacity-0 group-hover:opacity-100'
+                      }`}
+                      title={isSubbed ? "Revert ingredient" : hasSub ? "Use suggested substitute" : "Ask AI for pantry-based substitute"}
+                    >
+                      {loadingSubFor === index ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        isSubbed || hasSub ? <RefreshCw className="w-4 h-4" /> : <Wand2 className="w-4 h-4" />
+                      )}
+                    </button>
+                  </motion.div>
                 );
               })}
               {currentServings !== recipe.servings && (
-                <p className="text-[10px] text-gray-500 mt-2 text-right italic">
+                <p className="text-xs text-gray-500 mt-2 text-right italic">
                   * Ingredients adjusted for {currentServings} servings
                 </p>
               )}
