@@ -58,7 +58,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
       </div>
 
       {/* Recipe Grid */}
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {recipes.filter(r => r && r.name).map((recipe, index) => (
           <motion.div
             key={index}
@@ -67,38 +67,59 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ delay: index * 0.05 }}
           >
-            <TiltCard>
-            <div
+            <Card
               onClick={() => onRecipeClick(recipe)}
-              className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:shadow-[0_10px_25px_rgba(107,155,118,0.2)] transition-shadow duration-300 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)] bg-white/70"
+              className="cursor-pointer rounded-[2rem] overflow-hidden border-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)] bg-white h-full flex flex-col hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-shadow duration-300"
             >
-              <div className="w-11 h-11 rounded-[10px] flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65] shadow-inner">
+              <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
                 {recipe._loading ? (
-                   <Loader2 className="w-4 h-4 text-white animate-spin" />
+                   <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
+                     <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
+                   </div>
                  ) : recipe.imageLoading ? (
-                   <ChefHat className="w-4 h-4 text-white opacity-50" />
+                   <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
+                     <ChefHat className="w-12 h-12 text-[#6b9b76]/50" />
+                   </div>
                  ) : (recipe.imageUrl || recipe.image_url) ? (
                   <img src={recipe.imageUrl || recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />
                  ) : (
-                   <span>🥗</span>
+                   <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50 text-6xl">🥗</div>
                  )}
-              </div>
-              <div className="flex-1 min-w-0 pr-6">
-                <div className="text-[11px] font-semibold text-[#3d5244] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
-                  <HighlightedText text={recipe.name} query={searchQuery} />
+                 
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                  <div className="flex-1 pr-4">
+                    <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
+                      <HighlightedText text={recipe.name} query={searchQuery} />
+                    </h3>
+                    <p className="text-white/80 text-xs sm:text-sm line-clamp-1">
+                      {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
+                    </p>
+                  </div>
+                  <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform">
+                    <Heart className="w-5 h-5 fill-current" />
+                  </button>
                 </div>
-                <div className="text-[#6b9b76] text-[8px] tracking-widest mb-0.5">
-                  {'★'.repeat(recipe.rating || 5)}{'☆'.repeat(5 - (recipe.rating || 5))}
+              </div>
+              
+              <div className="p-5 flex justify-between items-center bg-white mt-auto">
+                <div className="text-center">
+                  <p className="font-bold text-lg text-gray-900">{recipe.nutrition?.calories || 290}</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Calories</p>
                 </div>
-                <div className="font-mono text-[8px] text-[#5a6f60]/45 tracking-[0.04em]">
-                  {recipe.prep_time || '25 min'} · {recipe.difficulty || 'Easy'} {recipe.nutrition?.calories ? `· ${recipe.nutrition.calories} kcal` : ''}
+                <div className="w-px h-8 bg-gray-100"></div>
+                <div className="text-center">
+                  <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Protein</p>
+                </div>
+                <div className="w-px h-8 bg-gray-100"></div>
+                <div className="text-center">
+                  <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Carbs</p>
                 </div>
               </div>
-              <div className="w-5 h-5 rounded-full border border-[#c5d9c9]/70 flex items-center justify-center text-[9px] text-[#6b9b76] flex-shrink-0">
-                →
-              </div>
-            </div>
-            </TiltCard>
+            </Card>
           </motion.div>
         ))}
       </div>
