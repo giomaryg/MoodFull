@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, RefreshCw, Loader2 } from 'lucide-react';
+import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, RefreshCw, Loader2, Heart } from 'lucide-react';
 import HighlightedText from './HighlightedText';
 import TiltCard from '../ui/TiltCard';
 
@@ -13,6 +13,12 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
     easy: 'bg-green-50 text-green-700 border-green-200',
     medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     hard: 'bg-red-50 text-red-700 border-red-200'
+  };
+
+  const parseMacro = (str) => {
+    if (!str) return 0;
+    const match = String(str).match(/(\d+)/);
+    return match ? parseInt(match[1]) : 0;
   };
 
   return (
