@@ -26,9 +26,9 @@ export default function SimilarRecipes({ recipes, onRecipeClick }) {
           >
             <Card className="h-full overflow-hidden hover:shadow-lg transition-all duration-300 border border-[#c5d9c9] bg-white group-hover:border-[#6b9b76]">
               <div className="h-32 bg-gray-100 relative overflow-hidden">
-                {recipe.imageUrl ? (
+                {(recipe.image_url || recipe.imageUrl) ? (
                   <img
-                    src={recipe.imageUrl}
+                    src={recipe.image_url || recipe.imageUrl}
                     alt={recipe.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
