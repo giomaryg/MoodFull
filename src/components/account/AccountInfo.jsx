@@ -8,6 +8,7 @@ import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone,
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
+import OuraConnectionCard from '../oura/OuraConnectionCard';
 
 export default function AccountInfo({ user, onUpdatePreferences, recipeCount, onReplayTutorial }) {
   const [inviteEmail, setInviteEmail] = useState('');
@@ -470,6 +471,15 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
           </Card>
         </motion.div>
       )}
+
+      {/* Oura Integration Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.155 }}
+      >
+        <OuraConnectionCard user={user} />
+      </motion.div>
 
       {/* App Settings Card */}
       <motion.div
