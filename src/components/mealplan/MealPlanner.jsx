@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight, Target, Check, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import { format, startOfWeek, addDays, isSameDay, startOfMonth } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AddMealDialog from './AddMealDialog';
 import SwapMealDialog from './SwapMealDialog';
@@ -14,7 +14,8 @@ import RecipeDetailModal from './RecipeDetailModal';
 import WeeklyGoalsDialog from './WeeklyGoalsDialog';
 
 function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremium }) {
-  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarView, setCalendarView] = useState('weekly'); // 'daily', 'weekly', 'monthly'
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [sidebarTab, setSidebarTab] = useState('saved');
   const [selectedDate, setSelectedDate] = useState(null);
@@ -79,9 +80,20 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
     }
   });
 
-  const weekDays = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
-  }, [currentWeekStart]);
+  const displayDays = useMemo(() => {
+    if (calendarView === 'daily') {
+      return [currentDate];
+    } else if (calendarView === 'weekly') {
+      const start = startOfWeek(currentDate, { weekStartsOn: 1 });
+      return Array.from({ length: 7 }, (_, i) => addDays(start, i));
+    } else {
+      const start = startOfMonth(currentDate);
+      const startDay = startOfWeek(start, { weekStartsOn: 1 });
+      return Array.from({ length: 35 }, (_, i) => addDays(startDay, i));
+    }
+  }, [currentDate, calendarView]);
+
+  const weekDays = displayDays;
 
   const pastMeals = useMemo(() => {
     const today = new Date();
@@ -825,27 +837,38 @@ Make them balanced, diverse, and delicious. Include:
         </div>
       )}
 
-      {/* Week Navigation */}
-      <div className="flex items-center justify-between bg-white rounded-xl p-4 border-2 border-[#c5d9c9]">
-        <Button
-          onClick={() => setCurrentWeekStart(addDays(currentWeekStart, -7))}
-          variant="ghost"
-          size="icon"
-        >
-          <ChevronLeft className="w-5 h-5 text-[#6b9b76]" />
-        </Button>
-        <div className="text-center">
-          <p className="text-[#6b9b76] font-semibold text-lg">
-            {format(currentWeekStart, 'MMM d')} - {format(addDays(currentWeekStart, 6), 'MMM d, yyyy')}
-          </p>
+      {/* Calendar Controls */}
+      <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-4 border-2 border-[#c5d9c9] gap-4">
+        <div className="flex bg-gray-100 p-1 rounded-lg">
+          <button onClick={() => setCalendarView('daily')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${calendarView === 'daily' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Daily</button>
+          <button onClick={() => setCalendarView('weekly')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${calendarView === 'weekly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Weekly</button>
+          <button onClick={() => setCalendarView('monthly')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${calendarView === 'monthly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Monthly</button>
         </div>
-        <Button
-          onClick={() => setCurrentWeekStart(addDays(currentWeekStart, 7))}
-          variant="ghost"
-          size="icon"
-        >
-          <ChevronRight className="w-5 h-5 text-[#6b9b76]" />
-        </Button>
+        <div className="flex items-center gap-4">
+          <Button
+            onClick={() => setCurrentDate(addDays(currentDate, calendarView === 'daily' ? -1 : calendarView === 'weekly' ? -7 : -30))}
+            variant="ghost"
+            size="icon"
+          >
+            <ChevronLeft className="w-5 h-5 text-[#6b9b76]" />
+          </Button>
+          <div className="text-center min-w-[150px]">
+            <p className="text-[#6b9b76] font-semibold text-lg">
+              {calendarView === 'daily' 
+                ? format(currentDate, 'MMM d, yyyy')
+                : calendarView === 'weekly'
+                  ? `${format(displayDays[0], 'MMM d')} - ${format(displayDays[6], 'MMM d, yyyy')}`
+                  : format(currentDate, 'MMMM yyyy')}
+            </p>
+          </div>
+          <Button
+            onClick={() => setCurrentDate(addDays(currentDate, calendarView === 'daily' ? 1 : calendarView === 'weekly' ? 7 : 30))}
+            variant="ghost"
+            size="icon"
+          >
+            <ChevronRight className="w-5 h-5 text-[#6b9b76]" />
+          </Button>
+        </div>
       </div>
 
       {/* Calendar Grid - Visual Planner */}
@@ -853,38 +876,90 @@ Make them balanced, diverse, and delicious. Include:
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1 bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
             <div className="overflow-x-auto">
-              <div className="min-w-[800px]">
-                {/* Day Headers */}
-              <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
-            {weekDays.map((day) => (
-              <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
-                <p className="text-white font-semibold text-sm">
-                  {format(day, 'EEE')}
-                </p>
-                <p className="text-white text-xs">
-                  {format(day, 'MMM d')}
-                </p>
-                <Button
-                  onClick={() => regenerateDay(day)}
-                  disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
-                  size="sm"
-                  variant="ghost"
-                  className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
-                >
-                  {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
-                    <Loader2 className="w-3 h-3 text-white animate-spin" />
-                  ) : (
-                    <RefreshCw className="w-3 h-3 text-white" />
-                  )}
-                </Button>
-              </div>
-            ))}
-          </div>
+              <div className={calendarView === 'monthly' ? "min-w-[600px]" : "min-w-[800px]"}>
+                {calendarView === 'monthly' ? (
+                  <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
+                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
+                      <div key={d} className="bg-[#6b9b76] p-2 text-center text-white text-xs font-bold">{d}</div>
+                    ))}
+                    {displayDays.map(day => {
+                      const isToday = isSameDay(day, new Date());
+                      const isCurrentMonth = day.getMonth() === currentDate.getMonth();
+                      return (
+                        <div key={day.toString()} className={`bg-white p-1 min-h-[100px] ${!isCurrentMonth ? 'opacity-50' : ''} ${isToday ? 'bg-[#f0f9f2]' : ''}`}>
+                          <div className="text-xs font-bold text-gray-500 mb-1 px-1">{format(day, 'd')}</div>
+                          <div className="space-y-1">
+                            {mealTypes.map(mealType => {
+                              const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
+                              const meals = getMealsForDay(day, mealType);
+                              return (
+                                <Droppable key={dropId} droppableId={dropId}>
+                                  {(provided, snapshot) => (
+                                    <div ref={provided.innerRef} {...provided.droppableProps} className={`min-h-[20px] ${snapshot.isDraggingOver ? 'bg-[#e8f0ea] ring-1 ring-[#6b9b76]' : ''}`}>
+                                      {meals.map((meal, index) => (
+                                        <Draggable key={meal.id} draggableId={meal.id} index={index}>
+                                          {(provided, snapshot) => (
+                                            <div 
+                                              ref={provided.innerRef} 
+                                              {...provided.draggableProps} 
+                                              {...provided.dragHandleProps} 
+                                              className="bg-[#f5e6dc] rounded text-[10px] p-1 mb-0.5 truncate cursor-move hover:bg-[#e8d5c4] transition-colors"
+                                              onClick={() => {
+                                                const linkedRecipe = recipes.find(r => r.id === meal.recipe_id);
+                                                if (linkedRecipe) setSelectedRecipe(linkedRecipe);
+                                                else setSelectedRecipe({ name: meal.recipe_name, ingredients: meal.custom_ingredients || [], instructions: meal.custom_instructions || [], servings: meal.servings, notes: meal.notes });
+                                              }}
+                                            >
+                                              <span className="font-semibold text-[#6b9b76] mr-1">{mealType.charAt(0).toUpperCase()}</span>
+                                              {meal.recipe_name}
+                                            </div>
+                                          )}
+                                        </Draggable>
+                                      ))}
+                                      {provided.placeholder}
+                                    </div>
+                                  )}
+                                </Droppable>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <>
+                    {/* Day Headers */}
+                    <div className={`grid ${calendarView === 'daily' ? 'grid-cols-1' : 'grid-cols-7'} gap-px bg-[#c5d9c9]`}>
+                      {displayDays.map((day) => (
+                        <div key={day.toString()} className="bg-[#6b9b76] p-3 text-center relative group">
+                          <p className="text-white font-semibold text-sm">
+                            {format(day, 'EEE')}
+                          </p>
+                          <p className="text-white text-xs">
+                            {format(day, 'MMM d')}
+                          </p>
+                          <Button
+                            onClick={() => regenerateDay(day)}
+                            disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
+                            size="sm"
+                            variant="ghost"
+                            className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
+                          >
+                            {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
+                              <Loader2 className="w-3 h-3 text-white animate-spin" />
+                            ) : (
+                              <RefreshCw className="w-3 h-3 text-white" />
+                            )}
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
 
-              {/* Meal Rows */}
-              {mealTypes.map((mealType) => (
-                <div key={mealType} className="grid grid-cols-7 gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]">
-                  {weekDays.map((day) => {
+                    {/* Meal Rows */}
+                    {mealTypes.map((mealType) => (
+                      <div key={mealType} className={`grid ${calendarView === 'daily' ? 'grid-cols-1' : 'grid-cols-7'} gap-px bg-[#c5d9c9] border-t-2 border-[#c5d9c9]`}>
+                        {displayDays.map((day) => {
                 const meals = getMealsForDay(day, mealType);
                 const isToday = isSameDay(day, new Date());
                 const dropId = `${format(day, 'yyyy-MM-dd')}|${mealType}`;
@@ -1042,6 +1117,8 @@ Make them balanced, diverse, and delicious. Include:
               })}
             </div>
               ))}
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ import RecipeComments from './RecipeComments';
 import InteractiveCookingMode from './InteractiveCookingMode';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import SaveToCollectionDialog from './SaveToCollectionDialog';
-import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send } from 'lucide-react';
+import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater } from 'lucide-react';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
@@ -734,18 +734,30 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               </h3>
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-inner border border-purple-200">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  {recipe.pairings.map((pairing, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="flex items-center gap-3 bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl border border-purple-200 shadow-sm"
-                    >
-                      <Wine className="w-5 h-5 text-purple-600 shrink-0" />
-                      <span className="text-gray-800 text-sm sm:text-base leading-relaxed">{pairing}</span>
-                    </motion.div>
-                  ))}
+                  {recipe.pairings.map((pairing, index) => {
+                    const lower = pairing.toLowerCase();
+                    let Icon = Wine;
+                    let iconColor = "text-purple-600";
+                    if (lower.includes('coffee')) { Icon = Coffee; iconColor = "text-amber-700"; }
+                    else if (lower.includes('tea')) { Icon = Coffee; iconColor = "text-green-600"; }
+                    else if (lower.includes('smoothie') || lower.includes('juice')) { Icon = CupSoda; iconColor = "text-orange-500"; }
+                    else if (lower.includes('beer')) { Icon = Beer; iconColor = "text-yellow-600"; }
+                    else if (lower.includes('water')) { Icon = Droplets; iconColor = "text-blue-400"; }
+                    else if (lower.includes('milk')) { Icon = GlassWater; iconColor = "text-blue-200"; }
+
+                    return (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="flex items-center gap-3 bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl border border-purple-200 shadow-sm"
+                      >
+                        <Icon className={`w-5 h-5 ${iconColor} shrink-0`} />
+                        <span className="text-gray-800 text-sm sm:text-base leading-relaxed">{pairing}</span>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

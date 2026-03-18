@@ -590,6 +590,13 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                   </div>
                   <div className="flex items-center gap-3 mt-1">
                     <p className="text-sm text-[#6b9b76] font-medium">{item.quantity} {item.unit}</p>
+                    {item.quantity <= 0 ? (
+                      <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-700">Out of Stock</span>
+                    ) : item.min_stock > 0 && item.quantity <= item.min_stock ? (
+                      <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">Low Stock</span>
+                    ) : (
+                      <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-green-100 text-green-700">In Stock</span>
+                    )}
                     {item.min_stock > 0 && (
                       <p className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${item.quantity < item.min_stock ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-500'}`}>
                         Min: {item.min_stock}

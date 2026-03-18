@@ -532,7 +532,8 @@ export default function RecipeGenerator() {
       anxious: "calming, grounding meals",
       kid_friendly: "realistic, simple, very easy meals with extremely familiar ingredients that kids actually eat",
       family_friendly: "realistic, simple, everyday family-friendly meals with familiar, accessible ingredients that the whole family will enjoy",
-      nostalgic: "classic, traditional recipes"
+      nostalgic: "classic, traditional recipes",
+      sick: "easy to digest, soothing, warm, hydrating, gentle, immune-supporting meals like soups or broths"
     };
 
     const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(', ');

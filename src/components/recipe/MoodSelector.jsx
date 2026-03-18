@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer } from 'lucide-react';
 
 const mealTypes = [
 { id: 'breakfast', label: 'Breakfast', icon: Sun, color: 'from-yellow-400 to-orange-300' },
@@ -98,6 +98,14 @@ const moods = [
   color: 'from-blue-400 to-cyan-500',
   bg: 'bg-blue-50 hover:bg-blue-100',
   border: 'border-blue-300'
+},
+{
+  id: 'sick',
+  label: 'Sick',
+  icon: Thermometer,
+  color: 'from-teal-200 to-emerald-300',
+  bg: 'bg-teal-50 hover:bg-teal-100',
+  border: 'border-teal-200'
 }];
 
 
