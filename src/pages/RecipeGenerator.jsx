@@ -28,7 +28,7 @@ import InventoryManagement from '../components/inventory/InventoryManagement';
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
 import AICoach from '../components/recipe/AICoach';
 
-const ENABLE_PANTRY_FEATURE = false;
+const ENABLE_PANTRY_FEATURE = true;
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
