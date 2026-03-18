@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone, Languages, CreditCard, MessageCircle, Bot, Users, UserPlus } from 'lucide-react';
+import { User, Mail, Calendar, Settings, LogOut, ChefHat, Edit2, Save, X, Phone, Languages, CreditCard, MessageCircle, Bot, Users, UserPlus, PlayCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
 
-export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) {
+export default function AccountInfo({ user, onUpdatePreferences, recipeCount, onReplayTutorial }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const [isInviting, setIsInviting] = useState(false);
 
@@ -470,6 +470,38 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount }) 
           </Card>
         </motion.div>
       )}
+
+      {/* App Settings Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.16 }}
+      >
+        <Card className="bg-white border-2 border-[#c5d9c9] rounded-2xl">
+          <CardHeader>
+            <CardTitle className="text-xl text-[#6b9b76] flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              App Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-[#f0f9f2] rounded-xl border border-[#c5d9c9]">
+              <div>
+                <p className="font-semibold text-gray-800">App Tutorial</p>
+                <p className="text-sm text-gray-500">Replay the onboarding guide</p>
+              </div>
+              <Button 
+                onClick={onReplayTutorial}
+                variant="outline"
+                className="border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#e8f0ea]"
+              >
+                <PlayCircle className="w-4 h-4 mr-2" />
+                Replay
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Household / Collaboration Card */}
       {user?.role === 'admin' && (

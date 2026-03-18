@@ -27,6 +27,7 @@ import ThreeBackground from '../components/ThreeBackground';
 import InventoryManagement from '../components/inventory/InventoryManagement';
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
 import AICoach from '../components/recipe/AICoach';
+import TutorialOverlay from '../components/onboarding/TutorialOverlay';
 
 const ENABLE_PANTRY_FEATURE = true;
 
@@ -55,6 +56,7 @@ export default function RecipeGenerator() {
   const [showCombineDialog, setShowCombineDialog] = useState(false);
   const [showAICoach, setShowAICoach] = useState(false);
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
+  const [forceShowTutorial, setForceShowTutorial] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFridgeScan = async (e) => {
@@ -1019,6 +1021,8 @@ export default function RecipeGenerator() {
 
   return (
     <>
+      <TutorialOverlay forceShow={forceShowTutorial} onCloseForceShow={() => setForceShowTutorial(false)} />
+
       <AnimatePresence>
         {showIntro && currentUser &&
         <IntroScreen
@@ -1519,7 +1523,8 @@ export default function RecipeGenerator() {
               <AccountInfo
               user={currentUser}
               onUpdatePreferences={() => setShowSurvey(true)}
-              recipeCount={savedRecipes.length} />
+              recipeCount={savedRecipes.length}
+              onReplayTutorial={() => setForceShowTutorial(true)} />
 
             </motion.div>
           }
