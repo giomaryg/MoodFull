@@ -1077,6 +1077,13 @@ export default function RecipeGenerator() {
 
           {!showSurvey && activeTab === 'home' &&
           <>
+              <WellnessRecommendationCard 
+                user={currentUser} 
+                onApplyWellnessContext={setWellnessContext} 
+              />
+              
+              <OrderOutSuggestion user={currentUser} />
+
               {/* Proactive Expiring Items Alert */}
               {(() => {
                 if (!ENABLE_PANTRY_FEATURE) return null;
