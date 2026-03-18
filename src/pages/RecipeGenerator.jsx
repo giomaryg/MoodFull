@@ -544,6 +544,10 @@ export default function RecipeGenerator() {
     const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(', ');
 
     let preferencesContext = '';
+    if (wellnessContext && currentUser?.oura_data_consent) {
+      preferencesContext += ` User's wellness context from Oura: Readiness is ${wellnessContext.readiness}, Sleep was ${wellnessContext.sleep}, Activity is ${wellnessContext.activity}. Please ensure the recipe recommendations support this wellness state (e.g., energizing if sleep was poor, comforting if readiness is low, protein-forward if activity is high).`;
+    }
+
     if (userPreferences?.survey_completed) {
       const prefs = [];
       if (userPreferences.allergies) prefs.push(`AVOID: ${userPreferences.allergies}`);
@@ -723,6 +727,10 @@ export default function RecipeGenerator() {
     setAdvancedFilters({});
 
     let preferencesContext = '';
+    if (wellnessContext && currentUser?.oura_data_consent) {
+      preferencesContext += ` User's wellness context from Oura: Readiness is ${wellnessContext.readiness}, Sleep was ${wellnessContext.sleep}, Activity is ${wellnessContext.activity}. Please ensure the recipe recommendations support this wellness state (e.g., energizing if sleep was poor, comforting if readiness is low, protein-forward if activity is high).`;
+    }
+
     if (userPreferences?.survey_completed) {
       const prefs = [];
       if (userPreferences.allergies) prefs.push(`AVOID: ${userPreferences.allergies}`);
@@ -879,6 +887,10 @@ export default function RecipeGenerator() {
     setAdvancedFilters({});
 
     let preferencesContext = '';
+    if (wellnessContext && currentUser?.oura_data_consent) {
+      preferencesContext += ` User's wellness context from Oura: Readiness is ${wellnessContext.readiness}, Sleep was ${wellnessContext.sleep}, Activity is ${wellnessContext.activity}. Please ensure the recipe recommendations support this wellness state (e.g., energizing if sleep was poor, comforting if readiness is low, protein-forward if activity is high).`;
+    }
+
     if (userPreferences?.survey_completed) {
       const prefs = [];
       if (userPreferences.allergies) prefs.push(`AVOID: ${userPreferences.allergies}`);
