@@ -28,6 +28,8 @@ import InventoryManagement from '../components/inventory/InventoryManagement';
 import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
 import AICoach from '../components/recipe/AICoach';
 import TutorialOverlay from '../components/onboarding/TutorialOverlay';
+import WellnessRecommendationCard from '../components/oura/WellnessRecommendationCard';
+import OrderOutSuggestion from '../components/oura/OrderOutSuggestion';
 
 const ENABLE_PANTRY_FEATURE = true;
 
@@ -57,6 +59,7 @@ export default function RecipeGenerator() {
   const [showAICoach, setShowAICoach] = useState(false);
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
   const [forceShowTutorial, setForceShowTutorial] = useState(false);
+  const [wellnessContext, setWellnessContext] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFridgeScan = async (e) => {
