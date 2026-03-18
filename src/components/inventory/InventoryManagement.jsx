@@ -22,6 +22,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
   const [restockSuggestions, setRestockSuggestions] = useState([]);
   const [isGeneratingRestock, setIsGeneratingRestock] = useState(false);
   const fileInputRef = React.useRef(null);
+  const pantryFileInputRef = React.useRef(null);
 
   const { data: inventory = [], isLoading } = useQuery({
     queryKey: ['inventory'],
@@ -55,6 +56,65 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
       toast.success('Ingredient removed');
     }
   });
+
+  const handlePantryScan = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsScanning(true);
+    toast.success('Scanning pantry with AI...');
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze this image of a pantry or fridge. Identify all the visible grocery items. For each item, provide the product name, estimated quantity, unit, standard grocery category (Produce, Dairy, Meat, Pantry, Spices, Frozen, Other), and estimated shelf life in days from today assuming proper storage. Return a JSON object with an 'items' array containing these details.`,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            items: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  quantity: { type: "number" },
+                  unit: { type: "string" },
+                  category: { type: "string", enum: ["Produce", "Dairy", "Meat", "Pantry", "Spices", "Frozen", "Other"] },
+                  estimated_shelf_life_days: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      if (response.items && response.items.length > 0) {
+        const itemsToCreate = response.items.map(item => {
+          const expiryDate = new Date();
+          expiryDate.setDate(expiryDate.getDate() + (item.estimated_shelf_life_days || 14));
+          return {
+            name: item.name || 'Unknown Item',
+            quantity: item.quantity || 1,
+            unit: item.unit || 'units',
+            category: item.category || 'Pantry',
+            expiry_date: expiryDate.toISOString().split('T')[0],
+            min_stock: 0
+          };
+        });
+        
+        await base44.entities.Ingredient.bulkCreate(itemsToCreate);
+        queryClient.invalidateQueries({ queryKey: ['inventory'] });
+        toast.success(`Pantry scan complete! Added ${itemsToCreate.length} items to inventory.`);
+      } else {
+        toast.error('No items found in the image.');
+      }
+    } catch (err) {
+      toast.error('Failed to scan pantry image. Please try again.');
+    } finally {
+      setIsScanning(false);
+      if (pantryFileInputRef.current) pantryFileInputRef.current.value = '';
+    }
+  };
 
   const handleScan = async (e) => {
     const file = e.target.files?.[0];
@@ -406,15 +466,33 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 onChange={handleScan}
                 className="hidden" 
               />
+              <input 
+                type="file" 
+                accept="image/*" 
+                capture="environment"
+                ref={pantryFileInputRef}
+                onChange={handlePantryScan}
+                className="hidden" 
+              />
               <Button 
                 type="button" 
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isScanning}
                 variant="outline"
                 className="border-2 border-[#6b9b76] text-[#6b9b76] px-3"
-                title="Scan Barcode / Item"
+                title="Scan Barcode / Single Item"
               >
                 {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Barcode className="w-4 h-4" />}
+              </Button>
+              <Button 
+                type="button" 
+                onClick={() => pantryFileInputRef.current?.click()}
+                disabled={isScanning}
+                variant="outline"
+                className="border-2 border-[#6b9b76] text-[#6b9b76] px-3"
+                title="Scan Full Pantry / Fridge"
+              >
+                {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
               </Button>
               <Button 
                 type="button" 
