@@ -347,8 +347,16 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
         <p className="text-gray-600">Track your ingredients to get smarter recipe suggestions</p>
       </div>
 
-      <div className="flex justify-center mb-8">
-        <div className="bg-gray-100 p-1 rounded-lg inline-flex shadow-inner">
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+        <Button 
+          onClick={() => pantryFileInputRef.current?.click()}
+          disabled={isScanning}
+          className="bg-gradient-to-r from-[#6b9b76] to-[#5a8a65] text-white shadow-md hover:shadow-lg transition-all px-6 py-6 rounded-xl font-bold flex items-center gap-3 w-full sm:w-auto"
+        >
+          {isScanning ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />}
+          Scan Pantry / Fridge
+        </Button>
+        <div className="bg-gray-100 p-1 rounded-lg inline-flex shadow-inner w-full sm:w-auto overflow-x-auto">
           <button
             onClick={() => setViewMode('list')}
             className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${
