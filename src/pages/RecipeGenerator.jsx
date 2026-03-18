@@ -1122,6 +1122,7 @@ export default function RecipeGenerator() {
                     type="text"
                     placeholder="Search your recipes or generate new ones..."
                     value={globalSearchQuery}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && activeTab === 'home') generateRecipe(); }}
                     onChange={(e) => setGlobalSearchQuery(e.target.value)} className="bg-transparent my-3 pt-6 pr-8 pb-6 pl-10 text-sm rounded-xl flex h-9 w-full transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-2 border-[#c5d9c9] focus:border-[#6b9b76] sm:text-base shadow-md" />
 
 
@@ -1212,7 +1213,7 @@ export default function RecipeGenerator() {
 
               {/* Generate Button */}
               <AnimatePresence mode="wait">
-                {(selectedMoods.length > 0 || selectedMealTypes.length > 0) && !currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
+                {(selectedMoods.length > 0 || selectedMealTypes.length > 0 || globalSearchQuery.trim().length > 0 || Object.keys(advancedFilters).length > 0) && !currentRecipe && generatedRecipes.length === 0 &&
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}

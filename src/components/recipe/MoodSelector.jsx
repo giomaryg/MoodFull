@@ -12,12 +12,20 @@ const mealTypes = [
 
 const moods = [
 {
-  id: 'happy',
-  label: 'Happy',
-  icon: Smile,
-  color: 'from-yellow-400 to-orange-400',
-  bg: 'bg-yellow-50 hover:bg-yellow-100',
-  border: 'border-yellow-300'
+  id: 'adventurous',
+  label: 'Adventurous',
+  icon: Compass,
+  color: 'from-purple-400 to-violet-500',
+  bg: 'bg-purple-50 hover:bg-purple-100',
+  border: 'border-purple-300'
+},
+{
+  id: 'anxious',
+  label: 'Anxious',
+  icon: AlertCircle,
+  color: 'from-slate-400 to-gray-500',
+  bg: 'bg-slate-50 hover:bg-slate-100',
+  border: 'border-slate-300'
 },
 {
   id: 'cozy',
@@ -36,52 +44,20 @@ const moods = [
   border: 'border-green-300'
 },
 {
-  id: 'lazy',
-  label: 'Lazy',
-  icon: Moon,
-  color: 'from-indigo-400 to-blue-500',
-  bg: 'bg-indigo-50 hover:bg-indigo-100',
-  border: 'border-indigo-300'
-},
-{
-  id: 'stressed',
-  label: 'Stressed',
-  icon: Cloud,
-  color: 'from-blue-400 to-indigo-400',
+  id: 'family_friendly',
+  label: 'Family',
+  icon: Users,
+  color: 'from-blue-400 to-cyan-500',
   bg: 'bg-blue-50 hover:bg-blue-100',
   border: 'border-blue-300'
 },
 {
-  id: 'romantic',
-  label: 'Romantic',
-  icon: Heart,
-  color: 'from-pink-400 to-rose-500',
-  bg: 'bg-pink-50 hover:bg-pink-100',
-  border: 'border-pink-300'
-},
-{
-  id: 'adventurous',
-  label: 'Adventurous',
-  icon: Compass,
-  color: 'from-purple-400 to-violet-500',
-  bg: 'bg-purple-50 hover:bg-purple-100',
-  border: 'border-purple-300'
-},
-{
-  id: 'anxious',
-  label: 'Anxious',
-  icon: AlertCircle,
-  color: 'from-slate-400 to-gray-500',
-  bg: 'bg-slate-50 hover:bg-slate-100',
-  border: 'border-slate-300'
-},
-{
-  id: 'nostalgic',
-  label: 'Nostalgic',
-  icon: Clock,
-  color: 'from-amber-400 to-yellow-500',
-  bg: 'bg-amber-50 hover:bg-amber-100',
-  border: 'border-amber-300'
+  id: 'happy',
+  label: 'Happy',
+  icon: Smile,
+  color: 'from-yellow-400 to-orange-400',
+  bg: 'bg-yellow-50 hover:bg-yellow-100',
+  border: 'border-yellow-300'
 },
 {
   id: 'kid_friendly',
@@ -92,12 +68,28 @@ const moods = [
   border: 'border-teal-300'
 },
 {
-  id: 'family_friendly',
-  label: 'Family',
-  icon: Users,
-  color: 'from-blue-400 to-cyan-500',
-  bg: 'bg-blue-50 hover:bg-blue-100',
-  border: 'border-blue-300'
+  id: 'lazy',
+  label: 'Lazy',
+  icon: Moon,
+  color: 'from-indigo-400 to-blue-500',
+  bg: 'bg-indigo-50 hover:bg-indigo-100',
+  border: 'border-indigo-300'
+},
+{
+  id: 'nostalgic',
+  label: 'Nostalgic',
+  icon: Clock,
+  color: 'from-amber-400 to-yellow-500',
+  bg: 'bg-amber-50 hover:bg-amber-100',
+  border: 'border-amber-300'
+},
+{
+  id: 'romantic',
+  label: 'Romantic',
+  icon: Heart,
+  color: 'from-pink-400 to-rose-500',
+  bg: 'bg-pink-50 hover:bg-pink-100',
+  border: 'border-pink-300'
 },
 {
   id: 'sick',
@@ -106,7 +98,16 @@ const moods = [
   color: 'from-teal-200 to-emerald-300',
   bg: 'bg-teal-50 hover:bg-teal-100',
   border: 'border-teal-200'
-}];
+},
+{
+  id: 'stressed',
+  label: 'Stressed',
+  icon: Cloud,
+  color: 'from-blue-400 to-indigo-400',
+  bg: 'bg-blue-50 hover:bg-blue-100',
+  border: 'border-blue-300'
+}
+];
 
 
 export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName }) {
