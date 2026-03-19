@@ -49,8 +49,13 @@ export default function RecipeGenerator() {
   const [tabScrollPositions, setTabScrollPositions] = useState({});
 
   const handleTabChange = (newTab) => {
-    setTabScrollPositions(prev => ({ ...prev, [activeTab]: window.scrollY }));
-    setSearchParams({ tab: newTab }, { replace: true });
+    if (activeTab === newTab) {
+      clearStack(newTab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setTabScrollPositions(prev => ({ ...prev, [activeTab]: window.scrollY }));
+      setSearchParams({ tab: newTab }, { replace: true });
+    }
   };
 
   const queryClient = useQueryClient();
