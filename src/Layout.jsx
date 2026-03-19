@@ -25,10 +25,7 @@ export default function Layout({ children, currentPageName }) {
           font-family: 'DM Mono', monospace !important;
         }
 
-        body {
-          background-color: #e8f0ea; /* --green-lt */
-          color: #3d5244;
-        }
+
 
         .text-gradient {
           background: linear-gradient(135deg, #3d5244 30%, #6b9b76 100%);
