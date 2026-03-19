@@ -72,12 +72,12 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                   <Icon
                     strokeWidth={isActive ? 2.5 : 2}
                     className={`w-5 h-5 transition-colors ${
-                      isActive ? 'text-[#6b9b76]' : 'text-[#5a6f60]/40'
+                      isActive ? 'text-primary' : 'text-muted-foreground'
                     }`}
                   />
                   <span
                     className={`font-mono text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center truncate px-1 ${
-                      isActive ? 'text-[#6b9b76] font-medium' : 'text-[#5a6f60]/50'
+                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
                     }`}
                   >
                     {tab.label}
