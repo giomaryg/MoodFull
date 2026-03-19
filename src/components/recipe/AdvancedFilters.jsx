@@ -34,7 +34,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
           size="sm"
           aria-label="Toggle AI Recipe Filters"
           onClick={() => setShowFilters(!showFilters)}
-          className={`gap-2 ${showFilters || activeFilterCount > 0 ? 'border-[#6b9b76] text-[#6b9b76] bg-[#f0f9f2]' : 'text-gray-600'}`}
+          className={`gap-2 min-h-[44px] ${showFilters || activeFilterCount > 0 ? 'border-[#6b9b76] text-[#6b9b76] bg-[#f0f9f2]' : 'text-gray-600'}`}
         >
           <Filter className="w-4 h-4" />
           AI Recipe Filters
