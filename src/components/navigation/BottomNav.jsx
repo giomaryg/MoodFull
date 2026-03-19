@@ -52,7 +52,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
         >
           {isMinimized && (
             <button 
-              className="absolute top-0 left-0 w-full h-[44px] flex justify-center items-center"
+              className="absolute top-0 left-0 w-full h-[44px] min-h-[44px] flex justify-center items-center"
               aria-label="Expand navigation"
             >
               <ChevronUp className="w-5 h-5 text-[#6b9b76]" />
