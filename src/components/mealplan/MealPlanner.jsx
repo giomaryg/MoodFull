@@ -1108,6 +1108,7 @@ Make them balanced, diverse, and delicious. Include:
           onClick={(e) => markAsCooked(e, meal)}
           className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
           title="Mark as Cooked (Deduct Inventory)"
+          aria-label={`Mark ${meal.recipe_name} as cooked`}
         >
           <Check className="w-4 h-4 text-green-600" />
         </button>
@@ -1115,6 +1116,7 @@ Make them balanced, diverse, and delicious. Include:
           onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
           className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
           title="Swap Meal"
+          aria-label={`Swap ${meal.recipe_name}`}
         >
           <ArrowLeftRight className="w-4 h-4 text-[#6b9b76]" />
         </button>
@@ -1122,6 +1124,7 @@ Make them balanced, diverse, and delicious. Include:
           onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
           className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
           title="Repeat Meal"
+          aria-label={`Repeat ${meal.recipe_name}`}
         >
           <Repeat className="w-4 h-4 text-[#6b9b76]" />
         </button>
@@ -1129,6 +1132,7 @@ Make them balanced, diverse, and delicious. Include:
           onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
           className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
           title="Remove Meal"
+          aria-label={`Remove ${meal.recipe_name}`}
         >
           <Trash2 className="w-4 h-4 text-red-500" />
         </button>
