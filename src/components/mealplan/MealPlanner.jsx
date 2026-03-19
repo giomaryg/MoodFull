@@ -858,9 +858,9 @@ Make them balanced, diverse, and delicious. Include:
       {/* Calendar Controls */}
       <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-4 border-2 border-[#c5d9c9] gap-4">
         <div className="flex bg-gray-100 p-1 rounded-lg">
-          <button onClick={() => setCalendarView('daily')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${calendarView === 'daily' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Daily</button>
-          <button onClick={() => setCalendarView('weekly')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${calendarView === 'weekly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Weekly</button>
-          <button onClick={() => setCalendarView('monthly')} className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${calendarView === 'monthly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Monthly</button>
+          <button onClick={() => setCalendarView('daily')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'daily' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Daily</button>
+          <button onClick={() => setCalendarView('weekly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'weekly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Weekly</button>
+          <button onClick={() => setCalendarView('monthly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'monthly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Monthly</button>
         </div>
         <div className="flex items-center gap-4">
           <Button
@@ -960,9 +960,9 @@ Make them balanced, diverse, and delicious. Include:
                           <Button
                             onClick={() => regenerateDay(day)}
                             disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
-                            size="sm"
+                            size="icon"
                             variant="ghost"
-                            className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
+                            className="absolute top-1 right-1 h-11 w-11 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
                           >
                             {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
                               <Loader2 className="w-3 h-3 text-white animate-spin" />
@@ -1082,35 +1082,35 @@ Make them balanced, diverse, and delicious. Include:
          ) : null}
        </div>
 
-       <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-         <button
-           onClick={(e) => markAsCooked(e, meal)}
-           className="p-1 hover:bg-white/50 rounded"
-           title="Mark as Cooked (Deduct Inventory)"
-         >
-           <Check className="w-3 h-3 text-green-600" />
-         </button>
-         <button
-           onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
-           className="p-1 hover:bg-white/50 rounded"
-           title="Swap Meal"
-         >
-           <ArrowLeftRight className="w-3 h-3 text-[#6b9b76]" />
-         </button>
-         <button
-           onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
-           className="p-1 hover:bg-white/50 rounded"
-           title="Repeat Meal"
-         >
-           <Repeat className="w-3 h-3 text-[#6b9b76]" />
-         </button>
-         <button
-           onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
-           className="p-1 hover:bg-white/50 rounded"
-           title="Remove Meal"
-         >
-           <Trash2 className="w-3 h-3 text-red-500" />
-         </button>
+       <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-wrap justify-end">
+        <button
+          onClick={(e) => markAsCooked(e, meal)}
+          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          title="Mark as Cooked (Deduct Inventory)"
+        >
+          <Check className="w-4 h-4 text-green-600" />
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
+          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          title="Swap Meal"
+        >
+          <ArrowLeftRight className="w-4 h-4 text-[#6b9b76]" />
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
+          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          title="Repeat Meal"
+        >
+          <Repeat className="w-4 h-4 text-[#6b9b76]" />
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
+          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          title="Remove Meal"
+        >
+          <Trash2 className="w-4 h-4 text-red-500" />
+        </button>
        </div>
      </div>
    )}
@@ -1149,19 +1149,19 @@ Make them balanced, diverse, and delicious. Include:
             <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-lg overflow-x-auto">
               <button
                 onClick={() => setSidebarTab('saved')}
-                className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Saved ({recipes.length})
               </button>
               <button
                 onClick={() => setSidebarTab('generated')}
-                className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Generated ({generatedRecipes.length})
               </button>
               <button
                 onClick={() => setSidebarTab('history')}
-                className={`flex-1 text-xs font-medium py-1.5 px-2 rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'history' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'history' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 History ({pastMeals.length})
               </button>

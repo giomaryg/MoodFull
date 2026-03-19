@@ -383,7 +383,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
         <div className="bg-gray-100 p-1 rounded-lg inline-flex shadow-inner w-full sm:w-auto overflow-x-auto">
           <button
             onClick={() => setViewMode('list')}
-            className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${
+            className={`px-6 py-2 min-h-[44px] rounded-md text-sm font-bold transition-all ${
               viewMode === 'list'
                 ? 'bg-white text-[#6b9b76] shadow-sm'
                 : 'text-gray-500 hover:text-gray-800'
@@ -393,7 +393,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
           </button>
           <button
             onClick={() => setViewMode('analytics')}
-            className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${
+            className={`px-6 py-2 min-h-[44px] rounded-md text-sm font-bold transition-all ${
               viewMode === 'analytics'
                 ? 'bg-white text-[#6b9b76] shadow-sm'
                 : 'text-gray-500 hover:text-gray-800'
@@ -403,7 +403,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
           </button>
           <button
             onClick={() => setViewMode('restock')}
-            className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${
+            className={`px-6 py-2 min-h-[44px] rounded-md text-sm font-bold transition-all ${
               viewMode === 'restock'
                 ? 'bg-white text-[#6b9b76] shadow-sm'
                 : 'text-gray-500 hover:text-gray-800'
@@ -553,7 +553,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 key={item}
                 onClick={() => handleQuickAdd(item)}
                 disabled={isAnalyzing}
-                className="flex items-center gap-1.5 text-xs font-medium bg-gray-50 hover:bg-[#f0f9f2] hover:text-[#6b9b76] border border-gray-200 hover:border-[#6b9b76] text-gray-600 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 text-xs font-medium bg-gray-50 hover:bg-[#f0f9f2] hover:text-[#6b9b76] border border-gray-200 hover:border-[#6b9b76] text-gray-600 px-3 py-2 min-h-[44px] rounded-full transition-colors disabled:opacity-50"
               >
                 <PlusCircle className="w-3 h-3" />
                 {item}
@@ -671,9 +671,9 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                     <p className="font-semibold text-gray-900 text-lg">{item.name}</p>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="text-[10px] uppercase tracking-wider bg-gray-100 hover:bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full transition-colors cursor-pointer flex items-center gap-1">
+                        <button className="text-[10px] uppercase tracking-wider bg-gray-100 hover:bg-gray-200 text-gray-500 px-3 py-2 min-h-[44px] rounded-full transition-colors cursor-pointer flex items-center gap-1">
                           {item.category || 'Uncategorized'}
-                          <Edit2 className="w-2 h-2" />
+                          <Edit2 className="w-3 h-3" />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>

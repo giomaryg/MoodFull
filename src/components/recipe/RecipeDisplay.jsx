@@ -411,7 +411,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       {/* Top Section */}
       <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-[320px] sm:min-h-[400px]">
         {onBack && (
-          <button onClick={onBack} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 hover:bg-gray-50 transition-colors">
+          <button onClick={onBack} className="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 hover:bg-gray-50 transition-colors">
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
         )}
@@ -508,9 +508,9 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-2">
             <Users className="w-4 h-4 mr-1 text-gray-400" />
-            <button onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900"><Minus className="w-3 h-3" /></button>
+            <button onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Minus className="w-3 h-3" /></button>
             <span className="font-bold">{currentServings}</span>
-            <button onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900"><Plus className="w-3 h-3" /></button>
+            <button onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Plus className="w-3 h-3" /></button>
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl capitalize">
             <ChefHat className="w-4 h-4 mr-1.5 text-gray-400" />
@@ -622,7 +622,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     <button 
                       onClick={() => toggleSubstitution(index, ingredient)}
                       disabled={loadingSubFor === index}
-                      className={`p-2 rounded-xl flex items-center justify-center transition-colors ${
+                      className={`p-2 min-h-[44px] min-w-[44px] rounded-xl flex items-center justify-center transition-colors ${
                         isSubbed 
                           ? 'bg-[#c17a7a] text-white' 
                           : hasSub || aiSubstitutions[index]
@@ -660,7 +660,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                    size="sm" 
                    onClick={() => handleRegenerateSteps('simplify')} 
                    disabled={isRegeneratingSteps}
-                   className="h-8 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
+                   className="h-11 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
                    title="Make instructions simpler and easier to follow"
                  >
                    {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <RefreshCw className="w-3 h-3 mr-1.5" />} Simplify
@@ -670,7 +670,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                    size="sm" 
                    onClick={() => handleRegenerateSteps('detail')} 
                    disabled={isRegeneratingSteps}
-                   className="h-8 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
+                   className="h-11 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
                    title="Make instructions extremely detailed with visual cues"
                  >
                    {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <Sparkles className="w-3 h-3 mr-1.5" />} Detail
