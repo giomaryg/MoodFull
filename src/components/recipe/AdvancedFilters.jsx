@@ -32,6 +32,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
         <Button
           variant="outline"
           size="sm"
+          aria-label="Toggle AI Recipe Filters"
           onClick={() => setShowFilters(!showFilters)}
           className={`gap-2 ${showFilters || activeFilterCount > 0 ? 'border-[#6b9b76] text-[#6b9b76] bg-[#f0f9f2]' : 'text-gray-600'}`}
         >
