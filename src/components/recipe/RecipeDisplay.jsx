@@ -479,9 +479,9 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-2 min-h-[44px]">
             <Users className="w-4 h-4 mr-1 text-gray-400" />
-            <Button variant="ghost" size="icon" aria-label="Decrease servings" onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-0 w-8 h-8 min-w-[32px] min-h-[32px]"><Minus className="w-3 h-3" /></Button>
+            <Button variant="ghost" size="icon" aria-label="Decrease servings" onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-0 min-w-[44px] min-h-[44px]"><Minus className="w-4 h-4" /></Button>
             <span className="font-bold">{currentServings}</span>
-            <Button variant="ghost" size="icon" aria-label="Increase servings" onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-0 w-8 h-8 min-w-[32px] min-h-[32px]"><Plus className="w-3 h-3" /></Button>
+            <Button variant="ghost" size="icon" aria-label="Increase servings" onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-0 min-w-[44px] min-h-[44px]"><Plus className="w-4 h-4" /></Button>
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl capitalize">
             <ChefHat className="w-4 h-4 mr-1.5 text-gray-400" />
