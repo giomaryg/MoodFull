@@ -1242,6 +1242,7 @@ export default function RecipeGenerator() {
                     {globalSearchQuery &&
                   <button
                     onClick={() => setGlobalSearchQuery('')}
+                    aria-label="Clear search"
                     className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
 
                         <X className="w-4 h-4" />
