@@ -307,27 +307,16 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
     const meal = mealPlans.find(m => m.id === draggableId);
     if (!meal) return;
 
-    // Optimistically update the UI immediately
-    queryClient.setQueryData(['mealPlans'], (oldData) => {
-      if (!oldData) return oldData;
-      return oldData.map(m => 
-        m.id === draggableId 
-          ? { ...m, date: destDate, meal_type: destMealType }
-          : m
-      );
-    });
-
     try {
-      await base44.entities.MealPlan.update(meal.id, {
-        date: destDate,
-        meal_type: destMealType
+      await updateMealMutation.mutateAsync({
+        id: meal.id,
+        data: {
+          date: destDate,
+          meal_type: destMealType
+        }
       });
-      // Refetch to ensure data is in sync
-      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
     } catch (error) {
       console.error('Failed to move meal:', error);
-      // Revert on error by refetching
-      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
     }
   };
 
