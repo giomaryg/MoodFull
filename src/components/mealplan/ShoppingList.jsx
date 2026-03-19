@@ -623,12 +623,14 @@ Return JSON.`,
         onClick={(e) => e.stopPropagation()}
         className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto relative mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)]"
       >
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-50"
+          className="absolute top-4 right-4 min-w-[44px] min-h-[44px] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-50"
         >
           <X className="w-5 h-5" />
-        </button>
+        </Button>
         {/* Premium gate */}
         {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
           <div className="relative py-8">
