@@ -63,6 +63,8 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                 <button
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
+                  aria-label={tab.label}
+                  aria-current={isActive ? 'page' : undefined}
                   className={`flex flex-col items-center justify-center gap-1.5 px-3 py-2 rounded-2xl relative transition-colors flex-shrink-0 min-w-[72px] sm:min-w-[80px] min-h-[44px] ${
                     isActive ? 'bg-[#6b9b76]/10' : ''
                   }`}
