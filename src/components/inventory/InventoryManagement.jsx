@@ -61,6 +61,26 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
     }
   });
 
+  const updateCategoryMutation = useMutation({
+    mutationFn: ({ id, category }) => base44.entities.Ingredient.update(id, { category }),
+    onMutate: async ({ id, category }) => {
+      await queryClient.cancelQueries({ queryKey: ['inventory'] });
+      const previousInventory = queryClient.getQueryData(['inventory']);
+      queryClient.setQueryData(['inventory'], old => old?.map(item => item.id === id ? { ...item, category } : item));
+      return { previousInventory };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(['inventory'], context.previousInventory);
+      toast.error('Failed to update category');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+    },
+    onSuccess: () => {
+      toast.success('Category updated!');
+    }
+  });
+
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Ingredient.delete(id),
     onMutate: async (id) => {
@@ -681,15 +701,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                           <DropdownMenuItem 
                             key={cat}
                             onClick={() => {
-                              const updatePromise = base44.entities.Ingredient.update(item.id, { category: cat });
-                              toast.promise(updatePromise, {
-                                loading: 'Updating category...',
-                                success: () => {
-                                  queryClient.invalidateQueries({ queryKey: ['inventory'] });
-                                  return 'Category updated!';
-                                },
-                                error: 'Failed to update'
-                              });
+                              updateCategoryMutation.mutate({ id: item.id, category: cat });
                             }}
                           >
                             {cat}
