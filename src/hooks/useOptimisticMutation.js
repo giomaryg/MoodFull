@@ -22,16 +22,24 @@ export function useOptimisticMutation({
         if (!old) return old;
         
         if (action === 'create') {
-          return [{ ...variables, [idField]: `temp-id-${Date.now()}` }, ...old];
+          return Array.isArray(old) ? [{ ...variables, [idField]: `temp-id-${Date.now()}` }, ...old] : old;
         } else if (action === 'update') {
-          const id = variables[idField] || variables.id;
           const data = variables.data || variables;
-          return old.map(item => 
-            item[idField] === id ? { ...item, ...data } : item
-          );
+          if (Array.isArray(old)) {
+            const id = variables[idField] || variables.id;
+            return old.map(item => 
+              item[idField] === id ? { ...item, ...data } : item
+            );
+          } else if (typeof old === 'object' && old !== null) {
+            return { ...old, ...data };
+          }
         } else if (action === 'delete') {
-          const id = typeof variables === 'object' ? (variables[idField] || variables.id) : variables;
-          return old.filter(item => item[idField] !== id);
+          if (Array.isArray(old)) {
+            const id = typeof variables === 'object' ? (variables[idField] || variables.id) : variables;
+            return old.filter(item => item[idField] !== id);
+          } else {
+            return null;
+          }
         }
         return old;
       });
