@@ -13,7 +13,7 @@ import { SafeAreaContainer } from '@/components/ui/SafeAreaContainer';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import { NavigationStackProvider } from '@/lib/NavigationStackContext';
+import { NavigationStackProvider, useNavigationStack } from '@/lib/NavigationStackContext';
 import { ThemeProvider } from '@/lib/ThemeProvider';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -67,14 +67,38 @@ const AuthenticatedApp = () => {
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  const { direction } = useNavigationStack();
   
+  const variants = {
+    initial: (direction) => ({
+      x: direction === 'backward' ? '-30%' : '100%',
+      opacity: direction === 'backward' ? 0 : 1
+    }),
+    animate: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction) => ({
+      x: direction === 'backward' ? '100%' : '-30%',
+      opacity: direction === 'backward' ? 1 : 0
+    })
+  };
+
   return (
     <>
       <NavigationHeader />
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" custom={direction}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={
-            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '-30%' }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="w-full h-full min-h-screen bg-background">
+            <motion.div 
+              custom={direction}
+              variants={variants}
+              initial="initial" 
+              animate="animate" 
+              exit="exit" 
+              transition={{ type: "spring", stiffness: 300, damping: 30 }} 
+              className="w-full h-full min-h-screen bg-background"
+            >
               <LayoutWrapper currentPageName={mainPageKey}>
                 <MainPage />
               </LayoutWrapper>
@@ -85,7 +109,15 @@ const AnimatedRoutes = () => {
               key={path}
               path={`/${path}`}
               element={
-                <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '-30%' }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="w-full h-full min-h-screen bg-background">
+                <motion.div 
+                  custom={direction}
+                  variants={variants}
+                  initial="initial" 
+                  animate="animate" 
+                  exit="exit" 
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }} 
+                  className="w-full h-full min-h-screen bg-background"
+                >
                   <LayoutWrapper currentPageName={path}>
                     <Page />
                   </LayoutWrapper>

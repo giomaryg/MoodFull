@@ -57,7 +57,7 @@ export default function RecipeGenerator() {
   };
 
   const queryClient = useQueryClient();
-  const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack, getStack, saveScrollPosition, getScrollPosition } = useNavigationStack();
+  const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack, getStack, saveScrollPosition, getScrollPosition, direction } = useNavigationStack();
   const currentRecipe = peekStack(activeTab)?.recipe || null;
 
   const setCurrentRecipe = (recipe) => {
@@ -78,15 +78,16 @@ export default function RecipeGenerator() {
   };
 
   const renderTabStack = (tabName) => (
-    <AnimatePresence>
+    <AnimatePresence custom={direction}>
       {getStack(tabName).map((stackItem, index) => {
         const isTop = index === getStack(tabName).length - 1;
         return (
           <motion.div
             key={`${tabName}-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-            initial={{ x: '100%' }}
+            custom={direction}
+            initial={{ x: direction === 'backward' ? '-30%' : '100%', opacity: direction === 'backward' ? 0 : 1 }}
             animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-            exit={{ x: '100%' }}
+            exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
             style={{ minHeight: '100vh' }}
