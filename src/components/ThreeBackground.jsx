@@ -90,6 +90,9 @@ export default function ThreeBackground() {
       const animate = () => {
         if (cancel) return;
         animId = requestAnimationFrame(animate);
+        
+        if (document.hidden) return;
+
         group.rotation.y += 0.001;
         group.rotation.x += 0.0005;
         
