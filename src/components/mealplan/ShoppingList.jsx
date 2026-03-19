@@ -880,15 +880,16 @@ Return JSON.`,
                         {format(new Date(plan.date), 'EEE, MMM d')} · {plan.meal_type}
                       </p>
                     </div>
-                    <button
+                    <Button
+                      size="sm"
                       onClick={() => handleReaddToMealPlan(plan)}
                       disabled={readdingId === plan.id}
-                      className="flex items-center gap-1 text-xs bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-2.5 py-1.5 rounded-lg transition-colors shrink-0 disabled:opacity-60"
+                      className="flex items-center gap-1 text-xs bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-3 min-h-[44px] rounded-lg transition-colors shrink-0 disabled:opacity-60"
                       title="Add to today's meal plan"
                     >
-                      <Plus className="w-3 h-3" />
+                      <Plus className="w-4 h-4" />
                       Add Again
-                    </button>
+                    </Button>
                   </div>
                   <div className="px-4 pb-4 bg-white">
                     {recipe?.ingredients?.length > 0 ? (
