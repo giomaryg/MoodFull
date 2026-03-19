@@ -67,7 +67,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Cuisine</Label>
                 <Select value={filters.cuisine || "all"} onValueChange={(val) => handleFilterChange('cuisine', val === "all" ? null : val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Any Cuisine" />
                   </SelectTrigger>
                   <SelectContent>
@@ -87,7 +87,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Dietary</Label>
                 <Select value={filters.dietary || "all"} onValueChange={(val) => handleFilterChange('dietary', val === "all" ? null : val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Any Diet" />
                   </SelectTrigger>
                   <SelectContent>
@@ -106,7 +106,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Meal Type</Label>
                 <Select value={filters.mealType || "all"} onValueChange={(val) => handleFilterChange('mealType', val === "all" ? null : val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Any Type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -124,7 +124,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Difficulty</Label>
                 <Select value={filters.difficulty || "all"} onValueChange={(val) => handleFilterChange('difficulty', val === "all" ? null : val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Any Difficulty" />
                   </SelectTrigger>
                   <SelectContent>
@@ -140,7 +140,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Max Prep Time</Label>
                 <Select value={filters.maxPrepTime || "all"} onValueChange={(val) => handleFilterChange('maxPrepTime', val === "all" ? null : val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Any Time" />
                   </SelectTrigger>
                   <SelectContent>
@@ -157,7 +157,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Max Calories</Label>
                 <Select value={filters.maxCalories || "all"} onValueChange={(val) => handleFilterChange('maxCalories', val === "all" ? null : val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Any Calories" />
                   </SelectTrigger>
                   <SelectContent>
@@ -173,7 +173,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Sort By</Label>
                 <Select value={filters.sortBy || "date_desc"} onValueChange={(val) => handleFilterChange('sortBy', val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="Sort By" />
                   </SelectTrigger>
                   <SelectContent>
@@ -192,7 +192,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Allergies</Label>
                 <Select value={filters.allergens || "all"} onValueChange={(val) => handleFilterChange('allergens', val === "all" ? null : val)}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="No restrictions" />
                   </SelectTrigger>
                   <SelectContent>
@@ -209,7 +209,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Ingredients</Label>
                 <Select value={filters.usePantry ? "yes" : "all"} onValueChange={(val) => handleFilterChange('usePantry', val === "yes")}>
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger className="h-11">
                     <SelectValue placeholder="All Ingredients" />
                   </SelectTrigger>
                   <SelectContent>
@@ -225,11 +225,11 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                   <Sparkles className="w-3 h-3"/> Ingredients on Hand
                 </Label>
                 <Input 
-                  placeholder="e.g. chicken, spinach, rice" 
-                  value={filters.includeIngredients || ""}
-                  onChange={(e) => handleFilterChange('includeIngredients', e.target.value)}
-                  onKeyDown={handleManualIngredients}
-                  className="h-9 border-[#c5d9c9] focus:border-[#6b9b76] bg-[#f0f9f2]"
+                placeholder="e.g. chicken, spinach, rice" 
+                value={filters.includeIngredients || ""}
+                onChange={(e) => handleFilterChange('includeIngredients', e.target.value)}
+                onKeyDown={handleManualIngredients}
+                className="h-11 border-[#c5d9c9] focus:border-[#6b9b76] bg-[#f0f9f2]"
                 />
                 <p className="text-[10px] text-gray-500">AI will use these to generate custom variations.</p>
               </div>
@@ -238,10 +238,10 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
               <div className="space-y-2 col-span-1 sm:col-span-2 mt-2">
                 <Label className="text-xs font-semibold text-gray-500 uppercase">Exclude Ingredients</Label>
                 <Input 
-                  placeholder="e.g. onions, garlic" 
-                  value={filters.excludeIngredients || ""}
-                  onChange={(e) => handleFilterChange('excludeIngredients', e.target.value)}
-                  className="h-9 border-[#c5d9c9] focus:border-[#6b9b76]"
+                placeholder="e.g. onions, garlic" 
+                value={filters.excludeIngredients || ""}
+                onChange={(e) => handleFilterChange('excludeIngredients', e.target.value)}
+                className="h-11 border-[#c5d9c9] focus:border-[#6b9b76]"
                 />
               </div>
 
@@ -254,7 +254,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
                       <p className="text-[10px] text-gray-500">Allow AI to modify classic recipes based on your criteria.</p>
                   </div>
                   <Select value={filters.generateVariations ? "yes" : "no"} onValueChange={(val) => handleFilterChange('generateVariations', val === "yes")}>
-                      <SelectTrigger className="h-9 w-32 border-[#6b9b76] text-[#6b9b76]">
+                      <SelectTrigger className="h-11 w-32 border-[#6b9b76] text-[#6b9b76]">
                           <SelectValue placeholder="No" />
                       </SelectTrigger>
                       <SelectContent>
