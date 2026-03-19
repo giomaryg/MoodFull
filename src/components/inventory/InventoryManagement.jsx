@@ -373,8 +373,10 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
           {isScanning ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />}
           Scan Pantry / Fridge
         </Button>
-        <div className="bg-gray-100 p-1 rounded-lg inline-flex shadow-inner w-full sm:w-auto overflow-x-auto">
+        <div className="bg-gray-100 p-1 rounded-lg inline-flex shadow-inner w-full sm:w-auto overflow-x-auto" role="tablist" aria-label="Inventory Views">
           <button
+            role="tab"
+            aria-selected={viewMode === 'list'}
             onClick={() => setViewMode('list')}
             className={`px-6 py-2 min-h-[44px] rounded-md text-sm font-bold transition-all ${
               viewMode === 'list'
@@ -385,6 +387,8 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
             Inventory List
           </button>
           <button
+            role="tab"
+            aria-selected={viewMode === 'analytics'}
             onClick={() => setViewMode('analytics')}
             className={`px-6 py-2 min-h-[44px] rounded-md text-sm font-bold transition-all ${
               viewMode === 'analytics'
@@ -395,6 +399,8 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
             Analytics & Insights
           </button>
           <button
+            role="tab"
+            aria-selected={viewMode === 'restock'}
             onClick={() => setViewMode('restock')}
             className={`px-6 py-2 min-h-[44px] rounded-md text-sm font-bold transition-all ${
               viewMode === 'restock'
