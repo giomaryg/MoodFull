@@ -1201,6 +1201,7 @@ export default function RecipeGenerator() {
                       onClick={() => setHideExpiringAlert(true)}
                       className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
                       title="Dismiss notification"
+                      aria-label="Dismiss expiring items notification"
                     >
                       <X className="w-4 h-4" />
                     </button>
