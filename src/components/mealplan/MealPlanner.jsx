@@ -866,10 +866,10 @@ Make them balanced, diverse, and delicious. Include:
 
       {/* Calendar Controls */}
       <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-4 border-2 border-[#c5d9c9] gap-4">
-        <div className="flex bg-gray-100 p-1 rounded-lg">
-          <button onClick={() => setCalendarView('daily')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'daily' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Daily</button>
-          <button onClick={() => setCalendarView('weekly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'weekly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Weekly</button>
-          <button onClick={() => setCalendarView('monthly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'monthly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Monthly</button>
+        <div className="flex bg-gray-100 p-1 rounded-lg" role="tablist" aria-label="Calendar View">
+          <button role="tab" aria-selected={calendarView === 'daily'} onClick={() => setCalendarView('daily')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'daily' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Daily</button>
+          <button role="tab" aria-selected={calendarView === 'weekly'} onClick={() => setCalendarView('weekly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'weekly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Weekly</button>
+          <button role="tab" aria-selected={calendarView === 'monthly'} onClick={() => setCalendarView('monthly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'monthly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Monthly</button>
         </div>
         <div className="flex items-center gap-4">
           <Button
