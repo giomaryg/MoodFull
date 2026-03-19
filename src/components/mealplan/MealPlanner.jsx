@@ -971,6 +971,7 @@ Make them balanced, diverse, and delicious. Include:
                             disabled={regeneratingDay === format(day, 'yyyy-MM-dd')}
                             size="icon"
                             variant="ghost"
+                            aria-label={`Regenerate meals for ${format(day, 'MMM d')}`}
                             className="absolute top-1 right-1 h-11 w-11 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
                           >
                             {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
