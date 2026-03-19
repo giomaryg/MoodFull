@@ -18,7 +18,7 @@ import RecipeComments from './RecipeComments';
 import InteractiveCookingMode from './InteractiveCookingMode';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import SaveToCollectionDialog from './SaveToCollectionDialog';
-import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater } from 'lucide-react';
+import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater, Utensils } from 'lucide-react';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
@@ -738,12 +738,24 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     const lower = pairing.toLowerCase();
                     let Icon = Wine;
                     let iconColor = "text-purple-600";
-                    if (lower.includes('coffee')) { Icon = Coffee; iconColor = "text-amber-700"; }
-                    else if (lower.includes('tea')) { Icon = Coffee; iconColor = "text-green-600"; }
-                    else if (lower.includes('smoothie') || lower.includes('juice')) { Icon = CupSoda; iconColor = "text-orange-500"; }
-                    else if (lower.includes('beer')) { Icon = Beer; iconColor = "text-yellow-600"; }
-                    else if (lower.includes('water')) { Icon = Droplets; iconColor = "text-blue-400"; }
-                    else if (lower.includes('milk')) { Icon = GlassWater; iconColor = "text-blue-200"; }
+                    
+                    // Beverages
+                    if (lower.includes('coffee') || lower.includes('espresso') || lower.includes('latte') || lower.includes('cappuccino')) { Icon = Coffee; iconColor = "text-amber-800"; }
+                    else if (lower.includes('tea') || lower.includes('matcha') || lower.includes('chai')) { Icon = Coffee; iconColor = "text-green-600"; }
+                    else if (lower.includes('smoothie') || lower.includes('juice') || lower.includes('lemonade')) { Icon = CupSoda; iconColor = "text-orange-500"; }
+                    else if (lower.includes('beer') || lower.includes('ale') || lower.includes('stout') || lower.includes('ipa') || lower.includes('lager')) { Icon = Beer; iconColor = "text-yellow-600"; }
+                    else if (lower.includes('water') || lower.includes('sparkling') || lower.includes('seltzer')) { Icon = GlassWater; iconColor = "text-blue-400"; }
+                    else if (lower.includes('milk') || lower.includes('shake')) { Icon = GlassWater; iconColor = "text-blue-200"; }
+                    else if (lower.includes('wine') || lower.includes('cabernet') || lower.includes('chardonnay') || lower.includes('merlot') || lower.includes('pinot') || lower.includes('sauvignon') || lower.includes('syrah') || lower.includes('zinfandel') || lower.includes('bordeaux') || lower.includes('blend') || lower.includes('champagne') || lower.includes('prosecco') || lower.includes('rose') || lower.includes('rosé')) { Icon = Wine; iconColor = "text-purple-600"; }
+                    else if (lower.includes('cocktail') || lower.includes('margarita') || lower.includes('martini') || lower.includes('mojito') || lower.includes('vodka') || lower.includes('gin') || lower.includes('rum') || lower.includes('tequila') || lower.includes('whiskey') || lower.includes('bourbon') || lower.includes('scotch')) { Icon = Wine; iconColor = "text-pink-500"; }
+                    // Sauces / Dips
+                    else if (lower.includes('sauce') || lower.includes('dip') || lower.includes('dressing') || lower.includes('salsa') || lower.includes('guacamole') || lower.includes('hummus') || lower.includes('gravy') || lower.includes('syrup') || lower.includes('glaze') || lower.includes('ketchup') || lower.includes('mustard') || lower.includes('mayo') || lower.includes('aioli') || lower.includes('pesto') || lower.includes('chutney') || lower.includes('marinade') || lower.includes('vinaigrette') || lower.includes('oil') || lower.includes('vinegar')) { Icon = Droplets; iconColor = "text-orange-600"; }
+                    // Salads / Veggies
+                    else if (lower.includes('salad') || lower.includes('greens') || lower.includes('vegetable') || lower.includes('broccoli') || lower.includes('asparagus') || lower.includes('spinach') || lower.includes('kale') || lower.includes('carrot') || lower.includes('potato') || lower.includes('tomato') || lower.includes('onion') || lower.includes('garlic') || lower.includes('pepper') || lower.includes('mushroom') || lower.includes('corn') || lower.includes('pea') || lower.includes('bean') || lower.includes('lentil') || lower.includes('chickpea')) { Icon = Leaf; iconColor = "text-green-500"; }
+                    // Default to Utensils for other things that aren't beverages
+                    else if (!lower.includes('drink') && !lower.includes('beverage') && !lower.includes('sip') && !lower.includes('glass') && !lower.includes('cup') && !lower.includes('mug') && !lower.includes('bottle') && !lower.includes('can') && !lower.includes('pint') && !lower.includes('shot') && !lower.includes('pour') && !lower.includes('splash') && !lower.includes('drop') && !lower.includes('liquid') && !lower.includes('fluid')) {
+                      Icon = Utensils; iconColor = "text-amber-600";
+                    }
 
                     return (
                       <motion.div
