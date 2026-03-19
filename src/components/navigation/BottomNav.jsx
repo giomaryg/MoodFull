@@ -51,11 +51,14 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
           style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
         >
           {isMinimized && (
-            <div className="absolute top-0 left-0 w-full flex justify-center py-0.5">
-              <ChevronUp className="w-4 h-4 text-[#6b9b76]" />
-            </div>
+            <button 
+              className="absolute top-0 left-0 w-full h-[44px] flex justify-center items-center"
+              aria-label="Expand navigation"
+            >
+              <ChevronUp className="w-5 h-5 text-[#6b9b76]" />
+            </button>
           )}
-          <div className={`flex items-center gap-1 overflow-x-auto scroll-smooth px-2 py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isMinimized ? 'pointer-events-none opacity-20' : ''}`}>
+          <div className={`flex items-center justify-around w-full gap-1 overflow-x-auto scroll-smooth px-2 py-2 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isMinimized ? 'pointer-events-none opacity-20' : ''}`}>
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
