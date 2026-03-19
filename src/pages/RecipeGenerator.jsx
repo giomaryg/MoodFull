@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useLayoutEffect, Suspense, lazy } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -10,30 +10,32 @@ import { useSearchParams } from 'react-router-dom';
 
 import MoodSelector from '../components/recipe/MoodSelector';
 import RecipeDisplay from '../components/recipe/RecipeDisplay';
-import SavedRecipes from '../components/recipe/SavedRecipes';
-import SimilarRecipes from '../components/recipe/SimilarRecipes';
-import PreferenceSurvey from '../components/survey/PreferenceSurvey';
 import RecipeGrid from '../components/recipe/RecipeGrid';
 import IntroScreen from '../components/IntroScreen';
 import BottomNav from '../components/navigation/BottomNav';
-import AccountInfo from '../components/account/AccountInfo';
-import MealPlanner from '../components/mealplan/MealPlanner';
-import ShoppingList from '../components/mealplan/ShoppingList';
 import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 import DiscoveryFeed from '../components/recipe/DiscoveryFeed';
-import Paywall from '../components/paywall/Paywall';
-import CombinationCookingDialog from '../components/recipe/CombinationCookingDialog';
 import ThreeBackground from '../components/ThreeBackground';
-import InventoryManagement from '../components/inventory/InventoryManagement';
-import AnalyticsDashboard from '../components/analytics/AnalyticsDashboard';
-import AICoach from '../components/recipe/AICoach';
-import TutorialOverlay from '../components/onboarding/TutorialOverlay';
 import WellnessRecommendationCard from '../components/oura/WellnessRecommendationCard';
 import OrderOutSuggestion from '../components/oura/OrderOutSuggestion';
+
 import { useNavigationStack } from '@/lib/NavigationStackContext';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { PullToRefresh } from '@/components/ui/PullToRefresh';
+import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
+
+const SavedRecipes = lazy(() => import('../components/recipe/SavedRecipes'));
+const PreferenceSurvey = lazy(() => import('../components/survey/PreferenceSurvey'));
+const AccountInfo = lazy(() => import('../components/account/AccountInfo'));
+const MealPlanner = lazy(() => import('../components/mealplan/MealPlanner'));
+const ShoppingList = lazy(() => import('../components/mealplan/ShoppingList'));
+const Paywall = lazy(() => import('../components/paywall/Paywall'));
+const CombinationCookingDialog = lazy(() => import('../components/recipe/CombinationCookingDialog'));
+const InventoryManagement = lazy(() => import('../components/inventory/InventoryManagement'));
+const AnalyticsDashboard = lazy(() => import('../components/analytics/AnalyticsDashboard'));
+const AICoach = lazy(() => import('../components/recipe/AICoach'));
+const TutorialOverlay = lazy(() => import('../components/onboarding/TutorialOverlay'));
 
 const ENABLE_PANTRY_FEATURE = true;
 
@@ -516,24 +518,14 @@ export default function RecipeGenerator() {
     }
   });
 
-  const saveRecipeMutation = useMutation({
+  const saveRecipeMutation = useOptimisticMutation({
+    queryKey: ['recipes'],
     mutationFn: (recipeData) => base44.entities.Recipe.create(recipeData),
-    onMutate: async (recipeData) => {
-      await queryClient.cancelQueries({ queryKey: ['recipes'] });
-      const previousRecipes = queryClient.getQueryData(['recipes']);
-      queryClient.setQueryData(['recipes'], old => [{...recipeData, id: 'temp-id-' + Date.now()}, ...(old || [])]);
-      return { previousRecipes };
-    },
-    onError: (err, newRecipe, context) => {
-      queryClient.setQueryData(['recipes'], context.previousRecipes);
-      toast.error('Failed to save recipe');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipes'] });
-    },
-    onSuccess: (data) => {
+    action: 'create',
+    onSuccessMessage: 'Recipe saved to your collection!',
+    onErrorMessage: 'Failed to save recipe',
+    onSuccessCallback: (data) => {
       setSavedRecipeId(data.id);
-      toast.success('Recipe saved to your collection!');
     }
   });
 
@@ -1132,6 +1124,7 @@ export default function RecipeGenerator() {
             paddingBottom: 'calc(8rem + env(safe-area-inset-bottom))'
           }}
         >
+          <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-[#6b9b76]" /></div>}>
           {/* Survey */}
           {showSurvey &&
           <motion.div
@@ -1582,6 +1575,7 @@ export default function RecipeGenerator() {
 
             </div>
           </div>
+          </Suspense>
         </div>
       </div>
 
@@ -1645,12 +1639,13 @@ export default function RecipeGenerator() {
       {/* Global Shopping List Modal */}
       {showShoppingList &&
       <div className="fixed inset-0 z-50">
+        <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-[#6b9b76]" /></div>}>
           <ShoppingList
           mealPlans={mealPlans}
           recipes={savedRecipes}
           onClose={() => setShowShoppingList(false)}
           currentUser={currentUser} />
-
+        </Suspense>
         </div>
       }
       </PullToRefresh>

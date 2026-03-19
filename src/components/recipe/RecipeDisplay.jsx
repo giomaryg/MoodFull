@@ -19,6 +19,7 @@ import InteractiveCookingMode from './InteractiveCookingMode';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import SaveToCollectionDialog from './SaveToCollectionDialog';
 import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater, Utensils } from 'lucide-react';
+import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
@@ -48,59 +49,29 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     queryFn: () => base44.entities.Recipe.list('-created_date', 100)
   });
 
-  const updateRatingMutation = useMutation({
+  const updateRatingMutation = useOptimisticMutation({
+    queryKey: ['recipes'],
     mutationFn: ({ id, rating }) => base44.entities.Recipe.update(id, { rating }),
-    onMutate: async ({ id, rating }) => {
-      await queryClient.cancelQueries({ queryKey: ['recipes'] });
-      const previousRecipes = queryClient.getQueryData(['recipes']);
-      queryClient.setQueryData(['recipes'], old => old?.map(r => r.id === id ? { ...r, rating } : r));
-      return { previousRecipes };
-    },
-    onError: (err, variables, context) => {
-      queryClient.setQueryData(['recipes'], context.previousRecipes);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipes'] });
-    }
+    action: 'update'
   });
 
-  const updateReviewMutation = useMutation({
+  const updateReviewMutation = useOptimisticMutation({
+    queryKey: ['recipes'],
     mutationFn: ({ id, review }) => base44.entities.Recipe.update(id, { review }),
-    onMutate: async ({ id, review }) => {
-      await queryClient.cancelQueries({ queryKey: ['recipes'] });
-      const previousRecipes = queryClient.getQueryData(['recipes']);
-      queryClient.setQueryData(['recipes'], old => old?.map(r => r.id === id ? { ...r, review } : r));
-      return { previousRecipes };
-    },
-    onError: (err, variables, context) => {
-      queryClient.setQueryData(['recipes'], context.previousRecipes);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipes'] });
-    }
+    action: 'update'
   });
 
   const handleReviewSave = (review) => {
     if (recipe.id && isSaved) {
-      updateReviewMutation.mutate({ id: recipe.id, review });
+      updateReviewMutation.mutate({ id: recipe.id, data: { review } });
     }
   };
 
-  const updateRecipeMutation = useMutation({
+  const updateRecipeMutation = useOptimisticMutation({
+    queryKey: ['recipes'],
     mutationFn: ({ id, data }) => base44.entities.Recipe.update(id, data),
-    onMutate: async ({ id, data }) => {
-      await queryClient.cancelQueries({ queryKey: ['recipes'] });
-      const previousRecipes = queryClient.getQueryData(['recipes']);
-      queryClient.setQueryData(['recipes'], old => old?.map(r => r.id === id ? { ...r, ...data } : r));
-      return { previousRecipes };
-    },
-    onError: (err, variables, context) => {
-      queryClient.setQueryData(['recipes'], context.previousRecipes);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipes'] });
-    },
-    onSuccess: (updatedRecipe) => {
+    action: 'update',
+    onSuccessCallback: (updatedRecipe) => {
       setShowEditDialog(false);
       if (onUpdate) onUpdate(updatedRecipe);
     }
@@ -114,7 +85,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
   const handleRate = (rating) => {
     if (recipe.id && isSaved) {
-      updateRatingMutation.mutate({ id: recipe.id, rating });
+      updateRatingMutation.mutate({ id: recipe.id, data: { rating } });
     }
   };
 

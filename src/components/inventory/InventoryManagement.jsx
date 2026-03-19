@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import PantryAnalytics from './PantryAnalytics';
 import SmartRestock from './SmartRestock';
+import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
 export default function InventoryManagement({ onGenerateFromExpiring }) {
   const queryClient = useQueryClient();
@@ -34,7 +35,8 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
     queryFn: () => base44.entities.MealPlan.list('-date', 50)
   });
 
-  const addMutation = useMutation({
+  const addMutation = useOptimisticMutation({
+    queryKey: ['inventory'],
     mutationFn: (data) => {
       base44.analytics.track({
         eventName: "inventory_updated",
@@ -42,63 +44,28 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
       });
       return base44.entities.Ingredient.create(data);
     },
-    onMutate: async (data) => {
-      await queryClient.cancelQueries({ queryKey: ['inventory'] });
-      const previousInventory = queryClient.getQueryData(['inventory']);
-      queryClient.setQueryData(['inventory'], old => [{...data, id: 'temp-id-' + Date.now()}, ...(old || [])]);
-      return { previousInventory };
-    },
-    onError: (err, newData, context) => {
-      queryClient.setQueryData(['inventory'], context.previousInventory);
-      toast.error('Failed to add ingredient');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['inventory'] });
-    },
-    onSuccess: () => {
+    action: 'create',
+    onSuccessMessage: 'Ingredient added to inventory',
+    onErrorMessage: 'Failed to add ingredient',
+    onSuccessCallback: () => {
       setNewItem({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0, expiry_date: '' });
-      toast.success('Ingredient added to inventory');
     }
   });
 
-  const updateCategoryMutation = useMutation({
+  const updateCategoryMutation = useOptimisticMutation({
+    queryKey: ['inventory'],
     mutationFn: ({ id, category }) => base44.entities.Ingredient.update(id, { category }),
-    onMutate: async ({ id, category }) => {
-      await queryClient.cancelQueries({ queryKey: ['inventory'] });
-      const previousInventory = queryClient.getQueryData(['inventory']);
-      queryClient.setQueryData(['inventory'], old => old?.map(item => item.id === id ? { ...item, category } : item));
-      return { previousInventory };
-    },
-    onError: (err, variables, context) => {
-      queryClient.setQueryData(['inventory'], context.previousInventory);
-      toast.error('Failed to update category');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['inventory'] });
-    },
-    onSuccess: () => {
-      toast.success('Category updated!');
-    }
+    action: 'update',
+    onSuccessMessage: 'Category updated!',
+    onErrorMessage: 'Failed to update category'
   });
 
-  const deleteMutation = useMutation({
+  const deleteMutation = useOptimisticMutation({
+    queryKey: ['inventory'],
     mutationFn: (id) => base44.entities.Ingredient.delete(id),
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ['inventory'] });
-      const previousInventory = queryClient.getQueryData(['inventory']);
-      queryClient.setQueryData(['inventory'], old => old?.filter(item => item.id !== id));
-      return { previousInventory };
-    },
-    onError: (err, id, context) => {
-      queryClient.setQueryData(['inventory'], context.previousInventory);
-      toast.error('Failed to remove ingredient');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['inventory'] });
-    },
-    onSuccess: () => {
-      toast.success('Ingredient removed');
-    }
+    action: 'delete',
+    onSuccessMessage: 'Ingredient removed',
+    onErrorMessage: 'Failed to remove ingredient'
   });
 
   const handlePantryScan = async (e) => {

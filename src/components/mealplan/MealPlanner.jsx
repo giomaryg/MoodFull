@@ -12,6 +12,7 @@ import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
 import RecipeDetailModal from './RecipeDetailModal';
 import WeeklyGoalsDialog from './WeeklyGoalsDialog';
+import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
 function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremium }) {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -53,23 +54,15 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
     queryFn: () => base44.entities.Ingredient.list()
   });
 
-  const deleteMealMutation = useMutation({
+  const deleteMealMutation = useOptimisticMutation({
+    queryKey: ['mealPlans'],
     mutationFn: (id) => base44.entities.MealPlan.delete(id),
-    onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ['mealPlans'] });
-      const previousMeals = queryClient.getQueryData(['mealPlans']);
-      queryClient.setQueryData(['mealPlans'], old => old?.filter(m => m.id !== id));
-      return { previousMeals };
-    },
-    onError: (err, id, context) => {
-      queryClient.setQueryData(['mealPlans'], context.previousMeals);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
-    }
+    action: 'delete',
+    onErrorMessage: 'Failed to delete meal'
   });
 
-  const createMealMutation = useMutation({
+  const createMealMutation = useOptimisticMutation({
+    queryKey: ['mealPlans'],
     mutationFn: (mealData) => {
       base44.analytics.track({
         eventName: "meal_added_to_plan",
@@ -77,34 +70,15 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
       });
       return base44.entities.MealPlan.create(mealData);
     },
-    onMutate: async (mealData) => {
-      await queryClient.cancelQueries({ queryKey: ['mealPlans'] });
-      const previousMeals = queryClient.getQueryData(['mealPlans']);
-      queryClient.setQueryData(['mealPlans'], old => [{...mealData, id: 'temp-id-' + Date.now()}, ...(old || [])]);
-      return { previousMeals };
-    },
-    onError: (err, newMeal, context) => {
-      queryClient.setQueryData(['mealPlans'], context.previousMeals);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
-    }
+    action: 'create',
+    onErrorMessage: 'Failed to create meal'
   });
 
-  const updateMealMutation = useMutation({
+  const updateMealMutation = useOptimisticMutation({
+    queryKey: ['mealPlans'],
     mutationFn: ({ id, data }) => base44.entities.MealPlan.update(id, data),
-    onMutate: async ({ id, data }) => {
-      await queryClient.cancelQueries({ queryKey: ['mealPlans'] });
-      const previousMeals = queryClient.getQueryData(['mealPlans']);
-      queryClient.setQueryData(['mealPlans'], old => old?.map(m => m.id === id ? { ...m, ...data } : m));
-      return { previousMeals };
-    },
-    onError: (err, variables, context) => {
-      queryClient.setQueryData(['mealPlans'], context.previousMeals);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
-    }
+    action: 'update',
+    onErrorMessage: 'Failed to update meal'
   });
 
   const displayDays = useMemo(() => {
