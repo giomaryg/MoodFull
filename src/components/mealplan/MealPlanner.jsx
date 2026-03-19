@@ -760,7 +760,8 @@ Make them balanced, diverse, and delicious. Include:
               placeholder="e.g. high-protein under $80" 
               value={customPlanPrompt}
               onChange={(e) => setCustomPlanPrompt(e.target.value)}
-              className="w-full sm:w-64 h-10 px-3 py-2 text-sm rounded-md border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent"
+              aria-label="Custom meal plan prompt"
+              className="w-full sm:w-64 min-h-[44px] px-3 py-2 text-sm rounded-md border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent"
             />
             {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
               <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap">
