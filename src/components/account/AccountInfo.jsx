@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
 import OuraConnectionCard from '../oura/OuraConnectionCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
 export default function AccountInfo({ user, onUpdatePreferences, recipeCount, onReplayTutorial }) {
   const [inviteEmail, setInviteEmail] = useState('');
@@ -40,7 +41,6 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     vitamin_targets: user?.vitamin_targets || ''
   });
   const [isDeleting, setIsDeleting] = useState(false);
-  const { useOptimisticMutation } = require('@/hooks/useOptimisticMutation');
 
   const updateAccountMutation = useOptimisticMutation({
     queryKey: ['currentUser'],
@@ -216,11 +216,11 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                 <div className="flex gap-3 pt-2">
                   <Button
                     onClick={handleSave}
-                    disabled={isSaving}
+                    disabled={updateAccountMutation.isPending}
                     className="flex-1 bg-[#6b9b76] hover:bg-[#5a8a65]"
                   >
                     <Save className="w-4 h-4 mr-2" />
-                    {isSaving ? 'Saving...' : 'Save Changes'}
+                    {updateAccountMutation.isPending ? 'Saving...' : 'Save Changes'}
                   </Button>
                   <Button
                     onClick={handleCancel}
