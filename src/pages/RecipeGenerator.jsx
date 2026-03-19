@@ -1421,8 +1421,7 @@ export default function RecipeGenerator() {
 
             }
 
-            </>
-          }
+            </div>
 
           {/* Saved Recipes Tab */}
           <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'saved' ? 'block' : 'none' }}>
