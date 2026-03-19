@@ -40,10 +40,11 @@ export default function RecipeGenerator() {
   const [selectedMealTypes, setSelectedMealTypes] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [activeTab, setActiveTab] = useState('home');
 
   const queryClient = useQueryClient();
   const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack } = useNavigationStack();
-  const currentRecipe = peekStack('home')?.recipe || null;
+  const currentRecipe = peekStack(activeTab)?.recipe || null;
 
   const setCurrentRecipe = (recipe) => {
     if (recipe === null) {
@@ -71,7 +72,6 @@ export default function RecipeGenerator() {
 
   const [globalSearchQuery, setGlobalSearchQuery] = useState('');
   const [showIntro, setShowIntro] = useState(true);
-  const [activeTab, setActiveTab] = useState('home');
   const [advancedFilters, setAdvancedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
