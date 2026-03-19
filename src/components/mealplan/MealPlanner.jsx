@@ -77,7 +77,16 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
       });
       return base44.entities.MealPlan.create(mealData);
     },
-    onSuccess: () => {
+    onMutate: async (mealData) => {
+      await queryClient.cancelQueries({ queryKey: ['mealPlans'] });
+      const previousMeals = queryClient.getQueryData(['mealPlans']);
+      queryClient.setQueryData(['mealPlans'], old => [{...mealData, id: 'temp-id-' + Date.now()}, ...(old || [])]);
+      return { previousMeals };
+    },
+    onError: (err, newMeal, context) => {
+      queryClient.setQueryData(['mealPlans'], context.previousMeals);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
     }
   });
