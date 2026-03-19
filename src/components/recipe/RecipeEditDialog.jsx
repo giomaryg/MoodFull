@@ -6,8 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { X, Save, Plus, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function RecipeEditDialog({ recipe, onSave, onClose }) {
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     name: recipe.name || '',
     description: recipe.description || '',
@@ -68,8 +71,9 @@ export default function RecipeEditDialog({ recipe, onSave, onClose }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
       >
+        <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(); }} className="overflow-y-auto h-full w-full">
         <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between z-10">
           <h2 className="text-xl font-bold text-gray-900">Edit Recipe</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -247,6 +251,7 @@ export default function RecipeEditDialog({ recipe, onSave, onClose }) {
             </Button>
           </div>
         </form>
+        </PullToRefresh>
       </motion.div>
     </div>
   );

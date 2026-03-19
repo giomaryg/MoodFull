@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from '@/components/ui/input';
 import { format, startOfWeek, addDays, isSameDay, startOfMonth } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import AddMealDialog from './AddMealDialog';
 import SwapMealDialog from './SwapMealDialog';
 import RepeatMealDialog from './RepeatMealDialog';
@@ -1184,9 +1185,10 @@ Make them balanced, diverse, and delicious. Include:
               </Button>
             </div>
 
+            <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(); }} className="flex-1 overflow-y-auto h-full">
             <Droppable droppableId="sidebar-recipes" isDropDisabled={true}>
               {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps} className="flex-1 overflow-y-auto space-y-3 pr-1 pb-4">
+                <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-3 pr-1 pb-4 min-h-full">
                   {sidebarTab === 'saved' ? (
                     recipes.length === 0 ? (
                       <p className="text-xs text-gray-400 text-center mt-4">No saved recipes.</p>
@@ -1261,6 +1263,7 @@ Make them balanced, diverse, and delicious. Include:
                 </div>
               )}
             </Droppable>
+            </PullToRefresh>
           </div>
         </div>
       </DragDropContext>

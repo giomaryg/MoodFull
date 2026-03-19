@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from '@/components/ui/textarea';
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import { X, Search, Plus, CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
@@ -114,8 +115,9 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+        className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col"
       >
+        <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(); }} className="p-6 overflow-y-auto h-full w-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -324,6 +326,7 @@ export default function AddMealDialog({ date, mealType, recipes, onClose, enable
             Add to Plan
           </Button>
         </div>
+        </PullToRefresh>
       </motion.div>
     </motion.div>
   );

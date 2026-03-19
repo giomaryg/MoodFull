@@ -1092,7 +1092,7 @@ export default function RecipeGenerator() {
         }
       </AnimatePresence>
 
-      <PullToRefresh onRefresh={handleRefresh}>
+      <PullToRefresh onRefresh={handleRefresh} isGlobal={true}>
       <div className="min-h-screen bg-background/80 relative z-10 transition-colors">
         <ThreeBackground />
         {/* Hero Section */}

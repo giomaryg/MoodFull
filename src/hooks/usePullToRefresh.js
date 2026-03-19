@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 
-export function usePullToRefresh(onRefresh) {
+export function usePullToRefresh(onRefresh, scrollRef = null) {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     let startY = 0;
     let isPulling = false;
+    const element = scrollRef?.current || document;
 
     const handleTouchStart = (e) => {
-      if (window.scrollY <= 0) {
+      const scrollTop = scrollRef?.current ? scrollRef.current.scrollTop : window.scrollY;
+      if (scrollTop <= 0) {
         startY = e.touches[0].clientY;
         isPulling = true;
       }
@@ -36,16 +38,16 @@ export function usePullToRefresh(onRefresh) {
       }
     };
 
-    document.addEventListener('touchstart', handleTouchStart, { passive: true });
-    document.addEventListener('touchmove', handleTouchMove, { passive: true });
-    document.addEventListener('touchend', handleTouchEnd, { passive: true });
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchmove', handleTouchMove, { passive: true });
+    element.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
+      element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('touchmove', handleTouchMove);
+      element.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [onRefresh, isRefreshing]);
+  }, [onRefresh, isRefreshing, scrollRef]);
 
   return isRefreshing;
 }

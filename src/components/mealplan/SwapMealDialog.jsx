@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { X, Search, Clock, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }) {
+  const queryClient = useQueryClient();
   if (!currentMeal) return null;
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -65,7 +68,7 @@ export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }
           </div>
         </CardHeader>
 
-        <CardContent className="p-4 overflow-y-auto max-h-[calc(85vh-200px)]">
+        <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(); }} className="p-4 overflow-y-auto max-h-[calc(85vh-200px)]">
           {filteredRecipes.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500">No recipes found. Try a different search or generate some recipes first!</p>
@@ -112,7 +115,7 @@ export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }
               ))}
             </div>
           )}
-        </CardContent>
+        </PullToRefresh>
       </Card>
     </motion.div>
   );

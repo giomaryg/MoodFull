@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText, Barcode, MoreHorizontal } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -621,8 +622,9 @@ Return JSON.`,
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto relative mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)]"
+        className="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] relative mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)] overflow-hidden flex flex-col"
       >
+        <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(); }} className="p-6 overflow-y-auto h-full w-full">
         <Button
           variant="ghost"
           size="icon"
@@ -1212,6 +1214,7 @@ Return JSON.`,
             )}
           </div>
         )}
+        </PullToRefresh>
       </motion.div>
     </motion.div>
   );

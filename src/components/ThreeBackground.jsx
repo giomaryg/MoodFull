@@ -3,7 +3,14 @@ import * as THREE from 'three';
 
 export default function ThreeBackground() {
   const mountRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
+           (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || 
+           (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+           /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || 
+           window.matchMedia('(display-mode: standalone)').matches;
+  });
 
   useEffect(() => {
     const checkMobile = () => {
@@ -14,7 +21,6 @@ export default function ThreeBackground() {
                         window.matchMedia('(display-mode: standalone)').matches;
       setIsMobile(isMobileDevice || isLowPerformance || isWebView);
     };
-    checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
