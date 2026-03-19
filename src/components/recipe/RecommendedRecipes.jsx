@@ -344,8 +344,8 @@ Generate the recipe with Name, Description, Ingredients, Instructions, Prep time
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-2/5 h-48 md:h-auto bg-gray-200 relative overflow-hidden">
                 {cookNextRecipe.imageLoading ?
-              <div className="absolute inset-0 flex items-center justify-center bg-orange-100/50">
-                    <Loader2 className="w-8 h-8 text-orange-400 animate-spin" />
+              <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                    <ChefHat className="w-16 h-16 text-muted-foreground/50" />
                   </div> :
               cookNextRecipe.imageUrl ?
               <img src={cookNextRecipe.imageUrl} alt={cookNextRecipe.name} className="w-full h-full object-cover" /> :
@@ -388,8 +388,8 @@ Generate the recipe with Name, Description, Ingredients, Instructions, Prep time
                 {/* Recipe Image */}
                 <div className="relative h-40 sm:h-44 bg-gradient-to-br from-[#f5e8e8] to-[#d4e4d6] overflow-hidden">
                   {recipe.imageLoading ?
-              <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6b9b76]"></div>
+              <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                      <ChefHat className="w-12 h-12 text-muted-foreground/50" />
                     </div> :
               recipe.imageUrl ?
               <img

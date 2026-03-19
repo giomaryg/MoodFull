@@ -212,20 +212,35 @@ Provide a detailed, structured report in markdown offering:
         </div>
       </div>
 
-      {aiReport && (
-        <Card className="border-2 border-[#f2b769] bg-[#fffcf7] mb-8">
+      {isGeneratingReport ? (
+        <Card className="border-2 border-border bg-card mb-8">
+          <CardHeader>
+            <CardTitle className="text-lg text-muted-foreground flex items-center gap-2">
+              <Bot className="w-5 h-5" /> Generating Insights...
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
+            <div className="h-4 bg-muted animate-pulse rounded w-full"></div>
+            <div className="h-4 bg-muted animate-pulse rounded w-5/6"></div>
+            <div className="h-4 bg-muted animate-pulse rounded w-full"></div>
+            <div className="h-4 bg-muted animate-pulse rounded w-2/3"></div>
+          </CardContent>
+        </Card>
+      ) : aiReport ? (
+        <Card className="border-2 border-[#f2b769] bg-[#fffcf7] dark:bg-card mb-8">
           <CardHeader>
             <CardTitle className="text-lg text-[#d4a373] flex items-center gap-2">
               <Bot className="w-5 h-5" /> AI Analytical Report
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="prose prose-sm prose-p:leading-relaxed prose-headings:text-[#5a6f60] max-w-none text-gray-700">
+            <div className="prose prose-sm prose-p:leading-relaxed prose-headings:text-[#5a6f60] max-w-none text-gray-700 dark:text-gray-300">
               <ReactMarkdown>{aiReport}</ReactMarkdown>
             </div>
           </CardContent>
         </Card>
-      )}
+      ) : null}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-2 border-[#c5d9c9] bg-white">
