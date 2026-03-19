@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Clock, Users, ChefHat, Sparkles, RefreshCw, Loader2, CalendarPlus, Star } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 import { toast } from 'sonner';
 
 export default function DiscoveryFeed({ 
@@ -33,12 +34,12 @@ export default function DiscoveryFeed({
     queryFn: () => base44.entities.MealPlan.list('-date', 50)
   });
 
-  const createMealMutation = useMutation({
+  const createMealMutation = useOptimisticMutation({
+    queryKey: ['mealPlans'],
     mutationFn: (mealData) => base44.entities.MealPlan.create(mealData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
-      toast.success('Added to your meal plan!');
-    }
+    action: 'create',
+    onSuccessMessage: 'Added to your meal plan!',
+    onErrorMessage: 'Failed to add to meal plan'
   });
 
   const handleQuickAdd = async (e, recipe) => {
