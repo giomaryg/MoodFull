@@ -9,6 +9,7 @@ import { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import NavigationHeader from '@/components/navigation/NavigationHeader';
+import { SafeAreaContainer } from '@/components/ui/SafeAreaContainer';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -57,7 +58,9 @@ const AuthenticatedApp = () => {
 
   // Render the main app
   return (
-    <AnimatedRoutes />
+    <SafeAreaContainer left right>
+      <AnimatedRoutes />
+    </SafeAreaContainer>
   );
 };
 
