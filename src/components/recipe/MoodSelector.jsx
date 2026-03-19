@@ -146,6 +146,8 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
           return (
             <button
               key={mood.id}
+              role="switch"
+              aria-checked={isSelected}
               onClick={() => handleMoodToggle(mood.id)}
               className={`p-4 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200 min-h-[44px] min-w-[44px] ${
               isSelected ?
@@ -190,6 +192,8 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
             return (
               <button
                 key={type.id}
+                role="switch"
+                aria-checked={isSelected}
                 onClick={() => handleMealTypeToggle(type.id)} 
                 className={`flex items-center gap-1.5 px-4 py-1.5 min-h-[44px] min-w-[44px] rounded-full border text-xs transition-all duration-200 ${
                   isSelected
