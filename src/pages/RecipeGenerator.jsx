@@ -1349,14 +1349,14 @@ export default function RecipeGenerator() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex flex-col sm:flex-row justify-center gap-4">
+                className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4">
 
                     <Button
                   onClick={generateRecipe}
                   disabled={isGenerating}
                   aria-label="Generate Recipes"
-                  className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
-                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating...</> : <>✦ Generate Recipes</>}
+                  className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <>✦ Generate</>}
                     </Button>
 
                     {ENABLE_PANTRY_FEATURE && (
@@ -1364,8 +1364,8 @@ export default function RecipeGenerator() {
                         onClick={generateFromInventory}
                         disabled={isGenerating}
                         aria-label="Generate Recipes from Pantry"
-                        className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2">
-                        {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Package className="w-5 h-5" /> Use My Pantry</>}
+                        className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                        {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Package className="w-4 h-4 sm:w-5 sm:h-5" /> Use Pantry</>}
                       </Button>
                     )}
 
@@ -1373,9 +1373,8 @@ export default function RecipeGenerator() {
                   onClick={() => setShowCombineDialog(true)}
                   disabled={isGenerating} 
                   aria-label="Combine and Create Recipes"
-                  className="bg-[#f2b769] text-white px-8 py-6 text-sm font-bold tracking-tight rounded-[20px] whitespace-nowrap focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-9 from-purple-500 to-indigo-500 shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 sm:text-base sm:px-12 sm:py-7 w-full sm:w-auto flex items-center justify-center gap-2">
-
-                      <UtensilsCrossed className="w-5 h-5" /> Combine & Create
+                  className="bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                      <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5" /> Combine
                     </Button>
 
                     <input type="file" accept="image/*" capture="environment" ref={fileInputRef} className="hidden" onChange={handleFridgeScan} />
@@ -1383,9 +1382,9 @@ export default function RecipeGenerator() {
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isGenerating}
                       aria-label="Scan Fridge with AI"
-                      className="bg-white text-gray-800 border-2 border-gray-200 shadow-[0_0_18px_rgba(0,0,0,0.05)] hover:bg-gray-50 transition-all duration-300 text-sm sm:text-base px-8 sm:px-12 py-6 sm:py-7 rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-2"
+                      className="bg-white text-gray-800 border-2 border-gray-200 shadow-[0_0_18px_rgba(0,0,0,0.05)] hover:bg-gray-50 transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2"
                     >
-                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Camera className="w-5 h-5" /> AI Fridge Scan</>}
+                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Camera className="w-4 h-4 sm:w-5 sm:h-5" /> Scan Fridge</>}
                     </Button>
                   </motion.div>
               }
