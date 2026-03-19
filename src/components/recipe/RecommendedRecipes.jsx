@@ -335,6 +335,10 @@ Generate the recipe with Name, Description, Ingredients, Instructions, Prep time
       {cookNextRecipe &&
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <Card
+          role="button"
+          tabIndex={0}
+          aria-label={`View details for ${cookNextRecipe.name}`}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(cookNextRecipe); } }}
           onClick={() => onRecipeClick(cookNextRecipe)}
           className="cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 border-orange-400 bg-gradient-to-br from-orange-50 to-amber-50 overflow-hidden relative">
 
@@ -382,6 +386,10 @@ Generate the recipe with Name, Description, Ingredients, Instructions, Prep time
           transition={{ delay: index * 0.1 }}>
 
               <Card
+            role="button"
+            tabIndex={0}
+            aria-label={`View details for ${recipe.name}`}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
             onClick={() => onRecipeClick(recipe)}
             className="cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-[#6b9b76] bg-white hover:bg-[#f8faf8] group rounded-2xl overflow-hidden h-full">
 

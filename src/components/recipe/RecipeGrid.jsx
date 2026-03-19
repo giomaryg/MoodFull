@@ -68,6 +68,10 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
             transition={{ delay: index * 0.05 }}
           >
             <Card
+              role="button"
+              tabIndex={0}
+              aria-label={`View details for ${recipe.name}`}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
               onClick={() => onRecipeClick(recipe)}
               className="cursor-pointer rounded-[2rem] overflow-hidden border-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)] bg-white h-full flex flex-col hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-shadow duration-300"
             >
