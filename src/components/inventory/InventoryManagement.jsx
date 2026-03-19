@@ -634,7 +634,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
         <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 sm:p-6 mb-6 relative">
           <button 
             onClick={() => setHideExpiringAlert(true)}
-            className="absolute top-3 right-3 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full p-1 transition-colors"
+            className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
             title="Dismiss"
           >
             <X className="w-4 h-4" />
