@@ -40,7 +40,6 @@ export default function RecipeGenerator() {
   const [selectedMealTypes, setSelectedMealTypes] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [activeTab, setActiveTab] = useState('home');
 
   const queryClient = useQueryClient();
   const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack } = useNavigationStack();
