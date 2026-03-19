@@ -90,7 +90,7 @@ const AnimatedRoutes = () => {
   return (
     <>
       <NavigationHeader />
-      <div className="relative w-full h-full min-h-screen overflow-hidden">
+      <div className="relative w-full h-full min-h-screen overflow-x-hidden">
       <AnimatePresence mode="wait" custom={direction}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={
