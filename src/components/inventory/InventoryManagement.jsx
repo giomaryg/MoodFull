@@ -52,6 +52,14 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
     }
   });
 
+  const bulkAddMutation = useOptimisticMutation({
+    queryKey: ['inventory'],
+    mutationFn: (items) => base44.entities.Ingredient.bulkCreate(items),
+    action: 'create',
+    onSuccessMessage: 'Items added to inventory',
+    onErrorMessage: 'Failed to add items'
+  });
+
   const updateCategoryMutation = useOptimisticMutation({
     queryKey: ['inventory'],
     mutationFn: ({ id, category }) => base44.entities.Ingredient.update(id, { category }),
@@ -113,9 +121,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
           };
         });
         
-        await base44.entities.Ingredient.bulkCreate(itemsToCreate);
-        queryClient.invalidateQueries({ queryKey: ['inventory'] });
-        toast.success(`Pantry scan complete! Added ${itemsToCreate.length} items to inventory.`);
+        bulkAddMutation.mutate(itemsToCreate);
       } else {
         toast.error('No items found in the image.');
       }
