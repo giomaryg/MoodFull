@@ -283,6 +283,10 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                 transition={{ delay: index * 0.05 }}
               >
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View details for ${recipe.name}`}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
                   onClick={() => onRecipeClick(recipe)}
                   className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:scale-[1.02] transition-transform duration-200 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
                 >
