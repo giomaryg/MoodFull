@@ -1361,36 +1361,7 @@ export default function RecipeGenerator() {
               }
               </AnimatePresence>
 
-              {/* Recipe Display */}
-              <AnimatePresence mode="wait">
-                {currentRecipe &&
-              <motion.div
 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6 sm:space-y-8">
-
-                    <RecipeDisplay
-                  recipe={currentRecipe}
-                  onSave={handleSaveRecipe}
-                  isSaved={!!savedRecipeId}
-                  onBack={handleBack}
-                  onUpdate={(updatedRecipe) => {
-                    // Update the current recipe with the new data
-                    updateCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
-                  }}
-                  onSimilarRecipeClick={(recipe) => {
-                    // When clicking a similar recipe, we want to scroll to the top of the new recipe display
-                    // rather than maintaining the previous scroll position.
-                    setScrollPosition(0);
-                    setCurrentRecipe(recipe);
-                    const savedVersion = savedRecipes.find((r) => r.id === recipe.id);
-                    setSavedRecipeId(savedVersion ? savedVersion.id : null);
-                  }} />
-                  </motion.div>
-              }
-              </AnimatePresence>
 
               {/* Personalized Recommendations - Only show when not searching */}
               {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
