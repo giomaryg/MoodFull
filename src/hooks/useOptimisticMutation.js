@@ -22,7 +22,14 @@ export function useOptimisticMutation({
         if (!old) return old;
         
         if (action === 'create') {
-          return Array.isArray(old) ? [{ ...variables, [idField]: `temp-id-${Date.now()}` }, ...old] : old;
+          if (Array.isArray(old)) {
+            if (Array.isArray(variables)) {
+              const newItems = variables.map((v, i) => ({ ...v, [idField]: `temp-id-${Date.now()}-${i}` }));
+              return [...newItems, ...old];
+            }
+            return [{ ...variables, [idField]: `temp-id-${Date.now()}` }, ...old];
+          }
+          return old;
         } else if (action === 'update') {
           const data = variables.data || variables;
           if (Array.isArray(old)) {
