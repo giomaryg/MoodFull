@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { useSearchParams } from 'react-router-dom';
 
 import MoodSelector from '../components/recipe/MoodSelector';
 import RecipeDisplay from '../components/recipe/RecipeDisplay';
