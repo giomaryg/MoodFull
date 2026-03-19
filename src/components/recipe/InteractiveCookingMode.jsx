@@ -154,7 +154,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
     <div className="fixed inset-0 z-[100] bg-black text-white flex flex-col">
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-gray-800">
+      <div className="flex items-center justify-between p-6 border-b border-gray-800" style={{ paddingTop: 'calc(1.5rem + env(safe-area-inset-top))' }}>
         <h2 className="text-2xl font-bold text-[#6b9b76]">{recipe.name}</h2>
         <Button onClick={onClose} variant="ghost" className="text-white hover:bg-gray-800 rounded-full h-12 w-12 p-0">
           <X className="w-8 h-8" />
@@ -273,7 +273,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
         </div>
 
         {/* AI Assistant Chat */}
-        <div className="w-full max-w-4xl mx-auto p-4 sm:p-8 mt-auto shrink-0 z-20">
+        <div className="w-full max-w-4xl mx-auto p-4 sm:p-8 mt-auto shrink-0 z-20" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
           <div className="bg-gray-900 rounded-2xl border border-gray-700 p-4 shadow-xl">
             {aiResponse && (
               <motion.div 
