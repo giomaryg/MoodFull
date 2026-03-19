@@ -77,7 +77,7 @@ const SelectTrigger = React.forwardRef(({ className, children, id, ...props }, r
 })
 SelectTrigger.displayName = "SelectTrigger"
 
-const SelectContent = React.forwardRef(({ className, children, ...props }, ref) => (
+const SelectContent = React.forwardRef(({ className, children, id, ...props }, ref) => (
   <Drawer.Portal>
     <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
     <Drawer.Content
