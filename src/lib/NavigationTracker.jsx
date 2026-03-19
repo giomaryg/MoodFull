@@ -1,14 +1,26 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { base44 } from '@/api/base44Client';
 import { pagesConfig } from '@/pages.config';
 
 export default function NavigationTracker() {
     const location = useLocation();
+    const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const { Pages, mainPage } = pagesConfig;
     const mainPageKey = mainPage ?? Object.keys(Pages)[0];
+
+    // Listen for native iOS back gestures via postMessage
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.data && event.data.type === 'native_go_back') {
+                navigate(-1);
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, [navigate]);
 
     // Post navigation changes to parent window
     useEffect(() => {

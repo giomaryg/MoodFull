@@ -55,7 +55,16 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
 
   const deleteMealMutation = useMutation({
     mutationFn: (id) => base44.entities.MealPlan.delete(id),
-    onSuccess: () => {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ['mealPlans'] });
+      const previousMeals = queryClient.getQueryData(['mealPlans']);
+      queryClient.setQueryData(['mealPlans'], old => old?.filter(m => m.id !== id));
+      return { previousMeals };
+    },
+    onError: (err, id, context) => {
+      queryClient.setQueryData(['mealPlans'], context.previousMeals);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
     }
   });
@@ -75,7 +84,16 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
 
   const updateMealMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.MealPlan.update(id, data),
-    onSuccess: () => {
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: ['mealPlans'] });
+      const previousMeals = queryClient.getQueryData(['mealPlans']);
+      queryClient.setQueryData(['mealPlans'], old => old?.map(m => m.id === id ? { ...m, ...data } : m));
+      return { previousMeals };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(['mealPlans'], context.previousMeals);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['mealPlans'] });
     }
   });

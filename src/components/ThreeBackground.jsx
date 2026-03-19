@@ -1,11 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 export default function ThreeBackground() {
   const mountRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile || !mountRef.current) return;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -91,7 +101,11 @@ export default function ThreeBackground() {
       particlesGeo.dispose();
       particlesMat.dispose();
     };
-  }, []);
+  }, [isMobile]);
+
+  if (isMobile) {
+    return <div className="fixed inset-0 z-0 pointer-events-none bg-[url('https://images.unsplash.com/photo-1495195134817-aeb325a55b65?q=80&w=2076&auto=format&fit=crop')] bg-cover bg-center opacity-5" />;
+  }
 
   return <div ref={mountRef} className="fixed inset-0 z-0 pointer-events-none" />;
 }

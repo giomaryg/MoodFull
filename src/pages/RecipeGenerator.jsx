@@ -1077,7 +1077,7 @@ export default function RecipeGenerator() {
         <ThreeBackground />
         {/* Hero Section */}
         {!showIntro &&
-        <div className="pt-1 glass-header fixed top-0 left-0 right-0 z-50 border-b-0">
+        <div className="pt-[calc(0.25rem+env(safe-area-inset-top))] glass-header fixed top-0 left-0 right-0 z-50 border-b-0">
             <div className="mx-auto my-1 px-3 max-w-6xl">
               <motion.div
               initial={{ opacity: 0, y: -20 }}

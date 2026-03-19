@@ -51,8 +51,20 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Ingredient.delete(id),
-    onSuccess: () => {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ['inventory'] });
+      const previousInventory = queryClient.getQueryData(['inventory']);
+      queryClient.setQueryData(['inventory'], old => old?.filter(item => item.id !== id));
+      return { previousInventory };
+    },
+    onError: (err, id, context) => {
+      queryClient.setQueryData(['inventory'], context.previousInventory);
+      toast.error('Failed to remove ingredient');
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['inventory'] });
+    },
+    onSuccess: () => {
       toast.success('Ingredient removed');
     }
   });
