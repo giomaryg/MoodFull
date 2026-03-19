@@ -718,33 +718,34 @@ Make them balanced, diverse, and delicious. Include:
               }
               setShowGoalsDialog(true);
             }}
-            className="bg-[#f2b769] hover:bg-[#e6a245] text-white flex-1 sm:flex-none min-h-[44px]"
+            className="bg-[#f2b769] hover:bg-[#e6a245] text-white flex-1 sm:flex-none min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
           >
-            <Target className="w-4 h-4 mr-2" />
-            Set Goals
-            {(!currentUser?.is_premium && currentUser?.role !== 'admin') && <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>}
+            <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <span className="hidden sm:inline">Set Goals</span>
+            <span className="sm:hidden">Goals</span>
+            {(!currentUser?.is_premium && currentUser?.role !== 'admin') && <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>}
           </Button>
 
-          <div className="flex items-center gap-2 flex-1 sm:flex-none">
+          <div className="flex items-center gap-2 flex-1 sm:flex-none w-full sm:w-auto">
             <Input 
               placeholder="e.g. high-protein under $80" 
               value={customPlanPrompt}
               onChange={(e) => setCustomPlanPrompt(e.target.value)}
               aria-label="Custom meal plan prompt"
-              className="w-full sm:w-64 min-h-[44px] border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+              className="w-full sm:w-64 min-h-[44px] border-2 border-[#c5d9c9] focus:border-[#6b9b76] text-xs sm:text-sm"
             />
             {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
-              <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px]">
-                <Sparkles className="w-4 h-4 mr-2" /> Generate Plan <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
+              <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="hidden sm:inline">Generate Plan</span><span className="sm:hidden">Generate</span> <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
               </Button>
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px]">
+                  <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5">
                     {isGeneratingPlan ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
+                      <><Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin shrink-0" /> <span className="hidden sm:inline">Generating...</span><span className="sm:hidden">Wait...</span></>
                     ) : (
-                      <><Sparkles className="w-4 h-4 mr-2" /> Generate Plan <ChevronDown className="w-4 h-4 ml-1" /></>
+                      <><Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="hidden sm:inline">Generate Plan</span><span className="sm:hidden">Generate</span> <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /></>
                     )}
                   </Button>
                 </DropdownMenuTrigger>
@@ -761,10 +762,11 @@ Make them balanced, diverse, and delicious. Include:
           </div>
           <Button
             onClick={onOpenShoppingList}
-            className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none min-h-[44px]"
+            className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
           >
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            Shopping List
+            <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <span className="hidden sm:inline">Shopping List</span>
+            <span className="sm:hidden">List</span>
           </Button>
         </div>
       </div>
