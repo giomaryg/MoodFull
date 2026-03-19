@@ -13,12 +13,20 @@ import HighlightedText from './HighlightedText';
 function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '', onOpenShoppingList }) {
   const queryClient = useQueryClient();
 
-  const deleteRecipeMutation = useMutation({
+  const { useOptimisticMutation } = require('@/hooks/useOptimisticMutation');
+
+  const deleteRecipeMutation = useOptimisticMutation({
+    queryKey: ['recipes'],
     mutationFn: (id) => base44.entities.Recipe.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipes'] });
-      toast.success('Recipe removed from your collection');
-    }
+    action: 'delete',
+    onSuccessMessage: 'Recipe removed from your collection',
+    onErrorMessage: 'Failed to remove recipe'
+  });
+
+  const updateRecipeMutation = useOptimisticMutation({
+    queryKey: ['recipes'],
+    mutationFn: ({ id, data }) => base44.entities.Recipe.update(id, data),
+    action: 'update'
   });
 
   const handleDelete = (e, recipeId) => {
@@ -76,14 +84,13 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
           });
           
           if (response?.tags) {
-            await base44.entities.Recipe.update(recipe.id, { ai_tags: response.tags });
+            await updateRecipeMutation.mutateAsync({ id: recipe.id, data: { ai_tags: response.tags } });
           }
         } catch (e) {
           console.error(`Failed to tag ${recipe.name}`, e);
         }
       }
       
-      queryClient.invalidateQueries({ queryKey: ['recipes'] });
       toast.success('Recipes auto-tagged successfully!');
     } catch (e) {
       toast.error('Auto-tagging failed');
@@ -273,10 +280,8 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                           prep_time: Math.floor(Math.random() * 30 + 10) + ' min',
                           difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]
                         };
-                        base44.entities.Recipe.update(recipe.id, randomData).then(() => {
-                          queryClient.invalidateQueries({ queryKey: ['recipes'] });
-                          toast.success('Dev: Recipe updated for testing');
-                        });
+                        updateRecipeMutation.mutate({ id: recipe.id, data: randomData });
+                        toast.success('Dev: Recipe updated for testing');
                       }}
                       className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-6 h-6"
                       title="Dev: Randomly update recipe info"
