@@ -1237,6 +1237,7 @@ export default function RecipeGenerator() {
                 <Button
                   onClick={() => setShowSurvey(true)}
                   variant="outline"
+                  aria-label="Update Preferences"
                   className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
                       Update Preferences
                     </Button>
