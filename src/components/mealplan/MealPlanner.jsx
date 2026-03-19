@@ -748,7 +748,7 @@ Make them balanced, diverse, and delicious. Include:
               }
               setShowGoalsDialog(true);
             }}
-            className="bg-[#f2b769] hover:bg-[#e6a245] text-white flex-1 sm:flex-none"
+            className="bg-[#f2b769] hover:bg-[#e6a245] text-white flex-1 sm:flex-none min-h-[44px]"
           >
             <Target className="w-4 h-4 mr-2" />
             Set Goals
@@ -764,13 +764,13 @@ Make them balanced, diverse, and delicious. Include:
               className="w-full sm:w-64 min-h-[44px] px-3 py-2 text-sm rounded-md border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent"
             />
             {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
-              <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap">
+              <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px]">
                 <Sparkles className="w-4 h-4 mr-2" /> Generate Plan <span className="ml-1 text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
               </Button>
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap">
+                  <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px]">
                     {isGeneratingPlan ? (
                       <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
                     ) : (
@@ -791,7 +791,7 @@ Make them balanced, diverse, and delicious. Include:
           </div>
           <Button
             onClick={onOpenShoppingList}
-            className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none"
+            className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none min-h-[44px]"
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
             Shopping List
@@ -878,6 +878,7 @@ Make them balanced, diverse, and delicious. Include:
             variant="ghost"
             size="icon"
             aria-label="Previous date range"
+            className="min-h-[44px] min-w-[44px]"
           >
             <ChevronLeft className="w-5 h-5 text-[#6b9b76]" />
           </Button>
@@ -895,6 +896,7 @@ Make them balanced, diverse, and delicious. Include:
             variant="ghost"
             size="icon"
             aria-label="Next date range"
+            className="min-h-[44px] min-w-[44px]"
           >
             <ChevronRight className="w-5 h-5 text-[#6b9b76]" />
           </Button>
@@ -975,7 +977,7 @@ Make them balanced, diverse, and delicious. Include:
                             size="icon"
                             variant="ghost"
                             aria-label={`Regenerate meals for ${format(day, 'MMM d')}`}
-                            className="absolute top-1 right-1 h-11 w-11 p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
+                            className="absolute top-1 right-1 h-11 w-11 min-h-[44px] min-w-[44px] p-0 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-opacity"
                           >
                             {regeneratingDay === format(day, 'yyyy-MM-dd') ? (
                               <Loader2 className="w-3 h-3 text-white animate-spin" />
