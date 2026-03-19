@@ -1136,7 +1136,8 @@ Make them balanced, diverse, and delicious. Include:
                           onClick={() => handleAddMeal(day, mealType)}
                           variant="ghost"
                           size="sm"
-                          className="w-full mt-2 text-[#6b9b76] hover:bg-[#f0f9f2]"
+                          aria-label={`Add ${mealType} for ${format(day, 'MMM d')}`}
+                          className="w-full mt-2 text-[#6b9b76] hover:bg-[#f0f9f2] min-h-[44px]"
                         >
                           <Plus className="w-3 h-3" />
                         </Button>
