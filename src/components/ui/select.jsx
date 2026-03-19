@@ -102,7 +102,7 @@ const SelectLabel = React.forwardRef(({ className, ...props }, ref) => (
 ))
 SelectLabel.displayName = "SelectLabel"
 
-const SelectItem = React.forwardRef(({ className, children, value, ...props }, ref) => {
+const SelectItem = React.forwardRef(({ className, children, value, id, ...props }, ref) => {
   const { value: selectedValue, onValueChange, registerItem } = React.useContext(SelectContext)
   const isSelected = selectedValue === value
 
