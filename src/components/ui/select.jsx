@@ -46,7 +46,7 @@ const SelectGroup = React.forwardRef(({ className, ...props }, ref) => {
 })
 SelectGroup.displayName = "SelectGroup"
 
-const SelectValue = React.forwardRef(({ className, placeholder, id, ...props }, ref) => {
+const SelectValue = React.forwardRef(({ className, placeholder, ...props }, ref) => {
   const { id, ...rest } = props;
   const { value, items } = React.useContext(SelectContext)
   
