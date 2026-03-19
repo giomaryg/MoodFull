@@ -956,7 +956,8 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isScanning}
                 variant="outline"
-                className="border-[#c5d9c9] text-[#6b9b76] hover:bg-[#e8f0ea] px-3 bg-white shrink-0"
+                aria-label="Scan Barcode or Item"
+                className="border-[#c5d9c9] text-[#6b9b76] hover:bg-[#e8f0ea] px-3 bg-white shrink-0 min-h-[44px] min-w-[44px]"
                 title="Scan Barcode / Item"
               >
                 {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Barcode className="w-4 h-4" />}
@@ -1082,7 +1083,8 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                     <button
                       key={item.key}
                       onClick={() => toggleItem(item.key)}
-                      className="w-full text-left p-3 rounded-xl border-2 transition-all flex items-start gap-3 bg-white border-[#c5d9c9] hover:border-[#6b9b76] group"
+                      aria-label={checkedItems[item.key] ? `Uncheck ${item.original}` : `Check ${item.original}`}
+                      className="w-full text-left p-3 rounded-xl border-2 transition-all flex items-start gap-3 bg-white border-[#c5d9c9] hover:border-[#6b9b76] group min-h-[44px]"
                     >
                       <Square className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5 group-hover:text-[#6b9b76]" />
                       <div className="flex-1">
@@ -1104,7 +1106,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                       <div className="flex items-center" onClick={e => e.stopPropagation()}>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-[#6b9b76]">
+                            <Button variant="ghost" size="icon" aria-label={`Move ${item.original} to aisle`} className="h-11 w-11 min-h-[44px] min-w-[44px] text-gray-400 hover:text-[#6b9b76]">
                               <MoreHorizontal className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -1131,6 +1133,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                             delete newChecked[item.key];
                             setCheckedItems(newChecked);
                           }}
+                          aria-label={`Remove custom item ${item.original}`}
                           className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-red-50 text-red-400 hover:text-red-500 rounded-lg transition-colors ml-2"
                           title="Remove custom item"
                         >
@@ -1153,6 +1156,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                     <button
                       key={item.key}
                       onClick={() => toggleItem(item.key)}
+                      aria-label={`Uncheck ${item.original}`}
                       className="w-full text-left px-3 py-2 min-h-[44px] rounded-xl border border-transparent hover:border-gray-300 transition-all flex items-center gap-3 bg-white shadow-sm"
                     >
                       <CheckSquare className="w-4 h-4 text-[#6b9b76] flex-shrink-0" />
