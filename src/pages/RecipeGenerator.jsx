@@ -32,6 +32,7 @@ import WellnessRecommendationCard from '../components/oura/WellnessRecommendatio
 import OrderOutSuggestion from '../components/oura/OrderOutSuggestion';
 import { useNavigationStack } from '@/lib/NavigationStackContext';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
 
 const ENABLE_PANTRY_FEATURE = true;
 
@@ -63,9 +64,9 @@ export default function RecipeGenerator() {
     replaceTopStack(activeTab, { recipe });
   };
 
-  const isRefreshing = usePullToRefresh(async () => {
+  const handleRefresh = async () => {
     await queryClient.invalidateQueries();
-  });
+  };
 
 
 
@@ -1085,14 +1086,8 @@ export default function RecipeGenerator() {
         }
       </AnimatePresence>
 
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="min-h-screen bg-[#e8f0ea]/80 relative z-10">
-        {isRefreshing && (
-          <div className="fixed top-[env(safe-area-inset-top)] left-0 right-0 flex justify-center z-50 pt-4">
-            <div className="bg-white rounded-full p-2 shadow-lg">
-              <Loader2 className="w-6 h-6 text-[#6b9b76] animate-spin" />
-            </div>
-          </div>
-        )}
         <ThreeBackground />
         {/* Hero Section */}
         {!showIntro &&
@@ -1660,6 +1655,7 @@ export default function RecipeGenerator() {
 
         </div>
       }
+      </PullToRefresh>
     </>);
 
 }
