@@ -77,6 +77,37 @@ export default function RecipeGenerator() {
     replaceTopStack(activeTab, { recipe });
   };
 
+  const renderTabStack = (tabName) => (
+    <AnimatePresence>
+      {getStack(tabName).map((stackItem, index) => {
+        const isTop = index === getStack(tabName).length - 1;
+        return (
+          <motion.div
+            key={`${tabName}-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
+            initial={{ x: '100%' }}
+            animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
+            style={{ minHeight: '100vh' }}
+          >
+            <RecipeDisplay
+              recipe={stackItem.recipe}
+              onSave={handleSaveRecipe}
+              isSaved={isRecipeSaved(stackItem.recipe)}
+              onBack={() => popFromStack(tabName)}
+              onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack(tabName, { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
+              onSimilarRecipeClick={(recipe) => {
+                pushToStack(tabName, { recipe });
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }}
+            />
+          </motion.div>
+        );
+      })}
+    </AnimatePresence>
+  );
+
   const handleRefresh = async () => {
     await queryClient.invalidateQueries();
   };
@@ -1418,34 +1449,7 @@ export default function RecipeGenerator() {
             </>
             </motion.div>
 
-            <AnimatePresence>
-              {getStack('home').map((stackItem, index) => {
-                const isTop = index === getStack('home').length - 1;
-                return (
-                  <motion.div
-                    key={`home-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-                    initial={{ x: '100%' }}
-                    animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-                    exit={{ x: '100%' }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-                    style={{ minHeight: '100vh' }}
-                  >
-                    <RecipeDisplay
-                      recipe={stackItem.recipe}
-                      onSave={handleSaveRecipe}
-                      isSaved={isRecipeSaved(stackItem.recipe)}
-                      onBack={() => popFromStack('home')}
-                      onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack('home', { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
-                      onSimilarRecipeClick={(recipe) => {
-                        pushToStack('home', { recipe });
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                      }}
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+            {renderTabStack('home')}
             </div>
 
             {/* Saved Recipes Tab */}
@@ -1544,34 +1548,7 @@ export default function RecipeGenerator() {
             </div>
             </motion.div>
 
-            <AnimatePresence>
-              {getStack('saved').map((stackItem, index) => {
-                const isTop = index === getStack('saved').length - 1;
-                return (
-                  <motion.div
-                    key={`saved-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-                    initial={{ x: '100%' }}
-                    animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-                    exit={{ x: '100%' }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-                    style={{ minHeight: '100vh' }}
-                  >
-                    <RecipeDisplay
-                      recipe={stackItem.recipe}
-                      onSave={handleSaveRecipe}
-                      isSaved={isRecipeSaved(stackItem.recipe)}
-                      onBack={() => popFromStack('saved')}
-                      onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack('saved', { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
-                      onSimilarRecipeClick={(recipe) => {
-                        pushToStack('saved', { recipe });
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                      }}
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+            {renderTabStack('saved')}
           </div>
 
           {/* Planner Tab */}
@@ -1587,34 +1564,7 @@ export default function RecipeGenerator() {
                 onRequirePremium={() => setShowPaywall(true)} 
               />
             </motion.div>
-            <AnimatePresence>
-              {getStack('planner').map((stackItem, index) => {
-                const isTop = index === getStack('planner').length - 1;
-                return (
-                  <motion.div
-                    key={`planner-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-                    initial={{ x: '100%' }}
-                    animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-                    exit={{ x: '100%' }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-                    style={{ minHeight: '100vh' }}
-                  >
-                    <RecipeDisplay
-                      recipe={stackItem.recipe}
-                      onSave={handleSaveRecipe}
-                      isSaved={isRecipeSaved(stackItem.recipe)}
-                      onBack={() => popFromStack('planner')}
-                      onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack('planner', { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
-                      onSimilarRecipeClick={(recipe) => {
-                        pushToStack('planner', { recipe });
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                      }}
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+            {renderTabStack('planner')}
           </div>
 
           {/* Inventory Tab */}
@@ -1631,34 +1581,7 @@ export default function RecipeGenerator() {
                 }} 
               />
             </motion.div>
-            <AnimatePresence>
-              {getStack('inventory').map((stackItem, index) => {
-                const isTop = index === getStack('inventory').length - 1;
-                return (
-                  <motion.div
-                    key={`inventory-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-                    initial={{ x: '100%' }}
-                    animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-                    exit={{ x: '100%' }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-                    style={{ minHeight: '100vh' }}
-                  >
-                    <RecipeDisplay
-                      recipe={stackItem.recipe}
-                      onSave={handleSaveRecipe}
-                      isSaved={isRecipeSaved(stackItem.recipe)}
-                      onBack={() => popFromStack('inventory')}
-                      onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack('inventory', { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
-                      onSimilarRecipeClick={(recipe) => {
-                        pushToStack('inventory', { recipe });
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                      }}
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+            {renderTabStack('inventory')}
           </div>
 
           {/* Analytics Tab */}
@@ -1688,34 +1611,7 @@ export default function RecipeGenerator() {
                 <AnalyticsDashboard />
               )}
             </motion.div>
-            <AnimatePresence>
-              {getStack('analytics').map((stackItem, index) => {
-                const isTop = index === getStack('analytics').length - 1;
-                return (
-                  <motion.div
-                    key={`analytics-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-                    initial={{ x: '100%' }}
-                    animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-                    exit={{ x: '100%' }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-                    style={{ minHeight: '100vh' }}
-                  >
-                    <RecipeDisplay
-                      recipe={stackItem.recipe}
-                      onSave={handleSaveRecipe}
-                      isSaved={isRecipeSaved(stackItem.recipe)}
-                      onBack={() => popFromStack('analytics')}
-                      onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack('analytics', { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
-                      onSimilarRecipeClick={(recipe) => {
-                        pushToStack('analytics', { recipe });
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                      }}
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+            {renderTabStack('analytics')}
           </div>
 
           {/* Account Tab */}
@@ -1732,34 +1628,7 @@ export default function RecipeGenerator() {
                 onReplayTutorial={() => setForceShowTutorial(true)} 
               />
             </motion.div>
-            <AnimatePresence>
-              {getStack('account').map((stackItem, index) => {
-                const isTop = index === getStack('account').length - 1;
-                return (
-                  <motion.div
-                    key={`account-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-                    initial={{ x: '100%' }}
-                    animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-                    exit={{ x: '100%' }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-                    style={{ minHeight: '100vh' }}
-                  >
-                    <RecipeDisplay
-                      recipe={stackItem.recipe}
-                      onSave={handleSaveRecipe}
-                      isSaved={isRecipeSaved(stackItem.recipe)}
-                      onBack={() => popFromStack('account')}
-                      onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack('account', { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
-                      onSimilarRecipeClick={(recipe) => {
-                        pushToStack('account', { recipe });
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                      }}
-                    />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+            {renderTabStack('account')}
           </div>
           </Suspense>
         </div>
