@@ -1037,7 +1037,16 @@ Make them balanced, diverse, and delicious. Include:
 
        {/* Clickable content area */}
        <div
-         className="pl-5 pr-8 py-2 cursor-pointer flex flex-col h-full justify-center"
+         role="button"
+         tabIndex={0}
+         aria-label={`View details for ${meal.recipe_name}`}
+         onKeyDown={(e) => {
+           if (e.key === 'Enter' || e.key === ' ') {
+             e.preventDefault();
+             e.currentTarget.click();
+           }
+         }}
+         className="pl-5 pr-8 py-2 cursor-pointer flex flex-col h-full justify-center min-h-[44px]"
          onClick={async () => {
            if (linkedRecipe) {
              setSelectedRecipe(linkedRecipe);
