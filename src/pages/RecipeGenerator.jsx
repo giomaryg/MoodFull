@@ -85,10 +85,10 @@ export default function RecipeGenerator() {
           <motion.div
             key={`${tabName}-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
             custom={direction}
-            initial={{ x: direction === 'backward' ? '-30%' : '100%', opacity: direction === 'backward' ? 0 : 1 }}
-            animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0 }}
-            exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            initial={{ x: direction === 'backward' ? '-30%' : '100%', opacity: direction === 'backward' ? 0.5 : 1, boxShadow: direction === 'backward' ? 'none' : '-10px 0 20px rgba(0,0,0,0.1)' }}
+            animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0.5, boxShadow: isTop ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
+            exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0.5, boxShadow: direction === 'backward' ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
+            transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
             className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
             style={{ minHeight: '100vh' }}
           >
@@ -1180,8 +1180,8 @@ export default function RecipeGenerator() {
           {/* Home Tab */}
           <div style={{ display: !showSurvey && activeTab === 'home' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('home').length > 0 ? '-30%' : 0, opacity: getStack('home').length > 0 ? 0 : 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              animate={{ x: getStack('home').length > 0 ? '-30%' : 0, opacity: getStack('home').length > 0 ? 0.5 : 1 }}
+              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
               className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
             >
               <>
@@ -1456,8 +1456,8 @@ export default function RecipeGenerator() {
             {/* Saved Recipes Tab */}
           <div style={{ display: !showSurvey && activeTab === 'saved' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('saved').length > 0 ? '-30%' : 0, opacity: getStack('saved').length > 0 ? 0 : 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              animate={{ x: getStack('saved').length > 0 ? '-30%' : 0, opacity: getStack('saved').length > 0 ? 0.5 : 1 }}
+              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
               className={`space-y-6 w-full ${getStack('saved').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
             >
           <div className="space-y-6">
@@ -1555,8 +1555,8 @@ export default function RecipeGenerator() {
           {/* Planner Tab */}
           <div style={{ display: !showSurvey && activeTab === 'planner' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('planner').length > 0 ? '-30%' : 0, opacity: getStack('planner').length > 0 ? 0 : 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              animate={{ x: getStack('planner').length > 0 ? '-30%' : 0, opacity: getStack('planner').length > 0 ? 0.5 : 1 }}
+              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
               className={`w-full ${getStack('planner').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
             >
               <MealPlanner
@@ -1571,8 +1571,8 @@ export default function RecipeGenerator() {
           {/* Inventory Tab */}
           <div style={{ display: !showSurvey && activeTab === 'inventory' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('inventory').length > 0 ? '-30%' : 0, opacity: getStack('inventory').length > 0 ? 0 : 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              animate={{ x: getStack('inventory').length > 0 ? '-30%' : 0, opacity: getStack('inventory').length > 0 ? 0.5 : 1 }}
+              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
               className={`w-full ${getStack('inventory').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
             >
               <InventoryManagement
@@ -1588,8 +1588,8 @@ export default function RecipeGenerator() {
           {/* Analytics Tab */}
           <div style={{ display: !showSurvey && activeTab === 'analytics' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('analytics').length > 0 ? '-30%' : 0, opacity: getStack('analytics').length > 0 ? 0 : 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              animate={{ x: getStack('analytics').length > 0 ? '-30%' : 0, opacity: getStack('analytics').length > 0 ? 0.5 : 1 }}
+              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
               className={`space-y-6 w-full ${getStack('analytics').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
             >
               {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
@@ -1618,8 +1618,8 @@ export default function RecipeGenerator() {
           {/* Account Tab */}
           <div style={{ display: !showSurvey && activeTab === 'account' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('account').length > 0 ? '-30%' : 0, opacity: getStack('account').length > 0 ? 0 : 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              animate={{ x: getStack('account').length > 0 ? '-30%' : 0, opacity: getStack('account').length > 0 ? 0.5 : 1 }}
+              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
               className={`w-full ${getStack('account').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
             >
               <AccountInfo
