@@ -56,7 +56,7 @@ const SelectValue = React.forwardRef(({ className, placeholder, id, ...props }, 
 })
 SelectValue.displayName = "SelectValue"
 
-const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) => {
+const SelectTrigger = React.forwardRef(({ className, children, id, ...props }, ref) => {
   const { disabled } = React.useContext(SelectContext)
   return (
     <Drawer.Trigger asChild>
