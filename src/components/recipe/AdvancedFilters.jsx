@@ -47,7 +47,7 @@ export default function AdvancedFilters({ filters, onFiltersChange, showFilters,
         </Button>
 
         {activeFilterCount > 0 && (
-          <Button variant="ghost" size="sm" onClick={clearFilters} className="text-gray-500 hover:text-red-500 h-8 px-2 text-xs">
+          <Button variant="ghost" size="sm" aria-label="Clear all filters" onClick={clearFilters} className="text-gray-500 hover:text-red-500 h-8 px-2 text-xs min-h-[44px] min-w-[44px]">
             Clear all
             <X className="w-3 h-3 ml-1" />
           </Button>
