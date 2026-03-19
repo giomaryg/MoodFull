@@ -130,7 +130,7 @@ const SelectItem = React.forwardRef(({ className, children, value, id, ...props 
 })
 SelectItem.displayName = "SelectItem"
 
-const SelectSeparator = React.forwardRef(({ className, ...props }, ref) => (
+const SelectSeparator = React.forwardRef(({ className, id, ...props }, ref) => (
   <div ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />
 ))
 SelectSeparator.displayName = "SelectSeparator"
