@@ -5,6 +5,7 @@ import { queryClientInstance } from '@/lib/query-client'
 import VisualEditAgent from '@/lib/VisualEditAgent'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
+import { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import NavigationHeader from '@/components/navigation/NavigationHeader';
@@ -17,9 +18,19 @@ const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
+const LoadingFallback = () => (
+  <div className="fixed inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-50">
+    <div className="w-8 h-8 border-4 border-slate-200 border-t-[#6b9b76] rounded-full animate-spin"></div>
+  </div>
+);
+
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
-  <Layout currentPageName={currentPageName}>{children}</Layout>
-  : <>{children}</>;
+  <Layout currentPageName={currentPageName}>
+    <Suspense fallback={<LoadingFallback />}>
+      {children}
+    </Suspense>
+  </Layout>
+  : <Suspense fallback={<LoadingFallback />}>{children}</Suspense>;
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
