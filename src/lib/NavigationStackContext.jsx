@@ -29,6 +29,10 @@ export function NavigationStackProvider({ children }) {
       };
     });
   }, []);
+
+  const getStack = useCallback((tab) => {
+    return tabStacks[tab] || [];
+  }, [tabStacks]);
   
   const clearStack = useCallback((tab) => {
     setTabStacks(prev => ({
@@ -54,8 +58,10 @@ export function NavigationStackProvider({ children }) {
   }, [tabStacks]);
 
   return (
-    <NavigationStackContext.Provider value={{ tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack }}>
-      {children}
+    <NavigationStackContext.Provider value={{ tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack, getStack }}>
+      <div className="pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] min-h-screen w-full">
+        {children}
+      </div>
     </NavigationStackContext.Provider>
   );
 }
