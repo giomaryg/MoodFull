@@ -104,16 +104,16 @@ function App() {
 
   return (
     <AuthProvider>
-      <NavigationStackProvider>
-        <QueryClientProvider client={queryClientInstance}>
-          <Router>
+      <QueryClientProvider client={queryClientInstance}>
+        <Router>
+          <NavigationStackProvider>
             <NavigationTracker />
             <AuthenticatedApp />
-          </Router>
-          <Toaster />
-          <VisualEditAgent />
-        </QueryClientProvider>
-      </NavigationStackProvider>
+          </NavigationStackProvider>
+        </Router>
+        <Toaster />
+        <VisualEditAgent />
+      </QueryClientProvider>
     </AuthProvider>
   )
 }
