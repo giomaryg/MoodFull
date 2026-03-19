@@ -97,7 +97,7 @@ const SelectContent = React.forwardRef(({ className, children, id, ...props }, r
 ))
 SelectContent.displayName = "SelectContent"
 
-const SelectLabel = React.forwardRef(({ className, ...props }, ref) => (
+const SelectLabel = React.forwardRef(({ className, id, ...props }, ref) => (
   <div ref={ref} className={cn("px-2 py-1.5 text-sm font-semibold text-muted-foreground", className)} {...props} />
 ))
 SelectLabel.displayName = "SelectLabel"
