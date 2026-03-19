@@ -203,6 +203,10 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
             <div className="flex flex-wrap gap-2 items-center">
               <span className="text-xs text-gray-500 font-medium w-20">Collections:</span>
               <Badge 
+                role="button"
+                tabIndex={0}
+                aria-pressed={selectedCollection === null}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedCollection(null); } }}
                 onClick={() => setSelectedCollection(null)}
                 variant={selectedCollection === null ? "default" : "outline"}
                 className={`cursor-pointer ${selectedCollection === null ? 'bg-[#6b9b76] hover:bg-[#5a8a65]' : 'text-gray-500 hover:text-[#6b9b76]'}`}
@@ -212,6 +216,10 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
               {collections.map(c => (
                 <Badge 
                   key={c}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={selectedCollection === c}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedCollection(c); } }}
                   onClick={() => setSelectedCollection(c)}
                   variant={selectedCollection === c ? "default" : "outline"}
                   className={`cursor-pointer ${selectedCollection === c ? 'bg-[#6b9b76] hover:bg-[#5a8a65]' : 'text-gray-500 hover:text-[#6b9b76]'}`}
@@ -226,6 +234,10 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
             <div className="flex flex-wrap gap-2 items-center">
               <span className="text-xs text-purple-500 font-medium w-20">AI Tags:</span>
               <Badge 
+                role="button"
+                tabIndex={0}
+                aria-pressed={selectedTag === null}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedTag(null); } }}
                 onClick={() => setSelectedTag(null)}
                 variant={selectedTag === null ? "default" : "outline"}
                 className={`cursor-pointer ${selectedTag === null ? 'bg-purple-500 hover:bg-purple-600' : 'text-gray-500 hover:text-purple-500'}`}
@@ -235,6 +247,10 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
               {tags.map(t => (
                 <Badge 
                   key={t}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={selectedTag === t}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedTag(t); } }}
                   onClick={() => setSelectedTag(t)}
                   variant={selectedTag === t ? "default" : "outline"}
                   className={`cursor-pointer ${selectedTag === t ? 'bg-purple-500 hover:bg-purple-600' : 'text-gray-500 hover:text-purple-500'}`}
