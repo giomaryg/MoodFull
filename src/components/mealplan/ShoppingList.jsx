@@ -1194,7 +1194,7 @@ Return JSON.`,
                     <button
                       key={item.key}
                       onClick={() => toggleItem(item.key)}
-                      className="w-full text-left px-3 py-2 rounded-xl border border-transparent hover:border-gray-300 transition-all flex items-center gap-3 bg-white shadow-sm"
+                      className="w-full text-left px-3 py-2 min-h-[44px] rounded-xl border border-transparent hover:border-gray-300 transition-all flex items-center gap-3 bg-white shadow-sm"
                     >
                       <CheckSquare className="w-4 h-4 text-[#6b9b76] flex-shrink-0" />
                       <div className="flex-1 flex items-center gap-2">
