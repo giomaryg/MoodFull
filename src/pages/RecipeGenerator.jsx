@@ -1672,6 +1672,7 @@ export default function RecipeGenerator() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           onClick={() => setShowAICoach(true)}
+          aria-label="Open AI Coach"
           className="fixed right-6 sm:right-8 bg-gradient-to-r from-[#f2b769] to-[#e6a245] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-40 group flex items-center justify-center border-2 border-white/20"
           style={{ bottom: 'calc(6rem + env(safe-area-inset-bottom))' }}
         >
