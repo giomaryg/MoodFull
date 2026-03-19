@@ -1063,7 +1063,9 @@ export default function RecipeGenerator() {
   const handleSavedRecipeClick = (recipe) => {
     setScrollPosition(window.scrollY);
     setCurrentRecipe(recipe);
-    setSelectedMoods(recipe.mood.split(', '));
+    if (recipe.mood) {
+      setSelectedMoods(recipe.mood.split(', '));
+    }
     setSavedRecipeId(recipe.id);
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
@@ -1503,7 +1505,6 @@ export default function RecipeGenerator() {
                 recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
                 onRecipeClick={(recipe) => {
                   handleSavedRecipeClick(recipe);
-                  setActiveTab('home');
                 }}
                 searchQuery={globalSearchQuery}
                 onOpenShoppingList={() => setShowShoppingList(true)} /> :
