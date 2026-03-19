@@ -411,7 +411,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       {/* Top Section */}
       <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-[320px] sm:min-h-[400px]">
         {onBack && (
-          <button onClick={onBack} className="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-sm mb-6 hover:bg-gray-50 transition-colors">
+          <button onClick={onBack} aria-label="Go back" className="w-11 h-11 min-w-[44px] min-h-[44px] bg-white rounded-full flex items-center justify-center shadow-sm mb-6 hover:bg-gray-50 transition-colors">
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
         )}
@@ -506,11 +506,11 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
             {recipe.cook_time || '-'} cook
           </Badge>
-          <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-2">
+          <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-2 min-h-[44px]">
             <Users className="w-4 h-4 mr-1 text-gray-400" />
-            <button onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Minus className="w-3 h-3" /></button>
+            <button aria-label="Decrease servings" onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Minus className="w-3 h-3" /></button>
             <span className="font-bold">{currentServings}</span>
-            <button onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Plus className="w-3 h-3" /></button>
+            <button aria-label="Increase servings" onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Plus className="w-3 h-3" /></button>
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl capitalize">
             <ChefHat className="w-4 h-4 mr-1.5 text-gray-400" />
@@ -622,6 +622,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     <button 
                       onClick={() => toggleSubstitution(index, ingredient)}
                       disabled={loadingSubFor === index}
+                      aria-label={`Substitute ${name}`}
                       className={`p-2 min-h-[44px] min-w-[44px] rounded-xl flex items-center justify-center transition-colors ${
                         isSubbed 
                           ? 'bg-[#c17a7a] text-white' 

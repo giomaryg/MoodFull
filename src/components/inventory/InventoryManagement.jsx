@@ -531,8 +531,9 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isScanning}
                 variant="outline"
-                className="border-2 border-[#6b9b76] text-[#6b9b76] px-3"
+                className="border-2 border-[#6b9b76] text-[#6b9b76] px-3 min-h-[44px] min-w-[44px]"
                 title="Scan Barcode / Single Item"
+                aria-label="Scan Barcode or Single Item"
               >
                 {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Barcode className="w-4 h-4" />}
               </Button>
@@ -541,8 +542,9 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 onClick={() => pantryFileInputRef.current?.click()}
                 disabled={isScanning}
                 variant="outline"
-                className="border-2 border-[#6b9b76] text-[#6b9b76] px-3"
+                className="border-2 border-[#6b9b76] text-[#6b9b76] px-3 min-h-[44px] min-w-[44px]"
                 title="Scan Full Pantry / Fridge"
+                aria-label="Scan Full Pantry or Fridge"
               >
                 {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
               </Button>
@@ -551,8 +553,9 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 onClick={handleVoiceInput}
                 disabled={isListening}
                 variant="outline"
-                className={`border-2 px-3 ${isListening ? 'border-red-500 text-red-500 animate-pulse' : 'border-[#6b9b76] text-[#6b9b76]'}`}
+                className={`border-2 px-3 min-h-[44px] min-w-[44px] ${isListening ? 'border-red-500 text-red-500 animate-pulse' : 'border-[#6b9b76] text-[#6b9b76]'}`}
                 title="Voice Input"
+                aria-label="Voice Input"
               >
                 <Mic className="w-4 h-4" />
               </Button>
@@ -691,7 +694,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                     <p className="font-semibold text-gray-900 text-lg">{item.name}</p>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <button className="text-[10px] uppercase tracking-wider bg-gray-100 hover:bg-gray-200 text-gray-500 px-3 py-2 min-h-[44px] rounded-full transition-colors cursor-pointer flex items-center gap-1">
+                        <button aria-label={`Edit category for ${item.name}`} className="text-[10px] uppercase tracking-wider bg-gray-100 hover:bg-gray-200 text-gray-500 px-3 py-2 min-h-[44px] min-w-[44px] rounded-full transition-colors cursor-pointer flex items-center gap-1">
                           {item.category || 'Uncategorized'}
                           <Edit2 className="w-3 h-3" />
                         </button>
@@ -734,9 +737,10 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
+                  className="text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl min-h-[44px] min-w-[44px]"
                   onClick={() => deleteMutation.mutate(item.id)}
                   disabled={deleteMutation.isPending}
+                  aria-label={`Delete ${item.name}`}
                 >
                   <Trash2 className="w-5 h-5" />
                 </Button>

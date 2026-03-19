@@ -52,7 +52,7 @@ export default function RecipeGenerator() {
   };
 
   const queryClient = useQueryClient();
-  const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack } = useNavigationStack();
+  const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack, getStack } = useNavigationStack();
   const currentRecipe = peekStack(activeTab)?.recipe || null;
 
   const setCurrentRecipe = (recipe) => {
@@ -1060,10 +1060,13 @@ export default function RecipeGenerator() {
     }
   };
 
+  const isRecipeSaved = (recipe) => !!savedRecipes.find(r => r.id === recipe.id || (r.name === recipe.name && r.description === recipe.description));
+
   const handleSaveRecipe = () => {
-    if (currentRecipe && !savedRecipeId) {
+    const recipeToSave = peekStack(activeTab)?.recipe;
+    if (recipeToSave && !isRecipeSaved(recipeToSave)) {
       // Persist the photo URL under image_url field
-      const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = currentRecipe;
+      const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = recipeToSave;
       saveRecipeMutation.mutate({ ...rest, image_url: imageUrl || (imageUrls ? imageUrls[0] : null) });
     }
   };
@@ -1074,7 +1077,6 @@ export default function RecipeGenerator() {
     if (recipe.mood && activeTab === 'saved') {
       setSelectedMoods(recipe.mood.split(', '));
     }
-    setSavedRecipeId(savedRecipes.find((r) => r.id === recipe.id)?.id || null);
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 

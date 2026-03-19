@@ -9,6 +9,7 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
 import OuraConnectionCard from '../oura/OuraConnectionCard';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function AccountInfo({ user, onUpdatePreferences, recipeCount, onReplayTutorial }) {
   const [inviteEmail, setInviteEmail] = useState('');
@@ -155,22 +156,26 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                     <Languages className="w-4 h-4" />
                     Preferred Language
                   </label>
-                  <select
+                  <Select
                     value={formData.preferred_language}
-                    onChange={(e) => setFormData({ ...formData, preferred_language: e.target.value })}
-                    className="w-full border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-md px-3 py-2 bg-white"
+                    onValueChange={(value) => setFormData({ ...formData, preferred_language: value })}
                   >
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                    <option value="fr">Français</option>
-                    <option value="de">Deutsch</option>
-                    <option value="it">Italiano</option>
-                    <option value="pt">Português</option>
-                    <option value="ja">日本語</option>
-                    <option value="zh">中文</option>
-                    <option value="ar">العربية</option>
-                    <option value="he">עברית</option>
-                  </select>
+                    <SelectTrigger className="w-full border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-md bg-white min-h-[44px]">
+                      <SelectValue placeholder="Select Language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="de">Deutsch</SelectItem>
+                      <SelectItem value="it">Italiano</SelectItem>
+                      <SelectItem value="pt">Português</SelectItem>
+                      <SelectItem value="ja">日本語</SelectItem>
+                      <SelectItem value="zh">中文</SelectItem>
+                      <SelectItem value="ar">العربية</SelectItem>
+                      <SelectItem value="he">עברית</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <label className="text-sm font-semibold text-gray-700 mb-2 block">Specific Dietary Restrictions</label>
