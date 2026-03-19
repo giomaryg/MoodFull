@@ -32,7 +32,7 @@ const Select = ({ children, value, onValueChange, defaultValue, disabled, ...pro
 
   return (
     <SelectContext.Provider value={{ value: internalValue, onValueChange: handleValueChange, open, setOpen, disabled, items, registerItem }}>
-      <Drawer.Root open={open} onOpenChange={setOpen} {...props}>
+      <Drawer.Root open={open} onOpenChange={setOpen} {...rest}>
         {children}
       </Drawer.Root>
     </SelectContext.Provider>
