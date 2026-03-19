@@ -54,6 +54,11 @@ export default function RecipeGenerator() {
     }
   };
 
+  const handleBack = () => {
+    popFromStack(activeTab);
+    setSavedRecipeId(null);
+  };
+
   const updateCurrentRecipe = (recipe) => {
     replaceTopStack(activeTab, { recipe });
   };
@@ -505,8 +510,20 @@ export default function RecipeGenerator() {
 
   const saveRecipeMutation = useMutation({
     mutationFn: (recipeData) => base44.entities.Recipe.create(recipeData),
-    onSuccess: (data) => {
+    onMutate: async (recipeData) => {
+      await queryClient.cancelQueries({ queryKey: ['recipes'] });
+      const previousRecipes = queryClient.getQueryData(['recipes']);
+      queryClient.setQueryData(['recipes'], old => [{...recipeData, id: 'temp-id-' + Date.now()}, ...(old || [])]);
+      return { previousRecipes };
+    },
+    onError: (err, newRecipe, context) => {
+      queryClient.setQueryData(['recipes'], context.previousRecipes);
+      toast.error('Failed to save recipe');
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] });
+    },
+    onSuccess: (data) => {
       setSavedRecipeId(data.id);
       toast.success('Recipe saved to your collection!');
     }
@@ -1358,10 +1375,7 @@ export default function RecipeGenerator() {
                   recipe={currentRecipe}
                   onSave={handleSaveRecipe}
                   isSaved={!!savedRecipeId}
-                  onBack={() => {
-                    setCurrentRecipe(null);
-                    setSavedRecipeId(null);
-                  }}
+                  onBack={handleBack}
                   onUpdate={(updatedRecipe) => {
                     // Update the current recipe with the new data
                     updateCurrentRecipe({ ...currentRecipe, ...updatedRecipe });

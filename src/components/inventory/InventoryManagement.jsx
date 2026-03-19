@@ -42,9 +42,21 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
       });
       return base44.entities.Ingredient.create(data);
     },
-    onSuccess: () => {
+    onMutate: async (data) => {
+      await queryClient.cancelQueries({ queryKey: ['inventory'] });
+      const previousInventory = queryClient.getQueryData(['inventory']);
+      queryClient.setQueryData(['inventory'], old => [{...data, id: 'temp-id-' + Date.now()}, ...(old || [])]);
+      return { previousInventory };
+    },
+    onError: (err, newData, context) => {
+      queryClient.setQueryData(['inventory'], context.previousInventory);
+      toast.error('Failed to add ingredient');
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['inventory'] });
-      setNewItem({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0 });
+    },
+    onSuccess: () => {
+      setNewItem({ name: '', quantity: 1, unit: '', category: 'Pantry', min_stock: 0, expiry_date: '' });
       toast.success('Ingredient added to inventory');
     }
   });

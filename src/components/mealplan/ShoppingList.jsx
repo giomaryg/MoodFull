@@ -621,7 +621,7 @@ Return JSON.`,
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto relative"
+        className="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto relative mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)]"
       >
         <button
           onClick={onClose}

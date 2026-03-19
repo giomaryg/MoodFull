@@ -50,14 +50,32 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
   const updateRatingMutation = useMutation({
     mutationFn: ({ id, rating }) => base44.entities.Recipe.update(id, { rating }),
-    onSuccess: () => {
+    onMutate: async ({ id, rating }) => {
+      await queryClient.cancelQueries({ queryKey: ['recipes'] });
+      const previousRecipes = queryClient.getQueryData(['recipes']);
+      queryClient.setQueryData(['recipes'], old => old?.map(r => r.id === id ? { ...r, rating } : r));
+      return { previousRecipes };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(['recipes'], context.previousRecipes);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] });
     }
   });
 
   const updateReviewMutation = useMutation({
     mutationFn: ({ id, review }) => base44.entities.Recipe.update(id, { review }),
-    onSuccess: () => {
+    onMutate: async ({ id, review }) => {
+      await queryClient.cancelQueries({ queryKey: ['recipes'] });
+      const previousRecipes = queryClient.getQueryData(['recipes']);
+      queryClient.setQueryData(['recipes'], old => old?.map(r => r.id === id ? { ...r, review } : r));
+      return { previousRecipes };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(['recipes'], context.previousRecipes);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] });
     }
   });
@@ -70,8 +88,19 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
   const updateRecipeMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Recipe.update(id, data),
-    onSuccess: (updatedRecipe) => {
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: ['recipes'] });
+      const previousRecipes = queryClient.getQueryData(['recipes']);
+      queryClient.setQueryData(['recipes'], old => old?.map(r => r.id === id ? { ...r, ...data } : r));
+      return { previousRecipes };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(['recipes'], context.previousRecipes);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] });
+    },
+    onSuccess: (updatedRecipe) => {
       setShowEditDialog(false);
       if (onUpdate) onUpdate(updatedRecipe);
     }
