@@ -910,7 +910,7 @@ Make them balanced, diverse, and delicious. Include:
                                               ref={provided.innerRef} 
                                               {...provided.draggableProps} 
                                               {...provided.dragHandleProps} 
-                                              className="bg-[#f5e6dc] rounded text-[10px] p-1 mb-0.5 truncate cursor-move hover:bg-[#e8d5c4] transition-colors"
+                                              className="bg-[#f5e6dc] rounded text-[10px] p-2 min-h-[44px] mb-1 truncate cursor-move hover:bg-[#e8d5c4] transition-colors flex items-center"
                                               onClick={() => {
                                                 const linkedRecipe = recipes.find(r => r.id === meal.recipe_id);
                                                 if (linkedRecipe) setSelectedRecipe(linkedRecipe);
