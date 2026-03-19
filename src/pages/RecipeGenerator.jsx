@@ -43,7 +43,7 @@ export default function RecipeGenerator() {
 
   const queryClient = useQueryClient();
   const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack } = useNavigationStack();
-  const currentRecipe = peekStack(activeTab)?.recipe || null;
+  const currentRecipe = peekStack('home')?.recipe || null;
 
   const setCurrentRecipe = (recipe) => {
     if (recipe === null) {
