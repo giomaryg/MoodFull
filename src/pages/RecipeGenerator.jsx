@@ -225,6 +225,8 @@ export default function RecipeGenerator() {
     }
   }, [currentRecipe, scrollPosition]);
 
+  const queryClient = useQueryClient();
+
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
     queryFn: () => base44.entities.Recipe.list('-created_date', 100)
