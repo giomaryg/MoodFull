@@ -834,7 +834,7 @@ Make them balanced, diverse, and delicious. Include:
                 disabled={isAnalyzingNutrition}
                 variant="outline" 
                 size="sm"
-                className="bg-white border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2]"
+                className="bg-white border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] min-h-[44px]"
               >
                 {isAnalyzingNutrition ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
                 Analyze Balance
