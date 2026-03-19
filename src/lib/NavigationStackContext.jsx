@@ -1,66 +1,59 @@
-import React, { createContext, useContext, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const NavigationStackContext = createContext();
 
 export function NavigationStackProvider({ children }) {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const tabStacks = location.state?.tabStacks || {
+  const [tabStacks, setTabStacks] = useState({
     home: [],
     saved: [],
     planner: [],
     inventory: [],
     analytics: [],
     account: []
-  };
-
-  const updateStacks = useCallback((newStacks) => {
-    navigate(location.pathname + location.search, {
-      state: { ...location.state, tabStacks: newStacks },
-      replace: true
-    });
-  }, [navigate, location]);
+  });
 
   const pushToStack = useCallback((tab, state) => {
-    updateStacks({
-      ...tabStacks,
-      [tab]: [...(tabStacks[tab] || []), state]
-    });
-  }, [tabStacks, updateStacks]);
+    setTabStacks(prev => ({
+      ...prev,
+      [tab]: [...(prev[tab] || []), state]
+    }));
+  }, []);
 
   const popFromStack = useCallback((tab) => {
-    const stack = tabStacks[tab] || [];
-    if (stack.length === 0) return;
-    updateStacks({
-      ...tabStacks,
-      [tab]: stack.slice(0, -1)
+    setTabStacks(prev => {
+      const stack = prev[tab] || [];
+      if (stack.length === 0) return prev;
+      return {
+        ...prev,
+        [tab]: stack.slice(0, -1)
+      };
     });
-  }, [tabStacks, updateStacks]);
+  }, []);
 
   const getStack = useCallback((tab) => {
     return tabStacks[tab] || [];
   }, [tabStacks]);
   
   const clearStack = useCallback((tab) => {
-    updateStacks({
-      ...tabStacks,
+    setTabStacks(prev => ({
+      ...prev,
       [tab]: []
-    });
-  }, [tabStacks, updateStacks]);
+    }));
+  }, []);
 
   const replaceTopStack = useCallback((tab, state) => {
-    const stack = tabStacks[tab] || [];
-    if (stack.length === 0) {
-      updateStacks({ ...tabStacks, [tab]: [state] });
-    } else {
-      updateStacks({
-        ...tabStacks,
-        [tab]: [...stack.slice(0, -1), state]
-      });
-    }
-  }, [tabStacks, updateStacks]);
+    setTabStacks(prev => {
+      const stack = prev[tab] || [];
+      if (stack.length === 0) {
+        return { ...prev, [tab]: [state] };
+      } else {
+        return {
+          ...prev,
+          [tab]: [...stack.slice(0, -1), state]
+        };
+      }
+    });
+  }, []);
 
   const peekStack = useCallback((tab) => {
     const stack = tabStacks[tab] || [];
@@ -69,7 +62,7 @@ export function NavigationStackProvider({ children }) {
 
   return (
     <NavigationStackContext.Provider value={{ tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack, getStack }}>
-      <div className="pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] min-h-screen w-full">
+      <div className="pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] min-h-screen w-full bg-background text-foreground transition-colors">
         {children}
       </div>
     </NavigationStackContext.Provider>
