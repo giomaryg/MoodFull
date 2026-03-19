@@ -9,11 +9,10 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import HighlightedText from './HighlightedText';
+import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
 function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '', onOpenShoppingList }) {
   const queryClient = useQueryClient();
-
-  const { useOptimisticMutation } = require('@/hooks/useOptimisticMutation');
 
   const deleteRecipeMutation = useOptimisticMutation({
     queryKey: ['recipes'],
