@@ -60,8 +60,18 @@ export function NavigationStackProvider({ children }) {
     return stack.length > 0 ? stack[stack.length - 1] : null;
   }, [tabStacks]);
 
+  const contextValue = React.useMemo(() => ({
+    tabStacks,
+    pushToStack,
+    popFromStack,
+    clearStack,
+    replaceTopStack,
+    peekStack,
+    getStack
+  }), [tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack, getStack]);
+
   return (
-    <NavigationStackContext.Provider value={{ tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack, getStack }}>
+    <NavigationStackContext.Provider value={contextValue}>
       <div className="pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] min-h-screen w-full bg-background text-foreground transition-colors">
         {children}
       </div>

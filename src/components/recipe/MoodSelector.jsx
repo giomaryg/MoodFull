@@ -147,7 +147,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
             <button
               key={mood.id}
               onClick={() => handleMoodToggle(mood.id)}
-              className={`p-4 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200 ${
+              className={`p-4 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200 min-h-[44px] min-w-[44px] ${
               isSelected ?
               'bg-[#6b9b76]/10 border border-[#6b9b76]/50 shadow-[0_2px_12px_rgba(107,155,118,0.15)] relative overflow-hidden' :
               'glass-panel hover:bg-white/70'}`
@@ -191,7 +191,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
               <button
                 key={type.id}
                 onClick={() => handleMealTypeToggle(type.id)} 
-                className={`flex items-center gap-1.5 px-4 py-1.5 min-h-[44px] rounded-full border text-xs transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 min-h-[44px] min-w-[44px] rounded-full border text-xs transition-all duration-200 ${
                   isSelected
                     ? 'bg-[#6b9b76]/20 border-[#6b9b76]/45 text-[#6b9b76] font-medium'
                     : 'bg-transparent border-[#c5d9c9]/60 text-[#8c8c8c]'

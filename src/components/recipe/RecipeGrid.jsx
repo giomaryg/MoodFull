@@ -99,9 +99,9 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                       {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
                     </p>
                   </div>
-                  <button aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform">
+                  <Button variant="ghost" size="icon" aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white rounded-full shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform hover:bg-white hover:text-red-600">
                     <Heart className="w-5 h-5 fill-current" />
-                  </button>
+                  </Button>
                 </div>
               </div>
               

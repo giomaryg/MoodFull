@@ -10,7 +10,9 @@ export default function ThreeBackground() {
       const isMobileDevice = window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const isLowPerformance = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || 
                                (navigator.deviceMemory && navigator.deviceMemory <= 4);
-      setIsMobile(isMobileDevice || isLowPerformance);
+      const isWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) || 
+                        window.matchMedia('(display-mode: standalone)').matches;
+      setIsMobile(isMobileDevice || isLowPerformance || isWebView);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -98,11 +100,17 @@ export default function ThreeBackground() {
     return () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animId);
-      if (mountRef.current) mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current && renderer.domElement && mountRef.current.contains(renderer.domElement)) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
       renderer.dispose();
       material.dispose();
       particlesGeo.dispose();
       particlesMat.dispose();
+      rings.forEach(r => {
+        if (r.mesh.geometry) r.mesh.geometry.dispose();
+      });
+      scene.clear();
     };
   }, [isMobile]);
 
