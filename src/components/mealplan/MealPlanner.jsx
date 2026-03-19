@@ -893,6 +893,7 @@ Make them balanced, diverse, and delicious. Include:
             onClick={() => setCurrentDate(addDays(currentDate, calendarView === 'daily' ? 1 : calendarView === 'weekly' ? 7 : 30))}
             variant="ghost"
             size="icon"
+            aria-label="Next date range"
           >
             <ChevronRight className="w-5 h-5 text-[#6b9b76]" />
           </Button>
