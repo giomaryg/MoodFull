@@ -39,9 +39,23 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     vitamin_targets: user?.vitamin_targets || ''
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleLogout = () => {
     base44.auth.logout();
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      setIsDeleting(true);
+      try {
+        await base44.auth.deleteAccount();
+        window.location.href = '/';
+      } catch (error) {
+        toast.error('Failed to delete account');
+        setIsDeleting(false);
+      }
+    }
   };
 
   const handleSave = async () => {
@@ -557,6 +571,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
+        className="space-y-3"
       >
         <Button
           onClick={handleLogout}
@@ -565,6 +580,14 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
         >
           <LogOut className="w-4 h-4 mr-2" />
           Log Out
+        </Button>
+        <Button
+          onClick={handleDeleteAccount}
+          disabled={isDeleting}
+          variant="ghost"
+          className="w-full text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl py-4"
+        >
+          {isDeleting ? 'Deleting...' : 'Delete Account'}
         </Button>
       </motion.div>
 

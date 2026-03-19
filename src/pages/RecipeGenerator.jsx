@@ -30,6 +30,8 @@ import AICoach from '../components/recipe/AICoach';
 import TutorialOverlay from '../components/onboarding/TutorialOverlay';
 import WellnessRecommendationCard from '../components/oura/WellnessRecommendationCard';
 import OrderOutSuggestion from '../components/oura/OrderOutSuggestion';
+import { useNavigationStack } from '@/lib/NavigationStackContext';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
 const ENABLE_PANTRY_FEATURE = true;
 
@@ -37,8 +39,26 @@ export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [selectedMealTypes, setSelectedMealTypes] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
-  const [currentRecipe, setCurrentRecipe] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+
+  const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack } = useNavigationStack();
+  const currentRecipe = peekStack(activeTab)?.recipe || null;
+
+  const setCurrentRecipe = (recipe) => {
+    if (recipe === null) {
+      clearStack(activeTab);
+    } else {
+      pushToStack(activeTab, { recipe });
+    }
+  };
+
+  const updateCurrentRecipe = (recipe) => {
+    replaceTopStack(activeTab, { recipe });
+  };
+
+  const isRefreshing = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries();
+  });
 
 
 
@@ -1048,6 +1068,13 @@ export default function RecipeGenerator() {
       </AnimatePresence>
 
       <div className="min-h-screen bg-[#e8f0ea]/80 relative z-10">
+        {isRefreshing && (
+          <div className="fixed top-[env(safe-area-inset-top)] left-0 right-0 flex justify-center z-50 pt-4">
+            <div className="bg-white rounded-full p-2 shadow-lg">
+              <Loader2 className="w-6 h-6 text-[#6b9b76] animate-spin" />
+            </div>
+          </div>
+        )}
         <ThreeBackground />
         {/* Hero Section */}
         {!showIntro &&
@@ -1071,7 +1098,7 @@ export default function RecipeGenerator() {
         }
 
         {/* Main Content */}
-        <div className="mx-auto px-4 pt-24 sm:pt-28 pb-32 sm:px-6 max-w-6xl space-y-6 sm:space-y-8">
+        <div className="mx-auto px-4 pt-[calc(6rem+env(safe-area-inset-top))] sm:pt-[calc(7rem+env(safe-area-inset-top))] pb-[calc(8rem+env(safe-area-inset-bottom))] sm:px-6 max-w-6xl space-y-6 sm:space-y-8">
           {/* Survey */}
           {showSurvey &&
           <motion.div
@@ -1338,7 +1365,7 @@ export default function RecipeGenerator() {
                   }}
                   onUpdate={(updatedRecipe) => {
                     // Update the current recipe with the new data
-                    setCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
+                    updateCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
                   }}
                   onSimilarRecipeClick={(recipe) => {
                     // When clicking a similar recipe, we want to scroll to the top of the new recipe display

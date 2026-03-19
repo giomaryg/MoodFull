@@ -1,0 +1,65 @@
+import React, { createContext, useContext, useState, useCallback } from 'react';
+
+const NavigationStackContext = createContext();
+
+export function NavigationStackProvider({ children }) {
+  const [tabStacks, setTabStacks] = useState({
+    home: [],
+    saved: [],
+    planner: [],
+    inventory: [],
+    analytics: [],
+    account: []
+  });
+
+  const pushToStack = useCallback((tab, state) => {
+    setTabStacks(prev => ({
+      ...prev,
+      [tab]: [...(prev[tab] || []), state]
+    }));
+  }, []);
+
+  const popFromStack = useCallback((tab) => {
+    setTabStacks(prev => {
+      const stack = prev[tab] || [];
+      if (stack.length === 0) return prev;
+      return {
+        ...prev,
+        [tab]: stack.slice(0, -1)
+      };
+    });
+  }, []);
+  
+  const clearStack = useCallback((tab) => {
+    setTabStacks(prev => ({
+      ...prev,
+      [tab]: []
+    }));
+  }, []);
+
+  const replaceTopStack = useCallback((tab, state) => {
+    setTabStacks(prev => {
+      const stack = prev[tab] || [];
+      if (stack.length === 0) return { ...prev, [tab]: [state] };
+      return {
+        ...prev,
+        [tab]: [...stack.slice(0, -1), state]
+      };
+    });
+  }, []);
+
+  const peekStack = useCallback((tab) => {
+    const stack = tabStacks[tab] || [];
+    return stack.length > 0 ? stack[stack.length - 1] : null;
+  }, [tabStacks]);
+
+  return (
+    <NavigationStackContext.Provider value={{ tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack }}>
+      {children}
+    </NavigationStackContext.Provider>
+  );
+}
+
+export function useNavigationStack() {
+  return useContext(NavigationStackContext);
+}

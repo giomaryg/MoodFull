@@ -46,7 +46,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
           exit={{ y: 150, x: "-50%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           onClick={() => isMinimized && setIsMinimized(false)}
-          className={`fixed bottom-4 sm:bottom-6 left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-white/80 backdrop-blur-md border border-[#c5d9c9]/60 rounded-3xl shadow-[0_4px_20px_rgba(107,155,118,0.12)] z-[100] overflow-hidden ${isMinimized ? 'cursor-pointer hover:opacity-100' : ''}`}
+          className={`fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-white/80 backdrop-blur-md border border-[#c5d9c9]/60 rounded-3xl shadow-[0_4px_20px_rgba(107,155,118,0.12)] z-[100] overflow-hidden ${isMinimized ? 'cursor-pointer hover:opacity-100' : ''}`}
         >
           {isMinimized && (
             <div className="absolute top-0 left-0 w-full flex justify-center py-0.5">
