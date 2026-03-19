@@ -72,15 +72,18 @@ const AnimatedRoutes = () => {
   const variants = {
     initial: (direction) => ({
       x: direction === 'backward' ? '-30%' : '100%',
-      opacity: direction === 'backward' ? 0 : 1
+      opacity: direction === 'backward' ? 0.5 : 1,
+      boxShadow: direction === 'backward' ? 'none' : '-10px 0 20px rgba(0,0,0,0.1)'
     }),
     animate: {
       x: 0,
-      opacity: 1
+      opacity: 1,
+      boxShadow: 'none'
     },
     exit: (direction) => ({
       x: direction === 'backward' ? '100%' : '-30%',
-      opacity: direction === 'backward' ? 1 : 0
+      opacity: direction === 'backward' ? 1 : 0.5,
+      boxShadow: direction === 'backward' ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none'
     })
   };
 
@@ -96,8 +99,8 @@ const AnimatedRoutes = () => {
               initial="initial" 
               animate="animate" 
               exit="exit" 
-              transition={{ type: "spring", stiffness: 300, damping: 30 }} 
-              className="w-full h-full min-h-screen bg-background"
+              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }} 
+              className="w-full h-full min-h-screen bg-background absolute top-0 left-0"
             >
               <LayoutWrapper currentPageName={mainPageKey}>
                 <MainPage />
