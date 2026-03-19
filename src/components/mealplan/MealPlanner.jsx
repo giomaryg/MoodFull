@@ -846,7 +846,7 @@ Make them balanced, diverse, and delicious. Include:
 
       {aiNutritionAdvice && (
         <div className="bg-[#f8faf8] border-2 border-[#c5d9c9] rounded-xl p-5 relative">
-          <button onClick={() => setAiNutritionAdvice(null)} className="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+          <button onClick={() => setAiNutritionAdvice(null)} aria-label="Close AI insights" className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 min-h-[44px] min-w-[44px] flex items-center justify-center">
             <X className="w-4 h-4" />
           </button>
           <h4 className="font-bold text-[#6b9b76] flex items-center gap-2 mb-2">
