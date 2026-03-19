@@ -1147,36 +1147,22 @@ export default function RecipeGenerator() {
             </motion.div>
           }
 
-          {!showSurvey && currentRecipe && (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentRecipe.id || 'current-recipe'}
-                initial={{ opacity: 0, x: '100%' }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: '100%' }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="space-y-6 sm:space-y-8"
-              >
-                <RecipeDisplay
-                  recipe={currentRecipe}
-                  onSave={handleSaveRecipe}
-                  isSaved={!!savedRecipeId}
-                  onBack={handleBack}
-                  onUpdate={(updatedRecipe) => {
-                    updateCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
-                  }}
-                  onSimilarRecipeClick={(recipe) => {
-                    setCurrentRecipe(recipe);
-                    const savedVersion = savedRecipes.find((r) => r.id === recipe.id);
-                    setSavedRecipeId(savedVersion ? savedVersion.id : null);
-                    window.scrollTo({ top: 0, behavior: 'instant' });
-                  }}
-                />
-              </motion.div>
-            </AnimatePresence>
-          )}
-
-          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'home' ? 'block' : 'none' }} className="space-y-6 sm:space-y-8">
+          {/* Home Tab */}
+          <div style={{ display: !showSurvey && activeTab === 'home' ? 'block' : 'none' }} className="space-y-6 sm:space-y-8">
+            {getStack('home').length > 0 ? (
+              <RecipeDisplay
+                recipe={getStack('home')[getStack('home').length - 1].recipe}
+                onSave={handleSaveRecipe}
+                isSaved={isRecipeSaved(getStack('home')[getStack('home').length - 1].recipe)}
+                onBack={() => popFromStack('home')}
+                onUpdate={(updatedRecipe) => { replaceTopStack('home', { recipe: { ...getStack('home')[getStack('home').length - 1].recipe, ...updatedRecipe } }); }}
+                onSimilarRecipeClick={(recipe) => {
+                  pushToStack('home', { recipe });
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }}
+              />
+            ) : (
+              <>
               <WellnessRecommendationCard 
                 user={currentUser} 
                 onApplyWellnessContext={setWellnessContext} 
@@ -1428,10 +1414,25 @@ export default function RecipeGenerator() {
 
             }
 
+              </>
+            )}
             </div>
 
           {/* Saved Recipes Tab */}
-          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'saved' ? 'block' : 'none' }}>
+          <div style={{ display: !showSurvey && activeTab === 'saved' ? 'block' : 'none' }}>
+            {getStack('saved').length > 0 ? (
+              <RecipeDisplay
+                recipe={getStack('saved')[getStack('saved').length - 1].recipe}
+                onSave={handleSaveRecipe}
+                isSaved={isRecipeSaved(getStack('saved')[getStack('saved').length - 1].recipe)}
+                onBack={() => popFromStack('saved')}
+                onUpdate={(updatedRecipe) => { replaceTopStack('saved', { recipe: { ...getStack('saved')[getStack('saved').length - 1].recipe, ...updatedRecipe } }); }}
+                onSimilarRecipeClick={(recipe) => {
+                  pushToStack('saved', { recipe });
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }}
+              />
+            ) : (
           <div className="space-y-6">
 
               <div className="text-center space-y-2">
@@ -1517,10 +1518,11 @@ export default function RecipeGenerator() {
                 </>
             }
             </div>
+            )}
           </div>
 
           {/* Planner Tab */}
-          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'planner' ? 'block' : 'none' }}>
+          <div style={{ display: !showSurvey && activeTab === 'planner' ? 'block' : 'none' }}>
           <div>
 
               <MealPlanner
@@ -1532,7 +1534,7 @@ export default function RecipeGenerator() {
           </div>
 
           {/* Inventory Tab */}
-          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'inventory' ? 'block' : 'none' }}>
+          <div style={{ display: !showSurvey && activeTab === 'inventory' ? 'block' : 'none' }}>
           <div>
               <InventoryManagement
               onGenerateFromExpiring={(items) => {
@@ -1544,7 +1546,7 @@ export default function RecipeGenerator() {
           </div>
 
           {/* Analytics Tab */}
-          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'analytics' ? 'block' : 'none' }}>
+          <div style={{ display: !showSurvey && activeTab === 'analytics' ? 'block' : 'none' }}>
           <div className="space-y-6">
               {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
                 <div className="relative">
@@ -1569,7 +1571,7 @@ export default function RecipeGenerator() {
           </div>
 
           {/* Account Tab */}
-          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'account' ? 'block' : 'none' }}>
+          <div style={{ display: !showSurvey && activeTab === 'account' ? 'block' : 'none' }}>
           <div>
 
               <AccountInfo
