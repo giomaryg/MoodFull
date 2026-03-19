@@ -39,8 +39,17 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     extra_equipment: user?.extra_equipment || '',
     vitamin_targets: user?.vitamin_targets || ''
   });
-  const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { useOptimisticMutation } = require('@/hooks/useOptimisticMutation');
+
+  const updateAccountMutation = useOptimisticMutation({
+    queryKey: ['currentUser'],
+    mutationFn: (data) => base44.auth.updateMe(data),
+    action: 'update',
+    onSuccessMessage: 'Account information updated successfully!',
+    onErrorMessage: 'Failed to update account information',
+    onSuccessCallback: () => setIsEditing(false)
+  });
 
   const handleLogout = () => {
     base44.auth.logout();
@@ -59,17 +68,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     }
   };
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      await base44.auth.updateMe(formData);
-      setIsEditing(false);
-      toast.success('Account information updated successfully!');
-    } catch (error) {
-      toast.error('Failed to update account information');
-    } finally {
-      setIsSaving(false);
-    }
+  const handleSave = () => {
+    updateAccountMutation.mutate(formData);
   };
 
   const handleCancel = () => {
