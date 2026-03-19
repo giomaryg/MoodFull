@@ -1131,9 +1131,10 @@ export default function RecipeGenerator() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentRecipe.id || 'current-recipe'}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, x: '100%' }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: '100%' }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className="space-y-6 sm:space-y-8"
               >
                 <RecipeDisplay
@@ -1181,7 +1182,7 @@ export default function RecipeGenerator() {
                   >
                     <button 
                       onClick={() => setHideExpiringAlert(true)}
-                      className="absolute top-3 right-3 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full p-1 transition-colors"
+                      className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
                       title="Dismiss notification"
                     >
                       <X className="w-4 h-4" />
@@ -1223,7 +1224,7 @@ export default function RecipeGenerator() {
                     {globalSearchQuery &&
                   <button
                     onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors">
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
 
                         <X className="w-4 h-4" />
                       </button>
@@ -1426,8 +1427,9 @@ export default function RecipeGenerator() {
           {/* Saved Recipes Tab */}
           {!showSurvey && !currentRecipe && activeTab === 'saved' &&
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
             className="space-y-6">
 
               <div className="text-center space-y-2">
@@ -1480,7 +1482,7 @@ export default function RecipeGenerator() {
                       {globalSearchQuery &&
                   <button
                     onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6b9b76]">
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] min-w-[44px] min-h-[44px] flex items-center justify-center">
 
                           <X className="w-4 h-4" />
                         </button>
@@ -1518,8 +1520,9 @@ export default function RecipeGenerator() {
           {/* Planner Tab */}
           {!showSurvey && !currentRecipe && activeTab === 'planner' &&
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}>
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}>
 
               <MealPlanner
               onOpenShoppingList={() => setShowShoppingList(true)}
@@ -1532,8 +1535,9 @@ export default function RecipeGenerator() {
           {/* Inventory Tab */}
           {!showSurvey && !currentRecipe && activeTab === 'inventory' &&
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}>
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}>
               <InventoryManagement
               onGenerateFromExpiring={(items) => {
                 setActiveTab('home');
@@ -1546,8 +1550,9 @@ export default function RecipeGenerator() {
           {/* Analytics Tab */}
           {!showSurvey && !currentRecipe && activeTab === 'analytics' &&
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
             className="space-y-6">
               {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
                 <div className="relative">
@@ -1574,8 +1579,9 @@ export default function RecipeGenerator() {
           {/* Account Tab */}
           {!showSurvey && !currentRecipe && activeTab === 'account' &&
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}>
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}>
 
               <AccountInfo
               user={currentUser}

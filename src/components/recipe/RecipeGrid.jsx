@@ -99,7 +99,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                       {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
                     </p>
                   </div>
-                  <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform">
+                  <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform">
                     <Heart className="w-5 h-5 fill-current" />
                   </button>
                 </div>
