@@ -1427,7 +1427,7 @@ export default function RecipeGenerator() {
           }
 
           {/* Saved Recipes Tab */}
-          {!showSurvey && activeTab === 'saved' &&
+          {!showSurvey && !currentRecipe && activeTab === 'saved' &&
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1520,7 +1520,7 @@ export default function RecipeGenerator() {
           }
 
           {/* Planner Tab */}
-          {!showSurvey && activeTab === 'planner' &&
+          {!showSurvey && !currentRecipe && activeTab === 'planner' &&
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}>
@@ -1534,7 +1534,7 @@ export default function RecipeGenerator() {
           }
 
           {/* Inventory Tab */}
-          {!showSurvey && activeTab === 'inventory' &&
+          {!showSurvey && !currentRecipe && activeTab === 'inventory' &&
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}>
@@ -1548,7 +1548,7 @@ export default function RecipeGenerator() {
           }
 
           {/* Analytics Tab */}
-          {!showSurvey && activeTab === 'analytics' &&
+          {!showSurvey && !currentRecipe && activeTab === 'analytics' &&
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1576,7 +1576,7 @@ export default function RecipeGenerator() {
           }
 
           {/* Account Tab */}
-          {!showSurvey && activeTab === 'account' &&
+          {!showSurvey && !currentRecipe && activeTab === 'account' &&
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}>
