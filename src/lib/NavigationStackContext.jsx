@@ -12,6 +12,16 @@ export function NavigationStackProvider({ children }) {
     account: []
   });
 
+  const scrollPositions = React.useRef({});
+
+  const saveScrollPosition = useCallback((tab, position) => {
+    scrollPositions.current[tab] = position;
+  }, []);
+
+  const getScrollPosition = useCallback((tab) => {
+    return scrollPositions.current[tab] || 0;
+  }, []);
+
   const pushToStack = useCallback((tab, state) => {
     setTabStacks(prev => ({
       ...prev,
@@ -67,8 +77,10 @@ export function NavigationStackProvider({ children }) {
     clearStack,
     replaceTopStack,
     peekStack,
-    getStack
-  }), [tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack, getStack]);
+    getStack,
+    saveScrollPosition,
+    getScrollPosition
+  }), [tabStacks, pushToStack, popFromStack, clearStack, replaceTopStack, peekStack, getStack, saveScrollPosition, getScrollPosition]);
 
   return (
     <NavigationStackContext.Provider value={contextValue}>

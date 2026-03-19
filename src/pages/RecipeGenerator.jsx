@@ -46,20 +46,18 @@ export default function RecipeGenerator() {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'home';
-  const [tabScrollPositions, setTabScrollPositions] = useState({});
-
   const handleTabChange = (newTab) => {
     if (activeTab === newTab) {
       clearStack(newTab);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      setTabScrollPositions(prev => ({ ...prev, [activeTab]: window.scrollY }));
+      saveScrollPosition(activeTab, window.scrollY);
       setSearchParams({ tab: newTab }, { replace: true });
     }
   };
 
   const queryClient = useQueryClient();
-  const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack, getStack } = useNavigationStack();
+  const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack, getStack, saveScrollPosition, getScrollPosition } = useNavigationStack();
   const currentRecipe = peekStack(activeTab)?.recipe || null;
 
   const setCurrentRecipe = (recipe) => {
@@ -242,9 +240,9 @@ export default function RecipeGenerator() {
 
   useLayoutEffect(() => {
     if (!currentRecipe && !showSurvey) {
-      window.scrollTo({ top: tabScrollPositions[activeTab] || 0, behavior: 'instant' });
+      window.scrollTo({ top: getScrollPosition(activeTab), behavior: 'instant' });
     }
-  }, [activeTab, currentRecipe, showSurvey]);
+  }, [activeTab, currentRecipe, showSurvey, getScrollPosition]);
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
@@ -1069,7 +1067,7 @@ export default function RecipeGenerator() {
   };
 
   const handleRecipeClick = (recipe) => {
-    setTabScrollPositions(prev => ({ ...prev, [activeTab]: window.scrollY }));
+    saveScrollPosition(activeTab, window.scrollY);
     setCurrentRecipe(recipe);
     if (recipe.mood && activeTab === 'saved') {
       setSelectedMoods(recipe.mood.split(', '));

@@ -73,12 +73,12 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
             >
               <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
                 {recipe._loading ? (
-                   <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
-                     <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
+                   <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
+                     <ChefHat className="w-12 h-12 text-muted-foreground/30" />
                    </div>
                  ) : recipe.imageLoading ? (
-                   <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
-                     <ChefHat className="w-12 h-12 text-[#6b9b76]/50" />
+                   <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                     <ChefHat className="w-12 h-12 text-muted-foreground/50" />
                    </div>
                  ) : (recipe.imageUrl || recipe.image_url) ? (
                   <img src={recipe.imageUrl || recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />
@@ -92,12 +92,21 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                 
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                   <div className="flex-1 pr-4">
-                    <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
-                      <HighlightedText text={recipe.name} query={searchQuery} />
-                    </h3>
-                    <p className="text-white/80 text-xs sm:text-sm line-clamp-1">
-                      {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
-                    </p>
+                    {recipe._loading ? (
+                      <div className="space-y-2">
+                        <div className="h-6 bg-white/40 rounded w-3/4 animate-pulse"></div>
+                        <div className="h-4 bg-white/40 rounded w-1/2 animate-pulse"></div>
+                      </div>
+                    ) : (
+                      <>
+                        <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
+                          <HighlightedText text={recipe.name} query={searchQuery} />
+                        </h3>
+                        <p className="text-white/80 text-xs sm:text-sm line-clamp-1">
+                          {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
+                        </p>
+                      </>
+                    )}
                   </div>
                   <Button variant="ghost" size="icon" aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white rounded-full shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform hover:bg-white hover:text-red-600">
                     <Heart className="w-5 h-5 fill-current" />
@@ -105,21 +114,33 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                 </div>
               </div>
               
-              <div className="p-5 flex justify-between items-center bg-white mt-auto">
-                <div className="text-center">
-                  <p className="font-bold text-lg text-gray-900">{recipe.nutrition?.calories || 290}</p>
-                  <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Calories</p>
-                </div>
-                <div className="w-px h-8 bg-gray-100"></div>
-                <div className="text-center">
-                  <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
-                  <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Protein</p>
-                </div>
-                <div className="w-px h-8 bg-gray-100"></div>
-                <div className="text-center">
-                  <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
-                  <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Carbs</p>
-                </div>
+              <div className="p-5 flex justify-between items-center bg-card mt-auto border-t border-border/50">
+                {recipe._loading ? (
+                  <>
+                    <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
+                    <div className="w-px h-8 bg-border"></div>
+                    <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
+                    <div className="w-px h-8 bg-border"></div>
+                    <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-foreground">{recipe.nutrition?.calories || 290}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Calories</p>
+                    </div>
+                    <div className="w-px h-8 bg-border"></div>
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Protein</p>
+                    </div>
+                    <div className="w-px h-8 bg-border"></div>
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Carbs</p>
+                    </div>
+                  </>
+                )}
               </div>
             </Card>
           </motion.div>
