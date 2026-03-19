@@ -42,6 +42,12 @@ export default function RecipeGenerator() {
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [activeTab, setActiveTab] = useState('home');
+  const [tabScrollPositions, setTabScrollPositions] = useState({});
+
+  const handleTabChange = (newTab) => {
+    setTabScrollPositions(prev => ({ ...prev, [activeTab]: window.scrollY }));
+    setActiveTab(newTab);
+  };
 
   const queryClient = useQueryClient();
   const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack } = useNavigationStack();
@@ -223,14 +229,13 @@ export default function RecipeGenerator() {
       setActiveTab('home');
       return;
     }
-    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [activeTab]);
 
   useLayoutEffect(() => {
-    if (!currentRecipe) {
-      window.scrollTo({ top: scrollPosition, behavior: 'auto' });
+    if (!currentRecipe && !showSurvey) {
+      window.scrollTo({ top: tabScrollPositions[activeTab] || 0, behavior: 'instant' });
     }
-  }, [currentRecipe, scrollPosition]);
+  }, [activeTab, currentRecipe, showSurvey]);
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes'],
@@ -1061,15 +1066,17 @@ export default function RecipeGenerator() {
     }
   };
 
-  const handleSavedRecipeClick = (recipe) => {
-    setScrollPosition(window.scrollY);
+  const handleRecipeClick = (recipe) => {
+    setTabScrollPositions(prev => ({ ...prev, [activeTab]: window.scrollY }));
     setCurrentRecipe(recipe);
-    if (recipe.mood) {
+    if (recipe.mood && activeTab === 'saved') {
       setSelectedMoods(recipe.mood.split(', '));
     }
-    setSavedRecipeId(recipe.id);
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    setSavedRecipeId(savedRecipes.find((r) => r.id === recipe.id)?.id || null);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
+
+  const handleSavedRecipeClick = handleRecipeClick;
 
 
 
@@ -1146,18 +1153,17 @@ export default function RecipeGenerator() {
                     updateCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
                   }}
                   onSimilarRecipeClick={(recipe) => {
-                    setScrollPosition(0);
                     setCurrentRecipe(recipe);
                     const savedVersion = savedRecipes.find((r) => r.id === recipe.id);
                     setSavedRecipeId(savedVersion ? savedVersion.id : null);
+                    window.scrollTo({ top: 0, behavior: 'instant' });
                   }}
                 />
               </motion.div>
             </AnimatePresence>
           )}
 
-          {!showSurvey && !currentRecipe && activeTab === 'home' &&
-          <>
+          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'home' ? 'block' : 'none' }} className="space-y-6 sm:space-y-8">
               <WellnessRecommendationCard 
                 user={currentUser} 
                 onApplyWellnessContext={setWellnessContext} 
@@ -1360,12 +1366,7 @@ export default function RecipeGenerator() {
 
                     <RecipeGrid
                   recipes={filteredGeneratedRecipes}
-                  onRecipeClick={(recipe) => {
-                    setScrollPosition(window.scrollY);
-                    setCurrentRecipe(recipe);
-                    setSavedRecipeId(null);
-                    window.scrollTo({ top: 0, behavior: 'auto' });
-                  }}
+                  onRecipeClick={handleRecipeClick}
                   onStartOver={() => {
                     setGeneratedRecipes([]);
                     setSelectedMoods([]);
@@ -1394,12 +1395,7 @@ export default function RecipeGenerator() {
                 <RecommendedRecipes
                   userPreferences={userPreferences}
                   inventory={inventory}
-                  onRecipeClick={(recipe) => {
-                    setScrollPosition(window.scrollY);
-                    setCurrentRecipe(recipe);
-                    setSavedRecipeId(null);
-                    window.scrollTo({ top: 0, behavior: 'auto' });
-                  }} 
+                  onRecipeClick={handleRecipeClick} 
                 />
               }
 
@@ -1425,12 +1421,8 @@ export default function RecipeGenerator() {
           }
 
           {/* Saved Recipes Tab */}
-          {!showSurvey && !currentRecipe && activeTab === 'saved' &&
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-6">
+          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'saved' ? 'block' : 'none' }}>
+          <div className="space-y-6">
 
               <div className="text-center space-y-2">
                 <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Your Saved Recipes</h2>
@@ -1514,46 +1506,36 @@ export default function RecipeGenerator() {
               }
                 </>
             }
-            </motion.div>
-          }
+            </div>
+          </div>
 
           {/* Planner Tab */}
-          {!showSurvey && !currentRecipe && activeTab === 'planner' &&
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}>
+          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'planner' ? 'block' : 'none' }}>
+          <div>
 
               <MealPlanner
               onOpenShoppingList={() => setShowShoppingList(true)}
               generatedRecipes={generatedRecipes}
               onRequirePremium={() => setShowPaywall(true)} />
 
-            </motion.div>
-          }
+            </div>
+          </div>
 
           {/* Inventory Tab */}
-          {!showSurvey && !currentRecipe && activeTab === 'inventory' &&
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}>
+          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'inventory' ? 'block' : 'none' }}>
+          <div>
               <InventoryManagement
               onGenerateFromExpiring={(items) => {
                 setActiveTab('home');
                 generateFromInventory(items);
               }} />
 
-            </motion.div>
-          }
+            </div>
+          </div>
 
           {/* Analytics Tab */}
-          {!showSurvey && !currentRecipe && activeTab === 'analytics' &&
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            className="space-y-6">
+          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'analytics' ? 'block' : 'none' }}>
+          <div className="space-y-6">
               {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
                 <div className="relative">
                   <div className="blur-sm pointer-events-none select-none">
@@ -1573,15 +1555,12 @@ export default function RecipeGenerator() {
               ) : (
                 <AnalyticsDashboard />
               )}
-            </motion.div>
-          }
+            </div>
+          </div>
 
           {/* Account Tab */}
-          {!showSurvey && !currentRecipe && activeTab === 'account' &&
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}>
+          <div style={{ display: !showSurvey && !currentRecipe && activeTab === 'account' ? 'block' : 'none' }}>
+          <div>
 
               <AccountInfo
               user={currentUser}
@@ -1589,13 +1568,13 @@ export default function RecipeGenerator() {
               recipeCount={savedRecipes.length}
               onReplayTutorial={() => setForceShowTutorial(true)} />
 
-            </motion.div>
-          }
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Bottom Navigation */}
-      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} isVisible={!showShoppingList} enablePantry={ENABLE_PANTRY_FEATURE} />}
+      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} isVisible={!showShoppingList} enablePantry={ENABLE_PANTRY_FEATURE} />}
 
       {/* Paywall Modal */}
       <AnimatePresence>
