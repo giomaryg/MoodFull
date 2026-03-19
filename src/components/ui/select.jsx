@@ -38,7 +38,7 @@ const Select = ({ children, value, onValueChange, defaultValue, disabled, ...pro
   )
 }
 
-const SelectGroup = React.forwardRef(({ className, ...props }, ref) => (
+const SelectGroup = React.forwardRef(({ className, id, ...props }, ref) => (
   <div ref={ref} className={cn("py-2", className)} {...props} />
 ))
 SelectGroup.displayName = "SelectGroup"
