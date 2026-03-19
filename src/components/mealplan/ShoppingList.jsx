@@ -940,7 +940,7 @@ Return JSON.`,
                         <button
                           key={ingIndex}
                           onClick={() => toggleItem(itemId)}
-                          className={`w-full text-left p-2 rounded-lg border transition-all flex items-center gap-3 ${
+                          className={`w-full text-left p-2 min-h-[44px] rounded-lg border transition-all flex items-center gap-3 ${
                             isChecked
                               ? 'bg-gray-50 border-gray-300 opacity-60'
                               : 'bg-white border-[#c5d9c9] hover:border-[#6b9b76]'
