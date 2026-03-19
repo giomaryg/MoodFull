@@ -120,19 +120,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         ? `\nDietary restrictions: ${currentUser.diet_preferences || 'None'}. Allergies: ${currentUser.allergies || 'None'}` 
         : '';
 
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Suggest ONE single best substitution for "${ingredient}" in the recipe "${recipe.name}".${dietaryContext}${inventoryContext}\nReturn ONLY the name of the substitute ingredient and the amount to use. Keep it very concise.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            substitute: { type: "string" }
-          }
-        }
+      const response = await base44.functions.invoke('suggestSubstitution', {
+        ingredient,
+        recipeName: recipe.name,
+        dietaryContext,
+        inventoryContext
       });
 
       setAiSubstitutions(prev => ({
         ...prev,
-        [index]: { ingredient, substitute: response.substitute }
+        [index]: { ingredient, substitute: response.data.substitute }
       }));
       setActiveSubstitutions(prev => ({ ...prev, [index]: true }));
       
@@ -258,49 +255,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const generateCustomVariation = async (typeOrPrompt) => {
     setIsGeneratingVariation(true);
     try {
-      const promptMap = {
-        'quicker': `Provide a quicker variation of "${recipe.name}". Simplify the ingredients and instructions.`,
-        'gourmet': `Provide a complex, gourmet, chef-level variation of "${recipe.name}" that takes longer but is extremely elevated.`,
-        'vegan': `Provide a vegan variation of "${recipe.name}". Replace any animal products with vegan alternatives.`,
-        'spicier': `Provide a spicier variation of "${recipe.name}". Add heat and bold spices.`
-      };
-
-      const finalPrompt = promptMap[typeOrPrompt] || `Create a variation of "${recipe.name}" with this specific modification: "${typeOrPrompt}". Adapt the ingredients and instructions accordingly.`;
-
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${finalPrompt} Keep the core identity but apply the requested changes.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            name: { type: "string" },
-            description: { type: "string" },
-            ingredients: { type: "array", items: { type: "string" } },
-            instructions: { type: "array", items: { type: "string" } },
-            prep_time: { type: "string" },
-            cook_time: { type: "string" },
-            servings: { type: "number" },
-            difficulty: { type: "string" },
-            nutrition: {
-              type: "object",
-              properties: {
-                calories: { type: "number" },
-                protein: { type: "string" },
-                carbs: { type: "string" },
-                fat: { type: "string" },
-                fiber: { type: "string" },
-                sodium: { type: "string" },
-                sugar: { type: "string" }
-              }
-            }
-          }
-        }
+      const response = await base44.functions.invoke('generateRecipeVariation', {
+        recipe,
+        typeOrPrompt
       });
 
       if (onSimilarRecipeClick) {
         onSimilarRecipeClick({
           ...recipe,
           id: undefined,
-          ...response,
+          ...response.data,
           mood: `Variation: ${typeOrPrompt}`,
           image_url: recipe.imageUrl || recipe.imageUrls?.[0]
         });
@@ -335,26 +299,18 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const handleRegenerateSteps = async (mode) => {
     setIsRegeneratingSteps(true);
     try {
-      const modePrompt = mode === 'simplify' 
-        ? "Simplify these instructions to be as easy to understand as possible for a beginner. Reduce the number of steps if possible."
-        : "Make these instructions extremely detailed, step-by-step, including visual cues, temperatures, and professional techniques.";
-        
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Here are the current instructions for ${recipe.name}: \n${recipe.instructions.join('\n')}\n\n${modePrompt} Return ONLY a list of strings representing the new steps.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            instructions: { type: "array", items: { type: "string" } }
-          }
-        }
+      const response = await base44.functions.invoke('regenerateInstructions', {
+        recipeName: recipe.name,
+        instructions: recipe.instructions,
+        mode
       });
       
-      if (response.instructions) {
+      if (response.data.instructions) {
          if (recipe.id && isSaved) {
-           updateRecipeMutation.mutate({ id: recipe.id, data: { instructions: response.instructions } });
+           updateRecipeMutation.mutate({ id: recipe.id, data: { instructions: response.data.instructions } });
          }
          if (onUpdate) {
-           onUpdate({ instructions: response.instructions });
+           onUpdate({ instructions: response.data.instructions });
          }
          toast.success("Instructions updated!");
       }
@@ -382,7 +338,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       {/* Top Section */}
       <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-[320px] sm:min-h-[400px]">
         {onBack && (
-          <Button variant="ghost" size="icon" onClick={onBack} aria-label="Go back" className="bg-white rounded-full shadow-sm mb-6 hover:bg-gray-50 transition-colors">
+          <Button variant="ghost" size="icon" onClick={onBack} aria-label="Go back" className="bg-white rounded-full shadow-sm mb-6 hover:bg-gray-50 transition-colors min-h-[44px] min-w-[44px]">
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </Button>
         )}
@@ -596,7 +552,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                       onClick={() => toggleSubstitution(index, ingredient)}
                       disabled={loadingSubFor === index}
                       aria-label={`Substitute ${name}`}
-                      className={`rounded-xl transition-colors ${
+                      className={`rounded-xl transition-colors min-h-[44px] min-w-[44px] ${
                         isSubbed 
                           ? 'bg-[#c17a7a] text-white hover:bg-[#b06a6a] hover:text-white' 
                           : hasSub || aiSubstitutions[index]
@@ -634,7 +590,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                    size="sm" 
                    onClick={() => handleRegenerateSteps('simplify')} 
                    disabled={isRegeneratingSteps}
-                   className="h-11 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
+                   aria-label="Simplify instructions"
+                   className="h-11 min-h-[44px] text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
                    title="Make instructions simpler and easier to follow"
                  >
                    {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <RefreshCw className="w-3 h-3 mr-1.5" />} Simplify
@@ -644,7 +601,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                    size="sm" 
                    onClick={() => handleRegenerateSteps('detail')} 
                    disabled={isRegeneratingSteps}
-                   className="h-11 text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
+                   aria-label="Detail instructions"
+                   className="h-11 min-h-[44px] text-xs border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl"
                    title="Make instructions extremely detailed with visual cues"
                  >
                    {isRegeneratingSteps ? <Loader2 className="w-3 h-3 animate-spin mr-1.5" /> : <Sparkles className="w-3 h-3 mr-1.5" />} Detail

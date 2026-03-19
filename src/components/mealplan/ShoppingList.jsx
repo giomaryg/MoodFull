@@ -282,58 +282,12 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
        const inventoryNames = inventory.map(i => i.name).join(', ');
        const upcomingMeals = mealPlans.filter(m => new Date(m.date) >= new Date()).slice(0, 7).map(m => m.recipe_name).join(', ');
 
-       const response = await base44.integrations.Core.InvokeLLM({
-          prompt: `Analyze this shopping list: ${itemsToAnalyze.join(', ')}.
-Current Pantry Inventory: ${inventoryNames || 'None'}
-Upcoming Meals (next 7 days): ${upcomingMeals || 'None'}
-
-1. Categorize these items into logical grocery aisles (e.g. Produce, Meat, Dairy, Pantry, Frozen, etc) to optimize for grocery store layout.
-2. Estimate the total cost in USD and provide a breakdown per category to optimize for cost-efficiency.
-3. Suggest 2-3 smart substitutions specifically based on what they already have in their Pantry Inventory.
-4. Suggest 2-3 proactive items they might need for their Upcoming Meals but forgot to add to the list.
-5. Suggest item-specific bulk buying opportunities or promotions based on these items.
-Return JSON.`,
-          response_json_schema: {
-             type: "object",
-             properties: {
-                categories: {
-                   type: "array",
-                   items: {
-                      type: "object",
-                      properties: {
-                         categoryName: { type: "string" },
-                         items: { type: "array", items: { type: "string" } }
-                      }
-                   }
-                },
-                categoryCosts: {
-                   type: "array",
-                   items: {
-                      type: "object",
-                      properties: {
-                         category: { type: "string" },
-                         cost: { type: "string" }
-                      }
-                   }
-                },
-                itemCosts: {
-                   type: "array",
-                   items: {
-                      type: "object",
-                      properties: {
-                         item: { type: "string" },
-                         estimatedCost: { type: "string" }
-                      }
-                   }
-                },
-                estimatedTotalCost: { type: "string" },
-                substitutions: { type: "array", items: { type: "string" } },
-                proactiveSuggestions: { type: "array", items: { type: "string" } },
-                bulkOpportunities: { type: "array", items: { type: "string" } }
-             }
-          }
+       const response = await base44.functions.invoke('generateShoppingInsights', {
+         itemsToAnalyze,
+         inventoryNames,
+         upcomingMeals
        });
-       setAiInsights(response);
+       setAiInsights(response.data);
     } catch (e) {
        toast.error("Failed to generate AI insights");
     }
@@ -918,7 +872,9 @@ Return JSON.`,
               <div key={index} className="border-2 border-[#c5d9c9] rounded-xl overflow-hidden">
                 <button
                   onClick={() => toggleRecipeExpand(index)}
-                  className="w-full p-4 bg-[#f5e6dc] hover:bg-[#f0dfd0] transition-colors flex items-center justify-between"
+                  aria-expanded={expandedRecipes[index]}
+                  aria-label={expandedRecipes[index] ? "Collapse recipe ingredients" : "Expand recipe ingredients"}
+                  className="w-full p-4 bg-[#f5e6dc] hover:bg-[#f0dfd0] transition-colors flex items-center justify-between min-h-[44px]"
                 >
                   <div className="text-left">
                     <p className="font-semibold text-gray-900">{group.recipeName}</p>
@@ -942,6 +898,7 @@ Return JSON.`,
                         <button
                           key={ingIndex}
                           onClick={() => toggleItem(itemId)}
+                          aria-label={isChecked ? `Uncheck ${ingredient}` : `Check ${ingredient}`}
                           className={`w-full text-left p-2 min-h-[44px] rounded-lg border transition-all flex items-center gap-3 ${
                             isChecked
                               ? 'bg-gray-50 border-gray-300 opacity-60'
