@@ -1098,7 +1098,10 @@ export default function RecipeGenerator() {
         <ThreeBackground />
         {/* Hero Section */}
         {!showIntro &&
-        <div className="pt-[calc(0.25rem+env(safe-area-inset-top))] glass-header fixed top-0 left-0 right-0 z-50 border-b-0">
+        <div 
+          className="glass-header fixed top-0 left-0 right-0 z-50 border-b-0"
+          style={{ paddingTop: 'calc(0.25rem + env(safe-area-inset-top))' }}
+        >
             <div className="mx-auto my-1 px-3 max-w-6xl">
               <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -1118,7 +1121,13 @@ export default function RecipeGenerator() {
         }
 
         {/* Main Content */}
-        <div className="mx-auto px-4 pt-[calc(6rem+env(safe-area-inset-top))] sm:pt-[calc(7rem+env(safe-area-inset-top))] pb-[calc(8rem+env(safe-area-inset-bottom))] sm:px-6 max-w-6xl space-y-6 sm:space-y-8">
+        <div 
+          className="mx-auto px-4 sm:px-6 max-w-6xl space-y-6 sm:space-y-8"
+          style={{ 
+            paddingTop: 'calc(6rem + env(safe-area-inset-top))',
+            paddingBottom: 'calc(8rem + env(safe-area-inset-bottom))'
+          }}
+        >
           {/* Survey */}
           {showSurvey &&
           <motion.div
@@ -1601,7 +1610,8 @@ export default function RecipeGenerator() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           onClick={() => setShowAICoach(true)}
-          className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-6 sm:bottom-[calc(2rem+env(safe-area-inset-bottom))] sm:right-8 bg-gradient-to-r from-[#f2b769] to-[#e6a245] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-40 group flex items-center justify-center border-2 border-white/20"
+          className="fixed right-6 sm:right-8 bg-gradient-to-r from-[#f2b769] to-[#e6a245] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-40 group flex items-center justify-center border-2 border-white/20"
+          style={{ bottom: 'calc(6rem + env(safe-area-inset-bottom))' }}
         >
           <Sparkles className="w-6 h-6 animate-pulse" />
           <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap font-bold pl-0 group-hover:pl-2">
