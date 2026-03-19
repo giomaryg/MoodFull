@@ -97,13 +97,9 @@ export function NavigationStackProvider({ children }) {
             ...prev,
             [currentTab]: stack.slice(0, -1)
           };
-        } else {
-          // No stack, let it go back
-          setTimeout(() => {
-             window.history.back();
-          }, 0);
-          return prev;
         }
+        // If stack is empty, the browser naturally goes back because we didn't push a new state
+        return prev;
       });
     };
 
