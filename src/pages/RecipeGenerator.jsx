@@ -41,12 +41,15 @@ export default function RecipeGenerator() {
   const [selectedMealTypes, setSelectedMealTypes] = useState([]);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [activeTab, setActiveTab] = useState('home');
+  const [searchParams, setSearchParams] = import('react-router-dom').then(m => m.useSearchParams) || [new URLSearchParams(), () => {}];
+  const activeTab = searchParams ? searchParams.get('tab') || 'home' : 'home';
   const [tabScrollPositions, setTabScrollPositions] = useState({});
 
   const handleTabChange = (newTab) => {
     setTabScrollPositions(prev => ({ ...prev, [activeTab]: window.scrollY }));
-    setActiveTab(newTab);
+    if (searchParams) {
+      setSearchParams({ tab: newTab }, { replace: true });
+    }
   };
 
   const queryClient = useQueryClient();
