@@ -48,7 +48,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           onClick={() => isMinimized && setIsMinimized(false)}
           className={`fixed left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden ${isMinimized ? 'cursor-pointer hover:opacity-100' : ''}`}
-          style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
+          style={{ bottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
         >
           {isMinimized && (
             <button 
