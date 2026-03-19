@@ -1408,12 +1408,7 @@ export default function RecipeGenerator() {
               advancedFilters={advancedFilters}
               selectedMoods={selectedMoods}
               selectedMealTypes={selectedMealTypes}
-              onRecipeClick={(recipe) => {
-                setScrollPosition(window.scrollY);
-                setCurrentRecipe(recipe);
-                setSavedRecipeId(null);
-                window.scrollTo({ top: 0, behavior: 'auto' });
-              }} />
+              onRecipeClick={handleRecipeClick} />
 
             }
 
