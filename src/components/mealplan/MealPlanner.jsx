@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, ShoppingCart, Sparkles, RefreshCw, Loader2, Repeat, ArrowLeftRight, Target, Check, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { format, startOfWeek, addDays, isSameDay, startOfMonth } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AddMealDialog from './AddMealDialog';
@@ -730,12 +731,12 @@ Make them balanced, diverse, and delicious. Include:
           </Button>
 
           <div className="flex items-center gap-2 flex-1 sm:flex-none">
-            <input 
+            <Input 
               placeholder="e.g. high-protein under $80" 
               value={customPlanPrompt}
               onChange={(e) => setCustomPlanPrompt(e.target.value)}
               aria-label="Custom meal plan prompt"
-              className="w-full sm:w-64 min-h-[44px] px-3 py-2 text-sm rounded-md border border-[#c5d9c9] focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent"
+              className="w-full sm:w-64 min-h-[44px] border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
             />
             {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
               <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px]">
