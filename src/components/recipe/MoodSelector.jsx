@@ -191,7 +191,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
               <button
                 key={type.id}
                 onClick={() => handleMealTypeToggle(type.id)} 
-                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 min-h-[44px] rounded-full border text-xs transition-all duration-200 ${
                   isSelected
                     ? 'bg-[#6b9b76]/20 border-[#6b9b76]/45 text-[#6b9b76] font-medium'
                     : 'bg-transparent border-[#c5d9c9]/60 text-[#8c8c8c]'
