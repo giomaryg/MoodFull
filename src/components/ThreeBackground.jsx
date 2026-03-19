@@ -104,7 +104,7 @@ export default function ThreeBackground() {
   }, [isMobile]);
 
   if (isMobile) {
-    return <div className="fixed inset-0 z-0 pointer-events-none bg-[url('https://images.unsplash.com/photo-1495195134817-aeb325a55b65?q=80&w=2076&auto=format&fit=crop')] bg-cover bg-center opacity-5" />;
+    return <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-br from-[#e8f0ea] to-[#fdf8f4]" />;
   }
 
   return <div ref={mountRef} className="fixed inset-0 z-0 pointer-events-none" />;
