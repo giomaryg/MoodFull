@@ -709,7 +709,7 @@ Make them balanced, diverse, and delicious. Include:
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Meal Planner</h2>
-        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:w-auto">
           <Button
             onClick={() => {
               if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
@@ -718,7 +718,7 @@ Make them balanced, diverse, and delicious. Include:
               }
               setShowGoalsDialog(true);
             }}
-            className="bg-[#f2b769] hover:bg-[#e6a245] text-white flex-1 sm:flex-none min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
+            className="bg-[#f2b769] hover:bg-[#e6a245] text-white w-full sm:w-auto min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
           >
             <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
             <span className="hidden sm:inline">Set Goals</span>
@@ -726,7 +726,7 @@ Make them balanced, diverse, and delicious. Include:
             {(!currentUser?.is_premium && currentUser?.role !== 'admin') && <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>}
           </Button>
 
-          <div className="flex items-center gap-2 flex-1 sm:flex-none w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <Input 
               placeholder="e.g. high-protein under $80" 
               value={customPlanPrompt}
@@ -735,13 +735,13 @@ Make them balanced, diverse, and delicious. Include:
               className="w-full sm:w-64 min-h-[44px] border-2 border-[#c5d9c9] focus:border-[#6b9b76] text-xs sm:text-sm"
             />
             {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
-              <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5">
+              <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5 w-full sm:w-auto">
                 <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="hidden sm:inline">Generate Plan</span><span className="sm:hidden">Generate</span> <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
               </Button>
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5">
+                  <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5 w-full sm:w-auto">
                     {isGeneratingPlan ? (
                       <><Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin shrink-0" /> <span className="hidden sm:inline">Generating...</span><span className="sm:hidden">Wait...</span></>
                     ) : (
@@ -762,7 +762,7 @@ Make them balanced, diverse, and delicious. Include:
           </div>
           <Button
             onClick={onOpenShoppingList}
-            className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white flex-1 sm:flex-none min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
+            className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white w-full sm:w-auto min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
           >
             <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
             <span className="hidden sm:inline">Shopping List</span>
