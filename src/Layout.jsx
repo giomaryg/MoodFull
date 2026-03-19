@@ -35,16 +35,16 @@ export default function Layout({ children, currentPageName }) {
         }
 
         .glass-panel {
-          background: rgba(255,255,255,0.65);
+          background: hsl(var(--card) / 0.65);
           backdrop-filter: blur(6px);
-          border: 1px solid rgba(197,217,201,0.5);
+          border: 1px solid hsl(var(--border) / 0.5);
           border-radius: 14px;
         }
         
         .glass-header {
-          background: rgba(232,240,234,0.85);
+          background: hsl(var(--background) / 0.85);
           backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(197,217,201,0.5);
+          border-bottom: 1px solid hsl(var(--border) / 0.5);
         }
 
         .s1-orbit {
