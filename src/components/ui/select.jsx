@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 
 // Select context
 const SelectContext = React.createContext({});
+// Fixed syntax errors
 
 const Select = ({ children, value, onValueChange, defaultValue, disabled, ...props }) => {
   const { id, ...rest } = props;
