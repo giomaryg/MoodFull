@@ -504,13 +504,15 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
     <div className="max-w-2xl mx-auto px-4">
       <Card className="border-0 shadow-2xl rounded-2xl sm:rounded-3xl relative">
         {onSkip &&
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={onSkip}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors z-10"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors z-10"
           aria-label="Skip survey">
 
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         }
         <CardContent className="p-6 sm:p-8 md:p-10">
           <div className="mb-8">
