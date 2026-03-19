@@ -1292,7 +1292,8 @@ export default function RecipeGenerator() {
                           queryClient.invalidateQueries({ queryKey: ['currentUser'] });
                           toast.success('Daily limit reset for testing!');
                         }}
-                        className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 px-2 py-1 rounded hover:bg-amber-200 transition-colors">
+                        aria-label="Reset daily limit for testing"
+                        className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 px-2 py-1 rounded hover:bg-amber-200 transition-colors min-h-[44px] min-w-[44px]">
 
                           Reset Limit (Dev)
                         </button>
