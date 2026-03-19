@@ -38,7 +38,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
             <Button
               onClick={onRefresh}
               variant="outline"
-              className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm flex-1 sm:flex-none"
+              className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm flex-1 sm:flex-none min-h-[44px]"
             >
               <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
               Refresh Ideas
@@ -48,7 +48,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
             <Button
               onClick={onStartOver}
               variant="outline"
-              className="border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-600 text-sm flex-1 sm:flex-none"
+              className="border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-600 text-sm flex-1 sm:flex-none min-h-[44px]"
             >
               <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
               Start Over
@@ -99,7 +99,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                       {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
                     </p>
                   </div>
-                  <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform">
+                  <button aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white rounded-full flex items-center justify-center shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform">
                     <Heart className="w-5 h-5 fill-current" />
                   </button>
                 </div>
