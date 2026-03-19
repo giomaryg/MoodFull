@@ -265,12 +265,14 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
       </div>
 
       {!hasInitialLoad && isGenerating && (
-        <Card className="border-2 border-dashed border-[#c5d9c9] bg-[#f8faf8]">
-          <CardContent className="p-12 text-center">
-            <Loader2 className="w-10 h-10 text-[#6b9b76] animate-spin mx-auto mb-4" />
-            <p className="text-gray-600 font-medium">Curating your personalized recipe feed...</p>
-          </CardContent>
-        </Card>
+        <div className="space-y-8">
+          <div className="w-full h-80 bg-muted animate-pulse rounded-[2rem]"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="w-full h-64 bg-muted animate-pulse rounded-[2rem]"></div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Recipe of the Day */}
@@ -286,8 +288,8 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
           >
             <div className="relative h-64 sm:h-80 bg-gray-100">
               {recipeOfDay.imageLoading ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
-                  <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                  <ChefHat className="w-16 h-16 text-muted-foreground/50" />
                 </div>
               ) : recipeOfDay.imageUrl ? (
                 <img src={recipeOfDay.imageUrl} alt={recipeOfDay.name} className="w-full h-full object-cover" />
@@ -318,20 +320,20 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
               </div>
             </div>
             
-            <div className="p-6 flex justify-around items-center bg-white">
+            <div className="p-6 flex justify-around items-center bg-card border-t border-border/50">
               <div className="text-center">
-                <p className="font-bold text-xl text-gray-900">{recipeOfDay.nutrition?.calories || 320}</p>
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Calories</p>
+                <p className="font-bold text-xl text-foreground">{recipeOfDay.nutrition?.calories || 320}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Calories</p>
               </div>
-              <div className="w-px h-10 bg-gray-100"></div>
+              <div className="w-px h-10 bg-border"></div>
               <div className="text-center">
-                <p className="font-bold text-xl text-gray-900">{recipeOfDay.nutrition?.protein ? String(recipeOfDay.nutrition.protein).match(/(\d+)/)?.[1] : 24}g</p>
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Protein</p>
+                <p className="font-bold text-xl text-foreground">{recipeOfDay.nutrition?.protein ? String(recipeOfDay.nutrition.protein).match(/(\d+)/)?.[1] : 24}g</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Protein</p>
               </div>
-              <div className="w-px h-10 bg-gray-100"></div>
+              <div className="w-px h-10 bg-border"></div>
               <div className="text-center">
-                <p className="font-bold text-xl text-gray-900">{recipeOfDay.nutrition?.carbs ? String(recipeOfDay.nutrition.carbs).match(/(\d+)/)?.[1] : 45}g</p>
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Carbs</p>
+                <p className="font-bold text-xl text-foreground">{recipeOfDay.nutrition?.carbs ? String(recipeOfDay.nutrition.carbs).match(/(\d+)/)?.[1] : 45}g</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Carbs</p>
               </div>
             </div>
           </Card>
@@ -363,8 +365,8 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
                 >
                   <div className="relative h-56 sm:h-64 shrink-0 bg-gray-100">
                     {recipe.imageLoading ? (
-                      <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
-                        <Loader2 className="w-8 h-8 text-[#6b9b76] animate-spin" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                        <ChefHat className="w-12 h-12 text-muted-foreground/50" />
                       </div>
                     ) : recipe.imageUrl ? (
                       <img
@@ -397,20 +399,20 @@ Generate the full recipes. Each recipe must have Name, Description, Ingredients,
                     </div>
                   </div>
 
-                  <div className="p-5 flex justify-between items-center bg-white mt-auto">
+                  <div className="p-5 flex justify-between items-center bg-card mt-auto border-t border-border/50">
                     <div className="text-center">
-                      <p className="font-bold text-lg text-gray-900">{recipe.nutrition?.calories || 290}</p>
-                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Calories</p>
+                      <p className="font-bold text-lg text-foreground">{recipe.nutrition?.calories || 290}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Calories</p>
                     </div>
-                    <div className="w-px h-8 bg-gray-100"></div>
+                    <div className="w-px h-8 bg-border"></div>
                     <div className="text-center">
-                      <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
-                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Protein</p>
+                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Protein</p>
                     </div>
-                    <div className="w-px h-8 bg-gray-100"></div>
+                    <div className="w-px h-8 bg-border"></div>
                     <div className="text-center">
-                      <p className="font-bold text-lg text-gray-900">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
-                      <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">Carbs</p>
+                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Carbs</p>
                     </div>
                   </div>
                 </Card>
