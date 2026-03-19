@@ -382,9 +382,9 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       {/* Top Section */}
       <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-[320px] sm:min-h-[400px]">
         {onBack && (
-          <button onClick={onBack} aria-label="Go back" className="w-11 h-11 min-w-[44px] min-h-[44px] bg-white rounded-full flex items-center justify-center shadow-sm mb-6 hover:bg-gray-50 transition-colors">
+          <Button variant="ghost" size="icon" onClick={onBack} aria-label="Go back" className="bg-white rounded-full shadow-sm mb-6 hover:bg-gray-50 transition-colors">
             <ChevronLeft className="w-5 h-5 text-gray-700" />
-          </button>
+          </Button>
         )}
         <div className="flex justify-between relative h-full">
           <div className="w-[55%] sm:w-1/2 z-10 flex flex-col">
@@ -479,9 +479,9 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-2 min-h-[44px]">
             <Users className="w-4 h-4 mr-1 text-gray-400" />
-            <button aria-label="Decrease servings" onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Minus className="w-3 h-3" /></button>
+            <Button variant="ghost" size="icon" aria-label="Decrease servings" onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-0 w-8 h-8 min-w-[32px] min-h-[32px]"><Minus className="w-3 h-3" /></Button>
             <span className="font-bold">{currentServings}</span>
-            <button aria-label="Increase servings" onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"><Plus className="w-3 h-3" /></button>
+            <Button variant="ghost" size="icon" aria-label="Increase servings" onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-0 w-8 h-8 min-w-[32px] min-h-[32px]"><Plus className="w-3 h-3" /></Button>
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl capitalize">
             <ChefHat className="w-4 h-4 mr-1.5 text-gray-400" />
@@ -590,13 +590,15 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                       </AnimatePresence>
                     </div>
                     
-                    <button 
+                    <Button 
+                      variant="ghost"
+                      size="icon"
                       onClick={() => toggleSubstitution(index, ingredient)}
                       disabled={loadingSubFor === index}
                       aria-label={`Substitute ${name}`}
-                      className={`p-2 min-h-[44px] min-w-[44px] rounded-xl flex items-center justify-center transition-colors ${
+                      className={`rounded-xl transition-colors ${
                         isSubbed 
-                          ? 'bg-[#c17a7a] text-white' 
+                          ? 'bg-[#c17a7a] text-white hover:bg-[#b06a6a] hover:text-white' 
                           : hasSub || aiSubstitutions[index]
                             ? 'bg-white text-[#c17a7a] hover:bg-gray-50'
                             : isMissingOrLow 
@@ -610,7 +612,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                       ) : (
                         isSubbed || hasSub ? <RefreshCw className="w-4 h-4" /> : <Wand2 className="w-4 h-4" />
                       )}
-                    </button>
+                    </Button>
                   </motion.div>
                 );
               })}

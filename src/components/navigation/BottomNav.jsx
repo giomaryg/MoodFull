@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Home, BookMarked, User, Calendar, Package, BarChart2, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 export default function BottomNav({ activeTab, onTabChange, isVisible = true, enablePantry = true }) {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -60,13 +61,14 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
               const isActive = activeTab === tab.id;
               
               return (
-                <button
+                <Button
                   key={tab.id}
+                  variant="ghost"
                   onClick={() => onTabChange(tab.id)}
                   aria-label={tab.label}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`flex flex-col items-center justify-center gap-1.5 px-3 py-2 rounded-2xl relative transition-colors flex-shrink-0 min-w-[72px] sm:min-w-[80px] min-h-[44px] ${
-                    isActive ? 'bg-[#6b9b76]/10' : ''
+                  className={`flex-col h-auto gap-1.5 px-3 py-2 rounded-2xl relative flex-shrink-0 min-w-[72px] sm:min-w-[80px] min-h-[44px] ${
+                    isActive ? 'bg-[#6b9b76]/10 hover:bg-[#6b9b76]/20' : 'hover:bg-gray-100/50'
                   }`}
                 >
                   <Icon
@@ -90,7 +92,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                       transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
                   )}
-                </button>
+                </Button>
               );
             })}
           </div>

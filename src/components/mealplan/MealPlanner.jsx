@@ -821,9 +821,9 @@ Make them balanced, diverse, and delicious. Include:
 
       {aiNutritionAdvice && (
         <div className="bg-[#f8faf8] border-2 border-[#c5d9c9] rounded-xl p-5 relative">
-          <button onClick={() => setAiNutritionAdvice(null)} aria-label="Close AI insights" className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 min-h-[44px] min-w-[44px] flex items-center justify-center">
+          <Button variant="ghost" size="icon" onClick={() => setAiNutritionAdvice(null)} aria-label="Close AI insights" className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 hover:bg-transparent">
             <X className="w-4 h-4" />
-          </button>
+          </Button>
           <h4 className="font-bold text-[#6b9b76] flex items-center gap-2 mb-2">
             <Sparkles className="w-5 h-5" /> AI Nutrition Insights
           </h4>
@@ -842,9 +842,9 @@ Make them balanced, diverse, and delicious. Include:
       {/* Calendar Controls */}
       <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-xl p-4 border-2 border-[#c5d9c9] gap-4">
         <div className="flex bg-gray-100 p-1 rounded-lg" role="tablist" aria-label="Calendar View">
-          <button role="tab" aria-selected={calendarView === 'daily'} onClick={() => setCalendarView('daily')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'daily' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Daily</button>
-          <button role="tab" aria-selected={calendarView === 'weekly'} onClick={() => setCalendarView('weekly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'weekly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Weekly</button>
-          <button role="tab" aria-selected={calendarView === 'monthly'} onClick={() => setCalendarView('monthly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'monthly' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}>Monthly</button>
+          <Button variant="ghost" role="tab" aria-selected={calendarView === 'daily'} onClick={() => setCalendarView('daily')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'daily' ? 'bg-white shadow text-[#6b9b76] hover:bg-white hover:text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700 hover:bg-transparent'}`}>Daily</Button>
+          <Button variant="ghost" role="tab" aria-selected={calendarView === 'weekly'} onClick={() => setCalendarView('weekly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'weekly' ? 'bg-white shadow text-[#6b9b76] hover:bg-white hover:text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700 hover:bg-transparent'}`}>Weekly</Button>
+          <Button variant="ghost" role="tab" aria-selected={calendarView === 'monthly'} onClick={() => setCalendarView('monthly')} className={`px-4 py-2 min-h-[44px] text-sm font-medium rounded-md transition-colors ${calendarView === 'monthly' ? 'bg-white shadow text-[#6b9b76] hover:bg-white hover:text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700 hover:bg-transparent'}`}>Monthly</Button>
         </div>
         <div className="flex items-center gap-4">
           <Button
@@ -1081,38 +1081,42 @@ Make them balanced, diverse, and delicious. Include:
        </div>
 
        <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-wrap justify-end">
-        <button
+        <Button
+          variant="ghost" size="icon"
           onClick={(e) => markAsCooked(e, meal)}
-          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          className="hover:bg-white/50 rounded"
           title="Mark as Cooked (Deduct Inventory)"
           aria-label={`Mark ${meal.recipe_name} as cooked`}
         >
           <Check className="w-4 h-4 text-green-600" />
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost" size="icon"
           onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
-          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          className="hover:bg-white/50 rounded"
           title="Swap Meal"
           aria-label={`Swap ${meal.recipe_name}`}
         >
           <ArrowLeftRight className="w-4 h-4 text-[#6b9b76]" />
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost" size="icon"
           onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
-          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          className="hover:bg-white/50 rounded"
           title="Repeat Meal"
           aria-label={`Repeat ${meal.recipe_name}`}
         >
           <Repeat className="w-4 h-4 text-[#6b9b76]" />
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost" size="icon"
           onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
-          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/50 rounded"
+          className="hover:bg-white/50 rounded"
           title="Remove Meal"
           aria-label={`Remove ${meal.recipe_name}`}
         >
           <Trash2 className="w-4 h-4 text-red-500" />
-        </button>
+        </Button>
        </div>
      </div>
    )}
@@ -1150,30 +1154,33 @@ Make them balanced, diverse, and delicious. Include:
             <p className="text-xs text-gray-500 mb-4 leading-tight">Drag and drop recipes onto the calendar slots.</p>
             
             <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-lg overflow-x-auto" role="tablist" aria-label="Recipe Sources">
-              <button
+              <Button
+                variant="ghost"
                 role="tab"
                 aria-selected={sidebarTab === 'saved'}
                 onClick={() => setSidebarTab('saved')}
-                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76] hover:bg-white hover:text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700 hover:bg-transparent'}`}
               >
                 Saved ({recipes.length})
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 role="tab"
                 aria-selected={sidebarTab === 'generated'}
                 onClick={() => setSidebarTab('generated')}
-                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76] hover:bg-white hover:text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700 hover:bg-transparent'}`}
               >
                 Generated ({generatedRecipes.length})
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 role="tab"
                 aria-selected={sidebarTab === 'history'}
                 onClick={() => setSidebarTab('history')}
-                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'history' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'history' ? 'bg-white shadow text-[#6b9b76] hover:bg-white hover:text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700 hover:bg-transparent'}`}
               >
                 History ({pastMeals.length})
-              </button>
+              </Button>
             </div>
 
             <Droppable droppableId="sidebar-recipes" isDropDisabled={true}>

@@ -1141,20 +1141,12 @@ export default function RecipeGenerator() {
           }
 
           {/* Home Tab */}
-          <div style={{ display: !showSurvey && activeTab === 'home' ? 'block' : 'none' }} className="space-y-6 sm:space-y-8">
-            {getStack('home').length > 0 ? (
-              <RecipeDisplay
-                recipe={getStack('home')[getStack('home').length - 1].recipe}
-                onSave={handleSaveRecipe}
-                isSaved={isRecipeSaved(getStack('home')[getStack('home').length - 1].recipe)}
-                onBack={() => popFromStack('home')}
-                onUpdate={(updatedRecipe) => { replaceTopStack('home', { recipe: { ...getStack('home')[getStack('home').length - 1].recipe, ...updatedRecipe } }); }}
-                onSimilarRecipeClick={(recipe) => {
-                  pushToStack('home', { recipe });
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                }}
-              />
-            ) : (
+          <div style={{ display: !showSurvey && activeTab === 'home' ? 'block' : 'none' }} className="relative w-full">
+            <motion.div
+              animate={{ x: getStack('home').length > 0 ? '-30%' : 0, opacity: getStack('home').length > 0 ? 0 : 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
+            >
               <>
               <WellnessRecommendationCard 
                 user={currentUser} 
@@ -1178,14 +1170,16 @@ export default function RecipeGenerator() {
                     animate={{ opacity: 1, y: 0 }}
                     className="relative bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
                   >
-                    <button 
+                    <Button 
+                      variant="ghost"
+                      size="icon"
                       onClick={() => setHideExpiringAlert(true)}
-                      className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
+                      className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors"
                       title="Dismiss notification"
                       aria-label="Dismiss expiring items notification"
                     >
                       <X className="w-4 h-4" />
-                    </button>
+                    </Button>
                     <div className="pr-6">
                       <h4 className="font-bold text-amber-800 flex items-center gap-2">
                         <span className="text-xl">⚠️</span> Expiring Soon!
@@ -1221,13 +1215,15 @@ export default function RecipeGenerator() {
 
 
                     {globalSearchQuery &&
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setGlobalSearchQuery('')}
                     aria-label="Clear search"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] hover:bg-transparent">
 
                         <X className="w-4 h-4" />
-                      </button>
+                      </Button>
                   }
                   </div>
 
@@ -1266,18 +1262,20 @@ export default function RecipeGenerator() {
                       <span className="text-xl">⏳</span>
                       <div>
                         <p className="font-semibold text-amber-800">Daily limit reached</p>
-                        <p className="text-amber-700 text-xs">You've used your 3 free generations for today. Resets in 24 hours — or <button onClick={() => setShowPaywall(true)} className="underline font-semibold">upgrade for unlimited</button>.</p>
-                        <button
+                        <p className="text-amber-700 text-xs">You've used your 3 free generations for today. Resets in 24 hours — or <Button variant="link" className="p-0 h-auto font-semibold text-amber-800 underline" onClick={() => setShowPaywall(true)}>upgrade for unlimited</Button>.</p>
+                        <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={async () => {
                           await base44.auth.updateMe({ daily_mood_count: 0, daily_mood_reset_date: null });
                           queryClient.invalidateQueries({ queryKey: ['currentUser'] });
                           toast.success('Daily limit reset for testing!');
                         }}
                         aria-label="Reset daily limit for testing"
-                        className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 px-2 py-1 rounded hover:bg-amber-200 transition-colors min-h-[44px] min-w-[44px]">
+                        className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 hover:bg-amber-200 transition-colors">
 
                           Reset Limit (Dev)
-                        </button>
+                        </Button>
                       </div>
                     </motion.div>);
 
@@ -1407,25 +1405,41 @@ export default function RecipeGenerator() {
 
             }
 
-              </>
+            </>
+            </motion.div>
+
+            <AnimatePresence>
+            {getStack('home').length > 0 && (
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="relative z-50 w-full bg-background"
+              >
+                <RecipeDisplay
+                  recipe={getStack('home')[getStack('home').length - 1].recipe}
+                  onSave={handleSaveRecipe}
+                  isSaved={isRecipeSaved(getStack('home')[getStack('home').length - 1].recipe)}
+                  onBack={() => popFromStack('home')}
+                  onUpdate={(updatedRecipe) => { replaceTopStack('home', { recipe: { ...getStack('home')[getStack('home').length - 1].recipe, ...updatedRecipe } }); }}
+                  onSimilarRecipeClick={(recipe) => {
+                    pushToStack('home', { recipe });
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                  }}
+                />
+              </motion.div>
             )}
+            </AnimatePresence>
             </div>
 
-          {/* Saved Recipes Tab */}
-          <div style={{ display: !showSurvey && activeTab === 'saved' ? 'block' : 'none' }}>
-            {getStack('saved').length > 0 ? (
-              <RecipeDisplay
-                recipe={getStack('saved')[getStack('saved').length - 1].recipe}
-                onSave={handleSaveRecipe}
-                isSaved={isRecipeSaved(getStack('saved')[getStack('saved').length - 1].recipe)}
-                onBack={() => popFromStack('saved')}
-                onUpdate={(updatedRecipe) => { replaceTopStack('saved', { recipe: { ...getStack('saved')[getStack('saved').length - 1].recipe, ...updatedRecipe } }); }}
-                onSimilarRecipeClick={(recipe) => {
-                  pushToStack('saved', { recipe });
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                }}
-              />
-            ) : (
+            {/* Saved Recipes Tab */}
+          <div style={{ display: !showSurvey && activeTab === 'saved' ? 'block' : 'none' }} className="relative w-full">
+            <motion.div
+              animate={{ x: getStack('saved').length > 0 ? '-30%' : 0, opacity: getStack('saved').length > 0 ? 0 : 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={`space-y-6 w-full ${getStack('saved').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
+            >
           <div className="space-y-6">
 
               <div className="text-center space-y-2">
@@ -1476,12 +1490,14 @@ export default function RecipeGenerator() {
                     className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl" />
 
                       {globalSearchQuery &&
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] min-w-[44px] min-h-[44px] flex items-center justify-center">
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:bg-transparent">
 
                           <X className="w-4 h-4" />
-                        </button>
+                        </Button>
                   }
                     </div>
 
@@ -1511,7 +1527,31 @@ export default function RecipeGenerator() {
                 </>
             }
             </div>
-            )}
+            </motion.div>
+
+            <AnimatePresence>
+              {getStack('saved').length > 0 && (
+                <motion.div
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="relative z-50 w-full bg-background"
+                >
+                  <RecipeDisplay
+                    recipe={getStack('saved')[getStack('saved').length - 1].recipe}
+                    onSave={handleSaveRecipe}
+                    isSaved={isRecipeSaved(getStack('saved')[getStack('saved').length - 1].recipe)}
+                    onBack={() => popFromStack('saved')}
+                    onUpdate={(updatedRecipe) => { replaceTopStack('saved', { recipe: { ...getStack('saved')[getStack('saved').length - 1].recipe, ...updatedRecipe } }); }}
+                    onSimilarRecipeClick={(recipe) => {
+                      pushToStack('saved', { recipe });
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Planner Tab */}

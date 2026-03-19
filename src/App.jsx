@@ -73,7 +73,7 @@ const AnimatedRoutes = () => {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={
-            <motion.div initial={{ x: '100%', opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: '-100%', opacity: 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="w-full h-full min-h-screen">
+            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '-30%' }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="w-full h-full min-h-screen bg-background">
               <LayoutWrapper currentPageName={mainPageKey}>
                 <MainPage />
               </LayoutWrapper>
@@ -84,7 +84,7 @@ const AnimatedRoutes = () => {
               key={path}
               path={`/${path}`}
               element={
-                <motion.div initial={{ x: '100%', opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: '-100%', opacity: 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="w-full h-full min-h-screen">
+                <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '-30%' }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="w-full h-full min-h-screen bg-background">
                   <LayoutWrapper currentPageName={path}>
                     <Page />
                   </LayoutWrapper>
