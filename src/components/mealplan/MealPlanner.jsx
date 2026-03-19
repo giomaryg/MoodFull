@@ -1158,20 +1158,26 @@ Make them balanced, diverse, and delicious. Include:
             <h3 className="font-bold text-[#6b9b76] mb-2 text-lg">Add to Calendar</h3>
             <p className="text-xs text-gray-500 mb-4 leading-tight">Drag and drop recipes onto the calendar slots.</p>
             
-            <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-lg overflow-x-auto">
+            <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-lg overflow-x-auto" role="tablist" aria-label="Recipe Sources">
               <button
+                role="tab"
+                aria-selected={sidebarTab === 'saved'}
                 onClick={() => setSidebarTab('saved')}
                 className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'saved' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Saved ({recipes.length})
               </button>
               <button
+                role="tab"
+                aria-selected={sidebarTab === 'generated'}
                 onClick={() => setSidebarTab('generated')}
                 className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'generated' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Generated ({generatedRecipes.length})
               </button>
               <button
+                role="tab"
+                aria-selected={sidebarTab === 'history'}
                 onClick={() => setSidebarTab('history')}
                 className={`flex-1 text-xs font-medium py-2 px-2 min-h-[44px] rounded-md transition-colors whitespace-nowrap ${sidebarTab === 'history' ? 'bg-white shadow text-[#6b9b76]' : 'text-gray-500 hover:text-gray-700'}`}
               >
