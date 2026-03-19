@@ -47,10 +47,11 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Home from './pages/Home';
-import RecipeGenerator from './pages/RecipeGenerator';
+import { lazy } from 'react';
 import __Layout from './Layout.jsx';
 
+const Home = lazy(() => import('./pages/Home'));
+const RecipeGenerator = lazy(() => import('./pages/RecipeGenerator'));
 
 export const PAGES = {
     "Home": Home,
