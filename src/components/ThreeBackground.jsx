@@ -7,7 +7,10 @@ export default function ThreeBackground() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+      const isMobileDevice = window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const isLowPerformance = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || 
+                               (navigator.deviceMemory && navigator.deviceMemory <= 4);
+      setIsMobile(isMobileDevice || isLowPerformance);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
