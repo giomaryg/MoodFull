@@ -1349,7 +1349,7 @@ export default function RecipeGenerator() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4">
+                className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4 w-full">
 
                     <Button
                   onClick={generateRecipe}
