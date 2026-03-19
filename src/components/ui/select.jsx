@@ -6,7 +6,7 @@ import { Check, ChevronDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const SelectContext = React.createContext({})
+const SelectContext = React.createContext({});
 
 const Select = ({ children, value, onValueChange, defaultValue, disabled, ...props }) => {
   const { id, ...rest } = props;
