@@ -115,7 +115,12 @@ export default function ThreeBackground() {
   }, [isMobile]);
 
   if (isMobile) {
-    return <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-br from-[#e8f0ea] to-[#fdf8f4]" />;
+    return (
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-br from-[#e8f0ea] to-[#fdf8f4]" 
+        style={{ transform: 'translateZ(0)', willChange: 'transform' }}
+      />
+    );
   }
 
   return <div ref={mountRef} className="fixed inset-0 z-0 pointer-events-none" />;
