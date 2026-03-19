@@ -1626,7 +1626,7 @@ export default function RecipeGenerator() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           onClick={() => setShowAICoach(true)}
-          className="fixed bottom-24 right-6 sm:bottom-8 sm:right-8 bg-gradient-to-r from-[#f2b769] to-[#e6a245] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-40 group flex items-center justify-center border-2 border-white/20"
+          className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-6 sm:bottom-[calc(2rem+env(safe-area-inset-bottom))] sm:right-8 bg-gradient-to-r from-[#f2b769] to-[#e6a245] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-40 group flex items-center justify-center border-2 border-white/20"
         >
           <Sparkles className="w-6 h-6 animate-pulse" />
           <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap font-bold pl-0 group-hover:pl-2">
