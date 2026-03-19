@@ -290,37 +290,13 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                   onClick={() => onRecipeClick(recipe)}
                   className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:scale-[1.02] transition-transform duration-200 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
                 >
-                  <div className="absolute top-2 right-2 flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-all z-10">
-                    {/* Dev Edit Button for testing */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const randomData = {
-                          prep_time: Math.floor(Math.random() * 30 + 10) + ' min',
-                          difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]
-                        };
-                        updateRecipeMutation.mutate({ id: recipe.id, data: randomData });
-                        toast.success('Dev: Recipe updated for testing');
-                      }}
-                      className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-6 h-6"
-                      title="Dev: Randomly update recipe info"
-                    >
-                      DEV
-                    </button>
-                    <button
-                      onClick={(e) => handleDelete(e, recipe.id)}
-                      className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-red-50"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                    </button>
-                  </div>
                   <div className="w-11 h-11 rounded-[10px] flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65]">
                     🥗
                     {recipe.image_url && (
                       <img src={recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />
                     )}
                   </div>
-                  <div className="flex-1 min-w-0 pr-6">
+                  <div className="flex-1 min-w-0 pr-2">
                     <div className="text-[11px] font-semibold text-[#3d5244] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
                       <HighlightedText text={recipe.name} query={displayQuery} />
                     </div>
@@ -345,8 +321,34 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                       </div>
                     )}
                   </div>
-                  <div className="w-5 h-5 rounded-full border border-[#c5d9c9]/70 flex items-center justify-center text-[9px] text-[#6b9b76] flex-shrink-0">
-                    →
+                  <div className="flex flex-col items-end justify-between self-stretch flex-shrink-0">
+                    <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-all z-10">
+                      {/* Dev Edit Button for testing */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const randomData = {
+                            prep_time: Math.floor(Math.random() * 30 + 10) + ' min',
+                            difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]
+                          };
+                          updateRecipeMutation.mutate({ id: recipe.id, data: randomData });
+                          toast.success('Dev: Recipe updated for testing');
+                        }}
+                        className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-6 h-6"
+                        title="Dev: Randomly update recipe info"
+                      >
+                        DEV
+                      </button>
+                      <button
+                        onClick={(e) => handleDelete(e, recipe.id)}
+                        className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-red-50"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                      </button>
+                    </div>
+                    <div className="w-5 h-5 rounded-full border border-[#c5d9c9]/70 flex items-center justify-center text-[9px] text-[#6b9b76] mt-auto">
+                      →
+                    </div>
                   </div>
                 </div>
               </motion.div>
