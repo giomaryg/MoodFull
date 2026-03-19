@@ -83,6 +83,12 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
     onErrorMessage: 'Failed to update meal'
   });
 
+  const updateInventoryMutation = useOptimisticMutation({
+    queryKey: ['inventory'],
+    mutationFn: ({ id, data }) => base44.entities.Ingredient.update(id, data),
+    action: 'update'
+  });
+
   const displayDays = useMemo(() => {
     if (calendarView === 'daily') {
       return [currentDate];
@@ -219,12 +225,11 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
         
         if (invMatch && invMatch.quantity > 0) {
            const newQuant = Math.max(0, Number((invMatch.quantity - (1 * servingsRatio)).toFixed(2)));
-           await base44.entities.Ingredient.update(invMatch.id, { quantity: newQuant });
+           await updateInventoryMutation.mutateAsync({ id: invMatch.id, data: { quantity: newQuant } });
            deductedCount++;
         }
       }
       
-      queryClient.invalidateQueries({ queryKey: ['inventory'] });
       toast.success(`Marked as cooked! Deducted ${deductedCount} items from inventory.`);
     } catch (err) {
       toast.error("Failed to update inventory.");
