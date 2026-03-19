@@ -1130,7 +1130,35 @@ export default function RecipeGenerator() {
             </motion.div>
           }
 
-          {!showSurvey && activeTab === 'home' &&
+          {!showSurvey && currentRecipe && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentRecipe.id || 'current-recipe'}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-6 sm:space-y-8"
+              >
+                <RecipeDisplay
+                  recipe={currentRecipe}
+                  onSave={handleSaveRecipe}
+                  isSaved={!!savedRecipeId}
+                  onBack={handleBack}
+                  onUpdate={(updatedRecipe) => {
+                    updateCurrentRecipe({ ...currentRecipe, ...updatedRecipe });
+                  }}
+                  onSimilarRecipeClick={(recipe) => {
+                    setScrollPosition(0);
+                    setCurrentRecipe(recipe);
+                    const savedVersion = savedRecipes.find((r) => r.id === recipe.id);
+                    setSavedRecipeId(savedVersion ? savedVersion.id : null);
+                  }}
+                />
+              </motion.div>
+            </AnimatePresence>
+          )}
+
+          {!showSurvey && !currentRecipe && activeTab === 'home' &&
           <>
               <WellnessRecommendationCard 
                 user={currentUser} 
