@@ -1172,10 +1172,10 @@ Return JSON.`,
                             delete newChecked[item.key];
                             setCheckedItems(newChecked);
                           }}
-                          className="p-1.5 hover:bg-red-50 text-red-400 hover:text-red-500 rounded-lg transition-colors ml-2"
+                          className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-red-50 text-red-400 hover:text-red-500 rounded-lg transition-colors ml-2"
                           title="Remove custom item"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-5 h-5" />
                         </button>
                       )}
                     </button>
