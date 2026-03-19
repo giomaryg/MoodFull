@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils"
 
 const SelectContext = React.createContext({})
 
-const Select = ({ children, value, onValueChange, defaultValue, disabled, id, ...props }) => {
+const Select = ({ children, value, onValueChange, defaultValue, disabled, ...props }) => {
+  const { id, ...rest } = props;
   const [open, setOpen] = React.useState(false)
   const [internalValue, setInternalValue] = React.useState(value || defaultValue)
   const [items, setItems] = React.useState({})
