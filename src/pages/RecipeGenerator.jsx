@@ -128,8 +128,7 @@ export default function RecipeGenerator() {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
         const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
-        await base44.auth.updateMe({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
-        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+        await updateUserMutation.mutateAsync({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
       }
 
       const quickResponse = await base44.integrations.Core.InvokeLLM({
@@ -532,16 +531,21 @@ export default function RecipeGenerator() {
     }
   });
 
+  const updateUserMutation = useOptimisticMutation({
+    queryKey: ['currentUser'],
+    mutationFn: (data) => base44.auth.updateMe(data),
+    action: 'update'
+  });
+
   const handleSurveyComplete = async (preferences) => {
     try {
-      await base44.auth.updateMe(preferences);
+      await updateUserMutation.mutateAsync(preferences);
       setUserPreferences({ ...userPreferences, ...preferences });
       setShowSurvey(false);
       setSelectedMoods([]);
       setGeneratedRecipes([]);
       setCurrentRecipe(null);
       setSavedRecipeId(null);
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       toast.success('Preferences saved!');
     } catch (error) {
       toast.error('Failed to save preferences');
@@ -664,8 +668,7 @@ export default function RecipeGenerator() {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
         const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
-        await base44.auth.updateMe({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
-        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+        await updateUserMutation.mutateAsync({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
       }
 
       // Show recipes immediately
@@ -844,8 +847,7 @@ export default function RecipeGenerator() {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
         const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
-        await base44.auth.updateMe({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
-        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+        await updateUserMutation.mutateAsync({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
       }
 
       setGeneratedRecipes(quickRecipes);
@@ -1271,8 +1273,7 @@ export default function RecipeGenerator() {
                         variant="secondary"
                         size="sm"
                         onClick={async () => {
-                          await base44.auth.updateMe({ daily_mood_count: 0, daily_mood_reset_date: null });
-                          queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+                          await updateUserMutation.mutateAsync({ daily_mood_count: 0, daily_mood_reset_date: null });
                           toast.success('Daily limit reset for testing!');
                         }}
                         aria-label="Reset daily limit for testing"
