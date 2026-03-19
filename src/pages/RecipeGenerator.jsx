@@ -72,7 +72,6 @@ export default function RecipeGenerator() {
 
   const [globalSearchQuery, setGlobalSearchQuery] = useState('');
   const [showIntro, setShowIntro] = useState(true);
-  const [activeTab, setActiveTab] = useState('home');
   const [advancedFilters, setAdvancedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [showShoppingList, setShowShoppingList] = useState(false);
