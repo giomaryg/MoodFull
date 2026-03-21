@@ -1121,8 +1121,8 @@ export default function RecipeGenerator() {
       <AnimatePresence>
         {showIntro && currentUser &&
         <IntroScreen
-          userName={currentUser?.full_name?.split(' ')[0]}
-          onContinue={() => setShowIntro(false)} />
+        userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]}
+        onContinue={() => setShowIntro(false)} />
 
         }
       </AnimatePresence>
