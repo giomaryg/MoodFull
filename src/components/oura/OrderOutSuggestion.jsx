@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { UtensilsCrossed, ExternalLink, ShoppingBag, ChevronRight } from 'lucide-react';
+import { UtensilsCrossed, ExternalLink, ShoppingBag, ChevronRight, X } from 'lucide-react';
 import { getOrderOutPattern } from '@/lib/ouraService';
 import { Button } from '@/components/ui/button';
 
