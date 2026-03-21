@@ -16,7 +16,9 @@ export default function WellnessRecommendationCard({ user, onApplyWellnessContex
     }
   }, [user]);
 
-  if (!user?.oura_connected || !user?.oura_data_consent || !wellnessData) {
+  const [isVisible, setIsVisible] = useState(true);
+
+  if (!user?.oura_connected || !user?.oura_data_consent || !wellnessData || !isVisible) {
     return null;
   }
 
