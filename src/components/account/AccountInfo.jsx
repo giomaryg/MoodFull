@@ -618,6 +618,11 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
         onClose={() => setIsBillingOpen(false)} 
         user={user} 
       />
+
+      <PrivacyPolicyPanel 
+        isOpen={isPrivacyPolicyOpen} 
+        onClose={() => setIsPrivacyPolicyOpen(false)} 
+      />
     </div>
   );
 }
