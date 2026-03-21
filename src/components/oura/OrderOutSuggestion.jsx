@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 
 export default function OrderOutSuggestion({ user }) {
   const [pattern, setPattern] = useState(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     // Only show if user has consented to data usage (or if we want to show it generally, but let's tie it to Oura consent for now)
