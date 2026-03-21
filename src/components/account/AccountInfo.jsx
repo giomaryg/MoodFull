@@ -530,6 +530,21 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                 Replay
               </Button>
             </div>
+            
+            <div className="flex items-center justify-between p-4 bg-[#f5f9f6] rounded-xl border border-[#e0ede4]">
+              <div>
+                <p className="font-semibold text-gray-800">Privacy Policy</p>
+                <p className="text-sm text-gray-500">View our data collection and usage policy</p>
+              </div>
+              <Button 
+                onClick={() => setIsPrivacyPolicyOpen(true)}
+                variant="outline"
+                className="border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#e8f0ea]"
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                View
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
