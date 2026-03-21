@@ -1288,7 +1288,7 @@ export default function RecipeGenerator() {
 
 
               {/* Daily limit notice */}
-              {!currentUser?.is_premium && currentUser?.role !== 'admin' && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && (() => {
+              {!currentUser?.is_premium && currentUser?.role !== 'admin' && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && !hideLimitAlert && (() => {
               const today = new Date().toISOString().slice(0, 10);
               const lastReset = currentUser?.daily_mood_reset_date;
               const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -1296,23 +1296,21 @@ export default function RecipeGenerator() {
               if (dailyCount >= 3) {
                 return (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm">
+                  className="relative flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm">
+                      <Button 
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setHideLimitAlert(true)}
+                        className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors w-6 h-6"
+                        title="Dismiss notification"
+                        aria-label="Dismiss limit notification"
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
                       <span className="text-xl">⏳</span>
-                      <div>
+                      <div className="pr-6">
                         <p className="font-semibold text-amber-800">Daily limit reached</p>
                         <p className="text-amber-700 text-xs">You've used your 3 free generations for today. Resets in 24 hours — or <Button variant="link" className="p-0 h-auto font-semibold text-amber-800 underline" onClick={() => setShowPaywall(true)}>upgrade for unlimited</Button>.</p>
-                        <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={async () => {
-                          await updateUserMutation.mutateAsync({ daily_mood_count: 0, daily_mood_reset_date: null });
-                          toast.success('Daily limit reset for testing!');
-                        }}
-                        aria-label="Reset daily limit for testing"
-                        className="mt-2 text-[10px] font-medium bg-amber-200/50 text-amber-800 hover:bg-amber-200 transition-colors">
-
-                          Reset Limit (Dev)
-                        </Button>
                       </div>
                     </motion.div>);
 
