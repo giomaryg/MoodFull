@@ -342,9 +342,14 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         )}
         <div className="flex justify-between relative h-full">
           <div className="w-[55%] sm:w-1/2 z-10 flex flex-col">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8 pr-4">
-              {recipe.name}
-            </h1>
+            <div className="flex items-start gap-3 mb-8 pr-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                {recipe.name}
+              </h1>
+              <Button variant="ghost" size="icon" onClick={() => setShowEditDialog(true)} className="mt-1 shrink-0 bg-white/50 hover:bg-white rounded-full min-h-[44px] min-w-[44px]">
+                <Pencil className="w-5 h-5 text-gray-700" />
+              </Button>
+            </div>
             
             <div className="space-y-5 mt-auto pb-8">
               <div>
