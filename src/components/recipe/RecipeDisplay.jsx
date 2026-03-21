@@ -65,6 +65,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     if (recipe.id && isSaved) {
       updateReviewMutation.mutate({ id: recipe.id, data: { review } });
     }
+    if (onUpdate) onUpdate({ review });
   };
 
   const updateRecipeMutation = useOptimisticMutation({
@@ -85,6 +86,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     if (recipe.id && isSaved) {
       updateRatingMutation.mutate({ id: recipe.id, data: { rating } });
     }
+    if (onUpdate) onUpdate({ rating });
   };
 
   const [activeSubstitutions, setActiveSubstitutions] = useState({});
