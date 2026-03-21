@@ -1091,8 +1091,8 @@ export default function RecipeGenerator() {
 
   const isRecipeSaved = (recipe) => !!savedRecipes.find(r => r.id === recipe.id || (r.name === recipe.name && r.description === recipe.description));
 
-  const handleSaveRecipe = () => {
-    const recipeToSave = peekStack(activeTab)?.recipe;
+  const handleSaveRecipe = (recipeArg) => {
+    const recipeToSave = recipeArg || peekStack(activeTab)?.recipe;
     if (recipeToSave && !isRecipeSaved(recipeToSave)) {
       // Persist the photo URL under image_url field
       const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = recipeToSave;
