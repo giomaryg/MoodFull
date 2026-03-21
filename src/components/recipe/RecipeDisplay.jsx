@@ -770,7 +770,6 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           onClose={() => setShowSaveDialog(false)}
           onSaveComplete={(updatedRecipe) => {
             if (onUpdate) onUpdate(updatedRecipe);
-            if (!isSaved && onSave) onSave(updatedRecipe);
           }}
         />
       )}
