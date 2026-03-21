@@ -101,7 +101,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                   <User className="w-8 h-8" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl">{user?.full_name || 'User'}</CardTitle>
+                  <CardTitle className="text-2xl">{user?.display_name || user?.full_name || 'User'}</CardTitle>
                   <p className="text-white/80 text-sm mt-1 flex items-center gap-1">
                     <Mail className="w-3 h-3" />
                     {user?.email}
