@@ -380,7 +380,18 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
                   return (
                     <Badge
                       key={cuisine}
-                      onClick={() => toggleInArray('preferred_cuisines', cuisine)}
+                      onClick={() => {
+                        if (cuisine === 'Open Minded') {
+                          setFormData(prev => ({ ...prev, preferred_cuisines: ['Open Minded'] }));
+                        } else {
+                          setFormData(prev => ({
+                            ...prev,
+                            preferred_cuisines: prev.preferred_cuisines.includes(cuisine)
+                              ? prev.preferred_cuisines.filter(c => c !== cuisine)
+                              : [...prev.preferred_cuisines.filter(c => c !== 'Open Minded'), cuisine]
+                          }));
+                        }
+                      }}
                       className={`cursor-pointer px-3 py-1.5 text-xs transition-all ${
                       isSelected ?
                       'bg-[#6b9b76] hover:bg-[#5a8a65] text-white shadow-md scale-105' :
