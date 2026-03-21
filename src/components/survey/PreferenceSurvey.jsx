@@ -32,6 +32,7 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
   const [step, setStep] = useState(1);
   const [cuisineSearch, setCuisineSearch] = useState('');
   const [formData, setFormData] = useState({
+    full_name: initialData.full_name || currentUser.full_name || '',
     gender: initialData.gender || currentUser.gender || '',
     phone_number: initialData.phone_number || currentUser.phone_number || '',
     birthday: initialData.birthday || currentUser.birthday || '',
