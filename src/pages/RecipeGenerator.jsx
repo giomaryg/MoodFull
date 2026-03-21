@@ -1335,7 +1335,7 @@ export default function RecipeGenerator() {
                 onMoodSelect={setSelectedMoods}
                 selectedMealTypes={selectedMealTypes}
                 onMealTypeSelect={setSelectedMealTypes}
-                userName={currentUser?.full_name?.split(' ')[0]} />
+                userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]} />
 
                 </motion.div>
             }
