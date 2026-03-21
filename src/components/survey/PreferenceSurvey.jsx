@@ -82,7 +82,7 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
 
   const canProceed = () => {
     switch (step) {
-      case 1:return formData.gender && formData.phone_number && formData.birthday;
+      case 1:return formData.full_name && formData.gender && formData.phone_number && formData.birthday;
       case 2:return true;
       case 3:return true;
       case 4:return formData.blood_sugar_friendly !== null;
