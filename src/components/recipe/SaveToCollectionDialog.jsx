@@ -33,7 +33,12 @@ export default function SaveToCollectionDialog({ recipe, onClose, onSaveComplete
       if (recipe.id) {
         return base44.entities.Recipe.update(recipe.id, { collections: selectedCollections });
       } else {
-        const recipeData = { ...recipe, collections: selectedCollections };
+        const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = recipe;
+        const recipeData = { 
+          ...rest, 
+          collections: selectedCollections,
+          image_url: rest.image_url || imageUrl || (imageUrls ? imageUrls[0] : null)
+        };
         delete recipeData.id;
         return base44.entities.Recipe.create(recipeData);
       }
