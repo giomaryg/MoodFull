@@ -30,8 +30,18 @@ export default function OrderOutSuggestion({ user }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="mb-8 bg-white rounded-3xl border-2 border-[#f2b769]/30 shadow-md overflow-hidden"
+      className="relative mb-8 bg-white rounded-3xl border-2 border-[#f2b769]/30 shadow-md overflow-hidden"
     >
+      <Button 
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsVisible(false)}
+        className="absolute top-4 right-4 hover:bg-black/5 rounded-full transition-colors w-6 h-6 z-10"
+        title="Dismiss notification"
+        aria-label="Dismiss order out suggestion"
+      >
+        <X className="w-3 h-3 text-gray-500" />
+      </Button>
       <div className="bg-gradient-to-r from-[#fffcf7] to-[#fdf5e6] p-6 border-b border-[#f2b769]/20">
         <div className="flex items-start justify-between gap-4">
           <div>
