@@ -20,7 +20,7 @@ export default function RecipeComments({ recipe, currentUser }) {
     mutationFn: (content) => base44.entities.Comment.create({
       recipe_id: recipe.id,
       content,
-      author_name: currentUser?.full_name || 'Anonymous Chef',
+      author_name: currentUser?.display_name || currentUser?.full_name || 'Anonymous Chef',
       status: currentUser?.role === 'admin' ? 'approved' : 'pending'
     }),
     onSuccess: () => {
