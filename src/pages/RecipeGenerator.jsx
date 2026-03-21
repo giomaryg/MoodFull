@@ -1533,6 +1533,7 @@ export default function RecipeGenerator() {
                   handleSavedRecipeClick(recipe);
                 }}
                 searchQuery={globalSearchQuery}
+                currentUser={currentUser}
                 onOpenShoppingList={() => setShowShoppingList(true)} /> :
 
 
