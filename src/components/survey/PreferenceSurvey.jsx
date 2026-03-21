@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ChevronRight, ChevronLeft, Sparkles, Check, X } from 'lucide-react';
 
 const priorities = [
+'None',
 'Quick & Easy',
 'Healthy & Nutritious',
 'Budget-Friendly',
