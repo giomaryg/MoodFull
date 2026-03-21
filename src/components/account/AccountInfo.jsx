@@ -125,10 +125,10 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
             {isEditing ? (
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Full Name</label>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Display Name</label>
                   <Input
-                    value={formData.full_name}
-                    onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                    value={formData.display_name}
+                    onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
                     className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
                   />
                 </div>
