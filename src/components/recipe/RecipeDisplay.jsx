@@ -70,17 +70,15 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const updateRecipeMutation = useOptimisticMutation({
     queryKey: ['recipes'],
     mutationFn: ({ id, data }) => base44.entities.Recipe.update(id, data),
-    action: 'update',
-    onSuccessCallback: (updatedRecipe) => {
-      setShowEditDialog(false);
-      if (onUpdate) onUpdate(updatedRecipe);
-    }
+    action: 'update'
   });
 
   const handleEditSave = (formData) => {
     if (recipe.id && isSaved) {
       updateRecipeMutation.mutate({ id: recipe.id, data: formData });
     }
+    if (onUpdate) onUpdate(formData);
+    setShowEditDialog(false);
   };
 
   const handleRate = (rating) => {
