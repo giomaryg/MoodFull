@@ -1155,7 +1155,7 @@ export default function RecipeGenerator() {
 
         {/* Main Content */}
         <div 
-          className="mx-auto px-4 sm:px-6 max-w-6xl space-y-6 sm:space-y-8 relative z-10 pt-6"
+          className="mx-auto px-4 sm:px-6 max-w-6xl space-y-6 sm:space-y-8 relative z-10 pt-4 sm:pt-6"
           style={{ 
             paddingBottom: 'calc(8rem + env(safe-area-inset-bottom))'
           }}
