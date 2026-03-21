@@ -130,6 +130,7 @@ export default function RecipeGenerator() {
   const [showCombineDialog, setShowCombineDialog] = useState(false);
   const [showAICoach, setShowAICoach] = useState(false);
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
+  const [hideLimitAlert, setHideLimitAlert] = useState(false);
   const [forceShowTutorial, setForceShowTutorial] = useState(false);
   const [wellnessContext, setWellnessContext] = useState(null);
   const fileInputRef = useRef(null);
