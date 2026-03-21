@@ -326,21 +326,23 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                   <div className="flex flex-col items-end justify-between self-stretch flex-shrink-0">
                     <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-all z-10">
                       {/* Dev Edit Button for testing */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const randomData = {
-                            prep_time: Math.floor(Math.random() * 30 + 10) + ' min',
-                            difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]
-                          };
-                          updateRecipeMutation.mutate({ id: recipe.id, data: randomData });
-                          toast.success('Dev: Recipe updated for testing');
-                        }}
-                        className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-6 h-6"
-                        title="Dev: Randomly update recipe info"
-                      >
-                        DEV
-                      </button>
+                      {currentUser?.role === 'admin' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const randomData = {
+                              prep_time: Math.floor(Math.random() * 30 + 10) + ' min',
+                              difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]
+                            };
+                            updateRecipeMutation.mutate({ id: recipe.id, data: randomData });
+                            toast.success('Dev: Recipe updated for testing');
+                          }}
+                          className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-6 h-6"
+                          title="Dev: Randomly update recipe info"
+                        >
+                          DEV
+                        </button>
+                      )}
                       <button
                         onClick={(e) => handleDelete(e, recipe.id)}
                         className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-red-50"
