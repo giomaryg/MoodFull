@@ -152,6 +152,7 @@ function App() {
             </NavigationStackProvider>
           </Router>
           <Toaster />
+          <SonnerToaster position="top-center" offset="80px" />
           <VisualEditAgent />
         </QueryClientProvider>
       </AuthProvider>
