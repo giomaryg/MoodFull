@@ -31,6 +31,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
   };
   const [isEditing, setIsEditing] = useState(false);
   const [isBillingOpen, setIsBillingOpen] = useState(false);
+  const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
   const [formData, setFormData] = useState({
     display_name: user?.display_name || user?.full_name || '',
     email: user?.email || '',
