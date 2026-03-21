@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Moon, Zap, Coffee, Droplets } from 'lucide-react';
+import { Activity, Moon, Zap, Coffee, Droplets, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { getOuraWellnessData } from '@/lib/ouraService';
 
 export default function WellnessRecommendationCard({ user, onApplyWellnessContext }) {
