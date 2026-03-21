@@ -110,6 +110,18 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
             </div>
             <div className="space-y-4">
               <div className="space-y-2">
+                <Label htmlFor="full_name" className="text-base font-semibold">
+                  Full Name
+                </Label>
+                <Input
+                  id="full_name"
+                  type="text"
+                  placeholder="Your Name"
+                  value={formData.full_name}
+                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })} />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="gender" className="text-base font-semibold">
                   Gender
                 </Label>
