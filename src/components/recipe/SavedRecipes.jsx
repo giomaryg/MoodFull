@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import HighlightedText from './HighlightedText';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
-function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '', onOpenShoppingList }) {
+function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery = '', onOpenShoppingList, currentUser }) {
   const queryClient = useQueryClient();
 
   const deleteRecipeMutation = useOptimisticMutation({
