@@ -16,7 +16,7 @@ export default function OrderOutSuggestion({ user }) {
     }
   }, [user]);
 
-  if (!pattern?.isLikelyOrderOutDay) {
+  if (!pattern?.isLikelyOrderOutDay || !isVisible) {
     return null;
   }
 
