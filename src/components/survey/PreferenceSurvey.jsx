@@ -272,7 +272,18 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
                   return (
                     <motion.button
                       key={priority}
-                      onClick={() => toggleInArray('priorities', priority)}
+                      onClick={() => {
+                        if (priority === 'None') {
+                          setFormData(prev => ({ ...prev, priorities: ['None'] }));
+                        } else {
+                          setFormData(prev => ({
+                            ...prev,
+                            priorities: prev.priorities.includes(priority)
+                              ? prev.priorities.filter(p => p !== priority)
+                              : [...prev.priorities.filter(p => p !== 'None'), priority]
+                          }));
+                        }
+                      }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className={`p-4 rounded-xl border-2 text-left transition-all ${
