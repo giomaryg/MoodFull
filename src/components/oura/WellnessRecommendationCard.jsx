@@ -37,7 +37,7 @@ export default function WellnessRecommendationCard({ user, onApplyWellnessContex
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`mb-6 p-4 rounded-2xl border ${getBgColor()} flex items-start gap-4 shadow-sm`}
+      className={`mb-6 p-4 rounded-2xl border ${getBgColor()} flex flex-col sm:flex-row items-start gap-4 shadow-sm`}
     >
       <div className="bg-white p-2 rounded-full shadow-sm shrink-0">
         {getIcon()}
