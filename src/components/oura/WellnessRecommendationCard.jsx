@@ -40,12 +40,22 @@ export default function WellnessRecommendationCard({ user, onApplyWellnessContex
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`mb-6 p-4 rounded-2xl border ${getBgColor()} flex flex-col sm:flex-row items-start gap-4 shadow-sm`}
+      className={`relative mb-6 p-4 rounded-2xl border ${getBgColor()} flex flex-col sm:flex-row items-start gap-4 shadow-sm`}
     >
+      <Button 
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsVisible(false)}
+        className="absolute top-2 right-2 hover:bg-black/5 rounded-full transition-colors w-6 h-6"
+        title="Dismiss notification"
+        aria-label="Dismiss wellness notification"
+      >
+        <X className="w-3 h-3 text-gray-500" />
+      </Button>
       <div className="bg-white p-2 rounded-full shadow-sm shrink-0">
         {getIcon()}
       </div>
-      <div>
+      <div className="pr-6">
         <div className="flex items-center gap-2 mb-1">
           <h3 className="font-semibold text-gray-800 text-sm">Oura Wellness Insight</h3>
           <span className="text-[10px] uppercase tracking-wider font-bold bg-white px-2 py-0.5 rounded-full text-gray-500 shadow-sm border border-gray-100">
