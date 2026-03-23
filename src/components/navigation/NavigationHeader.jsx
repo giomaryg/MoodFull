@@ -44,7 +44,7 @@ export default function NavigationHeader() {
           <ChevronLeft className="w-6 h-6 text-gray-700" />
         </Button>
       )}
-      <span className={`font-semibold text-sm text-gray-800 capitalize ${!isIOS ? 'ml-4' : ''}`}>
+      <span className={`font-semibold text-gray-800 capitalize ${!isIOS ? 'ml-4' : ''}`}>
         {location.pathname.replace('/', '').replace(/([A-Z])/g, ' $1').trim()}
       </span>
     </div>
