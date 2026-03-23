@@ -1142,7 +1142,7 @@ export default function RecipeGenerator() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center">
                 <header>
-                  <div className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
+                  <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
                     ◎ AI Recipe Generator
                   </div>
                   <h1 className="text-gradient mb-1 pb-1 text-3xl sm:text-5xl font-normal tracking-tight" style={{ fontFamily: "'Brittany Signature', cursive", lineHeight: '1.2' }}>
