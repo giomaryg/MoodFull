@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,15 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
   const [savedScrollY, setSavedScrollY] = useState(0);
 
   const queryClient = useQueryClient();
+
+  React.useEffect(() => {
+    if (selectedRecipe) {
+      document.body.classList.add('hide-nav-header');
+    } else {
+      document.body.classList.remove('hide-nav-header');
+    }
+    return () => document.body.classList.remove('hide-nav-header');
+  }, [selectedRecipe]);
 
   const { data: mealPlans = [] } = useQuery({
     queryKey: ['mealPlans'],

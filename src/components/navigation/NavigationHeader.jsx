@@ -21,9 +21,22 @@ export default function NavigationHeader() {
     return null;
   }
 
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    const checkHidden = () => setIsHidden(document.body.classList.contains('hide-nav-header'));
+    checkHidden();
+    
+    const observer = new MutationObserver(checkHidden);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  if (isHidden) return null;
+
   return (
     <div 
-      className="relative z-50 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center"
+      className="sticky top-0 z-50 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center"
       style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)' }}
     >
       {!isIOS && (
