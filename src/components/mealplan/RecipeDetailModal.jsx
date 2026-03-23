@@ -12,7 +12,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[60] overflow-y-auto bg-black/50 pb-8" onClick={onClose}>
-      <div className="flex justify-center pt-40 pb-8 px-4 sm:pt-48">
+      <div className="flex justify-center pt-12 pb-8 px-4 sm:pt-16">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}

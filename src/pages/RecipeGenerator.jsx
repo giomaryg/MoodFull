@@ -1133,7 +1133,7 @@ export default function RecipeGenerator() {
         {/* Hero Section */}
         {!showIntro &&
         <div 
-          className="glass-header sticky top-0 left-0 right-0 z-50 border-b-0 pb-2"
+          className="glass-header relative z-50 border-b-0 pb-2"
           style={{ paddingTop: 'calc(1.5rem + env(safe-area-inset-top))' }}
         >
             <div className="mx-auto my-1 px-3 max-w-6xl">

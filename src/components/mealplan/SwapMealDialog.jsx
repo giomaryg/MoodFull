@@ -36,7 +36,7 @@ export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center pt-40 pb-4 px-4 sm:pt-48"
+      className="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center pt-12 pb-4 px-4 sm:pt-16"
       onClick={onClose}
     >
       <Card

@@ -23,7 +23,7 @@ export default function NavigationHeader() {
 
   return (
     <div 
-      className="sticky top-0 left-0 right-0 z-50 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center"
+      className="relative z-50 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center"
       style={{ paddingTop: 'calc(0.5rem + env(safe-area-inset-top))' }}
     >
       {!isIOS && (
