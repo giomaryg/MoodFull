@@ -15,14 +15,12 @@ export default function RecipeDetailModal({ recipe, onClose }) {
   if (!recipe) return null;
 
   return (
-    <div className="absolute inset-x-0 top-0 z-[60] bg-black/50 min-h-full pb-8" onClick={onClose}>
-      <div className="flex justify-center pt-6 pb-8 px-4 sm:pt-8">
+    <div className="w-full pb-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden"
+        className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-auto overflow-hidden border border-gray-100"
       >
         {/* Header with image */}
         <div className="relative h-48 bg-gradient-to-br from-[#f5e6dc] to-[#e8d5c4] shrink-0">
@@ -159,7 +157,6 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           )}
         </div>
       </motion.div>
-      </div>
 
       {showCookingMode && (
         <InteractiveCookingMode

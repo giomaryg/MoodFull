@@ -33,6 +33,7 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
   const [aiNutritionAdvice, setAiNutritionAdvice] = useState(null);
   const [isAnalyzingNutrition, setIsAnalyzingNutrition] = useState(false);
   const [customPlanPrompt, setCustomPlanPrompt] = useState("");
+  const [savedScrollY, setSavedScrollY] = useState(0);
 
   const queryClient = useQueryClient();
 
@@ -706,6 +707,7 @@ Make them balanced, diverse, and delicious. Include:
 
   return (
     <div className="space-y-6">
+      <div className={selectedRecipe ? 'hidden' : 'space-y-6'}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <h2 className="text-[#6b9b76] text-3xl sm:text-4xl font-bold">Meal Planner</h2>
@@ -909,6 +911,7 @@ Make them balanced, diverse, and delicious. Include:
                                               {...provided.dragHandleProps} 
                                               className="bg-[#f5e6dc] rounded text-[10px] p-2 min-h-[44px] mb-1 truncate cursor-move hover:bg-[#e8d5c4] transition-colors flex items-center"
                                               onClick={() => {
+                                                setSavedScrollY(window.scrollY);
                                                 const linkedRecipe = recipes.find(r => r.id === meal.recipe_id);
                                                 if (linkedRecipe) setSelectedRecipe(linkedRecipe);
                                                 else setSelectedRecipe({ name: meal.recipe_name, ingredients: meal.custom_ingredients || [], instructions: meal.custom_instructions || [], servings: meal.servings, notes: meal.notes });
@@ -1023,6 +1026,7 @@ Make them balanced, diverse, and delicious. Include:
          }}
          className="pl-5 pr-8 py-2 cursor-pointer flex flex-col h-full justify-center min-h-[44px]"
          onClick={async () => {
+           setSavedScrollY(window.scrollY);
            if (linkedRecipe) {
              setSelectedRecipe(linkedRecipe);
              return;
@@ -1264,6 +1268,8 @@ Make them balanced, diverse, and delicious. Include:
         </div>
       </DragDropContext>
 
+      </div>
+
       {/* Add Meal Dialog */}
       {showAddMeal && (
         <AddMealDialog
@@ -1301,7 +1307,10 @@ Make them balanced, diverse, and delicious. Include:
       {selectedRecipe && (
         <RecipeDetailModal
           recipe={selectedRecipe}
-          onClose={() => setSelectedRecipe(null)}
+          onClose={() => {
+            setSelectedRecipe(null);
+            setTimeout(() => window.scrollTo({ top: savedScrollY, behavior: 'instant' }), 0);
+          }}
         />
       )}
 
