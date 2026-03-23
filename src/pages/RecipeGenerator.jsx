@@ -77,37 +77,37 @@ export default function RecipeGenerator() {
     replaceTopStack(activeTab, { recipe });
   };
 
-  const renderTabStack = (tabName) => (
-    <AnimatePresence custom={direction}>
+  const renderTabStack = (tabName) =>
+  <AnimatePresence custom={direction}>
       {getStack(tabName).map((stackItem, index) => {
-        const isTop = index === getStack(tabName).length - 1;
-        return (
-          <motion.div
-            key={`${tabName}-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-            custom={direction}
-            initial={{ x: direction === 'backward' ? '-30%' : '100%', opacity: direction === 'backward' ? 0.5 : 1, boxShadow: direction === 'backward' ? 'none' : '-10px 0 20px rgba(0,0,0,0.1)' }}
-            animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0.5, boxShadow: isTop ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
-            exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0.5, boxShadow: direction === 'backward' ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
-            transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-            className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-            style={{ minHeight: '100vh' }}
-          >
+      const isTop = index === getStack(tabName).length - 1;
+      return (
+        <motion.div
+          key={`${tabName}-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
+          custom={direction}
+          initial={{ x: direction === 'backward' ? '-30%' : '100%', opacity: direction === 'backward' ? 0.5 : 1, boxShadow: direction === 'backward' ? 'none' : '-10px 0 20px rgba(0,0,0,0.1)' }}
+          animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0.5, boxShadow: isTop ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
+          exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0.5, boxShadow: direction === 'backward' ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
+          transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+          className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
+          style={{ minHeight: '100vh' }}>
+          
             <RecipeDisplay
-              recipe={stackItem.recipe}
-              onSave={handleSaveRecipe}
-              isSaved={isRecipeSaved(stackItem.recipe)}
-              onBack={() => popFromStack(tabName)}
-              onUpdate={(updatedRecipe) => { if (isTop) replaceTopStack(tabName, { recipe: { ...stackItem.recipe, ...updatedRecipe } }); }}
-              onSimilarRecipeClick={(recipe) => {
-                pushToStack(tabName, { recipe });
-                window.scrollTo({ top: 0, behavior: 'instant' });
-              }}
-            />
-          </motion.div>
-        );
-      })}
-    </AnimatePresence>
-  );
+            recipe={stackItem.recipe}
+            onSave={handleSaveRecipe}
+            isSaved={isRecipeSaved(stackItem.recipe)}
+            onBack={() => popFromStack(tabName)}
+            onUpdate={(updatedRecipe) => {if (isTop) replaceTopStack(tabName, { recipe: { ...stackItem.recipe, ...updatedRecipe } });}}
+            onSimilarRecipeClick={(recipe) => {
+              pushToStack(tabName, { recipe });
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }} />
+          
+          </motion.div>);
+
+    })}
+    </AnimatePresence>;
+
 
   const handleRefresh = async () => {
     await queryClient.invalidateQueries();
@@ -153,10 +153,10 @@ export default function RecipeGenerator() {
     setSavedRecipeId(null);
     setGlobalSearchQuery('');
     setAdvancedFilters({});
-    
+
     try {
       const uploadRes = await base44.integrations.Core.UploadFile({ file });
-      
+
       if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
@@ -237,22 +237,22 @@ export default function RecipeGenerator() {
       enrichPromises.forEach(async (promise) => {
         const { index, detail } = await promise;
         setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
+        i === index ? { ...r, ...detail, _loading: false, imageLoading: true } : r
         ));
 
         try {
           const recipe = quickRecipes[index];
           const [img1, img2, img3] = await Promise.all([
-            base44.integrations.Core.GenerateImage({ prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.` }),
-            base44.integrations.Core.GenerateImage({ prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.` }),
-            base44.integrations.Core.GenerateImage({ prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.` })
-          ]);
+          base44.integrations.Core.GenerateImage({ prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.` }),
+          base44.integrations.Core.GenerateImage({ prompt: `Overhead top-down view of ${recipe.name}. ${recipe.description}. Beautiful plating, on a rustic table, appetizing, high quality.` }),
+          base44.integrations.Core.GenerateImage({ prompt: `Close up macro shot of ${recipe.name}. ${recipe.description}. Appetizing details, high quality.` })]
+          );
           setGeneratedRecipes((prev) => prev.map((r, i) =>
-            i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
+          i === index ? { ...r, imageUrls: [img1.url, img2.url, img3.url], imageUrl: img1.url, imageLoading: false } : r
           ));
         } catch {
           setGeneratedRecipes((prev) => prev.map((r, i) =>
-            i === index ? { ...r, imageLoading: false } : r
+          i === index ? { ...r, imageLoading: false } : r
           ));
         }
       });
@@ -1090,7 +1090,7 @@ export default function RecipeGenerator() {
     }
   };
 
-  const isRecipeSaved = (recipe) => !!savedRecipes.find(r => r.id === recipe.id || (r.name === recipe.name && r.description === recipe.description));
+  const isRecipeSaved = (recipe) => !!savedRecipes.find((r) => r.id === recipe.id || r.name === recipe.name && r.description === recipe.description);
 
   const handleSaveRecipe = (recipeArg) => {
     const recipeToSave = recipeArg || peekStack(activeTab)?.recipe;
@@ -1121,8 +1121,8 @@ export default function RecipeGenerator() {
       <AnimatePresence>
         {showIntro && currentUser &&
         <IntroScreen
-        userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]}
-        onContinue={() => setShowIntro(false)} />
+          userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]}
+          onContinue={() => setShowIntro(false)} />
 
         }
       </AnimatePresence>
@@ -1132,89 +1132,89 @@ export default function RecipeGenerator() {
         <ThreeBackground />
         {/* Hero Section */}
         {!showIntro &&
-        <div 
-          className="glass-header relative z-50 border-b-0 pb-3"
-          style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)' }}
-        >
+          <div
+            className="glass-header relative z-50 border-b-0 pb-3"
+            style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)' }}>
+            
             <div className="mx-auto px-3 max-w-6xl">
               <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center">
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center">
                 <header>
                   <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
                     ◎ AI Recipe Generator
                   </div>
-                  <h1 className="text-gradient mb-1 pb-1 text-3xl sm:text-5xl font-normal tracking-tight" style={{ fontFamily: "'Brittany Signature', cursive", lineHeight: '1.2' }}>
+                  <h1 className="text-gradient mb-1 pb-1 text-2xl font-normal tracking-tight sm:text-5xl" style={{ fontFamily: "'Brittany Signature', cursive", lineHeight: '1.2' }}>
                     MoodFull
                   </h1>
                 </header>
               </motion.div>
             </div>
           </div>
-        }
+          }
 
         {/* Main Content */}
-        <div 
-          className="mx-auto px-4 sm:px-6 max-w-6xl space-y-6 sm:space-y-8 relative z-10 pt-4 sm:pt-6"
-          style={{ 
-            paddingBottom: 'calc(8rem + env(safe-area-inset-bottom))'
-          }}
-        >
+        <div
+            className="mx-auto px-4 sm:px-6 max-w-6xl space-y-6 sm:space-y-8 relative z-10 pt-4 sm:pt-6"
+            style={{
+              paddingBottom: 'calc(8rem + env(safe-area-inset-bottom))'
+            }}>
+            
           <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-[#6b9b76]" /></div>}>
           {/* Survey */}
           {showSurvey &&
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}>
 
               <PreferenceSurvey
-              onComplete={handleSurveyComplete}
-              onSkip={() => setShowSurvey(false)}
-              initialData={userPreferences || {}}
-              currentUser={currentUser || {}} />
+                  onComplete={handleSurveyComplete}
+                  onSkip={() => setShowSurvey(false)}
+                  initialData={userPreferences || {}}
+                  currentUser={currentUser || {}} />
 
             </motion.div>
-          }
+              }
 
           {/* Home Tab */}
           <div style={{ display: !showSurvey && activeTab === 'home' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('home').length > 0 ? '-30%' : 0, opacity: getStack('home').length > 0 ? 0.5 : 1 }}
-              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-              className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
-            >
+                  animate={{ x: getStack('home').length > 0 ? '-30%' : 0, opacity: getStack('home').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  
               <>
-              <WellnessRecommendationCard 
-                user={currentUser} 
-                onApplyWellnessContext={setWellnessContext} 
-              />
+              <WellnessRecommendationCard
+                      user={currentUser}
+                      onApplyWellnessContext={setWellnessContext} />
+                    
               
               <OrderOutSuggestion user={currentUser} />
 
               {/* Proactive Expiring Items Alert */}
               {(() => {
-                if (!ENABLE_PANTRY_FEATURE) return null;
-                if (hideExpiringAlert) return null;
-                const expiringItems = inventory.filter(item => {
-                  if (!item.expiry_date) return false;
-                  return new Date(item.expiry_date) <= new Date(Date.now() + 7 * 86400000);
-                });
-                if (expiringItems.length === 0 || globalSearchQuery || Object.keys(advancedFilters).length > 0) return null;
-                return (
-                  <motion.div 
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="relative bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-                  >
-                    <Button 
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setHideExpiringAlert(true)}
-                      className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors"
-                      title="Dismiss notification"
-                      aria-label="Dismiss expiring items notification"
-                    >
+                      if (!ENABLE_PANTRY_FEATURE) return null;
+                      if (hideExpiringAlert) return null;
+                      const expiringItems = inventory.filter((item) => {
+                        if (!item.expiry_date) return false;
+                        return new Date(item.expiry_date) <= new Date(Date.now() + 7 * 86400000);
+                      });
+                      if (expiringItems.length === 0 || globalSearchQuery || Object.keys(advancedFilters).length > 0) return null;
+                      return (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="relative bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                          
+                    <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setHideExpiringAlert(true)}
+                            className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors"
+                            title="Dismiss notification"
+                            aria-label="Dismiss expiring items notification">
+                            
                       <X className="w-4 h-4" />
                     </Button>
                     <div className="pr-6">
@@ -1225,17 +1225,17 @@ export default function RecipeGenerator() {
                         You have {expiringItems.length} items expiring soon (e.g. {expiringItems[0].name}).
                       </p>
                     </div>
-                    <Button 
-                      onClick={() => generateFromInventory(expiringItems.map(i => i.name))}
-                      disabled={isGenerating}
-                      className="bg-amber-500 hover:bg-amber-600 text-white shadow-sm w-full sm:w-auto whitespace-nowrap"
-                    >
+                    <Button
+                            onClick={() => generateFromInventory(expiringItems.map((i) => i.name))}
+                            disabled={isGenerating}
+                            className="bg-amber-500 hover:bg-amber-600 text-white shadow-sm w-full sm:w-auto whitespace-nowrap">
+                            
                       {isGenerating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
                       Use Them Up
                     </Button>
-                  </motion.div>
-                );
-              })()}
+                  </motion.div>);
+
+                    })()}
 
               {/* Search & Preferences */}
               <div className="space-y-3">
@@ -1244,44 +1244,44 @@ export default function RecipeGenerator() {
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b9b76]" />
                     <Input
-                    type="text"
-                    placeholder="Search your recipes or generate new ones..."
-                    value={globalSearchQuery}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && activeTab === 'home') generateRecipe(); }}
-                    onChange={(e) => setGlobalSearchQuery(e.target.value)} className="bg-transparent my-3 pt-6 pr-8 pb-6 pl-10 text-sm rounded-xl flex h-9 w-full transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-2 border-[#c5d9c9] focus:border-[#6b9b76] sm:text-base shadow-md" />
+                            type="text"
+                            placeholder="Search your recipes or generate new ones..."
+                            value={globalSearchQuery}
+                            onKeyDown={(e) => {if (e.key === 'Enter' && activeTab === 'home') generateRecipe();}}
+                            onChange={(e) => setGlobalSearchQuery(e.target.value)} className="bg-transparent my-3 pt-6 pr-8 pb-6 pl-10 text-sm rounded-xl flex h-9 w-full transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-2 border-[#c5d9c9] focus:border-[#6b9b76] sm:text-base shadow-md" />
 
 
                     {globalSearchQuery &&
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setGlobalSearchQuery('')}
-                    aria-label="Clear search"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] hover:bg-transparent">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setGlobalSearchQuery('')}
+                            aria-label="Clear search"
+                            className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] hover:bg-transparent">
 
                         <X className="w-4 h-4" />
                       </Button>
-                  }
+                          }
                   </div>
 
                   {/* Update Preferences Button */}
                   {userPreferences?.survey_completed &&
-                <Button
-                  onClick={() => setShowSurvey(true)}
-                  variant="outline"
-                  aria-label="Update Preferences"
-                  className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
+                        <Button
+                          onClick={() => setShowSurvey(true)}
+                          variant="outline"
+                          aria-label="Update Preferences"
+                          className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
                       Update Preferences
                     </Button>
-                }
+                        }
                   </div>
 
                   {/* Advanced Filters */}
                   <AdvancedFilters
-                filters={advancedFilters}
-                onFiltersChange={setAdvancedFilters}
-                showFilters={showFilters}
-                setShowFilters={setShowFilters} />
+                        filters={advancedFilters}
+                        onFiltersChange={setAdvancedFilters}
+                        showFilters={showFilters}
+                        setShowFilters={setShowFilters} />
 
               </div>
 
@@ -1289,22 +1289,22 @@ export default function RecipeGenerator() {
 
               {/* Daily limit notice */}
               {!currentUser?.is_premium && currentUser?.role !== 'admin' && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && !hideLimitAlert && (() => {
-              const today = new Date().toISOString().slice(0, 10);
-              const lastReset = currentUser?.daily_mood_reset_date;
-              const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
-              const remaining = Math.max(0, 3 - dailyCount);
-              if (dailyCount >= 3) {
-                return (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className="relative flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm">
-                      <Button 
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setHideLimitAlert(true)}
-                        className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors w-6 h-6"
-                        title="Dismiss notification"
-                        aria-label="Dismiss limit notification"
-                      >
+                      const today = new Date().toISOString().slice(0, 10);
+                      const lastReset = currentUser?.daily_mood_reset_date;
+                      const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
+                      const remaining = Math.max(0, 3 - dailyCount);
+                      if (dailyCount >= 3) {
+                        return (
+                          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                          className="relative flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm">
+                      <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setHideLimitAlert(true)}
+                              className="absolute top-2 right-2 text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-full transition-colors w-6 h-6"
+                              title="Dismiss notification"
+                              aria-label="Dismiss limit notification">
+                              
                         <X className="w-3 h-3" />
                       </Button>
                       <span className="text-xl">⏳</span>
@@ -1314,135 +1314,135 @@ export default function RecipeGenerator() {
                       </div>
                     </motion.div>);
 
-              }
-              if (dailyCount > 0) {
-                return (
-                  <p className="text-xs text-center text-gray-400">{remaining} free generation{remaining !== 1 ? 's' : ''} left today</p>);
+                      }
+                      if (dailyCount > 0) {
+                        return (
+                          <p className="text-xs text-center text-gray-400">{remaining} free generation{remaining !== 1 ? 's' : ''} left today</p>);
 
-              }
-              return null;
-            })()}
+                      }
+                      return null;
+                    })()}
 
               {/* Mood Selector - Only show when not searching */}
               {!globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}>
 
                   <MoodSelector
-                selectedMoods={selectedMoods}
-                onMoodSelect={setSelectedMoods}
-                selectedMealTypes={selectedMealTypes}
-                onMealTypeSelect={setSelectedMealTypes}
-                userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]} />
+                        selectedMoods={selectedMoods}
+                        onMoodSelect={setSelectedMoods}
+                        selectedMealTypes={selectedMealTypes}
+                        onMealTypeSelect={setSelectedMealTypes}
+                        userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]} />
 
                 </motion.div>
-            }
+                    }
 
               {/* Generate Button */}
               <AnimatePresence mode="wait">
                 {(selectedMoods.length > 0 || selectedMealTypes.length > 0 || globalSearchQuery.trim().length > 0 || Object.keys(advancedFilters).length > 0) && !currentRecipe && generatedRecipes.length === 0 &&
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4 w-full">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4 w-full">
 
                     <Button
-                  onClick={generateRecipe}
-                  disabled={isGenerating}
-                  aria-label="Generate Recipes"
-                  className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                          onClick={generateRecipe}
+                          disabled={isGenerating}
+                          aria-label="Generate Recipes"
+                          className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
                       {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <>✦ Generate</>}
                     </Button>
 
-                    {ENABLE_PANTRY_FEATURE && (
-                      <Button
-                        onClick={generateFromInventory}
-                        disabled={isGenerating}
-                        aria-label="Generate Recipes from Pantry"
-                        className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                    {ENABLE_PANTRY_FEATURE &&
+                        <Button
+                          onClick={generateFromInventory}
+                          disabled={isGenerating}
+                          aria-label="Generate Recipes from Pantry"
+                          className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
                         {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Package className="w-4 h-4 sm:w-5 sm:h-5" /> Use Pantry</>}
                       </Button>
-                    )}
+                        }
 
                     <Button
-                  onClick={() => setShowCombineDialog(true)}
-                  disabled={isGenerating} 
-                  aria-label="Combine and Create Recipes"
-                  className="bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                          onClick={() => setShowCombineDialog(true)}
+                          disabled={isGenerating}
+                          aria-label="Combine and Create Recipes"
+                          className="bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-[0_0_18px_rgba(168,85,247,0.3)] hover:shadow-[0_0_24px_rgba(168,85,247,0.4)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
                       <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5" /> Combine
                     </Button>
 
                     <input type="file" accept="image/*" capture="environment" ref={fileInputRef} className="hidden" onChange={handleFridgeScan} />
                     <Button
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isGenerating}
-                      aria-label="Scan Fridge with AI"
-                      className="bg-white text-gray-800 border-2 border-gray-200 shadow-[0_0_18px_rgba(0,0,0,0.05)] hover:bg-gray-50 transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2"
-                    >
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isGenerating}
+                          aria-label="Scan Fridge with AI"
+                          className="bg-white text-gray-800 border-2 border-gray-200 shadow-[0_0_18px_rgba(0,0,0,0.05)] hover:bg-gray-50 transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                          
                       {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <><Camera className="w-4 h-4 sm:w-5 sm:h-5" /> Scan Fridge</>}
                     </Button>
                   </motion.div>
-              }
+                      }
               </AnimatePresence>
 
               {/* Recipe Grid */}
               <AnimatePresence mode="wait">
                 {generatedRecipes.length > 0 && !currentRecipe &&
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}>
 
                     <RecipeGrid
-                  recipes={filteredGeneratedRecipes}
-                  onRecipeClick={handleRecipeClick}
-                  onStartOver={() => {
-                    setGeneratedRecipes([]);
-                    setSelectedMoods([]);
-                    setGlobalSearchQuery('');
-                    setAdvancedFilters({});
-                  }}
-                  onRefresh={() => {
-                    if (generatedRecipes[0]?.mood === 'From Pantry') {
-                      generateFromInventory();
-                    } else if (generatedRecipes[0]?.mood === 'Combined Creation') {
-                      setShowCombineDialog(true);
-                    } else {
-                      generateRecipe();
-                    }
-                  }}
-                  searchQuery={globalSearchQuery} />
+                          recipes={filteredGeneratedRecipes}
+                          onRecipeClick={handleRecipeClick}
+                          onStartOver={() => {
+                            setGeneratedRecipes([]);
+                            setSelectedMoods([]);
+                            setGlobalSearchQuery('');
+                            setAdvancedFilters({});
+                          }}
+                          onRefresh={() => {
+                            if (generatedRecipes[0]?.mood === 'From Pantry') {
+                              generateFromInventory();
+                            } else if (generatedRecipes[0]?.mood === 'Combined Creation') {
+                              setShowCombineDialog(true);
+                            } else {
+                              generateRecipe();
+                            }
+                          }}
+                          searchQuery={globalSearchQuery} />
 
                   </motion.div>
-              }
+                      }
               </AnimatePresence>
 
 
 
               {/* Personalized Recommendations - Only show when not searching */}
               {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
-                <RecommendedRecipes
-                  userPreferences={userPreferences}
-                  inventory={inventory}
-                  onRecipeClick={handleRecipeClick} 
-                />
-              }
+                    <RecommendedRecipes
+                      userPreferences={userPreferences}
+                      inventory={inventory}
+                      onRecipeClick={handleRecipeClick} />
+
+                    }
 
               {/* Personalized Discovery Feed - Only show when not searching for specific generated recipes */}
               {ENABLE_PANTRY_FEATURE && !currentRecipe && generatedRecipes.length === 0 &&
-            <DiscoveryFeed
-              userPreferences={userPreferences}
-              inventory={inventory}
-              searchQuery={globalSearchQuery}
-              advancedFilters={advancedFilters}
-              selectedMoods={selectedMoods}
-              selectedMealTypes={selectedMealTypes}
-              onRecipeClick={handleRecipeClick} />
+                    <DiscoveryFeed
+                      userPreferences={userPreferences}
+                      inventory={inventory}
+                      searchQuery={globalSearchQuery}
+                      advancedFilters={advancedFilters}
+                      selectedMoods={selectedMoods}
+                      selectedMealTypes={selectedMealTypes}
+                      onRecipeClick={handleRecipeClick} />
 
-            }
+                    }
 
             </>
             </motion.div>
@@ -1453,10 +1453,10 @@ export default function RecipeGenerator() {
             {/* Saved Recipes Tab */}
           <div style={{ display: !showSurvey && activeTab === 'saved' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('saved').length > 0 ? '-30%' : 0, opacity: getStack('saved').length > 0 ? 0.5 : 1 }}
-              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-              className={`space-y-6 w-full ${getStack('saved').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
-            >
+                  animate={{ x: getStack('saved').length > 0 ? '-30%' : 0, opacity: getStack('saved').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`space-y-6 w-full ${getStack('saved').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  
           <div className="space-y-6">
 
               <div className="text-center space-y-2">
@@ -1465,12 +1465,12 @@ export default function RecipeGenerator() {
               </div>
 
               {!currentUser?.is_premium && currentUser?.role !== 'admin' ?
-            <div className="relative">
+                    <div className="relative">
                   {/* Blurred preview */}
                   <div className="blur-sm pointer-events-none select-none">
                     <div className="space-y-3">
                       {[1, 2, 3].map((i) =>
-                  <div key={i} className="bg-white rounded-2xl border-2 border-[#c5d9c9] p-4 flex gap-4">
+                          <div key={i} className="bg-white rounded-2xl border-2 border-[#c5d9c9] p-4 flex gap-4">
                           <div className="w-20 h-20 bg-[#c5d9c9] rounded-xl flex-shrink-0" />
                           <div className="flex-1 space-y-2">
                             <div className="h-4 bg-[#c5d9c9] rounded w-2/3" />
@@ -1478,7 +1478,7 @@ export default function RecipeGenerator() {
                             <div className="h-3 bg-[#e0ede4] rounded w-1/2" />
                           </div>
                         </div>
-                  )}
+                          )}
                     </div>
                   </div>
                   {/* Overlay CTA */}
@@ -1494,56 +1494,56 @@ export default function RecipeGenerator() {
                   </div>
                 </div> :
 
-            <>
+                    <>
                   {/* Search and Filters */}
                   <div className="space-y-3">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
                       <Input
-                    type="text"
-                    placeholder="Search saved recipes..."
-                    value={globalSearchQuery}
-                    onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                    className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl" />
+                            type="text"
+                            placeholder="Search saved recipes..."
+                            value={globalSearchQuery}
+                            onChange={(e) => setGlobalSearchQuery(e.target.value)}
+                            className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl" />
 
                       {globalSearchQuery &&
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setGlobalSearchQuery('')}
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:bg-transparent">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setGlobalSearchQuery('')}
+                            className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:bg-transparent">
 
                           <X className="w-4 h-4" />
                         </Button>
-                  }
+                          }
                     </div>
 
                     <AdvancedFilters
-                  filters={advancedFilters}
-                  onFiltersChange={setAdvancedFilters}
-                  showFilters={showFilters}
-                  setShowFilters={setShowFilters} />
+                          filters={advancedFilters}
+                          onFiltersChange={setAdvancedFilters}
+                          showFilters={showFilters}
+                          setShowFilters={setShowFilters} />
 
                   </div>
 
                   {savedRecipes.length > 0 ?
-              <SavedRecipes
-                recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
-                onRecipeClick={(recipe) => {
-                  handleSavedRecipeClick(recipe);
-                }}
-                searchQuery={globalSearchQuery}
-                currentUser={currentUser}
-                onOpenShoppingList={() => setShowShoppingList(true)} /> :
+                      <SavedRecipes
+                        recipes={globalSearchQuery || Object.keys(advancedFilters).length > 0 ? filteredSavedRecipes : savedRecipes}
+                        onRecipeClick={(recipe) => {
+                          handleSavedRecipeClick(recipe);
+                        }}
+                        searchQuery={globalSearchQuery}
+                        currentUser={currentUser}
+                        onOpenShoppingList={() => setShowShoppingList(true)} /> :
 
 
-              <div className="text-center py-12">
+                      <div className="text-center py-12">
                       <UtensilsCrossed className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                       <p className="text-gray-600">No saved recipes yet. Generate some recipes to get started!</p>
                     </div>
-              }
+                      }
                 </>
-            }
+                    }
             </div>
             </motion.div>
 
@@ -1553,15 +1553,15 @@ export default function RecipeGenerator() {
           {/* Planner Tab */}
           <div style={{ display: !showSurvey && activeTab === 'planner' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('planner').length > 0 ? '-30%' : 0, opacity: getStack('planner').length > 0 ? 0.5 : 1 }}
-              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-              className={`w-full ${getStack('planner').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
-            >
+                  animate={{ x: getStack('planner').length > 0 ? '-30%' : 0, opacity: getStack('planner').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`w-full ${getStack('planner').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  
               <MealPlanner
-                onOpenShoppingList={() => setShowShoppingList(true)}
-                generatedRecipes={generatedRecipes}
-                onRequirePremium={() => setShowPaywall(true)} 
-              />
+                    onOpenShoppingList={() => setShowShoppingList(true)}
+                    generatedRecipes={generatedRecipes}
+                    onRequirePremium={() => setShowPaywall(true)} />
+                  
             </motion.div>
             {renderTabStack('planner')}
           </div>
@@ -1569,16 +1569,16 @@ export default function RecipeGenerator() {
           {/* Inventory Tab */}
           <div style={{ display: !showSurvey && activeTab === 'inventory' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('inventory').length > 0 ? '-30%' : 0, opacity: getStack('inventory').length > 0 ? 0.5 : 1 }}
-              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-              className={`w-full ${getStack('inventory').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
-            >
+                  animate={{ x: getStack('inventory').length > 0 ? '-30%' : 0, opacity: getStack('inventory').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`w-full ${getStack('inventory').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  
               <InventoryManagement
-                onGenerateFromExpiring={(items) => {
-                  setActiveTab('home');
-                  generateFromInventory(items);
-                }} 
-              />
+                    onGenerateFromExpiring={(items) => {
+                      setActiveTab('home');
+                      generateFromInventory(items);
+                    }} />
+                  
             </motion.div>
             {renderTabStack('inventory')}
           </div>
@@ -1586,12 +1586,12 @@ export default function RecipeGenerator() {
           {/* Analytics Tab */}
           <div style={{ display: !showSurvey && activeTab === 'analytics' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('analytics').length > 0 ? '-30%' : 0, opacity: getStack('analytics').length > 0 ? 0.5 : 1 }}
-              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-              className={`space-y-6 w-full ${getStack('analytics').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
-            >
-              {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
-                <div className="relative">
+                  animate={{ x: getStack('analytics').length > 0 ? '-30%' : 0, opacity: getStack('analytics').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`space-y-6 w-full ${getStack('analytics').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  
+              {!currentUser?.is_premium && currentUser?.role !== 'admin' ?
+                  <div className="relative">
                   <div className="blur-sm pointer-events-none select-none">
                      <AnalyticsDashboard />
                   </div>
@@ -1605,10 +1605,10 @@ export default function RecipeGenerator() {
                       </Button>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <AnalyticsDashboard />
-              )}
+                </div> :
+
+                  <AnalyticsDashboard />
+                  }
             </motion.div>
             {renderTabStack('analytics')}
           </div>
@@ -1616,16 +1616,16 @@ export default function RecipeGenerator() {
           {/* Account Tab */}
           <div style={{ display: !showSurvey && activeTab === 'account' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-              animate={{ x: getStack('account').length > 0 ? '-30%' : 0, opacity: getStack('account').length > 0 ? 0.5 : 1 }}
-              transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-              className={`w-full ${getStack('account').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}
-            >
+                  animate={{ x: getStack('account').length > 0 ? '-30%' : 0, opacity: getStack('account').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`w-full ${getStack('account').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  
               <AccountInfo
-                user={currentUser}
-                onUpdatePreferences={() => setShowSurvey(true)}
-                recipeCount={savedRecipes.length}
-                onReplayTutorial={() => setForceShowTutorial(true)} 
-              />
+                    user={currentUser}
+                    onUpdatePreferences={() => setShowSurvey(true)}
+                    recipeCount={savedRecipes.length}
+                    onReplayTutorial={() => setForceShowTutorial(true)} />
+                  
             </motion.div>
             {renderTabStack('account')}
           </div>
@@ -1639,70 +1639,70 @@ export default function RecipeGenerator() {
       {/* Paywall Modal */}
       <AnimatePresence>
         {showPaywall &&
-        <Paywall
-          onClose={() => setShowPaywall(false)}
-          onSubscribe={(plan, method = 'card') => {
-            // Placeholder: hook up real payment here
-            const methodText = method === 'apple_pay' ? 'Apple Pay' : method === 'samsung_pay' ? 'Samsung Pay' : 'Card';
-            toast.success(`You selected the ${plan} plan using ${methodText}! Payment coming soon.`);
-            setShowPaywall(false);
-          }} />
+          <Paywall
+            onClose={() => setShowPaywall(false)}
+            onSubscribe={(plan, method = 'card') => {
+              // Placeholder: hook up real payment here
+              const methodText = method === 'apple_pay' ? 'Apple Pay' : method === 'samsung_pay' ? 'Samsung Pay' : 'Card';
+              toast.success(`You selected the ${plan} plan using ${methodText}! Payment coming soon.`);
+              setShowPaywall(false);
+            }} />
 
-        }
+          }
       </AnimatePresence>
 
       <CombinationCookingDialog
-        isOpen={showCombineDialog}
-        onClose={() => setShowCombineDialog(false)}
-        inventory={inventory}
-        savedRecipes={savedRecipes}
-        onGenerate={handleCombineAndGenerate}
-        isGenerating={isGenerating} />
+          isOpen={showCombineDialog}
+          onClose={() => setShowCombineDialog(false)}
+          inventory={inventory}
+          savedRecipes={savedRecipes}
+          onGenerate={handleCombineAndGenerate}
+          isGenerating={isGenerating} />
 
 
       {/* Floating AI Coach Button */}
-      {!showIntro && !showShoppingList && !showSurvey && (
+      {!showIntro && !showShoppingList && !showSurvey &&
         <motion.button
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           onClick={() => setShowAICoach(true)}
           aria-label="Open AI Coach"
           className="fixed right-6 sm:right-8 bg-gradient-to-r from-[#f2b769] to-[#e6a245] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all z-40 group flex items-center justify-center border-2 border-white/20 min-h-[44px] min-w-[44px]"
-          style={{ bottom: 'calc(8rem + env(safe-area-inset-bottom))' }}
-        >
+          style={{ bottom: 'calc(8rem + env(safe-area-inset-bottom))' }}>
+          
           <Sparkles className="w-6 h-6 animate-pulse" />
           <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap font-bold pl-0 group-hover:pl-2">
             AI Coach
           </span>
         </motion.button>
-      )}
+        }
 
       {/* AI Coach Drawer */}
-      <AICoach 
-        isOpen={showAICoach} 
-        onClose={() => setShowAICoach(false)} 
-        userPreferences={userPreferences}
-        mealPlans={mealPlans}
-        inventory={inventory}
-        onSuggestRecipe={(recipeName) => {
-          setActiveTab('home');
-          setGlobalSearchQuery(recipeName);
-          generateRecipe();
-        }}
-      />
+      <AICoach
+          isOpen={showAICoach}
+          onClose={() => setShowAICoach(false)}
+          userPreferences={userPreferences}
+          mealPlans={mealPlans}
+          inventory={inventory}
+          onSuggestRecipe={(recipeName) => {
+            setActiveTab('home');
+            setGlobalSearchQuery(recipeName);
+            generateRecipe();
+          }} />
+        
 
       {/* Global Shopping List Modal */}
       {showShoppingList &&
-      <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-50">
         <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-[#6b9b76]" /></div>}>
           <ShoppingList
-          mealPlans={mealPlans}
-          recipes={savedRecipes}
-          onClose={() => setShowShoppingList(false)}
-          currentUser={currentUser} />
+              mealPlans={mealPlans}
+              recipes={savedRecipes}
+              onClose={() => setShowShoppingList(false)}
+              currentUser={currentUser} />
         </Suspense>
         </div>
-      }
+        }
       </PullToRefresh>
     </>);
 
