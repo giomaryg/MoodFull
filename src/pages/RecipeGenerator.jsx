@@ -1133,19 +1133,19 @@ export default function RecipeGenerator() {
         {/* Hero Section */}
         {!showIntro &&
         <div 
-          className="glass-header relative z-50 border-b-0 pb-2"
-          style={{ paddingTop: 'calc(1.5rem + env(safe-area-inset-top))' }}
+          className="glass-header relative z-50 border-b-0 pb-4"
+          style={{ paddingTop: 'max(3.5rem, calc(1.5rem + env(safe-area-inset-top)))' }}
         >
-            <div className="mx-auto my-1 px-3 max-w-6xl">
+            <div className="mx-auto px-3 max-w-6xl">
               <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center">
                 <header>
-                  <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
+                  <div className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[#6b9b76] mb-2 opacity-80">
                     ◎ AI Recipe Generator
                   </div>
-                  <h1 className="text-gradient my-2 pt-4 pb-2 text-3xl font-normal tracking-tight sm:text-6xl" style={{ fontFamily: "'Brittany Signature', cursive" }}>
+                  <h1 className="text-gradient mb-2 pb-2 text-4xl sm:text-6xl font-normal tracking-tight" style={{ fontFamily: "'Brittany Signature', cursive", lineHeight: '1.2' }}>
                     MoodFull
                   </h1>
                 </header>
