@@ -23,8 +23,8 @@ export default function NavigationHeader() {
 
   return (
     <div 
-      className="relative z-50 px-4 py-3 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center"
-      style={{ paddingTop: 'max(3rem, calc(1rem + env(safe-area-inset-top)))' }}
+      className="relative z-50 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center"
+      style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)' }}
     >
       {!isIOS && (
         <Button variant="ghost" size="icon" onClick={globalGoBack} aria-label="Go back" className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-white shadow-sm border border-gray-100">
