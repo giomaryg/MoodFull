@@ -918,6 +918,7 @@ Make them balanced, diverse, and delicious. Include:
                                               ref={provided.innerRef} 
                                               {...provided.draggableProps} 
                                               {...provided.dragHandleProps} 
+                                              style={provided.draggableProps.style}
                                               className="bg-[#f5e6dc] rounded text-[10px] p-2 min-h-[44px] mb-1 truncate cursor-move hover:bg-[#e8d5c4] transition-colors flex items-center"
                                               onClick={() => {
                                                 setSavedScrollY(window.scrollY);
@@ -1006,6 +1007,7 @@ Make them balanced, diverse, and delicious. Include:
      <div
        ref={provided.innerRef}
        {...provided.draggableProps}
+       style={provided.draggableProps.style}
        className={`bg-[#f5e6dc] rounded-lg text-xs group relative ${
          snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
        }`}
@@ -1209,6 +1211,7 @@ Make them balanced, diverse, and delicious. Include:
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
+                              style={provided.draggableProps.style}
                               className={`bg-[#f0f9f2] p-3 rounded-xl border border-[#c5d9c9] transition-shadow ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] scale-105 z-50' : 'hover:shadow-md'}`}
                             >
                               <p className="font-semibold text-[#5a6f60] text-sm line-clamp-2 leading-tight">{recipe.name}</p>
@@ -1232,6 +1235,7 @@ Make them balanced, diverse, and delicious. Include:
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
+                              style={provided.draggableProps.style}
                               className={`bg-[#fdf6f0] p-3 rounded-xl border border-[#e8d5c4] transition-shadow ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#d4a373] scale-105 z-50' : 'hover:shadow-md'}`}
                             >
                               <p className="font-semibold text-[#8a6849] text-sm line-clamp-2 leading-tight">{recipe.name}</p>
@@ -1255,6 +1259,7 @@ Make them balanced, diverse, and delicious. Include:
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
+                              style={provided.draggableProps.style}
                               className={`bg-[#f0f4f8] p-3 rounded-xl border border-[#c5d9c9] transition-shadow ${snapshot.isDragging ? 'shadow-xl ring-2 ring-[#6b9b76] scale-105 z-50' : 'hover:shadow-md'}`}
                             >
                               <p className="font-semibold text-[#5a6f60] text-sm line-clamp-2 leading-tight">{meal.recipe_name}</p>
