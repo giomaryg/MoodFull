@@ -637,7 +637,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                   {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods', 'Kroger', 'Safeway', 'Aldi', 'Costco', 'H-E-B', 'Wegmans', 'Uber Eats', 'DoorDash', 'Shipt', 'Peapod', 'FreshDirect', 'Gopuff', 'Meijer', 'Publix', 'Albertsons', 'Vons', 'Jewel-Osco', 'Stop & Shop', 'Giant', 'Food Lion', 'Hannaford', 'Ralphs', 'Smith\'s', 'Fred Meyer', 'Fry\'s', 'King Soopers'].sort().map(service => (
                     <DropdownMenuItem 
                       key={service}
-                      onClick={() => handleOrderGroceries(service)}
+                      onSelect={() => handleOrderGroceries(service)}
                       className="cursor-pointer hover:bg-[#f0f9f2] text-gray-700 focus:bg-[#f0f9f2] focus:text-[#6b9b76] px-4 py-2"
                     >
                       Order via {service}
@@ -656,10 +656,10 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden">
-                  <DropdownMenuItem onClick={downloadList} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
+                  <DropdownMenuItem onSelect={downloadList} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
                     <FileText className="w-4 h-4 mr-2" /> Text File
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={downloadListPDF} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
+                  <DropdownMenuItem onSelect={downloadListPDF} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
                     <Download className="w-4 h-4 mr-2" /> PDF Document
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -1080,11 +1080,14 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                   {items.map((item) => {
                     const aiCost = aiInsights?.itemCosts?.find(c => c.item === item.original)?.estimatedCost;
                     return (
-                    <button
+                    <div
                       key={item.key}
                       onClick={() => toggleItem(item.key)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleItem(item.key); } }}
+                      role="button"
+                      tabIndex={0}
                       aria-label={checkedItems[item.key] ? `Uncheck ${item.original}` : `Check ${item.original}`}
-                      className="w-full text-left p-3 rounded-xl border-2 transition-all flex items-start gap-3 bg-white border-[#c5d9c9] hover:border-[#6b9b76] group min-h-[44px]"
+                      className="w-full cursor-pointer text-left p-3 rounded-xl border-2 transition-all flex items-start gap-3 bg-white border-[#c5d9c9] hover:border-[#6b9b76] group min-h-[44px]"
                     >
                       <Square className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5 group-hover:text-[#6b9b76]" />
                       <div className="flex-1">
@@ -1115,7 +1118,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                             {['Produce (Aisle)', 'Meat & Seafood (Aisle)', 'Dairy & Eggs (Aisle)', 'Bakery (Aisle)', 'Frozen (Aisle)', 'Pantry (Aisle)', 'Beverages (Aisle)', 'Snacks (Aisle)', 'Household (Aisle)', 'Other'].map(aisle => (
                               <DropdownMenuItem 
                                 key={aisle} 
-                                onClick={() => setItemCategories(prev => ({...prev, [item.original || item.name]: aisle}))}
+                                onSelect={() => setItemCategories(prev => ({...prev, [item.original || item.name]: aisle}))}
                                 className="text-sm cursor-pointer"
                               >
                                 {aisle}
@@ -1140,7 +1143,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                           <X className="w-5 h-5" />
                         </button>
                       )}
-                    </button>
+                    </div>
                   )})}
                 </div>
               </div>
@@ -1153,11 +1156,14 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                 </h4>
                 <div className="space-y-2">
                   {inPantryItems.map((item) => (
-                    <button
+                    <div
                       key={item.key}
                       onClick={() => toggleItem(item.key)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleItem(item.key); } }}
+                      role="button"
+                      tabIndex={0}
                       aria-label={`Uncheck ${item.original}`}
-                      className="w-full text-left px-3 py-2 min-h-[44px] rounded-xl border border-transparent hover:border-gray-300 transition-all flex items-center gap-3 bg-white shadow-sm"
+                      className="w-full cursor-pointer text-left px-3 py-2 min-h-[44px] rounded-xl border border-transparent hover:border-gray-300 transition-all flex items-center gap-3 bg-white shadow-sm"
                     >
                       <CheckSquare className="w-4 h-4 text-[#6b9b76] flex-shrink-0" />
                       <div className="flex-1 flex items-center gap-2">
@@ -1168,7 +1174,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                           <span className="text-[10px] font-medium bg-[#f0f9f2] text-[#6b9b76] px-1.5 py-0.5 rounded border border-[#6b9b76]/30">In Pantry</span>
                         )}
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               </div>
