@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText, Barcode, MoreHorizontal } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText, Barcode, MoreHorizontal, ExternalLink } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -480,24 +480,23 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
   }, [inventory, shoppingList, shoppingByRecipe, checkedItems]);
 
   const getOrderUrl = (service) => {
-    const query = Object.values(shoppingList).flat().filter(i => !checkedItems[i.key]).map(i => i.original).join(' ');
     let url = '';
-    if (service === 'Instacart') url = `https://www.instacart.com/store/s?k=${encodeURIComponent(query)}`;
-    else if (service === 'Walmart') url = `https://www.walmart.com/search?q=${encodeURIComponent(query)}`;
-    else if (service === 'Amazon Fresh') url = `https://www.amazon.com/s?k=${encodeURIComponent(query)}&i=amazonfresh`;
-    else if (service === 'Kroger') url = `https://www.kroger.com/search?query=${encodeURIComponent(query)}`;
-    else if (service === 'Safeway') url = `https://www.safeway.com/shop/search-results.html?q=${encodeURIComponent(query)}`;
-    else if (service === 'Aldi') url = `https://new.aldi.us/results?q=${encodeURIComponent(query)}`;
-    else if (service === 'Costco') url = `https://www.costco.com/CatalogSearch?keyword=${encodeURIComponent(query)}`;
-    else if (service === 'H-E-B') url = `https://www.heb.com/search/?q=${encodeURIComponent(query)}`;
-    else if (service === 'Wegmans') url = `https://shop.wegmans.com/search?search_term=${encodeURIComponent(query)}`;
-    else if (service === 'Uber Eats') url = `https://www.ubereats.com/search?q=${encodeURIComponent(query)}`;
-    else if (service === 'DoorDash') url = `https://www.doordash.com/search/${encodeURIComponent(query)}/`;
-    else if (service === 'Shipt') url = `https://www.shipt.com/search?q=${encodeURIComponent(query)}`;
-    else if (service === 'Target') url = `https://www.target.com/s?searchTerm=${encodeURIComponent(query)}`;
-    else if (service === 'Sprouts') url = `https://shop.sprouts.com/search?search_term=${encodeURIComponent(query)}`;
-    else if (service === 'Whole Foods') url = `https://www.wholefoodsmarket.com/search?text=${encodeURIComponent(query)}`;
-    else url = `https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/search?q=${encodeURIComponent(query)}`;
+    if (service === 'Instacart') url = `https://www.instacart.com`;
+    else if (service === 'Walmart') url = `https://www.walmart.com`;
+    else if (service === 'Amazon Fresh') url = `https://www.amazon.com/alm/storefront?almBrandId=QW1hem9uIEZyZXNo`;
+    else if (service === 'Kroger') url = `https://www.kroger.com`;
+    else if (service === 'Safeway') url = `https://www.safeway.com`;
+    else if (service === 'Aldi') url = `https://new.aldi.us`;
+    else if (service === 'Costco') url = `https://www.costco.com`;
+    else if (service === 'H-E-B') url = `https://www.heb.com`;
+    else if (service === 'Wegmans') url = `https://shop.wegmans.com`;
+    else if (service === 'Uber Eats') url = `https://www.ubereats.com`;
+    else if (service === 'DoorDash') url = `https://www.doordash.com`;
+    else if (service === 'Shipt') url = `https://www.shipt.com`;
+    else if (service === 'Target') url = `https://www.target.com`;
+    else if (service === 'Sprouts') url = `https://shop.sprouts.com`;
+    else if (service === 'Whole Foods') url = `https://www.wholefoodsmarket.com`;
+    else url = `https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
     return url;
   };
 
@@ -640,12 +639,12 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                       target="_blank" 
                       rel="noopener noreferrer" 
                       onClick={() => {
-                        toast.success(`Searching items on ${service}...`);
                         setOrderMenuOpen(false);
                       }}
-                      className="cursor-pointer hover:bg-[#f0f9f2] text-gray-700 focus:bg-[#f0f9f2] focus:text-[#6b9b76] px-4 py-2 text-sm rounded-md"
+                      className="cursor-pointer hover:bg-[#f0f9f2] text-gray-700 focus:bg-[#f0f9f2] focus:text-[#6b9b76] px-4 py-2 text-sm rounded-md flex items-center justify-between"
                     >
-                      Order via {service}
+                      <span>Order via {service}</span>
+                      <ExternalLink className="w-3.5 h-3.5 ml-2 text-gray-400" />
                     </a>
                   ))}
                 </DropdownMenuContent>
