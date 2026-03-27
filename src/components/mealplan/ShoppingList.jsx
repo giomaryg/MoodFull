@@ -477,8 +477,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     }
   }, [inventory, shoppingList, shoppingByRecipe, checkedItems]);
 
-  const handleOrderGroceries = (service) => {
-    toast.success(`Searching items on ${service}...`);
+  const getOrderUrl = (service) => {
     const query = Object.values(shoppingList).flat().filter(i => !checkedItems[i.key]).map(i => i.original).join(' ');
     let url = '';
     if (service === 'Instacart') url = `https://www.instacart.com/store/s?k=${encodeURIComponent(query)}`;
@@ -497,7 +496,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     else if (service === 'Sprouts') url = `https://shop.sprouts.com/search?search_term=${encodeURIComponent(query)}`;
     else if (service === 'Whole Foods') url = `https://www.wholefoodsmarket.com/search?text=${encodeURIComponent(query)}`;
     else url = `https://www.${service.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/search?q=${encodeURIComponent(query)}`;
-    window.open(url, '_blank');
+    return url;
   };
 
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -635,10 +634,12 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                   {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods', 'Kroger', 'Safeway', 'Aldi', 'Costco', 'H-E-B', 'Wegmans', 'Uber Eats', 'DoorDash', 'Shipt', 'Peapod', 'FreshDirect', 'Gopuff', 'Meijer', 'Publix', 'Albertsons', 'Vons', 'Jewel-Osco', 'Stop & Shop', 'Giant', 'Food Lion', 'Hannaford', 'Ralphs', 'Smith\'s', 'Fred Meyer', 'Fry\'s', 'King Soopers'].sort().map(service => (
                     <DropdownMenuItem 
                       key={service}
-                      onSelect={() => handleOrderGroceries(service)}
+                      asChild
                       className="cursor-pointer hover:bg-[#f0f9f2] text-gray-700 focus:bg-[#f0f9f2] focus:text-[#6b9b76] px-4 py-2"
                     >
-                      Order via {service}
+                      <a href={getOrderUrl(service)} target="_blank" rel="noopener noreferrer" onClick={() => toast.success(`Searching items on ${service}...`)}>
+                        Order via {service}
+                      </a>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
