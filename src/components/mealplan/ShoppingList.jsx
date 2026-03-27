@@ -340,6 +340,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
   };
 
   const downloadListPDF = async () => {
+    if (!window.confirm("Would you like to download your shopping list as a PDF?")) return;
     try {
       const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
@@ -393,6 +394,23 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         });
       }
 
+      if (navigator.share && navigator.canShare) {
+        try {
+          const blob = doc.output('blob');
+          const file = new File([blob], 'shopping-list.pdf', { type: 'application/pdf' });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'Shopping List',
+            });
+            toast.success('PDF Shared!');
+            return;
+          }
+        } catch (err) {
+          // Fallback to download if share fails
+        }
+      }
+
       doc.save('shopping-list.pdf');
       toast.success('PDF Downloaded!');
     } catch (e) {
@@ -400,7 +418,8 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     }
   };
 
-  const downloadList = () => {
+  const downloadList = async () => {
+    if (!window.confirm("Would you like to download your shopping list as a text file?")) return;
     let text = '🛒 Shopping List\n\n';
     
     text += '=== BY MEAL ===\n\n';
@@ -435,13 +454,29 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
        });
     }
 
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Shopping List',
+          text: text
+        });
+        toast.success('List Shared!');
+        return;
+      } catch (e) {
+        // Fallback to download if share fails or is cancelled
+      }
+    }
+
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'shopping-list.txt';
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    toast.success('Text File Downloaded!');
   };
 
   const totalItems = Object.values(shoppingList).reduce((sum, items) => sum + items.length, 0);
