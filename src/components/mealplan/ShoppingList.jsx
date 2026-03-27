@@ -42,6 +42,8 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
   const [newCustomItem, setNewCustomItem] = useState('');
   const [expandedRecipes, setExpandedRecipes] = useState({});
   const [viewMode, setViewMode] = useState('selection'); // 'selection', 'consolidated', 'by-recipe', or 'history'
+  const [orderMenuOpen, setOrderMenuOpen] = useState(false);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
   const [itemCategories, setItemCategories] = useState(() => {
     try { return JSON.parse(localStorage.getItem('shoppingListItemCategories')) || {}; } catch { return {}; }
@@ -621,7 +623,7 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
               </p>
             </div>
             <div className="flex gap-2 mr-8">
-              <DropdownMenu>
+              <DropdownMenu open={orderMenuOpen} onOpenChange={setOrderMenuOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
                     disabled={totalItems === 0 || checkedCount === totalItems}
@@ -630,21 +632,25 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                     <ShoppingCart className="w-4 h-4 mr-2 hidden sm:block" /> Order
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden max-h-80 overflow-y-auto">
+                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden max-h-80 overflow-y-auto flex flex-col p-1 z-[100]">
                   {['Instacart', 'Amazon Fresh', 'Walmart', 'Target', 'Sprouts', 'Whole Foods', 'Kroger', 'Safeway', 'Aldi', 'Costco', 'H-E-B', 'Wegmans', 'Uber Eats', 'DoorDash', 'Shipt', 'Peapod', 'FreshDirect', 'Gopuff', 'Meijer', 'Publix', 'Albertsons', 'Vons', 'Jewel-Osco', 'Stop & Shop', 'Giant', 'Food Lion', 'Hannaford', 'Ralphs', 'Smith\'s', 'Fred Meyer', 'Fry\'s', 'King Soopers'].sort().map(service => (
-                    <DropdownMenuItem 
+                    <a 
                       key={service}
-                      asChild
-                      className="cursor-pointer hover:bg-[#f0f9f2] text-gray-700 focus:bg-[#f0f9f2] focus:text-[#6b9b76] px-4 py-2"
+                      href={getOrderUrl(service)} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      onClick={() => {
+                        toast.success(`Searching items on ${service}...`);
+                        setOrderMenuOpen(false);
+                      }}
+                      className="cursor-pointer hover:bg-[#f0f9f2] text-gray-700 focus:bg-[#f0f9f2] focus:text-[#6b9b76] px-4 py-2 text-sm rounded-md"
                     >
-                      <a href={getOrderUrl(service)} target="_blank" rel="noopener noreferrer" onClick={() => toast.success(`Searching items on ${service}...`)}>
-                        Order via {service}
-                      </a>
-                    </DropdownMenuItem>
+                      Order via {service}
+                    </a>
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <DropdownMenu>
+              <DropdownMenu open={exportMenuOpen} onOpenChange={setExportMenuOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
@@ -654,13 +660,25 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
                     <span className="hidden sm:inline">Export</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden">
-                  <DropdownMenuItem onSelect={downloadList} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
+                <DropdownMenuContent align="end" className="bg-white rounded-xl shadow-lg border border-[#c5d9c9] overflow-hidden flex flex-col p-1 z-[100]">
+                  <button 
+                    onClick={() => {
+                      downloadList();
+                      setExportMenuOpen(false);
+                    }} 
+                    className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2 text-sm rounded-md flex items-center text-gray-700 text-left"
+                  >
                     <FileText className="w-4 h-4 mr-2" /> Text File
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={downloadListPDF} className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2">
+                  </button>
+                  <button 
+                    onClick={() => {
+                      downloadListPDF();
+                      setExportMenuOpen(false);
+                    }} 
+                    className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2 text-sm rounded-md flex items-center text-gray-700 text-left"
+                  >
                     <Download className="w-4 h-4 mr-2" /> PDF Document
-                  </DropdownMenuItem>
+                  </button>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
