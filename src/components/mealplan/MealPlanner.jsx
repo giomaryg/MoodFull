@@ -1007,23 +1007,12 @@ Make them balanced, diverse, and delicious. Include:
      <div
        ref={provided.innerRef}
        {...provided.draggableProps}
+       {...provided.dragHandleProps}
        style={provided.draggableProps.style}
-       className={`bg-[#f5e6dc] rounded-lg text-xs group relative ${
+       className={`bg-[#f5e6dc] rounded-lg text-xs group relative cursor-move ${
          snapshot.isDragging ? 'shadow-lg ring-2 ring-[#6b9b76] opacity-90' : ''
        }`}
      >
-       {/* Drag handle — small grip area only */}
-       <div
-         {...provided.dragHandleProps}
-         className="absolute left-0 top-0 bottom-0 w-4 flex items-center justify-center cursor-move opacity-30 group-hover:opacity-60"
-       >
-         <div className="flex flex-col gap-0.5">
-           <div className="w-1 h-1 rounded-full bg-gray-500" />
-           <div className="w-1 h-1 rounded-full bg-gray-500" />
-           <div className="w-1 h-1 rounded-full bg-gray-500" />
-         </div>
-       </div>
-
        {/* Clickable content area */}
        <div
          role="button"
@@ -1035,7 +1024,7 @@ Make them balanced, diverse, and delicious. Include:
              e.currentTarget.click();
            }
          }}
-         className="pl-5 pr-8 py-2 cursor-pointer flex flex-col h-full justify-center min-h-[44px]"
+         className="px-3 pr-8 py-2 flex flex-col h-full justify-center min-h-[44px]"
          onClick={async () => {
            setSavedScrollY(window.scrollY);
            if (linkedRecipe) {
