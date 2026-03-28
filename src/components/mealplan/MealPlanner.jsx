@@ -750,7 +750,7 @@ Make them balanced, diverse, and delicious. Include:
                 <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="hidden sm:inline">Generate Plan</span><span className="sm:hidden">Generate</span> <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
               </Button>
             ) : (
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button disabled={isGeneratingPlan} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5 w-full sm:w-auto">
                     {isGeneratingPlan ? (
