@@ -4,26 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 export default function BottomNav({ activeTab, onTabChange, isVisible = true, enablePantry = true }) {
-  const [isMinimized, setIsMinimized] = useState(false);
-  const navRef = useRef(null);
-
-  useEffect(() => {
-    const handleDocumentClick = (e) => {
-      if (navRef.current && navRef.current.contains(e.target)) {
-        return;
-      }
-      setIsMinimized(true);
-    };
-
-    document.addEventListener('mousedown', handleDocumentClick);
-    document.addEventListener('touchstart', handleDocumentClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleDocumentClick);
-      document.removeEventListener('touchstart', handleDocumentClick);
-    };
-  }, []);
-
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'saved', label: 'Saved', icon: BookMarked },
@@ -37,28 +17,18 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
     <AnimatePresence>
       {isVisible && (
         <motion.div 
-          ref={navRef}
           initial={{ y: 150, x: "-50%", opacity: 0 }}
           animate={{ 
-            y: isMinimized ? "75%" : 0, 
+            y: 0, 
             x: "-50%", 
-            opacity: isMinimized ? 0.7 : 1 
+            opacity: 1 
           }}
           exit={{ y: 150, x: "-50%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          onClick={() => isMinimized && setIsMinimized(false)}
-          className={`fixed left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden ${isMinimized ? 'cursor-pointer hover:opacity-100' : ''}`}
+          className="fixed left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden"
           style={{ bottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
         >
-          {isMinimized && (
-            <button 
-              className="absolute top-0 left-0 w-full h-[44px] min-h-[44px] flex justify-center items-center"
-              aria-label="Expand navigation"
-            >
-              <ChevronUp className="w-5 h-5 text-[#6b9b76]" />
-            </button>
-          )}
-          <div className={`flex items-center justify-around w-full gap-1 overflow-x-auto scroll-smooth px-2 py-2 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${isMinimized ? 'pointer-events-none opacity-20' : ''}`}>
+          <div className="flex items-center justify-around w-full gap-1 overflow-x-auto scroll-smooth px-2 py-2 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
