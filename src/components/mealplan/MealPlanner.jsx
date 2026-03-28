@@ -891,7 +891,7 @@ Make them balanced, diverse, and delicious. Include:
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1 bg-white rounded-xl border-2 border-[#c5d9c9] overflow-hidden">
             <div className="overflow-x-auto">
-              <div className={calendarView === 'monthly' ? "min-w-[600px]" : "min-w-[800px]"}>
+              <div className={calendarView === 'monthly' ? "min-w-[800px]" : calendarView === 'weekly' ? "min-w-[1200px]" : "w-full"}>
                 {calendarView === 'monthly' ? (
                   <div className="grid grid-cols-7 gap-px bg-[#c5d9c9]">
                     {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
@@ -919,7 +919,7 @@ Make them balanced, diverse, and delicious. Include:
                                               {...provided.draggableProps} 
                                               {...provided.dragHandleProps} 
                                               style={provided.draggableProps.style}
-                                              className="bg-[#f5e6dc] rounded text-[10px] p-2 min-h-[44px] mb-1 truncate cursor-move hover:bg-[#e8d5c4] transition-colors flex items-center"
+                                              className="bg-[#f5e6dc] rounded text-xs p-2 min-h-[44px] mb-1 truncate cursor-move hover:bg-[#e8d5c4] transition-colors flex items-center"
                                               onClick={() => {
                                                 setSavedScrollY(window.scrollY);
                                                 const linkedRecipe = recipes.find(r => r.id === meal.recipe_id);
@@ -1078,18 +1078,18 @@ Make them balanced, diverse, and delicious. Include:
            }
          }}
        >
-         <p className="font-medium text-[#5a6f60] break-words text-xs leading-normal hover:underline">
+         <p className="font-medium text-[#5a6f60] break-words text-sm leading-snug hover:underline">
            {loadingRecipeId === meal.id ? '...' : meal.recipe_name}
          </p>
          {linkedRecipe?.nutrition ? (
-           <div className="flex gap-1.5 text-[10px] text-gray-500 mt-1 font-medium flex-wrap">
+           <div className="flex gap-1.5 text-xs text-gray-500 mt-1 font-medium flex-wrap">
              <span className="text-orange-600">{linkedRecipe.nutrition.calories || 0} cal</span>
              <span>{parseMacro(linkedRecipe.nutrition.protein)}p</span>
              <span>{parseMacro(linkedRecipe.nutrition.carbs)}c</span>
              <span>{parseMacro(linkedRecipe.nutrition.fat)}f</span>
            </div>
          ) : meal.servings ? (
-           <p className="text-gray-500 text-[10px] mt-0.5">{meal.servings} servings</p>
+           <p className="text-gray-500 text-xs mt-0.5">{meal.servings} servings</p>
          ) : null}
        </div>
 
