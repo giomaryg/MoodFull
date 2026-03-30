@@ -9,21 +9,30 @@ import {
 } from '@/components/ui/sheet';
 import { CreditCard, AlertCircle, CheckCircle2, Receipt, Calendar, Download } from 'lucide-react';
 import { toast } from 'sonner';
+import { base44 } from '@/api/base44Client';
+import { useQueryClient } from '@tanstack/react-query';
+import Paywall from '@/components/paywall/Paywall';
 
 export default function BillingPanel({ isOpen, onClose, user }) {
   const [isCancelling, setIsCancelling] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const queryClient = useQueryClient();
   const isPremium = user?.is_premium;
 
-  const handleCancelSubscription = () => {
-    // In a real app, this would call a backend function to cancel the subscription
-    toast.success('Your subscription cancellation request has been received.');
+  const handleCancelSubscription = async () => {
+    try {
+      await base44.auth.updateMe({ is_premium: false });
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+      toast.success('Your subscription has been successfully cancelled.');
+    } catch (e) {
+      toast.error('Failed to cancel subscription.');
+    }
     setIsCancelling(false);
     onClose();
   };
 
   const handleChangeSubscription = () => {
-    // In a real app, this would redirect to a customer portal like Stripe
-    toast.info('Redirecting to subscription management portal...');
+    setShowPaywall(true);
   };
 
   return (
@@ -157,6 +166,21 @@ export default function BillingPanel({ isOpen, onClose, user }) {
           )}
         </div>
       </SheetContent>
+      {showPaywall && (
+        <Paywall 
+          onClose={() => setShowPaywall(false)} 
+          onSubscribe={async (planId, method) => {
+            try {
+              await base44.auth.updateMe({ is_premium: true });
+              queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+              toast.success(`Successfully subscribed to ${planId} plan!`);
+              setShowPaywall(false);
+            } catch (e) {
+              toast.error('Failed to update subscription.');
+            }
+          }}
+        />
+      )}
     </Sheet>
   );
 }
