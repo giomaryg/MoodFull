@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer } from 'lucide-react';
 
 const mealTypes = [
 { id: 'breakfast', label: 'Breakfast', icon: Sun, color: 'from-yellow-400 to-orange-300' },
@@ -66,6 +66,14 @@ const moods = [
   color: 'from-teal-400 to-cyan-500',
   bg: 'bg-teal-50 hover:bg-teal-100',
   border: 'border-teal-300'
+},
+{
+  id: 'in_a_rush',
+  label: 'In a Rush',
+  icon: Timer,
+  color: 'from-orange-400 to-red-500',
+  bg: 'bg-orange-50 hover:bg-orange-100',
+  border: 'border-orange-300'
 },
 {
   id: 'lazy',

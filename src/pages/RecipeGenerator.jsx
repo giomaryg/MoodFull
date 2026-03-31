@@ -614,7 +614,8 @@ export default function RecipeGenerator() {
       kid_friendly: "realistic, simple, very easy meals with extremely familiar ingredients that kids actually eat",
       family_friendly: "realistic, simple, everyday family-friendly meals with familiar, accessible ingredients that the whole family will enjoy",
       nostalgic: "classic, traditional recipes",
-      sick: "easy to digest, soothing, warm, hydrating, gentle, immune-supporting meals like soups or broths"
+      sick: "easy to digest, soothing, warm, hydrating, gentle, immune-supporting meals like soups or broths",
+      in_a_rush: "ultra-fast, quick prep meals that can be made in under 15 minutes"
     };
 
     const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(', ');
