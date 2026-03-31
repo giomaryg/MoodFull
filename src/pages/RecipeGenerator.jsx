@@ -139,7 +139,7 @@ export default function RecipeGenerator() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+    if (false) {
       const today = new Date().toISOString().slice(0, 10);
       const lastReset = currentUser?.daily_mood_reset_date;
       const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -157,7 +157,7 @@ export default function RecipeGenerator() {
     try {
       const uploadRes = await base44.integrations.Core.UploadFile({ file });
 
-      if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+      if (false) {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
         const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -589,7 +589,7 @@ export default function RecipeGenerator() {
     if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
 
     // Free limit: 3 mood generations per day (resets every 24h)
-    if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+    if (false) {
       const today = new Date().toISOString().slice(0, 10);
       const lastReset = currentUser?.daily_mood_reset_date;
       const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -699,7 +699,7 @@ export default function RecipeGenerator() {
       }));
 
       // Increment daily usage count (reset if new day)
-      if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+      if (false) {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
         const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -788,7 +788,7 @@ export default function RecipeGenerator() {
       return;
     }
 
-    if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+    if (false) {
       const today = new Date().toISOString().slice(0, 10);
       const lastReset = currentUser?.daily_mood_reset_date;
       const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -878,7 +878,7 @@ export default function RecipeGenerator() {
         _loading: true
       }));
 
-      if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+      if (false) {
         const today = new Date().toISOString().slice(0, 10);
         const lastReset = currentUser?.daily_mood_reset_date;
         const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -1290,7 +1290,7 @@ export default function RecipeGenerator() {
 
 
               {/* Daily limit notice */}
-              {!currentUser?.is_premium && currentUser?.role !== 'admin' && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && !hideLimitAlert && (() => {
+              {false && !globalSearchQuery && Object.keys(advancedFilters).length === 0 && !hideLimitAlert && (() => {
                       const today = new Date().toISOString().slice(0, 10);
                       const lastReset = currentUser?.daily_mood_reset_date;
                       const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
@@ -1466,7 +1466,7 @@ export default function RecipeGenerator() {
                 <p className="text-gray-600">Browse and manage your collection</p>
               </div>
 
-              {!currentUser?.is_premium && currentUser?.role !== 'admin' ?
+              {false ?
                     <div className="relative">
                   {/* Blurred preview */}
                   <div className="blur-sm pointer-events-none select-none">
@@ -1592,7 +1592,7 @@ export default function RecipeGenerator() {
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
                   className={`space-y-6 w-full ${getStack('analytics').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
                   
-              {!currentUser?.is_premium && currentUser?.role !== 'admin' ?
+              {false ?
                   <div className="relative">
                   <div className="blur-sm pointer-events-none select-none">
                      <AnalyticsDashboard />

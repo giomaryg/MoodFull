@@ -723,7 +723,7 @@ Make them balanced, diverse, and delicious. Include:
         <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full sm:w-auto">
           <Button
             onClick={() => {
-              if (!currentUser?.is_premium && currentUser?.role !== 'admin') {
+              if (false) {
                 if (onRequirePremium) onRequirePremium();
                 return;
               }
@@ -734,7 +734,7 @@ Make them balanced, diverse, and delicious. Include:
             <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
             <span className="hidden sm:inline">Set Goals</span>
             <span className="sm:hidden">Goals</span>
-            {(!currentUser?.is_premium && currentUser?.role !== 'admin') && <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>}
+            {(false) && <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>}
           </Button>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
@@ -745,7 +745,7 @@ Make them balanced, diverse, and delicious. Include:
               aria-label="Custom meal plan prompt"
               className="w-full sm:w-64 min-h-[44px] border-2 border-[#c5d9c9] focus:border-[#6b9b76] text-xs sm:text-sm"
             />
-            {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
+            {(false) ? (
               <Button onClick={() => { if (onRequirePremium) onRequirePremium(); }} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white whitespace-nowrap min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5 w-full sm:w-auto">
                 <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="hidden sm:inline">Generate Plan</span><span className="sm:hidden">Generate</span> <span className="text-[9px] px-1 py-0.5 bg-white/30 rounded uppercase tracking-wider font-bold">Pro</span>
               </Button>
