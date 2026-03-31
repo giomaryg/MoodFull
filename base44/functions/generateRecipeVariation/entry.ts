@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
 
         const finalPrompt = promptMap[typeOrPrompt] || `Create a variation of "${recipe.name}" with this specific modification: "${typeOrPrompt}". Adapt the ingredients and instructions accordingly.`;
 
-        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `${finalPrompt} Keep the core identity but apply the requested changes.`,
           response_json_schema: {
             type: "object",

@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
 
         const { ingredient, recipeName, dietaryContext, inventoryContext } = await req.json();
 
-        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `Suggest ONE single best substitution for "${ingredient}" in the recipe "${recipeName}".${dietaryContext}${inventoryContext}\nReturn ONLY the name of the substitute ingredient and the amount to use. Keep it very concise.`,
           response_json_schema: {
             type: "object",

@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
           ? "Simplify these instructions to be as easy to understand as possible for a beginner. Reduce the number of steps if possible."
           : "Make these instructions extremely detailed, step-by-step, including visual cues, temperatures, and professional techniques.";
           
-        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `Here are the current instructions for ${recipeName}: \n${instructions.join('\n')}\n\n${modePrompt} Return ONLY a list of strings representing the new steps.`,
           response_json_schema: {
             type: "object",

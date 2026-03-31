@@ -160,7 +160,7 @@ function MealPlanner({ onOpenShoppingList, generatedRecipes = [], onRequirePremi
   const analyzeNutrition = async () => {
     setIsAnalyzingNutrition(true);
     try {
-      const response = await base44.integrations.Core.InvokeLLM({
+      const response = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Analyze the following weekly nutrition averages for the user:
 Calories: ${weeklyAverages.calories} (Goal: ${currentUser?.daily_calorie_target || 'None'})
 Protein: ${weeklyAverages.protein}g
@@ -439,7 +439,7 @@ Provide a concise, encouraging nutritional analysis, assessing if they meet thei
         }
       };
 
-      const response = await base44.integrations.Core.InvokeLLM({
+      const response = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Create a balanced weekly meal plan (7 days) with breakfast, lunch, and dinner for each day.
 
 ${userContext}
@@ -638,7 +638,7 @@ For each meal provide:
         }
       };
 
-      const response = await base44.integrations.Core.InvokeLLM({
+      const response = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Create meals for one day: breakfast, lunch, and dinner.
 
 ${userContext}

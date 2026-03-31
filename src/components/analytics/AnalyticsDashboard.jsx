@@ -168,7 +168,7 @@ export default function AnalyticsDashboard() {
   const generateAIReport = async () => {
     setIsGeneratingReport(true);
     try {
-      const response = await base44.integrations.Core.InvokeLLM({
+      const response = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Act as an expert nutritionist and financial advisor. Analyze this user's meal planning data:
 - Dietary Goals: ${currentUser?.daily_calorie_target || 'Not set'} calories/day, ${currentUser?.macro_protein_ratio || 'Not set'}% protein, ${currentUser?.macro_carbs_ratio || 'Not set'}% carbs, ${currentUser?.macro_fat_ratio || 'Not set'}% fat.
 - Compliance Rate: ${stats.complianceRate}% (days within 15% of calorie target).
@@ -299,7 +299,7 @@ Provide a detailed, structured report in markdown offering:
           </CardHeader>
           <CardContent>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                 <LineChart data={stats.intakeOverTime} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="date" />
@@ -320,7 +320,7 @@ Provide a detailed, structured report in markdown offering:
           </CardHeader>
           <CardContent>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                 <BarChart data={stats.frequentRecipes} layout="vertical" margin={{ left: 0, right: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                   <XAxis type="number" />
@@ -340,7 +340,7 @@ Provide a detailed, structured report in markdown offering:
           <CardContent>
             <div className="h-64 flex items-center justify-center">
               {stats.avgNutrition.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                   <PieChart>
                     <Pie
                       data={stats.avgNutrition}
@@ -372,7 +372,7 @@ Provide a detailed, structured report in markdown offering:
           </CardHeader>
           <CardContent>
             <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                 <LineChart data={stats.spendingData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="week" />

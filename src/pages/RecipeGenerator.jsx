@@ -164,7 +164,7 @@ export default function RecipeGenerator() {
         await updateUserMutation.mutateAsync({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
       }
 
-      const quickResponse = await base44.integrations.Core.InvokeLLM({
+      const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Look at this photo of a fridge/pantry. Identify the ingredients and generate 4 realistic recipe ideas using them. Provide varied options.`,
         file_urls: [uploadRes.file_url],
         response_json_schema: {
@@ -202,7 +202,7 @@ export default function RecipeGenerator() {
       setIsGenerating(false);
 
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
-        const detail = await base44.integrations.Core.InvokeLLM({
+        const detail = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
           response_json_schema: {
             type: "object",
@@ -663,7 +663,7 @@ export default function RecipeGenerator() {
       const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
-      const quickResponse = await base44.integrations.Core.InvokeLLM({
+      const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Generate 8 diverse recipe ideas ${moodPart} ${searchContext}.${mealTypePart}${preferencesContext}${filterString} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Focus heavily on requested nutritional goals and cooking techniques. Do NOT generate 8 similar recipes - make them varied and interesting.`,
         response_json_schema: {
           type: "object",
@@ -712,7 +712,7 @@ export default function RecipeGenerator() {
 
       // Phase 2: Enrich all recipes in parallel (ingredients, instructions, nutrition, etc.)
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
-        const detail = await base44.integrations.Core.InvokeLLM({
+        const detail = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). Factor in any specific nutritional goals, specific dietary restrictions, and teach any requested cooking techniques in the instructions. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items focusing on user targets if any), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
           response_json_schema: {
             type: "object",
@@ -843,7 +843,7 @@ export default function RecipeGenerator() {
     const filterString = filtersContext.length > 0 ? ` Requirements: ${filtersContext.join(', ')}.` : '';
 
     try {
-      const quickResponse = await base44.integrations.Core.InvokeLLM({
+      const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Generate 4 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
         response_json_schema: {
           type: "object",
@@ -889,7 +889,7 @@ export default function RecipeGenerator() {
       setIsGenerating(false);
 
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
-        const detail = await base44.integrations.Core.InvokeLLM({
+        const detail = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). ${priorityItems}. Factor in any specific nutritional goals, specific dietary restrictions, and teach any requested cooking techniques in the instructions. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items focusing on user targets if any), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
           response_json_schema: {
             type: "object",
@@ -987,7 +987,7 @@ export default function RecipeGenerator() {
     if (recipes.length > 0) combinePrompt.push(`Draw inspiration from or combine elements of these dishes: ${recipes.join(', ')}`);
 
     try {
-      const quickResponse = await base44.integrations.Core.InvokeLLM({
+      const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
         prompt: `Generate 3 completely new, creative recipe ideas by combining these elements: ${combinePrompt.join('. ')}. Make sure they are coherent and tasty. ${preferencesContext}`,
         response_json_schema: {
           type: "object",
@@ -1026,7 +1026,7 @@ export default function RecipeGenerator() {
       setIsGenerating(false);
 
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
-        const detail = await base44.integrations.Core.InvokeLLM({
+        const detail = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). It is a fusion/combination recipe. Factor in any specific nutritional goals, specific dietary restrictions, and teach any requested cooking techniques in the instructions. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items focusing on user targets if any), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
           response_json_schema: {
             type: "object",

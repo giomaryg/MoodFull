@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
 
         const { itemsToAnalyze, inventoryNames, upcomingMeals } = await req.json();
 
-        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
+        const response = await base44.asServiceRole.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
           prompt: `Analyze this shopping list: ${itemsToAnalyze.join(', ')}.
 Current Pantry Inventory: ${inventoryNames || 'None'}
 Upcoming Meals (next 7 days): ${upcomingMeals || 'None'}
