@@ -165,7 +165,7 @@ export default function RecipeGenerator() {
       }
 
       const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
-        prompt: `Look at this photo of a fridge/pantry. Identify the ingredients and generate 4 realistic recipe ideas using them. Provide varied options.`,
+        prompt: `Look at this photo of a fridge/pantry. Identify the ingredients and generate 6 realistic recipe ideas using them. Provide varied options.`,
         file_urls: [uploadRes.file_url],
         response_json_schema: {
           type: "object",
@@ -660,7 +660,7 @@ export default function RecipeGenerator() {
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
       const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
-        prompt: `Generate 4 diverse recipe ideas ${moodPart} ${searchContext}.${mealTypePart}${preferencesContext}${filterString} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Focus heavily on requested nutritional goals and cooking techniques. Do NOT generate 4 similar recipes - make them varied and interesting.`,
+        prompt: `Generate 6 diverse recipe ideas ${moodPart} ${searchContext}.${mealTypePart}${preferencesContext}${filterString} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Focus heavily on requested nutritional goals and cooking techniques. Do NOT generate 6 similar recipes - make them varied and interesting.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -832,7 +832,7 @@ export default function RecipeGenerator() {
 
     try {
       const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
-        prompt: `Generate 4 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
+        prompt: `Generate 6 realistic recipe ideas. ${priorityItems}. Try to minimize extra ingredients needed. ${preferencesContext}${filterString} Provide varied options.`,
         response_json_schema: {
           type: "object",
           properties: {
