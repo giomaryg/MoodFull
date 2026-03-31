@@ -1361,7 +1361,7 @@ export default function RecipeGenerator() {
 
                     {ENABLE_PANTRY_FEATURE &&
                         <Button
-                          onClick={generateFromInventory}
+                          onClick={() => generateFromInventory()}
                           disabled={isGenerating}
                           aria-label="Generate Recipes from Pantry"
                           className="bg-white text-[#6b9b76] border-2 border-[#6b9b76] shadow-[0_0_18px_rgba(107,155,118,0.15)] hover:bg-[#f0f9f2] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
