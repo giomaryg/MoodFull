@@ -483,10 +483,12 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           />
 
           {/* Public Community Comments */}
-          <RecipeComments 
-            recipe={recipe}
-            currentUser={currentUser}
-          />
+          {false && (
+            <RecipeComments 
+              recipe={recipe}
+              currentUser={currentUser}
+            />
+          )}
 
           {/* Ingredients */}
           <div className="space-y-4">
