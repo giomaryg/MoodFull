@@ -142,7 +142,7 @@ const AnimatedRoutes = () => {
 function App() {
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
         <QueryClientProvider client={queryClientInstance}>
           <Router>
