@@ -8,7 +8,7 @@ import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, RefreshCw, Loade
 import HighlightedText from './HighlightedText';
 import TiltCard from '../ui/TiltCard';
 
-function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuery = '' }) {
+function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuery = '', isGenerating }) {
   const difficultyColors = {
     easy: 'bg-green-50 text-green-700 border-green-200',
     medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
@@ -38,9 +38,14 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
             <Button
               onClick={onRefresh}
               variant="outline"
+              disabled={isGenerating}
               className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm flex-1 sm:flex-none min-h-[44px]"
             >
-              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
+              {isGenerating ? (
+                <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 animate-spin" />
+              ) : (
+                <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
+              )}
               Refresh Ideas
             </Button>
           )}

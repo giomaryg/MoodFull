@@ -1372,6 +1372,7 @@ export default function RecipeGenerator() {
 
                     <RecipeGrid
                           recipes={filteredGeneratedRecipes}
+                          isGenerating={isGenerating}
                           onRecipeClick={handleRecipeClick}
                           onStartOver={() => {
                             setGeneratedRecipes([]);
