@@ -1179,7 +1179,7 @@ export default function RecipeGenerator() {
                         <motion.div
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="relative bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                          className="relative bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 pr-12 sm:pr-14 mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                           
                     <Button
                             variant="ghost"
