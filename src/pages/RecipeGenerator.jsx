@@ -609,7 +609,9 @@ export default function RecipeGenerator() {
       nostalgic: "classic, traditional recipes",
       sick: "easy to digest, soothing, warm, hydrating, gentle, immune-supporting meals like soups or broths",
       in_a_rush: "ultra-fast, quick prep meals that can be made in under 15 minutes",
-      light_bite: "small portions, low calorie, refreshing, and light meals or snacks"
+      light_bite: "small portions, low calorie, refreshing, and light meals or snacks",
+      sad: "very comforting, nostalgic, indulgent, and mood-boosting foods like mac and cheese or warm stews",
+      indecisive: "a fun, highly varied mix of safe bets, wildly different cuisines, and unexpected pleasant surprises"
     };
 
     const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(', ');
