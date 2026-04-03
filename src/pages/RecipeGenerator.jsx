@@ -17,8 +17,6 @@ import AdvancedFilters from '../components/recipe/AdvancedFilters';
 import RecommendedRecipes from '../components/recipe/RecommendedRecipes';
 import DiscoveryFeed from '../components/recipe/DiscoveryFeed';
 import ThreeBackground from '../components/ThreeBackground';
-import WellnessRecommendationCard from '../components/oura/WellnessRecommendationCard';
-import OrderOutSuggestion from '../components/oura/OrderOutSuggestion';
 
 import { useNavigationStack } from '@/lib/NavigationStackContext';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
@@ -132,7 +130,6 @@ export default function RecipeGenerator() {
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
   const [hideLimitAlert, setHideLimitAlert] = useState(false);
   const [forceShowTutorial, setForceShowTutorial] = useState(false);
-  const [wellnessContext, setWellnessContext] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFridgeScan = async (e) => {
@@ -618,9 +615,6 @@ export default function RecipeGenerator() {
     const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(', ');
 
     let preferencesContext = '';
-    if (wellnessContext && currentUser?.oura_data_consent) {
-      preferencesContext += ` User's wellness context from Oura: Readiness is ${wellnessContext.readiness}, Sleep was ${wellnessContext.sleep}, Activity is ${wellnessContext.activity}. Please ensure the recipe recommendations support this wellness state (e.g., energizing if sleep was poor, comforting if readiness is low, protein-forward if activity is high).`;
-    }
 
     if (userPreferences?.survey_completed) {
       const prefs = [];
@@ -792,9 +786,6 @@ export default function RecipeGenerator() {
     setAdvancedFilters({});
 
     let preferencesContext = '';
-    if (wellnessContext && currentUser?.oura_data_consent) {
-      preferencesContext += ` User's wellness context from Oura: Readiness is ${wellnessContext.readiness}, Sleep was ${wellnessContext.sleep}, Activity is ${wellnessContext.activity}. Please ensure the recipe recommendations support this wellness state (e.g., energizing if sleep was poor, comforting if readiness is low, protein-forward if activity is high).`;
-    }
 
     if (userPreferences?.survey_completed) {
       const prefs = [];
@@ -943,9 +934,6 @@ export default function RecipeGenerator() {
     setAdvancedFilters({});
 
     let preferencesContext = '';
-    if (wellnessContext && currentUser?.oura_data_consent) {
-      preferencesContext += ` User's wellness context from Oura: Readiness is ${wellnessContext.readiness}, Sleep was ${wellnessContext.sleep}, Activity is ${wellnessContext.activity}. Please ensure the recipe recommendations support this wellness state (e.g., energizing if sleep was poor, comforting if readiness is low, protein-forward if activity is high).`;
-    }
 
     if (userPreferences?.survey_completed) {
       const prefs = [];
@@ -1159,12 +1147,6 @@ export default function RecipeGenerator() {
                   className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
                   
               <>
-              <WellnessRecommendationCard
-                      user={currentUser}
-                      onApplyWellnessContext={setWellnessContext} />
-                    
-              
-              <OrderOutSuggestion user={currentUser} />
 
               {/* Proactive Expiring Items Alert */}
               {(() => {

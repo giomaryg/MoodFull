@@ -9,7 +9,6 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
 import PrivacyPolicyPanel from './PrivacyPolicyPanel';
-import OuraConnectionCard from '../oura/OuraConnectionCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
@@ -460,14 +459,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
         </motion.div>
       )}
 
-      {/* Oura Integration Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.155 }}
-      >
-        <OuraConnectionCard user={user} />
-      </motion.div>
+
 
       {/* App Settings Card */}
       <motion.div
