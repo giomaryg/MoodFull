@@ -60,22 +60,6 @@ const moods = [
   border: 'border-yellow-300'
 },
 {
-  id: 'kid_friendly',
-  label: 'Kid Friendly',
-  icon: Baby,
-  color: 'from-teal-400 to-cyan-500',
-  bg: 'bg-teal-50 hover:bg-teal-100',
-  border: 'border-teal-300'
-},
-{
-  id: 'light_bite',
-  label: 'Light Bite',
-  icon: Feather,
-  color: 'from-green-200 to-lime-300',
-  bg: 'bg-green-50 hover:bg-green-100',
-  border: 'border-green-200'
-},
-{
   id: 'in_a_rush',
   label: 'In a Rush',
   icon: Timer,
@@ -84,12 +68,36 @@ const moods = [
   border: 'border-orange-300'
 },
 {
+  id: 'indecisive',
+  label: 'Indecisive',
+  icon: HelpCircle,
+  color: 'from-gray-300 to-slate-400',
+  bg: 'bg-gray-50 hover:bg-gray-100',
+  border: 'border-gray-200'
+},
+{
+  id: 'kid_friendly',
+  label: 'Kid Friendly',
+  icon: Baby,
+  color: 'from-teal-400 to-cyan-500',
+  bg: 'bg-teal-50 hover:bg-teal-100',
+  border: 'border-teal-300'
+},
+{
   id: 'lazy',
   label: 'Lazy',
   icon: Moon,
   color: 'from-indigo-400 to-blue-500',
   bg: 'bg-indigo-50 hover:bg-indigo-100',
   border: 'border-indigo-300'
+},
+{
+  id: 'light_bite',
+  label: 'Light Bite',
+  icon: Feather,
+  color: 'from-green-200 to-lime-300',
+  bg: 'bg-green-50 hover:bg-green-100',
+  border: 'border-green-200'
 },
 {
   id: 'nostalgic',
@@ -108,6 +116,14 @@ const moods = [
   border: 'border-pink-300'
 },
 {
+  id: 'sad',
+  label: 'Sad',
+  icon: Frown,
+  color: 'from-blue-300 to-indigo-400',
+  bg: 'bg-blue-50 hover:bg-blue-100',
+  border: 'border-blue-200'
+},
+{
   id: 'sick',
   label: 'Sick',
   icon: Thermometer,
@@ -122,22 +138,6 @@ const moods = [
   color: 'from-blue-400 to-indigo-400',
   bg: 'bg-blue-50 hover:bg-blue-100',
   border: 'border-blue-300'
-},
-{
-  id: 'sad',
-  label: 'Sad',
-  icon: Frown,
-  color: 'from-blue-300 to-indigo-400',
-  bg: 'bg-blue-50 hover:bg-blue-100',
-  border: 'border-blue-200'
-},
-{
-  id: 'indecisive',
-  label: 'Indecisive',
-  icon: HelpCircle,
-  color: 'from-gray-300 to-slate-400',
-  bg: 'bg-gray-50 hover:bg-gray-100',
-  border: 'border-gray-200'
 }
 ];
 
