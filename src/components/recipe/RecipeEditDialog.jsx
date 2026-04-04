@@ -22,11 +22,13 @@ export default function RecipeEditDialog({ recipe, onSave, onClose }) {
     instructions: recipe.instructions || [],
     cooking_tips: recipe.cooking_tips || [],
     cuisine_type: recipe.cuisine_type || '',
+    pairings: recipe.pairings || [],
   });
 
   const [newIngredient, setNewIngredient] = useState('');
   const [newInstruction, setNewInstruction] = useState('');
   const [newTip, setNewTip] = useState('');
+  const [newPairing, setNewPairing] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -64,6 +66,17 @@ export default function RecipeEditDialog({ recipe, onSave, onClose }) {
 
   const removeTip = (index) => {
     setFormData({ ...formData, cooking_tips: formData.cooking_tips.filter((_, i) => i !== index) });
+  };
+
+  const addPairing = () => {
+    if (newPairing.trim()) {
+      setFormData({ ...formData, pairings: [...formData.pairings, newPairing.trim()] });
+      setNewPairing('');
+    }
+  };
+
+  const removePairing = (index) => {
+    setFormData({ ...formData, pairings: formData.pairings.filter((_, i) => i !== index) });
   };
 
   return (
@@ -235,6 +248,32 @@ export default function RecipeEditDialog({ recipe, onSave, onClose }) {
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTip())}
               />
               <Button type="button" onClick={addTip} variant="outline" size="icon">
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Pairings */}
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold text-gray-700">Pairings</Label>
+            <div className="space-y-2">
+              {formData.pairings.map((pairing, index) => (
+                <div key={index} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
+                  <span className="flex-1 text-sm">{pairing}</span>
+                  <button type="button" onClick={() => removePairing(index)} className="text-red-500 hover:text-red-700">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={newPairing}
+                onChange={(e) => setNewPairing(e.target.value)}
+                placeholder="Add pairing..."
+                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addPairing())}
+              />
+              <Button type="button" onClick={addPairing} variant="outline" size="icon">
                 <Plus className="w-4 h-4" />
               </Button>
             </div>

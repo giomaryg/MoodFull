@@ -20,6 +20,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import SaveToCollectionDialog from './SaveToCollectionDialog';
 import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater, Utensils } from 'lucide-react';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
+import { toast } from 'sonner';
 import ApplianceSelector from './ApplianceSelector';
 import RecipeAssistantSheet from './RecipeAssistantSheet';
 import InteractivePairingSheet from './InteractivePairingSheet';
