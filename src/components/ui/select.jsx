@@ -82,17 +82,17 @@ SelectTrigger.displayName = "SelectTrigger"
 const SelectContent = React.forwardRef(({ className, children, ...props }, ref) => {
   return (
     <Drawer.Portal>
-      <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
+      <Drawer.Overlay className="fixed inset-0 bg-black/40 z-[100]" />
       <Drawer.Content
         ref={ref}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
+          "fixed inset-x-0 bottom-0 z-[100] mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
           className
         )}
         {...props}
       >
         <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
-        <div className="p-4 pb-8 overflow-y-auto max-h-[80vh]">
+        <div className="p-4 pb-16 overflow-y-auto max-h-[80vh]">
           {children}
         </div>
       </Drawer.Content>

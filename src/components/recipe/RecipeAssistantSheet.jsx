@@ -87,15 +87,17 @@ Provide a concise, practical, and helpful response. If you suggest modifications
       <AnimatePresence>
         {!isOpen && (
           <motion.div
+            drag
+            dragMomentum={false}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="absolute bottom-20 right-6 z-40 sm:bottom-6 sm:right-10"
-            style={{ position: 'fixed' }}
+            className="fixed bottom-24 right-6 z-[60] sm:bottom-6 sm:right-10"
+            style={{ touchAction: 'none' }}
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-full w-14 h-14 shadow-xl flex items-center justify-center transition-transform hover:scale-105"
+              className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-full w-14 h-14 shadow-xl flex items-center justify-center transition-transform hover:scale-105 cursor-grab active:cursor-grabbing pointer-events-auto"
             >
               <Sparkles className="w-6 h-6" />
             </Button>
@@ -111,7 +113,7 @@ Provide a concise, practical, and helpful response. If you suggest modifications
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/20 z-40 sm:hidden"
+              className="fixed inset-0 bg-black/20 z-[100] sm:hidden"
               onClick={() => setIsOpen(false)}
             />
             
@@ -120,7 +122,7 @@ Provide a concise, practical, and helpful response. If you suggest modifications
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-x-0 bottom-0 z-50 bg-white shadow-[0_-10px_40px_rgba(0,0,0,0.15)] rounded-t-3xl border-t border-gray-200 flex flex-col sm:max-w-[420px] sm:right-8 sm:left-auto sm:w-full sm:bottom-8 sm:rounded-3xl"
+              className="fixed inset-x-0 bottom-0 z-[101] bg-white shadow-[0_-10px_40px_rgba(0,0,0,0.15)] rounded-t-3xl border-t border-gray-200 flex flex-col sm:max-w-[420px] sm:right-8 sm:left-auto sm:w-full sm:bottom-8 sm:rounded-3xl"
               style={{ height: '75vh', maxHeight: '650px' }}
             >
               {/* Header */}
