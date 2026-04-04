@@ -20,6 +20,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import SaveToCollectionDialog from './SaveToCollectionDialog';
 import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater, Utensils } from 'lucide-react';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
+import ApplianceSelector from './ApplianceSelector';
+import RecipeAssistantSheet from './RecipeAssistantSheet';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
@@ -29,7 +31,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [adaptedRecipe, setAdaptedRecipe] = useState(null);
   const queryClient = useQueryClient();
+
+  const displayRecipe = {
+    ...recipe,
+    ...adaptedRecipe
+  };
   const descriptionRef = useRef(null);
   const images = recipe.imageUrls || (recipe.imageUrl || recipe.image_url ? [recipe.imageUrl || recipe.image_url] : []);
 
@@ -432,11 +440,11 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         <div className="flex flex-wrap gap-2 sm:gap-3 mb-8">
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl">
             <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
-            {recipe.prep_time || '-'} prep
+            {displayRecipe.prep_time || '-'} prep
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl">
             <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
-            {recipe.cook_time || '-'} cook
+            {displayRecipe.cook_time || '-'} cook
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-2 min-h-[44px]">
             <Users className="w-4 h-4 mr-1 text-gray-400" />
@@ -453,6 +461,24 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         <p ref={descriptionRef} className="text-gray-600 text-base leading-relaxed mb-8">
           {recipe.description}
         </p>
+
+        <ApplianceSelector 
+          recipe={recipe} 
+          onAdaptationStart={() => {}} 
+          onAdaptationComplete={setAdaptedRecipe} 
+        />
+
+        {adaptedRecipe && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8 p-4 bg-[#f0f9f2] rounded-xl border border-[#c5d9c9]">
+            <div className="flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-[#6b9b76] shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-semibold text-gray-900 text-sm">Adapted for {adaptedRecipe.appliance}</h4>
+                <p className="text-gray-700 text-sm mt-1">{adaptedRecipe.appliance_notes}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         <div className="space-y-8">
           {/* Enhanced Nutrition Panel */}
@@ -617,7 +643,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               </div>
             </div>
             <div className="space-y-4">
-              {recipe.instructions?.map((instruction, index) =>
+              {displayRecipe.instructions?.map((instruction, index) =>
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
@@ -779,10 +805,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       {/* Interactive Cooking Mode */}
       {showCookingMode && (
         <InteractiveCookingMode
-          recipe={recipe}
+          recipe={displayRecipe}
           onClose={() => setShowCookingMode(false)}
         />
       )}
+
+      {/* Recipe Assistant Sheet */}
+      <RecipeAssistantSheet recipe={displayRecipe} />
     </motion.div>
   );
 }
