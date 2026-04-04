@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, RefreshCw, Loader2, Heart } from 'lucide-react';
+import { Clock, Users, ChefHat, ArrowUpDown, Filter, RotateCcw, RefreshCw, Loader2, Heart, Search, Sparkles } from 'lucide-react';
 import HighlightedText from './HighlightedText';
 import TiltCard from '../ui/TiltCard';
 
@@ -114,6 +114,12 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                         <p className="text-white/80 text-xs sm:text-sm line-clamp-1">
                           {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
                         </p>
+                        {recipe.searchReason && (
+                          <div className="mt-2 text-[10px] sm:text-xs bg-black/40 backdrop-blur-md text-white px-2 py-1 rounded-md inline-flex items-center gap-1 border border-white/20">
+                            <Sparkles className="w-3 h-3 text-yellow-300" />
+                            {recipe.searchReason}
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -157,8 +163,17 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
       </div>
 
       {recipes.length === 0 && (
-        <div className="text-center py-8 sm:py-12">
-          <p className="text-[#5a6f60] text-sm sm:text-base md:text-lg px-4">No recipes match your filters. Try adjusting your selection.</p>
+        <div className="text-center py-12 px-4 bg-white/50 rounded-3xl border-2 border-dashed border-[#c5d9c9] max-w-lg mx-auto">
+          <div className="w-16 h-16 bg-[#e8f0ea] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="w-8 h-8 text-[#6b9b76]" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">No recipes found</h3>
+          <p className="text-[#5a6f60] mb-6">We couldn't find any recipes matching your current filters and search.</p>
+          {onStartOver && (
+            <Button onClick={onStartOver} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl">
+              Clear Search & Filters
+            </Button>
+          )}
         </div>
       )}
     </div>

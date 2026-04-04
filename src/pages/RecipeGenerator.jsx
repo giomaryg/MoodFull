@@ -3,7 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera } from 'lucide-react';
+import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera, Frown } from 'lucide-react';
+import { useSmartSearch } from '@/hooks/useSmartSearch';
+import SmartSearchBar from '@/components/recipe/SmartSearchBar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useSearchParams } from 'react-router-dom';
@@ -119,7 +121,8 @@ export default function RecipeGenerator() {
   const [showSurvey, setShowSurvey] = useState(false);
   const [userPreferences, setUserPreferences] = useState(null);
 
-  const [globalSearchQuery, setGlobalSearchQuery] = useState('');
+  // Used for text inputs, but smart search takes over for filtering
+  const [globalSearchQueryText, setGlobalSearchQueryText] = useState('');
   const [showIntro, setShowIntro] = useState(true);
   const [advancedFilters, setAdvancedFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
@@ -284,11 +287,45 @@ export default function RecipeGenerator() {
     queryFn: () => base44.entities.Ingredient.list()
   });
 
+  const availableRecipesForSearch = activeTab === 'saved' ? savedRecipes : generatedRecipes;
+  const { 
+    query: globalSearchQuery, 
+    setQuery: setGlobalSearchQuery, 
+    isSearching: isSmartSearching, 
+    smartResults, 
+    searchIntent 
+  } = useSmartSearch(availableRecipesForSearch);
+
+  // Sync the text version for legacy usages
+  useEffect(() => {
+    setGlobalSearchQueryText(globalSearchQuery);
+  }, [globalSearchQuery]);
+
   const filteredSavedRecipes = useMemo(() => {
     let filtered = savedRecipes.filter((r) => r && r.name);
 
-    // Apply text search
-    if (globalSearchQuery.trim()) {
+    // Apply Smart Search Results if available
+    if (globalSearchQuery.trim() && smartResults !== null) {
+      if (smartResults.length === 0) return []; // No results found by AI
+      
+      // Filter by the IDs returned by the AI, and attach the reason
+      const resultIds = new Set(smartResults.map(r => r.id));
+      filtered = filtered.filter(recipe => resultIds.has(recipe.id));
+      
+      // Inject the reason into the recipe object for display
+      filtered = filtered.map(recipe => {
+        const match = smartResults.find(r => r.id === recipe.id);
+        return { ...recipe, searchReason: match?.reason };
+      });
+      
+      // Sort by AI score
+      filtered.sort((a, b) => {
+        const scoreA = smartResults.find(r => r.id === a.id)?.score || 0;
+        const scoreB = smartResults.find(r => r.id === b.id)?.score || 0;
+        return scoreB - scoreA;
+      });
+    } else if (globalSearchQuery.trim()) {
+      // Fallback basic text search
       const query = globalSearchQuery.toLowerCase();
       filtered = filtered.filter((recipe) =>
       recipe.name.toLowerCase().includes(query) ||
@@ -412,8 +449,28 @@ export default function RecipeGenerator() {
   const filteredGeneratedRecipes = useMemo(() => {
     let filtered = generatedRecipes.filter((r) => r && r.name);
 
-    // Apply text search
-    if (globalSearchQuery.trim()) {
+    // Apply Smart Search Results if available
+    if (globalSearchQuery.trim() && smartResults !== null) {
+      if (smartResults.length === 0) return []; // No results found by AI
+      
+      // Filter by the IDs returned by the AI, and attach the reason
+      const resultIds = new Set(smartResults.map(r => r.id));
+      filtered = filtered.filter(recipe => resultIds.has(recipe.id));
+      
+      // Inject the reason into the recipe object for display
+      filtered = filtered.map(recipe => {
+        const match = smartResults.find(r => r.id === recipe.id);
+        return { ...recipe, searchReason: match?.reason };
+      });
+      
+      // Sort by AI score
+      filtered.sort((a, b) => {
+        const scoreA = smartResults.find(r => r.id === a.id)?.score || 0;
+        const scoreB = smartResults.find(r => r.id === b.id)?.score || 0;
+        return scoreB - scoreA;
+      });
+    } else if (globalSearchQuery.trim()) {
+      // Fallback basic text search
       const query = globalSearchQuery.toLowerCase();
       filtered = filtered.filter((recipe) =>
       recipe.name.toLowerCase().includes(query) ||
@@ -1200,26 +1257,16 @@ export default function RecipeGenerator() {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                   {/* Global Search */}
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#6b9b76]" />
-                    <Input
-                            type="text"
-                            placeholder="Search your recipes or generate new ones..."
-                            value={globalSearchQuery}
-                            onKeyDown={(e) => {if (e.key === 'Enter' && activeTab === 'home') generateRecipe();}}
-                            onChange={(e) => setGlobalSearchQuery(e.target.value)} className="bg-transparent my-3 pt-6 pr-8 pb-6 pl-10 text-sm rounded-xl flex h-9 w-full transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-2 border-[#c5d9c9] focus:border-[#6b9b76] sm:text-base shadow-md" />
-
-
-                    {globalSearchQuery &&
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setGlobalSearchQuery('')}
-                            aria-label="Clear search"
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:text-[#5a8a65] hover:bg-transparent">
-
-                        <X className="w-4 h-4" />
-                      </Button>
-                          }
+                    <SmartSearchBar
+                      query={globalSearchQuery}
+                      setQuery={setGlobalSearchQuery}
+                      isSearching={isSmartSearching}
+                      intent={searchIntent}
+                      onEnter={() => {
+                        if (activeTab === 'home' && generatedRecipes.length === 0) generateRecipe();
+                      }}
+                      placeholder="Search your recipes or generate new ones..."
+                    />
                   </div>
 
                   {/* Update Preferences Button */}
@@ -1457,24 +1504,13 @@ export default function RecipeGenerator() {
                   {/* Search and Filters */}
                   <div className="space-y-3">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#6b9b76]" />
-                      <Input
-                            type="text"
-                            placeholder="Search saved recipes..."
-                            value={globalSearchQuery}
-                            onChange={(e) => setGlobalSearchQuery(e.target.value)}
-                            className="pl-10 pr-10 border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-xl" />
-
-                      {globalSearchQuery &&
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setGlobalSearchQuery('')}
-                            className="absolute right-1 top-1/2 transform -translate-y-1/2 text-[#6b9b76] hover:bg-transparent">
-
-                          <X className="w-4 h-4" />
-                        </Button>
-                          }
+                      <SmartSearchBar
+                        query={globalSearchQuery}
+                        setQuery={setGlobalSearchQuery}
+                        isSearching={isSmartSearching}
+                        intent={searchIntent}
+                        placeholder="Search your saved recipes..."
+                      />
                     </div>
 
                     <AdvancedFilters

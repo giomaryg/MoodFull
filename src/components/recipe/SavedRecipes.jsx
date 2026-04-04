@@ -266,8 +266,17 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
       )}
 
       {filteredRecipes.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-[#5a6f60]">No recipes found matching "{displayQuery}"</p>
+        <div className="text-center py-12 px-4 bg-white/50 rounded-3xl border-2 border-dashed border-[#c5d9c9] max-w-lg mx-auto mt-8">
+          <div className="w-16 h-16 bg-[#e8f0ea] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="w-8 h-8 text-[#6b9b76]" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">No exact matches found</h3>
+          <p className="text-[#5a6f60] mb-6">We couldn't find anything matching "{displayQuery}". Try searching for something broader.</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <Badge variant="outline" className="bg-white hover:bg-gray-50 cursor-pointer py-1.5" onClick={() => setSearchQuery("healthy dinners")}>healthy dinners</Badge>
+            <Badge variant="outline" className="bg-white hover:bg-gray-50 cursor-pointer py-1.5" onClick={() => setSearchQuery("quick meals")}>quick meals</Badge>
+            <Badge variant="outline" className="bg-white hover:bg-gray-50 cursor-pointer py-1.5" onClick={() => setSearchQuery("comfort food")}>comfort food</Badge>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
@@ -320,6 +329,12 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                         {recipe.ai_tags.map((t, i) => (
                           <span key={i} className="text-[7px] bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-sm border border-purple-200 uppercase tracking-widest font-mono">{t}</span>
                         ))}
+                      </div>
+                    )}
+                    {recipe.searchReason && (
+                      <div className="text-[9px] mt-1.5 bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-sm inline-block border border-blue-100">
+                        <Sparkles className="w-2.5 h-2.5 inline mr-1 opacity-70" />
+                        {recipe.searchReason}
                       </div>
                     )}
                   </div>
