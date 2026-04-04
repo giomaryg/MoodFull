@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Clock, Users, Sparkles, Search, Trash2, ShoppingCart, Loader2, Tag } from 'lucide-react';
+import { Clock, Users, Sparkles, Search, Trash2, ShoppingCart, Loader2, Tag, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
