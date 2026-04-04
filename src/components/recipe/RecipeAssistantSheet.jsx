@@ -191,7 +191,7 @@ Provide a concise, practical, and helpful response. If you suggest modifications
               )}
 
               {/* Input Area */}
-              <div className="p-4 bg-white border-t border-gray-100 sm:rounded-b-3xl">
+              <div className="p-4 pb-28 sm:pb-4 bg-white border-t border-gray-100 sm:rounded-b-3xl">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
