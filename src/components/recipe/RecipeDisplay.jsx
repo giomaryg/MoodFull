@@ -22,6 +22,7 @@ import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Cof
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 import ApplianceSelector from './ApplianceSelector';
 import RecipeAssistantSheet from './RecipeAssistantSheet';
+import InteractivePairingSheet from './InteractivePairingSheet';
 
 function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
@@ -32,6 +33,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [adaptedRecipe, setAdaptedRecipe] = useState(null);
+  const [selectedPairing, setSelectedPairing] = useState(null);
   const queryClient = useQueryClient();
 
   const displayRecipe = {
@@ -704,16 +706,20 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           {/* Wine & Beverage Pairings */}
           {recipe.pairings && recipe.pairings.length > 0 && (
             <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-                <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-purple-500 rounded-full" />
-                Perfect Pairings
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                  <div className="w-1 sm:w-1.5 h-6 sm:h-8 bg-purple-500 rounded-full" />
+                  Perfect Pairings
+                </h3>
+                <span className="text-xs text-purple-600 font-medium bg-purple-100 px-2 py-1 rounded-md hidden sm:inline-block">Click any pairing to add to meal</span>
+              </div>
               <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-inner border border-purple-200">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {recipe.pairings.map((pairing, index) => {
                     const lower = pairing.toLowerCase();
                     let Icon = Wine;
                     let iconColor = "text-purple-600";
+                    let category = "drink";
                     
                     // Beverages
                     if (lower.includes('coffee') || lower.includes('espresso') || lower.includes('latte') || lower.includes('cappuccino')) { Icon = Coffee; iconColor = "text-amber-800"; }
@@ -725,12 +731,12 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     else if (lower.includes('wine') || lower.includes('cabernet') || lower.includes('chardonnay') || lower.includes('merlot') || lower.includes('pinot') || lower.includes('sauvignon') || lower.includes('syrah') || lower.includes('zinfandel') || lower.includes('bordeaux') || lower.includes('blend') || lower.includes('champagne') || lower.includes('prosecco') || lower.includes('rose') || lower.includes('rosé')) { Icon = Wine; iconColor = "text-purple-600"; }
                     else if (lower.includes('cocktail') || lower.includes('margarita') || lower.includes('martini') || lower.includes('mojito') || lower.includes('vodka') || lower.includes('gin') || lower.includes('rum') || lower.includes('tequila') || lower.includes('whiskey') || lower.includes('bourbon') || lower.includes('scotch')) { Icon = Wine; iconColor = "text-pink-500"; }
                     // Sauces / Dips
-                    else if (lower.includes('sauce') || lower.includes('dip') || lower.includes('dressing') || lower.includes('salsa') || lower.includes('guacamole') || lower.includes('hummus') || lower.includes('gravy') || lower.includes('syrup') || lower.includes('glaze') || lower.includes('ketchup') || lower.includes('mustard') || lower.includes('mayo') || lower.includes('aioli') || lower.includes('pesto') || lower.includes('chutney') || lower.includes('marinade') || lower.includes('vinaigrette') || lower.includes('oil') || lower.includes('vinegar')) { Icon = Droplets; iconColor = "text-orange-600"; }
+                    else if (lower.includes('sauce') || lower.includes('dip') || lower.includes('dressing') || lower.includes('salsa') || lower.includes('guacamole') || lower.includes('hummus') || lower.includes('gravy') || lower.includes('syrup') || lower.includes('glaze') || lower.includes('ketchup') || lower.includes('mustard') || lower.includes('mayo') || lower.includes('aioli') || lower.includes('pesto') || lower.includes('chutney') || lower.includes('marinade') || lower.includes('vinaigrette') || lower.includes('oil') || lower.includes('vinegar')) { Icon = Droplets; iconColor = "text-orange-600"; category = "sauce"; }
                     // Salads / Veggies
-                    else if (lower.includes('salad') || lower.includes('greens') || lower.includes('vegetable') || lower.includes('broccoli') || lower.includes('asparagus') || lower.includes('spinach') || lower.includes('kale') || lower.includes('carrot') || lower.includes('potato') || lower.includes('tomato') || lower.includes('onion') || lower.includes('garlic') || lower.includes('pepper') || lower.includes('mushroom') || lower.includes('corn') || lower.includes('pea') || lower.includes('bean') || lower.includes('lentil') || lower.includes('chickpea')) { Icon = Leaf; iconColor = "text-green-500"; }
+                    else if (lower.includes('salad') || lower.includes('greens') || lower.includes('vegetable') || lower.includes('broccoli') || lower.includes('asparagus') || lower.includes('spinach') || lower.includes('kale') || lower.includes('carrot') || lower.includes('potato') || lower.includes('tomato') || lower.includes('onion') || lower.includes('garlic') || lower.includes('pepper') || lower.includes('mushroom') || lower.includes('corn') || lower.includes('pea') || lower.includes('bean') || lower.includes('lentil') || lower.includes('chickpea')) { Icon = Leaf; iconColor = "text-green-500"; category = "side"; }
                     // Default to Utensils for other things that aren't beverages
                     else if (!lower.includes('drink') && !lower.includes('beverage') && !lower.includes('sip') && !lower.includes('glass') && !lower.includes('cup') && !lower.includes('mug') && !lower.includes('bottle') && !lower.includes('can') && !lower.includes('pint') && !lower.includes('shot') && !lower.includes('pour') && !lower.includes('splash') && !lower.includes('drop') && !lower.includes('liquid') && !lower.includes('fluid')) {
-                      Icon = Utensils; iconColor = "text-amber-600";
+                      Icon = Utensils; iconColor = "text-amber-600"; category = "side";
                     }
 
                     return (
@@ -739,10 +745,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.05 }}
-                        className="flex items-center gap-3 bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl border border-purple-200 shadow-sm"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setSelectedPairing({ name: pairing, category, iconColor, Icon })}
+                        className="flex items-center gap-3 bg-white p-3 sm:p-4 rounded-lg sm:rounded-xl border border-purple-200 shadow-sm cursor-pointer hover:shadow-md hover:border-purple-300 transition-all group"
                       >
-                        <Icon className={`w-5 h-5 ${iconColor} shrink-0`} />
-                        <span className="text-gray-800 text-sm sm:text-base leading-relaxed">{pairing}</span>
+                        <div className={`p-2 rounded-lg bg-gray-50 group-hover:bg-purple-50 transition-colors`}>
+                          <Icon className={`w-5 h-5 ${iconColor} shrink-0`} />
+                        </div>
+                        <span className="text-gray-800 text-sm sm:text-base leading-relaxed flex-1">{pairing}</span>
+                        <ChevronRight className="w-4 h-4 text-purple-300 group-hover:text-purple-500 opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0" />
                       </motion.div>
                     );
                   })}
@@ -812,6 +824,17 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
       {/* Recipe Assistant Sheet */}
       <RecipeAssistantSheet recipe={displayRecipe} />
+
+      {/* Interactive Pairing Sheet */}
+      <InteractivePairingSheet
+        isOpen={!!selectedPairing}
+        onClose={() => setSelectedPairing(null)}
+        pairingName={selectedPairing?.name}
+        mainRecipe={displayRecipe}
+        category={selectedPairing?.category}
+        iconColor={selectedPairing?.iconColor}
+        Icon={selectedPairing?.Icon}
+      />
     </motion.div>
   );
 }
