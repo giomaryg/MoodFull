@@ -490,16 +490,6 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             currentServings={currentServings}
           />
 
-          {/* Similar Recipes Section - Prominently Displayed */}
-          {similarRecipes.length > 0 && (
-            <div className="bg-gradient-to-br from-[#f0f9f2] to-white rounded-2xl p-4 sm:p-6 shadow-sm border-2 border-[#c5d9c9] my-6">
-              <SimilarRecipes
-                recipes={similarRecipes}
-                onRecipeClick={onSimilarRecipeClick}
-              />
-            </div>
-          )}
-
           {/* User Rating & Review */}
           <RecipeReview
             recipe={recipe}
@@ -766,6 +756,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                   })}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Similar Recipes Section */}
+          {similarRecipes.length > 0 && (
+            <div className="bg-gradient-to-br from-[#f0f9f2] to-white rounded-2xl p-4 sm:p-6 shadow-sm border-2 border-[#c5d9c9] mt-8 mb-6">
+              <SimilarRecipes
+                recipes={similarRecipes}
+                onRecipeClick={onSimilarRecipeClick}
+              />
             </div>
           )}
         </div>
