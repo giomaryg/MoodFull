@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
@@ -99,7 +99,7 @@ export default function InteractivePairingSheet({
         {/* Header Area */}
         <div className="px-6 pt-4 pb-2 shrink-0">
           <div className="flex items-center gap-3 mb-2">
-            <div className={`p-2 rounded-xl bg-white border shadow-sm ${iconColor.replace('text-', 'border-').replace('600', '200').replace('500', '200')}`}>
+            <div className={`p-2 rounded-xl bg-white border shadow-sm ${(iconColor || '').replace('text-', 'border-').replace('600', '200').replace('500', '200')}`}>
               {Icon && <Icon className={`w-5 h-5 ${iconColor}`} />}
             </div>
             <div className="flex-1">
