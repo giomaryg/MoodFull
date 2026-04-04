@@ -306,6 +306,11 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                     {recipe.image_url && (
                       <img src={recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />
                     )}
+                    {recipe.last_cooked_date && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[1px]">
+                        <Check className="w-6 h-6 text-white drop-shadow-md" />
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0 pr-2">
                     <div className="text-[11px] font-semibold text-[#3d5244] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
@@ -340,6 +345,20 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                   </div>
                   <div className="flex flex-col items-end justify-between self-stretch flex-shrink-0">
                     <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-all z-10">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateRecipeMutation.mutate({ 
+                            id: recipe.id, 
+                            data: { last_cooked_date: recipe.last_cooked_date ? null : new Date().toISOString() } 
+                          });
+                          toast.success(recipe.last_cooked_date ? 'Marked as uncooked' : 'Marked as cooked!');
+                        }}
+                        className={`p-1.5 rounded-full shadow-sm flex items-center justify-center w-7 h-7 ${recipe.last_cooked_date ? 'bg-[#6b9b76] text-white hover:bg-[#5a8a65]' : 'bg-white/80 hover:bg-green-50 text-green-600'}`}
+                        title={recipe.last_cooked_date ? "Mark as uncooked" : "Mark as cooked"}
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                      </button>
                       {/* Dev Edit Button for testing */}
                       {currentUser?.role === 'admin' && (
                         <button
@@ -352,7 +371,7 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                             updateRecipeMutation.mutate({ id: recipe.id, data: randomData });
                             toast.success('Dev: Recipe updated for testing');
                           }}
-                          className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-6 h-6"
+                          className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-7 h-7"
                           title="Dev: Randomly update recipe info"
                         >
                           DEV
@@ -360,7 +379,7 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                       )}
                       <button
                         onClick={(e) => handleDelete(e, recipe.id)}
-                        className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-red-50"
+                        className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-red-50 flex items-center justify-center w-7 h-7"
                       >
                         <Trash2 className="w-3.5 h-3.5 text-red-500" />
                       </button>

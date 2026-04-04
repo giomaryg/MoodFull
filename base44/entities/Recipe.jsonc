@@ -1,0 +1,204 @@
+{
+  "name": "Recipe",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the recipe"
+    },
+    "mood": {
+      "type": "string",
+      "description": "The mood this recipe was generated for"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the dish"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL of the generated recipe photo"
+    },
+    "ingredients": {
+      "type": "array",
+      "description": "List of ingredients",
+      "items": {
+        "type": "string"
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "description": "Cooking steps",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prep_time": {
+      "type": "string",
+      "description": "Preparation time"
+    },
+    "cook_time": {
+      "type": "string",
+      "description": "Cooking time"
+    },
+    "servings": {
+      "type": "number",
+      "description": "Number of servings"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ],
+      "description": "Recipe difficulty level"
+    },
+    "nutrition": {
+      "type": "object",
+      "description": "Nutritional information per serving",
+      "properties": {
+        "calories": {
+          "type": "number"
+        },
+        "protein": {
+          "type": "string"
+        },
+        "carbs": {
+          "type": "string"
+        },
+        "fat": {
+          "type": "string"
+        },
+        "fiber": {
+          "type": "string"
+        },
+        "sodium": {
+          "type": "string"
+        },
+        "sugar": {
+          "type": "string"
+        },
+        "saturated_fat": {
+          "type": "string"
+        },
+        "cholesterol": {
+          "type": "string"
+        }
+      }
+    },
+    "vitamins_minerals": {
+      "type": "array",
+      "description": "Key vitamins and minerals in the recipe",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "daily_value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "health_benefits": {
+      "type": "array",
+      "description": "Health benefits of this recipe",
+      "items": {
+        "type": "string"
+      }
+    },
+    "cooking_tips": {
+      "type": "array",
+      "description": "Helpful cooking tips and tricks",
+      "items": {
+        "type": "string"
+      }
+    },
+    "substitutions": {
+      "type": "array",
+      "description": "Ingredient substitution suggestions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ingredient": {
+            "type": "string"
+          },
+          "substitute": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pairings": {
+      "type": "array",
+      "description": "Wine and beverage pairing suggestions",
+      "items": {
+        "type": "string"
+      }
+    },
+    "cuisine_type": {
+      "type": "string",
+      "description": "Type of cuisine (for finding similar recipes)"
+    },
+    "main_ingredients": {
+      "type": "array",
+      "description": "Key ingredients (for finding similar recipes)",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rating": {
+      "type": "number",
+      "description": "User rating (0-5)",
+      "default": 0
+    },
+    "review": {
+      "type": "string",
+      "description": "User's personal review/notes about this recipe"
+    },
+    "collections": {
+      "type": "array",
+      "description": "Collections this recipe belongs to",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ai_tags": {
+      "type": "array",
+      "description": "AI generated tags for organization",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_cooked_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this recipe was last marked as cooked"
+    }
+  },
+  "required": [
+    "name",
+    "mood"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

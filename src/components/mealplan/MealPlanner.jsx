@@ -1025,7 +1025,7 @@ Make them balanced, diverse, and delicious. Include:
              e.currentTarget.click();
            }
          }}
-         className="px-3 pr-8 py-2 flex flex-col h-full justify-center min-h-[44px]"
+         className="px-3 py-2 flex flex-col h-full justify-center min-h-[44px]"
          onClick={async () => {
            setSavedScrollY(window.scrollY);
            if (linkedRecipe) {
@@ -1083,42 +1083,42 @@ Make them balanced, diverse, and delicious. Include:
          ) : null}
        </div>
 
-       <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-wrap justify-end">
+       <div className="sm:absolute sm:top-1 sm:right-1 flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 sm:pointer-events-none sm:group-hover:pointer-events-auto transition-opacity flex-wrap justify-end z-10 mt-2 sm:mt-0 p-1 sm:p-0 border-t sm:border-0 border-[#c5d9c9]/50">
         <Button
           variant="ghost" size="icon"
           onClick={(e) => markAsCooked(e, meal)}
-          className="hover:bg-white/50 rounded"
+          className="hover:bg-[#e8f0ea] rounded h-7 w-7"
           title="Mark as Cooked (Deduct Inventory)"
           aria-label={`Mark ${meal.recipe_name} as cooked`}
         >
-          <Check className="w-4 h-4 text-green-600" />
+          <Check className="w-3.5 h-3.5 text-green-600" />
         </Button>
         <Button
           variant="ghost" size="icon"
           onClick={(e) => { e.stopPropagation(); setSwappingMeal(meal); }}
-          className="hover:bg-white/50 rounded"
+          className="hover:bg-[#e8f0ea] rounded h-7 w-7"
           title="Swap Meal"
           aria-label={`Swap ${meal.recipe_name}`}
         >
-          <ArrowLeftRight className="w-4 h-4 text-[#6b9b76]" />
+          <ArrowLeftRight className="w-3.5 h-3.5 text-[#6b9b76]" />
         </Button>
         <Button
           variant="ghost" size="icon"
           onClick={(e) => { e.stopPropagation(); setRepeatingMeal(meal); }}
-          className="hover:bg-white/50 rounded"
+          className="hover:bg-[#e8f0ea] rounded h-7 w-7"
           title="Repeat Meal"
           aria-label={`Repeat ${meal.recipe_name}`}
         >
-          <Repeat className="w-4 h-4 text-[#6b9b76]" />
+          <Repeat className="w-3.5 h-3.5 text-[#6b9b76]" />
         </Button>
         <Button
           variant="ghost" size="icon"
           onClick={(e) => { e.stopPropagation(); deleteMealMutation.mutate(meal.id); }}
-          className="hover:bg-white/50 rounded"
+          className="hover:bg-red-50 rounded h-7 w-7"
           title="Remove Meal"
           aria-label={`Remove ${meal.recipe_name}`}
         >
-          <Trash2 className="w-4 h-4 text-red-500" />
+          <Trash2 className="w-3.5 h-3.5 text-red-500" />
         </Button>
        </div>
      </div>
