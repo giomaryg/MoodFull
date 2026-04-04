@@ -88,8 +88,9 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
   };
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
       {/* Profile Card */}
+      <div className="lg:col-span-2">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -290,6 +291,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
           </CardContent>
         </Card>
       </motion.div>
+
+      </div>
 
       {/* AI Assistants Card */}
       <motion.div
@@ -552,7 +555,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="space-y-3"
+        className="space-y-3 lg:col-span-2 lg:max-w-md lg:mx-auto w-full pt-8"
       >
         <Button
           onClick={handleLogout}

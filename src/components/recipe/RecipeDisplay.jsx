@@ -482,7 +482,9 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           </motion.div>
         )}
 
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Left Column: Nutrition, Ingredients, Pairings */}
+          <div className="lg:col-span-5 space-y-8">
           {/* Enhanced Nutrition Panel */}
           <NutritionPanel
             nutrition={recipe.nutrition}
@@ -597,6 +599,10 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             </div>
           </div>
 
+          </div>
+          
+          {/* Right Column: Instructions, Tips, Substitutions, Reviews */}
+          <div className="lg:col-span-7 space-y-8 lg:mt-0">
           {/* Instructions */}
           <div className="space-y-4">
             <div className="flex justify-between items-center mb-4">
@@ -771,9 +777,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             onReviewSave={handleReviewSave}
           />
 
+          </div>
+        </div>
+
+        <div className="w-full mt-12 mb-6">
           {/* Similar Recipes Section */}
           {similarRecipes.length > 0 && (
-            <div className="bg-gradient-to-br from-[#f0f9f2] to-white rounded-2xl p-4 sm:p-6 shadow-sm border-2 border-[#c5d9c9] mt-8 mb-6">
+            <div className="bg-gradient-to-br from-[#f0f9f2] to-white rounded-2xl p-4 sm:p-6 shadow-sm border-2 border-[#c5d9c9]">
               <SimilarRecipes
                 recipes={similarRecipes}
                 onRecipeClick={onSimilarRecipeClick}

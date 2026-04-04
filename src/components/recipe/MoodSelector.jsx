@@ -170,7 +170,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 px-4 flex-1">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 px-4 flex-1">
         {moods.map((mood) => {
           const Icon = mood.icon;
           const isSelected = selectedMoods.includes(mood.id);

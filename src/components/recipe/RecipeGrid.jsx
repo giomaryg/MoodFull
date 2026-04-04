@@ -63,7 +63,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
       </div>
 
       {/* Recipe Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
         {recipes.filter(r => r && r.name).map((recipe, index) => (
           <motion.div
             key={index}
@@ -100,7 +100,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                  <div className="flex-1 pr-4">
+                  <div className="flex-1 pr-3 sm:pr-4">
                     {recipe._loading ? (
                       <div className="space-y-2">
                         <div className="h-6 bg-white/40 rounded w-3/4 animate-pulse"></div>

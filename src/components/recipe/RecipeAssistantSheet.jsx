@@ -7,6 +7,8 @@ import { X, Send, Loader2, Sparkles, ChefHat } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
 
+import { createPortal } from 'react-dom';
+
 export default function RecipeAssistantSheet({ recipe }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -106,8 +108,9 @@ Provide a concise, practical, and helpful response. If you suggest modifications
       </AnimatePresence>
 
       {/* Assistant Sheet Overlay */}
-      <AnimatePresence>
-        {isOpen && (
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {isOpen && (
           <>
             <motion.div 
               initial={{ opacity: 0 }}
@@ -191,7 +194,7 @@ Provide a concise, practical, and helpful response. If you suggest modifications
               )}
 
               {/* Input Area */}
-              <div className="p-4 pb-28 sm:pb-4 bg-white border-t border-gray-100 sm:rounded-b-3xl">
+              <div className="p-4 bg-white border-t border-gray-100 sm:rounded-b-3xl">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -219,7 +222,9 @@ Provide a concise, practical, and helpful response. If you suggest modifications
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+      )}
     </>
   );
 }
