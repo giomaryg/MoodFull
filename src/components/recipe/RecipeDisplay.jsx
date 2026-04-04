@@ -490,14 +490,6 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             currentServings={currentServings}
           />
 
-          {/* User Rating & Review */}
-          <RecipeReview
-            recipe={recipe}
-            isSaved={isSaved}
-            onRate={handleRate}
-            onReviewSave={handleReviewSave}
-          />
-
           {/* Public Community Comments */}
           {false && (
             <RecipeComments 
@@ -758,6 +750,14 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               </div>
             </div>
           )}
+
+          {/* User Rating & Review */}
+          <RecipeReview
+            recipe={recipe}
+            isSaved={isSaved}
+            onRate={handleRate}
+            onReviewSave={handleReviewSave}
+          />
 
           {/* Similar Recipes Section */}
           {similarRecipes.length > 0 && (
