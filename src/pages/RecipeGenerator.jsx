@@ -1329,7 +1329,7 @@ export default function RecipeGenerator() {
                     })()}
 
               {/* Mood Selector - Only show when not searching */}
-              {!globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
+              {!globalSearchQuery &&
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
