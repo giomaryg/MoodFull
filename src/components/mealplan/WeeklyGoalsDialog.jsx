@@ -37,7 +37,7 @@ export default function WeeklyGoalsDialog({ currentUser, isOpen, onClose, onUpda
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto pb-24 sm:pb-6">
         <DialogHeader>
           <DialogTitle className="text-[#6b9b76] text-xl">Daily Dietary Goals</DialogTitle>
           <DialogDescription>
