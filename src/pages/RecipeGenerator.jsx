@@ -26,6 +26,8 @@ import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import { useSwipeDownNavigation } from '@/hooks/useSwipeDownNavigation';
 import SwipeDownNav from '../components/navigation/SwipeDownNav';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
+import WhatsNewModal from '../components/onboarding/WhatsNewModal';
+import { getLatestVersion } from '@/lib/featureAnnouncements';
 
 const SavedRecipes = lazy(() => import('../components/recipe/SavedRecipes'));
 const PreferenceSurvey = lazy(() => import('../components/survey/PreferenceSurvey'));
@@ -625,8 +627,13 @@ export default function RecipeGenerator() {
 
   const handleSurveyComplete = async (preferences) => {
     try {
-      await updateUserMutation.mutateAsync(preferences);
-      setUserPreferences({ ...userPreferences, ...preferences });
+      const latestVersion = getLatestVersion();
+      const updatedPrefs = { ...preferences, last_seen_features_version: latestVersion };
+      await updateUserMutation.mutateAsync(updatedPrefs);
+      // Ensure we also save to localStorage for immediate fallback consistency
+      localStorage.setItem('moodfull_last_seen_features_version', latestVersion.toString());
+      
+      setUserPreferences({ ...userPreferences, ...updatedPrefs });
       setShowSurvey(false);
       setSelectedMoods([]);
       setGeneratedRecipes([]);
@@ -1141,6 +1148,7 @@ export default function RecipeGenerator() {
   return (
     <>
       <TutorialOverlay forceShow={forceShowTutorial} onCloseForceShow={() => setForceShowTutorial(false)} />
+      <WhatsNewModal isReady={!showIntro && !showSurvey} />
 
       <AnimatePresence>
         {showIntro && currentUser &&
