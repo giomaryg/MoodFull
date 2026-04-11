@@ -236,7 +236,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
         <form onSubmit={handleAddCustomMood} className="flex items-center w-full relative">
           <Input
             type="text"
-            placeholder="Type your own mood..."
+            placeholder="Type your mood, we’ll cook the rest..."
             value={customMoodInput}
             onChange={(e) => setCustomMoodInput(e.target.value)}
             className="pr-10 text-xs sm:text-sm h-9 border-[#c5d9c9] focus:border-[#6b9b76] bg-white/50 rounded-full text-center placeholder:text-gray-400"
