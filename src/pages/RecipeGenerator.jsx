@@ -23,6 +23,8 @@ import ThreeBackground from '../components/ThreeBackground';
 import { useNavigationStack } from '@/lib/NavigationStackContext';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { PullToRefresh } from '@/components/ui/PullToRefresh';
+import { useSwipeDownNavigation } from '@/hooks/useSwipeDownNavigation';
+import SwipeDownNav from '../components/navigation/SwipeDownNav';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
 const SavedRecipes = lazy(() => import('../components/recipe/SavedRecipes'));
@@ -59,6 +61,7 @@ export default function RecipeGenerator() {
   const queryClient = useQueryClient();
   const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack, getStack, saveScrollPosition, getScrollPosition, direction } = useNavigationStack();
   const currentRecipe = peekStack(activeTab)?.recipe || null;
+  const { isOpen: isSwipeNavOpen, setIsOpen: setIsSwipeNavOpen } = useSwipeDownNavigation(60, 80);
 
   const setCurrentRecipe = (recipe) => {
     if (recipe === null) {
@@ -1630,6 +1633,14 @@ export default function RecipeGenerator() {
 
       {/* Bottom Navigation */}
       {!showIntro && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} isVisible={!showShoppingList} enablePantry={ENABLE_PANTRY_FEATURE} />}
+
+      <SwipeDownNav
+        isOpen={isSwipeNavOpen}
+        onClose={() => setIsSwipeNavOpen(false)}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        enablePantry={ENABLE_PANTRY_FEATURE}
+      />
 
       {/* Paywall Modal */}
       <AnimatePresence>
