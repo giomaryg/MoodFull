@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer, Feather, Frown, HelpCircle } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer, Feather, Frown, HelpCircle, Plus, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const mealTypes = [
 { id: 'breakfast', label: 'Breakfast', icon: Sun, color: 'from-yellow-400 to-orange-300' },
@@ -143,12 +145,29 @@ const moods = [
 
 
 export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName }) {
+  const [customMoodInput, setCustomMoodInput] = useState('');
+
   const handleMoodToggle = (moodId) => {
     if (selectedMoods.includes(moodId)) {
       onMoodSelect(selectedMoods.filter((m) => m !== moodId));
     } else {
       onMoodSelect([...selectedMoods, moodId]);
     }
+  };
+
+  const handleAddCustomMood = (e) => {
+    e?.preventDefault();
+    const trimmed = customMoodInput.trim().toLowerCase();
+    if (!trimmed) return;
+    
+    // Check if it exists in predefined moods
+    const existing = moods.find(m => m.id === trimmed || m.label.toLowerCase() === trimmed);
+    const moodIdToUse = existing ? existing.id : trimmed;
+
+    if (!selectedMoods.includes(moodIdToUse)) {
+      onMoodSelect([...selectedMoods, moodIdToUse]);
+    }
+    setCustomMoodInput('');
   };
 
   const handleMealTypeToggle = (typeId) => {
@@ -210,6 +229,53 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
             </button>);
 
         })}
+      </div>
+
+      {/* Custom Mood Input */}
+      <div className="px-4 mt-6 flex flex-col items-center max-w-sm mx-auto w-full">
+        <form onSubmit={handleAddCustomMood} className="flex items-center w-full relative">
+          <Input
+            type="text"
+            placeholder="Type your own mood..."
+            value={customMoodInput}
+            onChange={(e) => setCustomMoodInput(e.target.value)}
+            className="pr-10 text-xs sm:text-sm h-9 border-[#c5d9c9] focus:border-[#6b9b76] bg-white/50 rounded-full text-center placeholder:text-gray-400"
+            maxLength={30}
+          />
+          <Button
+            type="submit"
+            size="icon"
+            variant="ghost"
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full text-[#6b9b76] hover:bg-[#6b9b76]/10"
+            disabled={!customMoodInput.trim()}
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        </form>
+
+        {/* Selected Custom Moods Chips */}
+        {selectedMoods.filter(moodId => !moods.some(m => m.id === moodId)).length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 mt-3">
+            {selectedMoods
+              .filter(moodId => !moods.some(m => m.id === moodId))
+              .map(customMood => (
+                <div key={customMood} className="flex items-center gap-1 bg-[#6b9b76]/10 text-[#3d5244] border border-[#6b9b76]/30 px-3 py-1 rounded-full text-xs font-medium">
+                  {customMood}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleMoodToggle(customMood);
+                    }}
+                    className="ml-1 hover:text-red-500 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Meal Type Selector */}

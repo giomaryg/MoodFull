@@ -671,7 +671,7 @@ export default function RecipeGenerator() {
       indecisive: "a fun, highly varied mix of safe bets, wildly different cuisines, and unexpected pleasant surprises"
     };
 
-    const moodContext = selectedMoods.map((mood) => moodDescriptions[mood]).join(', ');
+    const moodContext = selectedMoods.map((mood) => moodDescriptions[mood] || mood).join(', ');
 
     let preferencesContext = '';
 
