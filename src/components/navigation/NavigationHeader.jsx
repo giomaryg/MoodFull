@@ -16,11 +16,6 @@ export default function NavigationHeader() {
     setIsIOS(checkIOS());
   }, []);
 
-  // Don't show back button on root or main tabs
-  if (location.pathname === '/' || location.pathname === '/Home' || location.pathname === '/RecipeGenerator') {
-    return null;
-  }
-
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
@@ -31,6 +26,11 @@ export default function NavigationHeader() {
     observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
   }, []);
+
+  // Don't show back button on root or main tabs
+  if (location.pathname === '/' || location.pathname === '/Home' || location.pathname === '/RecipeGenerator') {
+    return null;
+  }
 
   if (isHidden) return null;
 

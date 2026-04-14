@@ -268,7 +268,7 @@ export default function RecipeGenerator() {
 
   useEffect(() => {
     if (activeTab === 'inventory' && !ENABLE_PANTRY_FEATURE) {
-      setActiveTab('home');
+      handleTabChange('home');
       return;
     }
   }, [activeTab]);
@@ -874,7 +874,7 @@ export default function RecipeGenerator() {
   const generateFromInventory = async (expiringItemsList = null) => {
     if (inventory.length === 0 && !expiringItemsList) {
       toast.error('Add items to your pantry first!');
-      setActiveTab('inventory');
+      handleTabChange('inventory');
       return;
     }
 
@@ -1693,7 +1693,7 @@ export default function RecipeGenerator() {
                   
               <InventoryManagement
                     onGenerateFromExpiring={(items) => {
-                      setActiveTab('home');
+                      handleTabChange('home');
                       generateFromInventory(items);
                     }} />
                   

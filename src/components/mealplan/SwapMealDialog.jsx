@@ -10,7 +10,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }) {
   const queryClient = useQueryClient();
-  if (!currentMeal) return null;
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredRecipes = useMemo(() => {
@@ -30,6 +29,8 @@ export default function SwapMealDialog({ currentMeal, recipes, onSwap, onClose }
     medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     hard: 'bg-red-50 text-red-700 border-red-200'
   };
+
+  if (!currentMeal) return null;
 
   return (
     <motion.div

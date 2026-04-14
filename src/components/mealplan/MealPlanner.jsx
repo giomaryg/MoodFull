@@ -481,6 +481,7 @@ For each meal provide:
 
       // Save recipes and create meal plans
       const mealCreations = [];
+      const currentWeekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
       
       for (const dayPlan of response.week_plan) {
         const date = addDays(currentWeekStart, dayPlan.day);
