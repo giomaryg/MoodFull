@@ -28,6 +28,7 @@ import SwipeDownNav from '../components/navigation/SwipeDownNav';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 import WhatsNewModal from '../components/onboarding/WhatsNewModal';
 import { getLatestVersion } from '@/lib/featureAnnouncements';
+import { useRecipeCache } from '@/hooks/useRecipeCache';
 
 const SavedRecipes = lazy(() => import('../components/recipe/SavedRecipes'));
 const PreferenceSurvey = lazy(() => import('../components/survey/PreferenceSurvey'));
@@ -64,6 +65,7 @@ export default function RecipeGenerator() {
   const { pushToStack, popFromStack, peekStack, replaceTopStack, clearStack, getStack, saveScrollPosition, getScrollPosition, direction } = useNavigationStack();
   const currentRecipe = peekStack(activeTab)?.recipe || null;
   const { isOpen: isSwipeNavOpen, setIsOpen: setIsSwipeNavOpen } = useSwipeDownNavigation(60, 80);
+  const { getCachedRecipes, setCachedRecipes } = useRecipeCache();
 
   const setCurrentRecipe = (recipe) => {
     if (recipe === null) {
@@ -659,8 +661,33 @@ export default function RecipeGenerator() {
       }
     }
 
-    setIsGenerating(true);
     setSavedRecipeId(null);
+
+    const cacheKeyParams = {
+      moods: selectedMoods,
+      meals: selectedMealTypes,
+      query: globalSearchQuery,
+      filters: advancedFilters
+    };
+
+    const cached = getCachedRecipes('generator', cacheKeyParams);
+    if (cached) {
+      setGeneratedRecipes(cached);
+      return;
+    }
+
+    const skeletons = Array(6).fill(null).map((_, i) => ({
+      id: `temp-${Date.now()}-${i}`,
+      name: "Crafting your recipe...",
+      description: "Finding the perfect match for your mood and preferences...",
+      mood: selectedMoods.join(', ') || 'AI Generated',
+      _loading: true,
+      imageLoading: true
+    }));
+    
+    setGeneratedRecipes(skeletons);
+    // Setting isGenerating to false gives an instant response feel 
+    setIsGenerating(false);
 
     const moodDescriptions = {
       happy: "light, fun, colorful dishes",
@@ -765,9 +792,8 @@ export default function RecipeGenerator() {
         await updateUserMutation.mutateAsync({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
       }
 
-      // Show recipes immediately
+      // Update skeletons with generated basic info
       setGeneratedRecipes(quickRecipes);
-      setIsGenerating(false);
 
       // Phase 2: Enrich all recipes in parallel (ingredients, instructions, nutrition, etc.)
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
@@ -816,18 +842,31 @@ export default function RecipeGenerator() {
           const img1 = await base44.integrations.Core.GenerateImage({
             prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
           });
-          setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
-          ));
+          setGeneratedRecipes((prev) => {
+            const next = prev.map((r, i) =>
+              i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
+            );
+            if (!next.some(r => r._loading || r.imageLoading)) {
+              setCachedRecipes('generator', cacheKeyParams, next);
+            }
+            return next;
+          });
         } catch {
-          setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, imageLoading: false } : r
-          ));
+          setGeneratedRecipes((prev) => {
+            const next = prev.map((r, i) =>
+              i === index ? { ...r, imageLoading: false } : r
+            );
+            if (!next.some(r => r._loading || r.imageLoading)) {
+              setCachedRecipes('generator', cacheKeyParams, next);
+            }
+            return next;
+          });
         }
       });
 
     } catch (error) {
       toast.error('Failed to generate recipe. Please try again.');
+      setGeneratedRecipes([]); // Clear skeletons on error
       setIsGenerating(false);
     }
   };
@@ -849,10 +888,33 @@ export default function RecipeGenerator() {
       }
     }
 
-    setIsGenerating(true);
     setSavedRecipeId(null);
     setGlobalSearchQuery('');
     setAdvancedFilters({});
+
+    const cacheKeyParams = {
+      inventoryItems: inventory.map(i => i.name),
+      expiringItemsList,
+      filters: advancedFilters
+    };
+
+    const cached = getCachedRecipes('pantry', cacheKeyParams);
+    if (cached) {
+      setGeneratedRecipes(cached);
+      return;
+    }
+
+    const skeletons = Array(6).fill(null).map((_, i) => ({
+      id: `temp-${Date.now()}-${i}`,
+      name: "Checking your pantry...",
+      description: "Finding the best recipes for what you have...",
+      mood: 'From Pantry',
+      _loading: true,
+      imageLoading: true
+    }));
+    
+    setGeneratedRecipes(skeletons);
+    setIsGenerating(false);
 
     let preferencesContext = '';
 
@@ -933,8 +995,8 @@ export default function RecipeGenerator() {
         await updateUserMutation.mutateAsync({ daily_mood_count: dailyCount + 1, daily_mood_reset_date: today });
       }
 
+      // Update skeletons with generated basic info
       setGeneratedRecipes(quickRecipes);
-      setIsGenerating(false);
 
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
         const detail = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
@@ -980,27 +1042,63 @@ export default function RecipeGenerator() {
           const img1 = await base44.integrations.Core.GenerateImage({
             prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
           });
-          setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
-          ));
+          setGeneratedRecipes((prev) => {
+            const next = prev.map((r, i) =>
+              i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
+            );
+            if (!next.some(r => r._loading || r.imageLoading)) {
+              setCachedRecipes('pantry', cacheKeyParams, next);
+            }
+            return next;
+          });
         } catch {
-          setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, imageLoading: false } : r
-          ));
+          setGeneratedRecipes((prev) => {
+            const next = prev.map((r, i) =>
+              i === index ? { ...r, imageLoading: false } : r
+            );
+            if (!next.some(r => r._loading || r.imageLoading)) {
+              setCachedRecipes('pantry', cacheKeyParams, next);
+            }
+            return next;
+          });
         }
       });
     } catch (error) {
       toast.error('Failed to generate recipe from pantry. Please try again.');
+      setGeneratedRecipes([]); // Clear skeletons on error
       setIsGenerating(false);
     }
   };
 
   const handleCombineAndGenerate = async ({ ingredients, recipes }) => {
     setShowCombineDialog(false);
-    setIsGenerating(true);
     setSavedRecipeId(null);
     setGlobalSearchQuery('');
     setAdvancedFilters({});
+
+    const cacheKeyParams = {
+      combineIngredients: ingredients,
+      combineRecipes: recipes,
+      filters: advancedFilters
+    };
+
+    const cached = getCachedRecipes('combine', cacheKeyParams);
+    if (cached) {
+      setGeneratedRecipes(cached);
+      return;
+    }
+
+    const skeletons = Array(3).fill(null).map((_, i) => ({
+      id: `temp-${Date.now()}-${i}`,
+      name: "Creating fusion recipes...",
+      description: "Blending ingredients and styles together...",
+      mood: 'Combined Creation',
+      _loading: true,
+      imageLoading: true
+    }));
+    
+    setGeneratedRecipes(skeletons);
+    setIsGenerating(false);
 
     let preferencesContext = '';
 
@@ -1056,11 +1154,12 @@ export default function RecipeGenerator() {
         mood: 'Combined Creation',
         ingredients: [],
         instructions: [],
-        _loading: true
+        _loading: true,
+        imageLoading: true
       }));
 
+      // Update skeletons with generated basic info
       setGeneratedRecipes(quickRecipes);
-      setIsGenerating(false);
 
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
         const detail = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
@@ -1106,17 +1205,30 @@ export default function RecipeGenerator() {
           const img1 = await base44.integrations.Core.GenerateImage({
             prompt: `Professional food photography of ${recipe.name}. ${recipe.description}. Beautiful plating, natural lighting, appetizing, high quality.`
           });
-          setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
-          ));
+          setGeneratedRecipes((prev) => {
+            const next = prev.map((r, i) =>
+              i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
+            );
+            if (!next.some(r => r._loading || r.imageLoading)) {
+              setCachedRecipes('combine', cacheKeyParams, next);
+            }
+            return next;
+          });
         } catch {
-          setGeneratedRecipes((prev) => prev.map((r, i) =>
-          i === index ? { ...r, imageLoading: false } : r
-          ));
+          setGeneratedRecipes((prev) => {
+            const next = prev.map((r, i) =>
+              i === index ? { ...r, imageLoading: false } : r
+            );
+            if (!next.some(r => r._loading || r.imageLoading)) {
+              setCachedRecipes('combine', cacheKeyParams, next);
+            }
+            return next;
+          });
         }
       });
     } catch (error) {
       toast.error('Failed to generate combined recipes.');
+      setGeneratedRecipes([]); // Clear skeletons on error
       setIsGenerating(false);
     }
   };
