@@ -31,7 +31,7 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
         </div>
 
         <ScrollArea className="flex-1 p-6">
-          <div className="space-y-6 text-sm text-gray-700 pb-8">
+          <div className="space-y-6 text-sm text-gray-700 pb-32">
             <p>
               MoodFull (“we,” “our,” or “us”) respects your privacy and is committed to protecting your information. This Privacy Policy explains how we collect, use, and safeguard your data when you use the MoodFull mobile application.
             </p>
