@@ -16,6 +16,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { NavigationStackProvider, useNavigationStack } from '@/lib/NavigationStackContext';
 import { ThemeProvider } from '@/lib/ThemeProvider';
+import TrackingConsentModal from '@/components/onboarding/TrackingConsentModal';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -153,6 +154,7 @@ function App() {
           </Router>
           <Toaster />
           <SonnerToaster position="top-center" offset="80px" />
+          <TrackingConsentModal />
           <VisualEditAgent />
         </QueryClientProvider>
       </AuthProvider>

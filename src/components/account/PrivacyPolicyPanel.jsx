@@ -6,10 +6,15 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet';
-import { Shield } from 'lucide-react';
+import { Shield, MessageCircle } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import SupportChatModal from './SupportChatModal';
+import { useState } from 'react';
 
 export default function PrivacyPolicyPanel({ isOpen, onClose }) {
+  const [isSupportChatOpen, setIsSupportChatOpen] = useState(false);
+
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side="right" className="w-full sm:max-w-md bg-white p-0 flex flex-col h-full">
@@ -180,11 +185,19 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
             </section>
 
             <section className="space-y-2">
-              <h3 className="text-base font-semibold text-gray-900">11. Contact Us</h3>
-              <p>If you have any questions about this Privacy Policy, please contact us.</p>
+              <h3 className="text-base font-semibold text-gray-900">11. Contact & Support</h3>
+              <p>If you have any questions about this Privacy Policy, need to manage your data, or require assistance with account deletion, our AI Support Assistant is available 24/7.</p>
+              <Button 
+                onClick={() => setIsSupportChatOpen(true)}
+                className="w-full bg-[#6b9b76] hover:bg-[#5a8a65] text-white mt-2"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Chat with Privacy Support
+              </Button>
             </section>
           </div>
         </ScrollArea>
+        <SupportChatModal isOpen={isSupportChatOpen} onClose={() => setIsSupportChatOpen(false)} />
       </SheetContent>
     </Sheet>
   );

@@ -9,6 +9,8 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import BillingPanel from './BillingPanel';
 import PrivacyPolicyPanel from './PrivacyPolicyPanel';
+import SupportChatModal from './SupportChatModal';
+import DeleteAccountConfirmModal from './DeleteAccountConfirmModal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
 
@@ -42,6 +44,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     vitamin_targets: user?.vitamin_targets || ''
   });
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isSupportChatOpen, setIsSupportChatOpen] = useState(false);
 
   const updateAccountMutation = useOptimisticMutation({
     queryKey: ['currentUser'],
@@ -57,7 +61,6 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
   };
 
   const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
       setIsDeleting(true);
       try {
         await base44.auth.deleteAccount();
@@ -65,8 +68,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
       } catch (error) {
         toast.error('Failed to delete account');
         setIsDeleting(false);
+        setShowDeleteConfirm(false);
       }
-    }
   };
 
   const handleSave = () => {
@@ -566,7 +569,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
           Log Out
         </Button>
         <Button
-          onClick={handleDeleteAccount}
+          onClick={() => setShowDeleteConfirm(true)}
           disabled={isDeleting}
           variant="ghost"
           className="w-full text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl py-4"
@@ -585,6 +588,14 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
         isOpen={isPrivacyPolicyOpen} 
         onClose={() => setIsPrivacyPolicyOpen(false)} 
       />
+
+      <DeleteAccountConfirmModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDeleteAccount}
+        isDeleting={isDeleting}
+      />
+      <SupportChatModal isOpen={isSupportChatOpen} onClose={() => setIsSupportChatOpen(false)} />
     </div>
   );
 }

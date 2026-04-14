@@ -4,10 +4,13 @@ import { base44 } from '@/api/base44Client';
 export default function Layout({ children, currentPageName }) {
   useEffect(() => {
     if (currentPageName) {
-      base44.analytics.track({
-        eventName: "app_opened",
-        properties: { page_name: currentPageName }
-      });
+      const consent = localStorage.getItem('moodfull_tracking_consent');
+      if (consent === 'granted') {
+        base44.analytics.track({
+          eventName: "app_opened",
+          properties: { page_name: currentPageName }
+        });
+      }
     }
   }, [currentPageName]);
 
