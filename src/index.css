@@ -172,3 +172,12 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+/* Fix AI Agent button overlapping with BottomNav */
+[id^="base44-agent"],
+[class*="base44-agent"],
+[id*="base44-chat"],
+[class*="base44-chat"] {
+  margin-bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
+  z-index: 90 !important;
+}
