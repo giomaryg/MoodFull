@@ -13,10 +13,54 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
     { id: 'account', label: 'Account', icon: User }
   ];
 
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [isHiddenBySwipe, setIsHiddenBySwipe] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleFocusIn = (e) => {
+      const tag = e.target.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea') {
+        setIsKeyboardOpen(true);
+      }
+    };
+    const handleFocusOut = () => {
+      setIsKeyboardOpen(false);
+    };
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      // reveal nav again if scrolled up
+      if (currentScrollY < lastScrollY.current - 10) {
+        setIsHiddenBySwipe(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('focusin', handleFocusIn);
+    window.addEventListener('focusout', handleFocusOut);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('focusin', handleFocusIn);
+      window.removeEventListener('focusout', handleFocusOut);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const shouldShow = isVisible && !isKeyboardOpen && !isHiddenBySwipe;
+
   return (
     <AnimatePresence>
-      {isVisible && (
+      {shouldShow && (
         <motion.div 
+          drag="y"
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={{ top: 0, bottom: 0.5 }}
+          onDragEnd={(e, info) => {
+            if (info.offset.y > 40 || info.velocity.y > 200) {
+              setIsHiddenBySwipe(true);
+            }
+          }}
           initial={{ y: 150, x: "-50%", opacity: 0 }}
           animate={{ 
             y: 0, 
@@ -28,7 +72,10 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
           className="fixed left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden"
           style={{ bottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
         >
-          <div className="flex items-center justify-around w-full gap-1 overflow-x-auto scroll-smooth px-2 py-2 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="w-full flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100 transition-opacity">
+            <div className="w-10 h-1 bg-gray-400 rounded-full" />
+          </div>
+          <div className="flex items-center justify-around w-full gap-1 overflow-x-auto scroll-smooth px-2 pb-2 pt-0 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;

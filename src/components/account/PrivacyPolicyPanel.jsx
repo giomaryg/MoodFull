@@ -5,8 +5,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetClose,
 } from '@/components/ui/sheet';
-import { Shield, MessageCircle } from 'lucide-react';
+import { Shield, MessageCircle, X } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import SupportChatModal from './SupportChatModal';
@@ -17,8 +18,12 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side="right" className="w-full sm:max-w-md bg-white p-0 flex flex-col h-full">
-        <div className="p-6 pb-4 border-b border-gray-100">
+      <SheetContent side="right" className="w-full sm:max-w-md bg-white p-0 flex flex-col h-full [&>button]:hidden">
+        <div className="p-6 pt-16 pb-4 border-b border-gray-100 relative">
+          <SheetClose className="absolute right-4 top-14 z-10 flex items-center justify-center w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none shadow-sm">
+            <X className="h-5 w-5" />
+            <span className="sr-only">Close</span>
+          </SheetClose>
           <SheetHeader>
             <SheetTitle className="text-2xl font-bold text-[#6b9b76] flex items-center gap-2">
               <Shield className="w-6 h-6" />
