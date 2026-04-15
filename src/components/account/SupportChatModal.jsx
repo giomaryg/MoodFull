@@ -66,7 +66,7 @@ export default function SupportChatModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm sm:p-6">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pb-28 bg-black/50 backdrop-blur-sm sm:p-6 sm:pb-6">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
