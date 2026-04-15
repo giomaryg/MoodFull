@@ -94,7 +94,7 @@ Provide a concise, practical, and helpful response. If you suggest modifications
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="fixed bottom-24 right-6 z-[60] sm:bottom-6 sm:right-10"
+            className="fixed top-1/2 -translate-y-1/2 right-4 z-[60] sm:top-auto sm:-translate-y-0 sm:bottom-6 sm:right-10"
             style={{ touchAction: 'none' }}
           >
             <Button
