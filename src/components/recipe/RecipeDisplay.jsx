@@ -20,6 +20,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import SaveToCollectionDialog from './SaveToCollectionDialog';
 import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater, Utensils } from 'lucide-react';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
+import SmartTakeoutPanel from '../takeout/SmartTakeoutPanel';
 import { toast } from 'sonner';
 import ApplianceSelector from './ApplianceSelector';
 import RecipeAssistantSheet from './RecipeAssistantSheet';
@@ -31,6 +32,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showCookingMode, setShowCookingMode] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showTakeoutPanel, setShowTakeoutPanel] = useState(false);
   const [currentServings, setCurrentServings] = useState(recipe?.servings || 4);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [adaptedRecipe, setAdaptedRecipe] = useState(null);
@@ -409,6 +411,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-3 mb-8 justify-end">
+          <Button
+            onClick={() => setShowTakeoutPanel(true)}
+            variant="ghost"
+            className="rounded-full px-4 sm:px-6 text-gray-500 hover:text-[#6b9b76] hover:bg-[#f0f9f2] border border-transparent hover:border-[#c5d9c9] transition-colors whitespace-nowrap"
+          >
+            🥡 Order smarter instead
+          </Button>
           <Button
             onClick={() => {
               setShowCookingMode(true);
@@ -855,6 +864,14 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         category={selectedPairing?.category}
         iconColor={selectedPairing?.iconColor}
         Icon={selectedPairing?.Icon}
+      />
+
+      {/* Smart Takeout Panel */}
+      <SmartTakeoutPanel
+        isOpen={showTakeoutPanel}
+        onClose={() => setShowTakeoutPanel(false)}
+        contextRecipe={displayRecipe}
+        userPreferences={currentUser || {}}
       />
     </motion.div>
   );

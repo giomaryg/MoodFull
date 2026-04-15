@@ -41,6 +41,7 @@ const InventoryManagement = lazy(() => import('../components/inventory/Inventory
 const AnalyticsDashboard = lazy(() => import('../components/analytics/AnalyticsDashboard'));
 const AICoach = lazy(() => import('../components/recipe/AICoach'));
 const TutorialOverlay = lazy(() => import('../components/onboarding/TutorialOverlay'));
+const SmartTakeoutPanel = lazy(() => import('../components/takeout/SmartTakeoutPanel'));
 
 const ENABLE_PANTRY_FEATURE = true;
 
@@ -137,6 +138,7 @@ export default function RecipeGenerator() {
   const [showPaywall, setShowPaywall] = useState(false);
   const [showCombineDialog, setShowCombineDialog] = useState(false);
   const [showAICoach, setShowAICoach] = useState(false);
+  const [showTakeoutPanel, setShowTakeoutPanel] = useState(false);
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
   const [hideLimitAlert, setHideLimitAlert] = useState(false);
   const [forceShowTutorial, setForceShowTutorial] = useState(false);
@@ -1525,6 +1527,26 @@ export default function RecipeGenerator() {
                       }
               </AnimatePresence>
 
+              {/* Takeout Option */}
+              <AnimatePresence mode="wait">
+                {(selectedMoods.length > 0 || globalSearchQuery.trim().length > 0) && !currentRecipe && generatedRecipes.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="flex justify-center w-full"
+                  >
+                    <Button
+                      variant="ghost"
+                      onClick={() => setShowTakeoutPanel(true)}
+                      className="text-gray-500 hover:text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6 py-2 h-auto mt-2 text-sm transition-colors border border-transparent hover:border-[#c5d9c9]"
+                    >
+                      🥡 Not in the mood to cook? Order smarter
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Recipe Grid */}
               <AnimatePresence mode="wait">
                 {generatedRecipes.length > 0 && !currentRecipe &&
@@ -1793,6 +1815,17 @@ export default function RecipeGenerator() {
           savedRecipes={savedRecipes}
           onGenerate={handleCombineAndGenerate}
           isGenerating={isGenerating} />
+
+      <Suspense fallback={null}>
+        {showTakeoutPanel && (
+          <SmartTakeoutPanel
+            isOpen={showTakeoutPanel}
+            onClose={() => setShowTakeoutPanel(false)}
+            contextMoods={selectedMoods}
+            userPreferences={userPreferences}
+          />
+        )}
+      </Suspense>
 
 
 
