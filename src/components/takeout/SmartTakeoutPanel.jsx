@@ -108,19 +108,14 @@ Make the tone helpful, non-judgmental, and encouraging. Return a structured JSON
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden bg-white rounded-[2rem]">
         <div className="bg-gradient-to-br from-[#f0f9f2] to-[#e8f0ea] p-6 sm:p-8 border-b border-[#c5d9c9]">
-          <div className="flex justify-between items-start mb-2">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center border border-[#c5d9c9]">
-                <Utensils className="w-6 h-6 text-[#6b9b76]" />
-              </div>
-              <div>
-                <DialogTitle className="text-2xl font-bold text-gray-900">Order Smarter</DialogTitle>
-                <DialogDescription className="text-[#5a8a65] font-medium">Smart Takeout Alternatives</DialogDescription>
-              </div>
+          <div className="flex items-center gap-3 mb-2 pr-8">
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center border border-[#c5d9c9]">
+              <Utensils className="w-6 h-6 text-[#6b9b76]" />
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full bg-white/50 hover:bg-white text-gray-500">
-              <X className="w-5 h-5" />
-            </Button>
+            <div>
+              <DialogTitle className="text-2xl font-bold text-gray-900">Order Smarter</DialogTitle>
+              <DialogDescription className="text-[#5a8a65] font-medium">Smart Takeout Alternatives</DialogDescription>
+            </div>
           </div>
           <p className="text-gray-600 text-sm mt-4">Not in the mood to cook? We get it. Let AI find healthier versions of your cravings from nearby restaurants.</p>
         </div>
