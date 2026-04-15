@@ -36,14 +36,36 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
       lastScrollY.current = currentScrollY;
     };
 
+    let touchStartY = 0;
+    const handleTouchStart = (e) => {
+      touchStartY = e.touches[0].clientY;
+    };
+    const handleTouchMove = (e) => {
+      if (!touchStartY) return;
+      const touchEndY = e.touches[0].clientY;
+      // reveal nav if swiped up anywhere on screen
+      if (touchStartY - touchEndY > 20) {
+        setIsHiddenBySwipe(false);
+      }
+    };
+    const handleTouchEnd = () => {
+      touchStartY = 0;
+    };
+
     window.addEventListener('focusin', handleFocusIn);
     window.addEventListener('focusout', handleFocusOut);
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener('focusin', handleFocusIn);
       window.removeEventListener('focusout', handleFocusOut);
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
@@ -51,8 +73,9 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
 
   return (
     <AnimatePresence>
-      {shouldShow && (
+      {shouldShow ? (
         <motion.div 
+          key="nav-bar"
           drag="y"
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={{ top: 0, bottom: 0.5 }}
@@ -117,7 +140,25 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
             })}
           </div>
         </motion.div>
-      )}
+      ) : isHiddenBySwipe && !isKeyboardOpen ? (
+        <motion.div
+          key="restore-btn"
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 50, opacity: 0 }}
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[100]"
+        >
+          <Button
+            variant="secondary"
+            size="icon"
+            className="rounded-full shadow-lg bg-background/90 backdrop-blur-md border border-border/60 w-12 h-12"
+            onClick={() => setIsHiddenBySwipe(false)}
+            aria-label="Show navigation"
+          >
+            <ChevronUp className="w-6 h-6 text-foreground" />
+          </Button>
+        </motion.div>
+      ) : null}
     </AnimatePresence>
   );
 }
