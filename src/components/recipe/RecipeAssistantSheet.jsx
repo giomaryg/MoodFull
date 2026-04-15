@@ -6,11 +6,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { X, Send, Loader2, Sparkles, ChefHat } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
+import { useQuery } from '@tanstack/react-query';
 
 import { createPortal } from 'react-dom';
 
 export default function RecipeAssistantSheet({ recipe }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +54,11 @@ export default function RecipeAssistantSheet({ recipe }) {
     try {
       const chatHistory = messages.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
       
-      const prompt = `You are a helpful culinary AI assistant specifically helping the user with the recipe "${recipe.name}".
+      const pregnancyContext = currentUser?.pregnancy_status && ['pregnant', 'trying'].includes(currentUser.pregnancy_status)
+        ? `\nCRITICAL: The user is ${currentUser.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc). Do not give medical advice.`
+        : '';
+
+      const prompt = `You are a helpful culinary AI assistant specifically helping the user with the recipe "${recipe.name}".${pregnancyContext}
 Recipe Details:
 Description: ${recipe.description || 'N/A'}
 Ingredients: ${recipe.ingredients?.join(', ')}

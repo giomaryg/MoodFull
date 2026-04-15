@@ -28,13 +28,17 @@ export default function AICoach({ isOpen, onClose, userPreferences, mealPlans, i
         ? `${userPreferences.daily_calorie_target} cals, ${userPreferences.macro_protein_ratio}% protein` 
         : 'None specified';
 
+      const pregnancyContext = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status)
+        ? `\nCRITICAL: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions and advice are pregnancy-safe. Do not give medical advice.`
+        : '';
+
       const prompt = `You are a personalized AI Culinary & Nutrition Coach.
 User Info:
 - Diet: ${userPreferences?.diet_preferences || 'None'}
 - Goals: ${goals}
 - Skill: ${userPreferences?.cooking_skill || 'Intermediate'}
 - Recent Meals: ${recentMeals || 'None yet'}
-- Expiring Soon: ${expiringItems || 'None'}
+- Expiring Soon: ${expiringItems || 'None'}${pregnancyContext}
 
 Provide:
 1. A brief encouraging greeting.

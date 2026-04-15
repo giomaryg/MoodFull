@@ -41,7 +41,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     advanced_dietary: user?.advanced_dietary || '',
     techniques_to_practice: user?.techniques_to_practice || '',
     extra_equipment: user?.extra_equipment || '',
-    vitamin_targets: user?.vitamin_targets || ''
+    vitamin_targets: user?.vitamin_targets || '',
+    pregnancy_status: user?.pregnancy_status || 'not_applicable'
   });
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -85,7 +86,8 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
       advanced_dietary: user?.advanced_dietary || '',
       techniques_to_practice: user?.techniques_to_practice || '',
       extra_equipment: user?.extra_equipment || '',
-      vitamin_targets: user?.vitamin_targets || ''
+      vitamin_targets: user?.vitamin_targets || '',
+      pregnancy_status: user?.pregnancy_status || 'not_applicable'
     });
     setIsEditing(false);
   };
@@ -155,6 +157,28 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                     placeholder="+1 (555) 000-0000"
                     className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
                   />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Are you currently pregnant or trying to be?</label>
+                  <Select
+                    value={formData.pregnancy_status}
+                    onValueChange={(value) => setFormData({ ...formData, pregnancy_status: value })}
+                  >
+                    <SelectTrigger className="w-full border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-md bg-white min-h-[44px]">
+                      <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="not_applicable">Not applicable</SelectItem>
+                      <SelectItem value="pregnant">Pregnant</SelectItem>
+                      <SelectItem value="trying">Trying to conceive</SelectItem>
+                      <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {(formData.pregnancy_status === 'pregnant' || formData.pregnancy_status === 'trying') && (
+                    <p className="text-xs text-amber-600 mt-2 bg-amber-50 p-2 rounded-md border border-amber-100">
+                      MoodFull is not a medical professional. Recommendations are AI-generated and may not always be accurate. If you are pregnant or trying to conceive, please consult a qualified healthcare professional for personalized advice.
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center gap-2">
@@ -399,6 +423,18 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                       </Badge>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {user.pregnancy_status && ['pregnant', 'trying'].includes(user.pregnancy_status) && (
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Pregnancy Status</div>
+                  <Badge className="bg-pink-50 text-pink-700 border-0">
+                    {user.pregnancy_status === 'pregnant' ? 'Pregnant' : 'Trying to conceive'}
+                  </Badge>
+                  <p className="text-xs text-amber-600 mt-2 bg-amber-50 p-2 rounded-md border border-amber-100">
+                    MoodFull is not a medical professional. Recommendations are AI-generated and may not always be accurate. If you are pregnant or trying to conceive, please consult a qualified healthcare professional for personalized advice.
+                  </p>
                 </div>
               )}
 

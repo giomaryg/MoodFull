@@ -724,6 +724,9 @@ export default function RecipeGenerator() {
       if (userPreferences.equipment?.length > 0) prefs.push(`Available Equipment: ${userPreferences.equipment.join(', ')}`);
       if (userPreferences.extra_equipment) prefs.push(`Extra Equipment Available: ${userPreferences.extra_equipment}`);
       if (userPreferences.vitamin_targets) prefs.push(`Nutritional/Vitamin Targets: ${userPreferences.vitamin_targets}`);
+      if (userPreferences.pregnancy_status === 'pregnant' || userPreferences.pregnancy_status === 'trying') {
+        prefs.push(`CRITICAL CONTEXT: User is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Prioritize safe, nutrient-dense meals (iron, folate, protein, calcium). AVOID high-risk ingredients (raw/undercooked meats, fish, eggs, unpasteurized dairy, alcohol). Emphasize well-cooked, balanced, gentle and nourishing meals. Add 'Pregnancy-friendly' or 'Well-cooked & safe option' to the description or mood tags. Do not give medical advice.`);
+      }
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
@@ -930,6 +933,9 @@ export default function RecipeGenerator() {
       if (userPreferences.equipment?.length > 0) prefs.push(`Available Equipment: ${userPreferences.equipment.join(', ')}`);
       if (userPreferences.extra_equipment) prefs.push(`Extra Equipment Available: ${userPreferences.extra_equipment}`);
       if (userPreferences.vitamin_targets) prefs.push(`Nutritional/Vitamin Targets: ${userPreferences.vitamin_targets}`);
+      if (userPreferences.pregnancy_status === 'pregnant' || userPreferences.pregnancy_status === 'trying') {
+        prefs.push(`CRITICAL CONTEXT: User is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Prioritize safe, nutrient-dense meals (iron, folate, protein, calcium). AVOID high-risk ingredients (raw/undercooked meats, fish, eggs, unpasteurized dairy, alcohol). Emphasize well-cooked, balanced, gentle and nourishing meals. Add 'Pregnancy-friendly' or 'Well-cooked & safe option' to the description or mood tags. Do not give medical advice.`);
+      }
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 
@@ -1114,6 +1120,9 @@ export default function RecipeGenerator() {
       if (userPreferences.equipment?.length > 0) prefs.push(`Available Equipment: ${userPreferences.equipment.join(', ')}`);
       if (userPreferences.extra_equipment) prefs.push(`Extra Equipment Available: ${userPreferences.extra_equipment}`);
       if (userPreferences.vitamin_targets) prefs.push(`Nutritional/Vitamin Targets: ${userPreferences.vitamin_targets}`);
+      if (userPreferences.pregnancy_status === 'pregnant' || userPreferences.pregnancy_status === 'trying') {
+        prefs.push(`CRITICAL CONTEXT: User is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Prioritize safe, nutrient-dense meals (iron, folate, protein, calcium). AVOID high-risk ingredients (raw/undercooked meats, fish, eggs, unpasteurized dairy, alcohol). Emphasize well-cooked, balanced, gentle and nourishing meals. Add 'Pregnancy-friendly' or 'Well-cooked & safe option' to the description or mood tags. Do not give medical advice.`);
+      }
       if (prefs.length > 0) preferencesContext = ` [${prefs.join('. ')}]`;
     }
 

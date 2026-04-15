@@ -1,0 +1,130 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "display_name": {
+      "type": "string",
+      "description": "User's customizable display name"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female",
+        "non-binary",
+        "prefer-not-to-say"
+      ],
+      "description": "User's gender"
+    },
+    "phone_number": {
+      "type": "string",
+      "description": "User's phone number"
+    },
+    "birthday": {
+      "type": "string",
+      "format": "date",
+      "description": "User's date of birth"
+    },
+    "allergies": {
+      "type": "string",
+      "description": "User's food allergies"
+    },
+    "diet_preferences": {
+      "type": "string",
+      "description": "User's dietary preferences or restrictions"
+    },
+    "blood_sugar_friendly": {
+      "type": "boolean",
+      "description": "Whether user needs blood sugar friendly recipes"
+    },
+    "pregnancy_status": {
+      "type": "string",
+      "enum": [
+        "pregnant",
+        "trying",
+        "not_applicable",
+        "prefer_not_to_say"
+      ],
+      "description": "User's pregnancy status for tailoring recipes"
+    },
+    "priorities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User's cooking priorities"
+    },
+    "open_to_new_cuisines": {
+      "type": "boolean",
+      "description": "Whether user is open to trying new cuisines"
+    },
+    "preferred_cuisines": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User's preferred cuisines"
+    },
+    "meals_per_week": {
+      "type": "string",
+      "description": "Number of meals user cooks per week"
+    },
+    "survey_completed": {
+      "type": "boolean",
+      "description": "Whether user has completed the preference survey"
+    },
+    "is_premium": {
+      "type": "boolean",
+      "description": "Whether user has an active premium subscription"
+    },
+    "daily_mood_count": {
+      "type": "number",
+      "description": "Number of mood generations used today",
+      "default": 0
+    },
+    "daily_mood_reset_date": {
+      "type": "string",
+      "description": "The date (YYYY-MM-DD) when the daily count was last reset"
+    },
+    "cooking_skill": {
+      "type": "string"
+    },
+    "equipment": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "daily_calorie_target": {
+      "type": "number",
+      "description": "Daily target calories"
+    },
+    "macro_protein_ratio": {
+      "type": "number",
+      "description": "Protein percentage (0-100)"
+    },
+    "macro_carbs_ratio": {
+      "type": "number",
+      "description": "Carbohydrates percentage (0-100)"
+    },
+    "macro_fat_ratio": {
+      "type": "number",
+      "description": "Fat percentage (0-100)"
+    },
+    "oura_connected": {
+      "type": "boolean",
+      "description": "Whether the user has connected their Oura ring",
+      "default": false
+    },
+    "oura_data_consent": {
+      "type": "boolean",
+      "description": "Whether the user has consented to use Oura data for recommendations",
+      "default": false
+    },
+    "oura_access_token": {
+      "type": "string",
+      "description": "Simulated or real Oura access token"
+    }
+  },
+  "required": []
+}

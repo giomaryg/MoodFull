@@ -465,6 +465,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           {recipe.description}
         </p>
 
+        {currentUser?.pregnancy_status && ['pregnant', 'trying'].includes(currentUser.pregnancy_status) && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8 p-4 bg-amber-50 rounded-xl border border-amber-100 flex items-start gap-3">
+            <span className="text-xl">💡</span>
+            <div>
+              <h4 className="font-semibold text-amber-900 text-sm">Pregnancy & Health Notice</h4>
+              <p className="text-amber-800 text-sm mt-1">MoodFull is not a medical professional. Recommendations are AI-generated and may not always be accurate. If you are pregnant or trying to conceive, please consult a qualified healthcare professional for personalized advice and ensure all ingredients meet your safety guidelines.</p>
+            </div>
+          </motion.div>
+        )}
+
         <ApplianceSelector 
           recipe={recipe} 
           onAdaptationStart={() => {}} 

@@ -39,6 +39,7 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
     allergies: initialData.allergies || '',
     diet_preferences: initialData.diet_preferences || '',
     blood_sugar_friendly: initialData.blood_sugar_friendly ?? null,
+    pregnancy_status: initialData.pregnancy_status || currentUser.pregnancy_status || 'not_applicable',
     priorities: initialData.priorities || [],
     open_to_new_cuisines: initialData.open_to_new_cuisines ?? null,
     preferred_cuisines: initialData.preferred_cuisines || [],
@@ -254,6 +255,28 @@ export default function PreferenceSurvey({ onComplete, onSkip, initialData = {},
                   </div>
                 </motion.button>
               </div>
+            </div>
+            
+            <div className="space-y-4 pt-6 mt-6 border-t border-gray-100">
+              <Label className="text-base font-semibold">
+                Are you currently pregnant or trying to be?
+              </Label>
+              <Select value={formData.pregnancy_status || 'not_applicable'} onValueChange={(value) => setFormData({ ...formData, pregnancy_status: value })}>
+                <SelectTrigger className="w-full bg-white border-[#c5d9c9] focus:border-[#6b9b76]">
+                  <SelectValue placeholder="Select Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="not_applicable">Not applicable</SelectItem>
+                  <SelectItem value="pregnant">Pregnant</SelectItem>
+                  <SelectItem value="trying">Trying to conceive</SelectItem>
+                  <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                </SelectContent>
+              </Select>
+              {(formData.pregnancy_status === 'pregnant' || formData.pregnancy_status === 'trying') && (
+                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-amber-600 mt-3 bg-amber-50 p-3 rounded-xl border border-amber-200 leading-relaxed">
+                  MoodFull is not a medical professional. Recommendations are AI-generated and may not always be accurate. If you are pregnant or trying to conceive, please consult a qualified healthcare professional for personalized advice.
+                </motion.p>
+              )}
             </div>
           </div>);
 
