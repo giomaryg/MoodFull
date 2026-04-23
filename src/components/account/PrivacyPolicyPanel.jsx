@@ -163,7 +163,7 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
             </section>
 
             <section className="space-y-2">
-              <h3 className="text-base font-semibold text-gray-900">7. Your Rights</h3>
+              <h3 className="text-base font-semibold text-gray-900">7. Your Rights & Account Deletion</h3>
               <p>Depending on your location, you may have the right to:</p>
               <ul className="list-disc pl-5 mt-1 space-y-1 text-gray-600">
                 <li>Access your data</li>
@@ -171,7 +171,11 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
                 <li>Correct inaccurate information</li>
                 <li>Opt out of certain data uses</li>
               </ul>
-              <p className="mt-2">To make a request, contact us at: support@moodfullapp.com</p>
+              <div className="mt-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <h4 className="font-semibold text-gray-800 mb-1">Account Deletion (Guideline 5.1.1(v) - Data Collection and Storage)</h4>
+                <p className="text-sm">You can initiate the deletion of your account and all associated data at any time directly within the app. Navigate to <strong>Account Settings &gt; Delete Account</strong>. Upon confirmation, your personal data, saved recipes, and preferences will be permanently removed from our systems.</p>
+              </div>
+              <p className="mt-2">To make a manual request, contact us at: support@moodfullapp.com</p>
             </section>
 
             <section className="space-y-2">
@@ -199,6 +203,9 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Chat with Privacy Support
               </Button>
+              <p className="mt-4 text-sm text-gray-600">
+                For further assistance with your account or our platform, you can also visit the <a href="https://base44.com/support" target="_blank" rel="noopener noreferrer" className="text-[#6b9b76] underline hover:text-[#5a8a65]">Base44 Support Page</a>.
+              </p>
             </section>
           </div>
         </ScrollArea>
