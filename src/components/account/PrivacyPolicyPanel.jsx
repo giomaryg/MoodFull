@@ -204,7 +204,7 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
                 Chat with Privacy Support
               </Button>
               <p className="mt-4 text-sm text-gray-600">
-                For further assistance with your account or our platform, you can also visit the <a href="https://base44.com/support" target="_blank" rel="noopener noreferrer" className="text-[#6b9b76] underline hover:text-[#5a8a65]">Base44 Support Page</a>.
+                For further assistance with your account or our platform, you can also visit the <a href="https://app.base44.com/support/" target="_blank" rel="noopener noreferrer" className="text-[#6b9b76] underline hover:text-[#5a8a65]">Base44 Support Page</a>.
               </p>
             </section>
           </div>

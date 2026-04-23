@@ -553,7 +553,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                 <p className="text-sm text-gray-500">Contact Base44 Support</p>
               </div>
               <a 
-                href="https://base44.com/support"
+                href="https://app.base44.com/support/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 min-h-[40px] px-4 py-2 border-2 border-[#6b9b76] text-[#6b9b76] hover:bg-[#e8f0ea]"
