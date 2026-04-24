@@ -76,17 +76,17 @@ export default function Landing() {
             <div className="grid md:grid-cols-3 gap-8">
               <FeatureCard 
                 icon={<Sparkles className="w-6 h-6" />} 
-                title="Tell us how you feel" 
+                title="Drop your vibe" 
                 desc="Burnt out? Buzzing? Craving pure comfort? We don't ask what you want to eat—we ask how you feel. Your mood is the ultimate recipe filter." 
               />
               <FeatureCard 
                 icon={<Leaf className="w-6 h-6" />} 
-                title="Cook with what you have" 
+                title="Hack your fridge" 
                 desc="Snap a pic of your chaotic fridge. We hack your ingredients to find what's actually usable right now. Skip the grocery run." 
               />
               <FeatureCard 
                 icon={<Clock className="w-6 h-6" />} 
-                title="Curated mini-menus" 
+                title="Vibe-matched menus" 
                 desc="We filter out the noise and hand you 3-5 hyper-curated meals that match your exact vibe. Tap one and cook. No second-guessing allowed." 
               />
             </div>
@@ -124,7 +124,7 @@ export default function Landing() {
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Mood-Based Generation</h3>
+                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Vibe-Synced Recipes</h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
                   Forget endless recipe scrolling. Our AI reads your emotional and physical state, instantly matching your exact vibe with the ultimate recipe to either elevate your energy or wrap you in pure comfort.
                 </p>
@@ -133,7 +133,7 @@ export default function Landing() {
 
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="order-2 md:order-1">
-                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Smart Takeout Alternatives</h3>
+                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Fake-Out Takeout</h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
                   About to order delivery? Tell us what you're craving, and MoodFull will hack it into a faster, fresher, home-cooked alternative that hits the exact same spot without killing your goals or your wallet.
                 </p>
@@ -169,17 +169,17 @@ export default function Landing() {
             <div className="space-y-12">
               <Step 
                 number="01" 
-                title="Tell MoodFull how you feel" 
+                title="Set your status" 
                 desc="Running on empty? Craving pure comfort? Short on time? We read your vibe first. No endless scrolling, no generic search bars." 
               />
               <Step 
                 number="02" 
-                title="We narrow it down" 
+                title="We cut the noise" 
                 desc="We cross-reference your current energy with your fridge inventory, cutting the noise to serve up a curated mini-menu. No doom-scrolling. No chef skills required." 
               />
               <Step 
                 number="03" 
-                title="You pick once and move on" 
+                title="Lock it in and cook" 
                 desc="Pick your vibe and hit the kitchen. We guide you step-by-step from prep to plate. No overthinking, just great food that fits your mood." 
               />
             </div>
