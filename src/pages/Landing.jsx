@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
-import { ChefHat, Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed } from 'lucide-react';
+import { ChefHat, Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X } from 'lucide-react';
 
 export default function Landing() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const handleLogin = () => {
     base44.auth.redirectToLogin();
   };
@@ -25,10 +27,56 @@ export default function Landing() {
           <a href="#how-it-works" className="hover:text-[#6b9b76] transition-colors">How it works</a>
           <a href="#faq" className="hover:text-[#6b9b76] transition-colors">FAQ</a>
         </nav>
-        <Button onClick={handleLogin} variant="outline" className="border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6">
-          Sign In
-        </Button>
+        <div className="hidden md:block">
+          <Button onClick={handleLogin} variant="outline" className="border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6">
+            Sign In
+          </Button>
+        </div>
+        <button 
+          className="md:hidden text-[#3d5244] p-2" 
+          onClick={() => setIsMobileMenuOpen(true)}
+        >
+          <Menu className="w-6 h-6" />
+        </button>
       </header>
+
+      {/* Mobile Side Panel */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/40 z-[60] md:hidden"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-64 bg-white z-[70] shadow-2xl flex flex-col p-6 md:hidden"
+            >
+              <div className="flex justify-end mb-8">
+                <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-800 p-2">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <nav className="flex flex-col gap-6 text-[#5a6f60] font-medium text-lg">
+                <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#6b9b76] transition-colors">Features</a>
+                <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#6b9b76] transition-colors">How it works</a>
+                <a href="#faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#6b9b76] transition-colors">FAQ</a>
+                <div className="pt-6 border-t border-gray-100">
+                  <Button onClick={handleLogin} variant="outline" className="w-full border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6 py-6 text-lg">
+                    Sign In
+                  </Button>
+                </div>
+              </nav>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <main className="flex-1">
