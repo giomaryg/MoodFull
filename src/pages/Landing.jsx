@@ -14,7 +14,17 @@ export default function Landing() {
       {/* Header */}
       <header className="px-6 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#e0ede4]">
         <div className="flex items-center gap-2">
-          <div className="p-2 bg-[#6b9b76] rounded-xl">
+          <img 
+            src="/logo.png" 
+            alt="MoodFull Logo" 
+            className="w-10 h-10 object-contain rounded-xl"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              const nextSibling = e.target.nextElementSibling;
+              if (nextSibling) nextSibling.style.display = 'flex';
+            }}
+          />
+          <div className="p-2 bg-[#6b9b76] rounded-xl hidden">
             <ChefHat className="w-6 h-6 text-white" />
           </div>
           <span className="font-bold text-xl text-[#3d5244]">MoodFull</span>
@@ -33,7 +43,7 @@ export default function Landing() {
             transition={{ duration: 0.5 }}
           >
             <span className="text-[#6b9b76] font-semibold tracking-wider uppercase text-sm mb-4 block">
-              Dinner decision engine
+              Meal decision engine
             </span>
             <h1 className="text-5xl md:text-7xl font-bold text-[#3d5244] tracking-tight mb-6 leading-tight">
               Stop deciding what to cook.<br className="hidden md:block" />
@@ -42,7 +52,7 @@ export default function Landing() {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Tell MoodFull how tonight feels and what you already have. We'll pick exactly 3–5 dinners you can actually cook tonight. Not 50 options.
+              Tell MoodFull how you feel and what you already have. We'll pick exactly 3–5 meals you can actually cook right now—whether it's breakfast, lunch, dinner, or a snack. Not 50 options.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
@@ -68,7 +78,7 @@ export default function Landing() {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">Deciding what to cook shouldn't feel this hard.</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                You're tired. You're hungry. You open the fridge and ask yourself "what should I cook tonight?" - then spend 20 minutes negotiating with yourself. MoodFull makes the dinner decision so you can just cook and move on.
+                You're tired. You're hungry. You open the fridge and ask yourself "what should I cook?" - then spend 20 minutes negotiating with yourself. MoodFull makes the meal decision so you can just cook and move on.
               </p>
             </div>
 
@@ -86,22 +96,90 @@ export default function Landing() {
               <FeatureCard 
                 icon={<Clock className="w-6 h-6" />} 
                 title="3-5 realistic options" 
-                desc="We narrow it down to a few dinners you can actually cook tonight. Pick one and go. No second-guessing." 
+                desc="We narrow it down to a few meals you can actually cook right now. Pick one and go. No second-guessing." 
               />
             </div>
+          </div>
+        </section>
+
+        {/* Sneak Peeks Section */}
+        <section className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">A sneak peek inside MoodFull</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                Beautiful, intuitive, and designed to help you cook better, faster.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+              <div className="bg-[#f0f9f2] p-8 rounded-3xl border border-[#c5d9c9] shadow-inner relative overflow-hidden h-80 flex flex-col justify-center">
+                <div className="bg-white rounded-2xl shadow-xl p-4 border border-[#e0ede4] transform rotate-[-2deg] -mx-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm">How are you feeling?</div>
+                      <div className="text-xs text-gray-500">Pick a mood</div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-gray-50 p-2 rounded-xl text-center text-xs font-medium border border-gray-100">Exhausted</div>
+                    <div className="bg-green-50 p-2 rounded-xl text-center text-xs font-medium border border-green-200 text-green-700">Cozy</div>
+                    <div className="bg-gray-50 p-2 rounded-xl text-center text-xs font-medium border border-gray-100">Energized</div>
+                    <div className="bg-gray-50 p-2 rounded-xl text-center text-xs font-medium border border-gray-100">Stressed</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Mood-Based Generation</h3>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  We don't ask what you want to eat. We ask how you feel. Our AI engine instantly matches your emotional and physical state with the perfect recipe to elevate your mood or comfort your soul.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="order-2 md:order-1">
+                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Smart Takeout Alternatives</h3>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Craving fast food? Tell us what you want to order, and MoodFull will suggest a healthier, home-cooked alternative that hits the same spot but fits your nutritional goals.
+                </p>
+              </div>
+              <div className="bg-[#fffcf7] p-8 rounded-3xl border border-[#f2b769]/30 shadow-inner relative overflow-hidden h-80 flex flex-col justify-center order-1 md:order-2">
+                <div className="bg-white rounded-2xl shadow-xl p-4 border border-[#e0ede4] transform rotate-[2deg] -mx-4">
+                  <div className="font-bold text-sm mb-3 flex items-center gap-2">
+                    <UtensilsCrossed className="w-4 h-4 text-orange-500" />
+                    Instead of ordering Pizza...
+                  </div>
+                  <div className="flex gap-3 mb-2">
+                    <div className="w-16 h-16 bg-gray-200 rounded-xl overflow-hidden shrink-0">
+                      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=100&q=80" alt="Pizza" className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm text-[#3d5244]">Cauliflower Crust Margherita</div>
+                      <div className="text-xs text-gray-500 mt-1">25 min • 350 cals</div>
+                      <div className="text-[10px] text-green-600 bg-green-50 inline-block px-2 py-0.5 rounded-full mt-1">Saves $15</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </section>
 
         {/* How it works */}
         <section className="py-24 bg-[#f0f9f2]">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-16 text-center">Three steps to dinner. No scrolling, no stress.</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-16 text-center">Three steps to your next meal. No scrolling, no stress.</h2>
             
             <div className="space-y-12">
               <Step 
                 number="01" 
-                title="Tell MoodFull how tonight feels" 
-                desc="Tired? Craving something specific? Short on time? MoodFull starts with you, not a search bar." 
+                title="Tell MoodFull how you feel" 
+                desc="Tired? Craving something specific? Short on time? MoodFull starts with your energy level, not a search bar." 
               />
               <Step 
                 number="02" 
@@ -130,7 +208,17 @@ export default function Landing() {
 
       <footer className="bg-white border-t border-[#e0ede4] py-8 text-center text-gray-500 text-sm flex flex-col items-center">
         <div className="flex items-center gap-2 mb-4 opacity-50">
-          <ChefHat className="w-5 h-5" />
+          <img 
+            src="/logo.png" 
+            alt="MoodFull Logo" 
+            className="w-6 h-6 object-contain grayscale"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              const nextSibling = e.target.nextElementSibling;
+              if (nextSibling) nextSibling.style.display = 'block';
+            }}
+          />
+          <ChefHat className="w-5 h-5 hidden" />
           <span className="font-bold text-lg">MoodFull</span>
         </div>
         <p>© {new Date().getFullYear()} MoodFull. All rights reserved.</p>
