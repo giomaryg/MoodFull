@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, BookMarked, User, Calendar, Package, BarChart2, X } from 'lucide-react';
+import { Home, BookMarked, User, Calendar, Package, BarChart2, X, ShoppingCart, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function SwipeDownNav({ isOpen, onClose, activeTab, onTabChange, enablePantry = true }) {
@@ -8,9 +8,10 @@ export default function SwipeDownNav({ isOpen, onClose, activeTab, onTabChange, 
     { id: 'home', label: 'Home', icon: Home },
     { id: 'saved', label: 'Saved', icon: BookMarked },
     { id: 'planner', label: 'Planner', icon: Calendar },
+    { id: 'shopping', label: 'Shopping', icon: ShoppingCart },
     ...(enablePantry ? [{ id: 'inventory', label: 'Pantry', icon: Package }] : []),
     { id: 'analytics', label: 'Insights', icon: BarChart2 },
-    { id: 'account', label: 'Account', icon: User }
+    { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
   // Prevent body scroll when navigation overlay is open

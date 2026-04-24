@@ -1762,12 +1762,12 @@ export default function RecipeGenerator() {
             {renderTabStack('analytics')}
           </div>
 
-          {/* Account Tab */}
-          <div style={{ display: !showSurvey && activeTab === 'account' ? 'block' : 'none' }} className="relative w-full">
+          {/* Settings Tab */}
+          <div style={{ display: !showSurvey && activeTab === 'settings' ? 'block' : 'none' }} className="relative w-full">
             <motion.div
-                  animate={{ x: getStack('account').length > 0 ? '-30%' : 0, opacity: getStack('account').length > 0 ? 0.5 : 1 }}
+                  animate={{ x: getStack('settings').length > 0 ? '-30%' : 0, opacity: getStack('settings').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`w-full ${getStack('account').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`w-full ${getStack('settings').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
                   
               <AccountInfo
                     user={currentUser}
@@ -1776,7 +1776,24 @@ export default function RecipeGenerator() {
                     onReplayTutorial={() => setForceShowTutorial(true)} />
                   
             </motion.div>
-            {renderTabStack('account')}
+            {renderTabStack('settings')}
+          </div>
+
+          {/* Shopping Tab */}
+          <div style={{ display: !showSurvey && activeTab === 'shopping' ? 'block' : 'none' }} className="relative w-full">
+            <motion.div
+                  animate={{ x: getStack('shopping').length > 0 ? '-30%' : 0, opacity: getStack('shopping').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`w-full ${getStack('shopping').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  
+              <ShoppingList
+                  mealPlans={mealPlans}
+                  recipes={savedRecipes}
+                  isInline={true}
+                  currentUser={currentUser} />
+                  
+            </motion.div>
+            {renderTabStack('shopping')}
           </div>
           </Suspense>
         </div>

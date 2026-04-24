@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 
-function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
+function ShoppingList({ mealPlans, recipes, onClose, currentUser, isInline = false }) {
   const queryClient = useQueryClient();
   const [readdingId, setReaddingId] = useState(null);
 
@@ -596,30 +596,25 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
     setIsPurchasing(false);
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center pt-12 pb-4 px-4 sm:pt-16"
-      onClick={onClose}
-    >
+  const content = (
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
+        initial={isInline ? false : { scale: 0.9, opacity: 0 }}
+        animate={isInline ? false : { scale: 1, opacity: 1 }}
+        exit={isInline ? false : { scale: 0.9, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] relative mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)] overflow-hidden flex flex-col"
+        className={`bg-white relative overflow-hidden flex flex-col ${isInline ? 'rounded-2xl border-2 border-[#c5d9c9] w-full min-h-[60vh] mx-auto' : 'rounded-2xl max-w-3xl w-full max-h-[85vh] mt-[env(safe-area-inset-top)] mb-[env(safe-area-inset-bottom)]'}`}
       >
         <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(); }} className="p-6 overflow-y-auto h-full w-full">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          className="absolute top-4 right-4 min-w-[44px] min-h-[44px] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-50"
-        >
-          <X className="w-5 h-5" />
-        </Button>
+        {!isInline && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="absolute top-4 right-4 min-w-[44px] min-h-[44px] bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors z-50"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        )}
         {/* Premium gate */}
         {(!currentUser?.is_premium && currentUser?.role !== 'admin') ? (
           <div className="relative py-8">
@@ -1236,6 +1231,21 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser }) {
         )}
         </PullToRefresh>
       </motion.div>
+  );
+
+  if (isInline) {
+    return content;
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center pt-12 pb-4 px-4 sm:pt-16"
+      onClick={onClose}
+    >
+      {content}
     </motion.div>
   );
 }

@@ -39,6 +39,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     phone_number: user?.phone_number || '',
     preferred_language: user?.preferred_language || 'en',
     advanced_dietary: user?.advanced_dietary || '',
+    allergies: user?.allergies || '',
     techniques_to_practice: user?.techniques_to_practice || '',
     extra_equipment: user?.extra_equipment || '',
     vitamin_targets: user?.vitamin_targets || '',
@@ -84,6 +85,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
       phone_number: user?.phone_number || '',
       preferred_language: user?.preferred_language || 'en',
       advanced_dietary: user?.advanced_dietary || '',
+      allergies: user?.allergies || '',
       techniques_to_practice: user?.techniques_to_practice || '',
       extra_equipment: user?.extra_equipment || '',
       vitamin_targets: user?.vitamin_targets || '',
@@ -212,6 +214,15 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                     placeholder="e.g., Low FODMAP, Autoimmune Protocol"
                     value={formData.advanced_dietary}
                     onChange={(e) => setFormData({ ...formData, advanced_dietary: e.target.value })}
+                    className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Allergies to Exclude</label>
+                  <Input
+                    placeholder="e.g., Peanuts, Shellfish, Dairy"
+                    value={formData.allergies}
+                    onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
                     className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
                   />
                 </div>
