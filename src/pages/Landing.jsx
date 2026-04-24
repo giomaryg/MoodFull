@@ -46,13 +46,13 @@ export default function Landing() {
               Meal decision engine
             </span>
             <h1 className="text-5xl md:text-7xl font-bold text-[#3d5244] tracking-tight mb-6 leading-tight">
-              Stop deciding what to cook.<br className="hidden md:block" />
+              Where every mood meets its perfect meal.<br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6b9b76] to-[#4a7a55]">
-                MoodFull decides for you.
+                MoodFull does it for you.
               </span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Tell MoodFull how you feel and what you already have. We'll pick exactly 3–5 meals you can actually cook right now—whether it's breakfast, lunch, dinner, or a snack. Not 50 options.
+              Ditch the endless scrolling. Just tell us your vibe and what's in the fridge—we'll curate a tight lineup of 3–5 crave-worthy meals you can whip up right now. Zero decision fatigue, 100% satisfaction.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
