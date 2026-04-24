@@ -13,6 +13,7 @@ import NavigationHeader from '@/components/navigation/NavigationHeader';
 import { SafeAreaContainer } from '@/components/ui/SafeAreaContainer';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import Landing from '@/pages/Landing';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { NavigationStackProvider, useNavigationStack } from '@/lib/NavigationStackContext';
 import { ThemeProvider } from '@/lib/ThemeProvider';
@@ -53,9 +54,7 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
+      return <Landing />;
     }
   }
 
