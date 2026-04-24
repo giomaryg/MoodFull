@@ -69,7 +69,7 @@ export default function Landing() {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">Deciding what to cook shouldn't feel this hard.</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                You're tired. You're hungry. You open the fridge and ask yourself "what should I cook?" - then spend 20 minutes negotiating with yourself. MoodFull makes the meal decision so you can just cook and move on.
+                You're drained. You're hungry. You stare blankly into the fridge and spiral into decision paralysis. Stop negotiating with yourself. MoodFull reads the room (and your ingredients) so you can just cook, eat, and vibe.
               </p>
             </div>
 
@@ -77,17 +77,17 @@ export default function Landing() {
               <FeatureCard 
                 icon={<Sparkles className="w-6 h-6" />} 
                 title="Tell us how you feel" 
-                desc="Exhausted? Energized? Craving something light? MoodFull starts with your energy level, not a search bar." 
+                desc="Burnt out? Buzzing? Craving pure comfort? We don't ask what you want to eat—we ask how you feel. Your mood is the ultimate recipe filter." 
               />
               <FeatureCard 
                 icon={<Leaf className="w-6 h-6" />} 
                 title="Cook with what you have" 
-                desc="Snap a photo of your fridge. We figure out what's usable and what's realistic. No grocery run needed." 
+                desc="Snap a pic of your chaotic fridge. We hack your ingredients to find what's actually usable right now. Skip the grocery run." 
               />
               <FeatureCard 
                 icon={<Clock className="w-6 h-6" />} 
-                title="3-5 realistic options" 
-                desc="We narrow it down to a few meals you can actually cook right now. Pick one and go. No second-guessing." 
+                title="Curated mini-menus" 
+                desc="We filter out the noise and hand you 3-5 hyper-curated meals that match your exact vibe. Tap one and cook. No second-guessing allowed." 
               />
             </div>
           </div>
@@ -99,7 +99,7 @@ export default function Landing() {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">A sneak peek inside MoodFull</h2>
               <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                Beautiful, intuitive, and designed to help you cook better, faster.
+                Sleek, intuitive, and built to cut the BS out of cooking. See how we turn your mood into your next meal.
               </p>
             </div>
             
@@ -126,7 +126,7 @@ export default function Landing() {
               <div>
                 <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Mood-Based Generation</h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  We don't ask what you want to eat. We ask how you feel. Our AI engine instantly matches your emotional and physical state with the perfect recipe to elevate your mood or comfort your soul.
+                  Forget endless recipe scrolling. Our AI reads your emotional and physical state, instantly matching your exact vibe with the ultimate recipe to either elevate your energy or wrap you in pure comfort.
                 </p>
               </div>
             </div>
@@ -135,7 +135,7 @@ export default function Landing() {
               <div className="order-2 md:order-1">
                 <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Smart Takeout Alternatives</h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  Craving fast food? Tell us what you want to order, and MoodFull will suggest a healthier, home-cooked alternative that hits the same spot but fits your nutritional goals.
+                  About to order delivery? Tell us what you're craving, and MoodFull will hack it into a faster, fresher, home-cooked alternative that hits the exact same spot without killing your goals or your wallet.
                 </p>
               </div>
               <div className="bg-[#fffcf7] p-8 rounded-3xl border border-[#f2b769]/30 shadow-inner relative overflow-hidden h-80 flex flex-col justify-center order-1 md:order-2">
@@ -170,17 +170,17 @@ export default function Landing() {
               <Step 
                 number="01" 
                 title="Tell MoodFull how you feel" 
-                desc="Tired? Craving something specific? Short on time? MoodFull starts with your energy level, not a search bar." 
+                desc="Running on empty? Craving pure comfort? Short on time? We read your vibe first. No endless scrolling, no generic search bars." 
               />
               <Step 
                 number="02" 
                 title="We narrow it down" 
-                desc="Based on your time, energy, and what's already in your kitchen. No scrolling. No unrealistic options." 
+                desc="We cross-reference your current energy with your fridge inventory, cutting the noise to serve up a curated mini-menu. No doom-scrolling. No chef skills required." 
               />
               <Step 
                 number="03" 
                 title="You pick once and move on" 
-                desc="Choose one and start cooking. No second-guessing. We'll give you step-by-step instructions." 
+                desc="Pick your vibe and hit the kitchen. We guide you step-by-step from prep to plate. No overthinking, just great food that fits your mood." 
               />
             </div>
             
