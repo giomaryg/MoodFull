@@ -7,6 +7,7 @@ import { TrendingUp, Utensils, DollarSign, Activity, FileSpreadsheet, FileText, 
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { motion } from 'framer-motion';
 
 export default function AnalyticsDashboard() {
   const [aiReport, setAiReport] = useState('');
@@ -260,7 +261,12 @@ Provide a detailed, structured report in markdown offering:
         </Card>
       ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
         <Card className="border-2 border-[#c5d9c9] bg-white">
           <CardContent className="p-6 flex items-center gap-4">
             <div className="p-3 bg-[#f0f9f2] rounded-xl">
@@ -308,9 +314,14 @@ Provide a detailed, structured report in markdown offering:
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+      >
         <Card className="border-2 border-[#c5d9c9] lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg text-[#5a6f60]">Caloric Intake vs Goal (Last 14 Days)</CardTitle>
@@ -435,7 +446,7 @@ Provide a detailed, structured report in markdown offering:
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
     </div>
   );
 }
