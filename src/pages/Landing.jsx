@@ -43,7 +43,7 @@ export default function Landing() {
             </span>
             <h1 className="text-5xl md:text-7xl font-bold text-[#3d5244] tracking-tight mb-6 leading-tight">
               Where every mood meets its perfect meal.<br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6b9b76] to-[#4a7a55]">
+              <span className="block mt-2 md:mt-0 md:inline text-transparent bg-clip-text bg-gradient-to-r from-[#6b9b76] to-[#4a7a55]">
                 MoodFull does it for you.
               </span>
             </h1>
