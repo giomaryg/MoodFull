@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
@@ -20,6 +20,11 @@ export default function Landing() {
             className="h-10 w-auto object-contain"
           />
         </div>
+        <nav className="hidden md:flex items-center gap-8 text-[#5a6f60] font-medium">
+          <a href="#features" className="hover:text-[#6b9b76] transition-colors">Features</a>
+          <a href="#how-it-works" className="hover:text-[#6b9b76] transition-colors">How it works</a>
+          <a href="#faq" className="hover:text-[#6b9b76] transition-colors">FAQ</a>
+        </nav>
         <Button onClick={handleLogin} variant="outline" className="border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6">
           Sign In
         </Button>
@@ -64,7 +69,7 @@ export default function Landing() {
         </section>
 
         {/* Features Section */}
-        <section className="bg-white py-24 border-t border-[#e0ede4]">
+        <section id="features" className="bg-white py-24 border-t border-[#e0ede4]">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">Deciding what to cook shouldn't feel this hard.</h2>
@@ -162,7 +167,7 @@ export default function Landing() {
         </section>
 
         {/* How it works */}
-        <section className="py-24 bg-[#f0f9f2]">
+        <section id="how-it-works" className="py-24 bg-[#f0f9f2]">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-16 text-center">Three steps to your next meal. No scrolling, no stress.</h2>
             
@@ -192,6 +197,31 @@ export default function Landing() {
                 Start deciding faster
                 <UtensilsCrossed className="w-5 h-5 ml-2" />
               </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="py-24 bg-white border-t border-[#e0ede4]">
+          <div className="max-w-3xl mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-12 text-center">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              <FaqItem 
+                question="Do I need to know how to cook?" 
+                answer="Not at all! We provide step-by-step instructions tailored to your skill level. Even if you're a complete beginner, our recipes are designed to be foolproof." 
+              />
+              <FaqItem 
+                question="Does it work for specific diets?" 
+                answer="Yes! During onboarding, you can set your dietary preferences (vegan, gluten-free, keto, etc.) and allergies. We'll only show you meals that fit your criteria." 
+              />
+              <FaqItem 
+                question="How does the fridge scanning work?" 
+                answer="Simply take a photo of your fridge or pantry, and our AI will identify the ingredients you have on hand and suggest recipes you can make right away." 
+              />
+              <FaqItem 
+                question="Is it free to use?" 
+                answer="MoodFull is free to sign up and use basic features. We also offer premium features for advanced AI meal planning and analytics." 
+              />
             </div>
           </div>
         </section>
@@ -231,6 +261,26 @@ function Step({ number, title, desc }) {
         <h3 className="text-2xl font-bold text-[#3d5244] mb-2">{title}</h3>
         <p className="text-lg text-gray-600">{desc}</p>
       </div>
+    </div>
+  );
+}
+
+function FaqItem({ question, answer }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border border-[#e0ede4] rounded-2xl overflow-hidden bg-[#f8faf8]">
+      <button 
+        onClick={() => setIsOpen(!isOpen)} 
+        className="w-full text-left px-6 py-5 hover:bg-[#f0f9f2] flex justify-between items-center transition-colors"
+      >
+        <span className="font-bold text-[#3d5244] text-lg pr-4">{question}</span>
+        <span className="text-[#6b9b76] text-2xl font-light leading-none shrink-0">{isOpen ? '−' : '+'}</span>
+      </button>
+      {isOpen && (
+        <div className="px-6 py-5 bg-white text-gray-600 leading-relaxed border-t border-[#e0ede4]">
+          {answer}
+        </div>
+      )}
     </div>
   );
 }
