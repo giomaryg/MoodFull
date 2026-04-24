@@ -15,19 +15,10 @@ export default function Landing() {
       <header className="px-6 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#e0ede4]">
         <div className="flex items-center gap-2">
           <img 
-            src="/logo.png" 
+            src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/1c2a0298b_MoodFull-2.png" 
             alt="MoodFull Logo" 
-            className="w-10 h-10 object-contain rounded-xl"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              const nextSibling = e.target.nextElementSibling;
-              if (nextSibling) nextSibling.style.display = 'flex';
-            }}
+            className="h-10 w-auto object-contain"
           />
-          <div className="p-2 bg-[#6b9b76] rounded-xl hidden">
-            <ChefHat className="w-6 h-6 text-white" />
-          </div>
-          <span className="font-bold text-xl text-[#3d5244]">MoodFull</span>
         </div>
         <Button onClick={handleLogin} variant="outline" className="border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6">
           Sign In
@@ -209,17 +200,10 @@ export default function Landing() {
       <footer className="bg-white border-t border-[#e0ede4] py-8 text-center text-gray-500 text-sm flex flex-col items-center">
         <div className="flex items-center gap-2 mb-4 opacity-50">
           <img 
-            src="/logo.png" 
+            src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/1c2a0298b_MoodFull-2.png" 
             alt="MoodFull Logo" 
-            className="w-6 h-6 object-contain grayscale"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              const nextSibling = e.target.nextElementSibling;
-              if (nextSibling) nextSibling.style.display = 'block';
-            }}
+            className="h-8 w-auto object-contain grayscale"
           />
-          <ChefHat className="w-5 h-5 hidden" />
-          <span className="font-bold text-lg">MoodFull</span>
         </div>
         <p>© {new Date().getFullYear()} MoodFull. All rights reserved.</p>
       </footer>
