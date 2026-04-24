@@ -447,6 +447,22 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             <CalendarPlus className="w-4 h-4 mr-2" />
             Plan
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" disabled={isGeneratingVariation} className="rounded-full px-6 border-gray-200 hover:bg-gray-50">
+                {isGeneratingVariation ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Wand2 className="w-4 h-4 mr-2" />}
+                Complexity
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => generateCustomVariation('Make the recipe simpler, easier, and use fewer ingredients')}>
+                Make it Simpler
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => generateCustomVariation('Make the recipe more complex, gourmet, and use advanced techniques')}>
+                Make it Fancier
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 mb-8">

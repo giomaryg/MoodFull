@@ -129,18 +129,19 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
     };
   }, [isVoiceActive, instructions.length]);
 
-  const handleAskAI = async (e) => {
+  const handleAskAI = async (e, overrideQuery = null) => {
     if (e) e.preventDefault();
-    if (!aiQuery.trim()) return;
+    const queryToUse = overrideQuery || aiQuery;
+    if (!queryToUse.trim()) return;
     setIsAiLoading(true);
     setAiResponse('');
     try {
       const stepText = instructions[currentStep];
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are an AI Cooking Coach. The user is cooking "${recipe.name}" and is currently on step: "${stepText}". The full recipe instructions are: ${JSON.stringify(instructions)}. They asked: "${aiQuery}". Provide a helpful, concise answer. If they ask to adapt the step based on missing equipment or feedback, provide the adapted instructions clearly.`
+        prompt: `You are an AI Cooking Coach. The user is cooking "${recipe.name}" and is currently on step: "${stepText}". The full recipe instructions are: ${JSON.stringify(instructions)}. They asked: "${queryToUse}". Provide a helpful, concise answer. If they ask to adapt the step based on missing equipment or feedback, provide the adapted instructions clearly.`
       });
       setAiResponse(response);
-      setAiQuery('');
+      if (!overrideQuery) setAiQuery('');
     } catch (err) {
       setAiResponse('Sorry, I could not process your request right now.');
     } finally {
@@ -285,7 +286,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
                 <p>{aiResponse}</p>
               </motion.div>
             )}
-            <form onSubmit={handleAskAI} className="flex gap-2">
+            <form onSubmit={handleAskAI} className="flex gap-2 mb-3">
               <Input 
                 value={aiQuery}
                 onChange={e => setAiQuery(e.target.value)}
@@ -300,6 +301,35 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
                 {isAiLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </Button>
             </form>
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleAskAI(null, "Break this step down into smaller, simpler parts")}
+                className="bg-gray-800 border-gray-700 text-gray-300 hover:text-white hover:bg-gray-700 text-xs rounded-full h-8"
+              >
+                Break it down
+              </Button>
+              <Button 
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleAskAI(null, "Explain this step like I'm a beginner")}
+                className="bg-gray-800 border-gray-700 text-gray-300 hover:text-white hover:bg-gray-700 text-xs rounded-full h-8"
+              >
+                Explain simply
+              </Button>
+              <Button 
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleAskAI(null, "What should it look like right now?")}
+                className="bg-gray-800 border-gray-700 text-gray-300 hover:text-white hover:bg-gray-700 text-xs rounded-full h-8"
+              >
+                Visual cue
+              </Button>
+            </div>
           </div>
         </div>
       </div>

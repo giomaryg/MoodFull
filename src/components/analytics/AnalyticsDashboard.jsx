@@ -132,7 +132,25 @@ export default function AnalyticsDashboard() {
         spendingData.push({ week: week.substring(5).replace('-', '/'), cost: Math.round(cost) });
       });
 
-    return { frequentRecipes, avgNutrition, avgCalories, intakeOverTime, complianceRate, spendingData };
+    // 6. Mood Summary
+    const moodCounts = {};
+    mealPlans.forEach(plan => {
+      const recipe = recipes.find(r => r.id === plan.recipe_id);
+      if (recipe && recipe.mood) {
+        const moods = recipe.mood.split(', ');
+        moods.forEach(m => {
+          if (m && m !== 'AI Generated' && !m.startsWith('Variation:') && m !== 'From Pantry') {
+            moodCounts[m] = (moodCounts[m] || 0) + 1;
+          }
+        });
+      }
+    });
+    const moodData = Object.entries(moodCounts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5);
+
+    return { frequentRecipes, avgNutrition, avgCalories, intakeOverTime, complianceRate, spendingData, moodData };
   }, [mealPlans, recipes, currentUser]);
 
   const COLORS = ['#6b9b76', '#c17a7a', '#e8d5c4', '#5a6f60'];
@@ -314,6 +332,39 @@ Provide a detailed, structured report in markdown offering:
             </div>
           </CardContent>
         </Card>
+        <Card className="border-2 border-[#c5d9c9]">
+          <CardHeader>
+            <CardTitle className="text-lg text-[#5a6f60]">Meals by Mood</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64 flex items-center justify-center">
+              {stats.moodData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
+                  <PieChart>
+                    <Pie
+                      data={stats.moodData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {stats.moodData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="text-gray-400">No mood data available</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="border-2 border-[#c5d9c9]">
           <CardHeader>
             <CardTitle className="text-lg text-[#5a6f60]">Most Frequent Recipes</CardTitle>
