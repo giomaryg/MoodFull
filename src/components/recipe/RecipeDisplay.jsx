@@ -349,15 +349,15 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       className="bg-[#fdf8f4] rounded-[2rem] overflow-hidden shadow-2xl relative"
     >
       {/* Top Section */}
-      <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-[320px] sm:min-h-[400px]">
+      <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-auto sm:min-h-[400px]">
         {onBack && (
           <Button variant="ghost" size="icon" onClick={onBack} aria-label="Go back" className="bg-white rounded-full shadow-sm mb-6 hover:bg-gray-50 transition-colors min-h-[44px] min-w-[44px]">
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </Button>
         )}
-        <div className="flex justify-between relative h-full">
-          <div className="w-[55%] sm:w-1/2 z-10 flex flex-col">
-            <div className="flex items-start gap-3 mb-8 pr-4">
+        <div className="flex flex-col-reverse sm:flex-row justify-between relative h-full gap-8 sm:gap-0">
+          <div className="w-full sm:w-1/2 z-10 flex flex-col">
+            <div className="flex items-start gap-3 mb-6 sm:mb-8 pr-0 sm:pr-4">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
                 {recipe.name}
               </h1>
@@ -366,7 +366,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
               </Button>
             </div>
             
-            <div className="space-y-5 mt-auto pb-8">
+            <div className="flex flex-row sm:flex-col gap-6 sm:gap-5 mt-auto pb-2 sm:pb-8 flex-wrap">
               <div>
                 <div className="flex items-baseline gap-1">
                   <span className="text-2xl sm:text-3xl font-bold text-gray-900">{recipe.nutrition?.calories || 240}</span>
@@ -393,13 +393,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             </div>
           </div>
           
-          {/* Right side circular image */}
-          <div className="absolute right-[-3rem] sm:right-[-4rem] top-0 w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full overflow-hidden shadow-2xl border-[8px] border-white z-0">
+          {/* Recipe image - Responsive layout */}
+          <div className="relative sm:absolute right-auto sm:right-[-4rem] top-0 w-full sm:w-80 sm:h-80 md:w-96 md:h-96 aspect-[4/3] sm:aspect-square rounded-3xl sm:rounded-full overflow-hidden shadow-xl sm:shadow-2xl border-4 sm:border-[8px] border-white z-0">
             {images.length > 0 ? (
               <img src={images[currentImageIndex]} alt={recipe.name} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <ChefHat className="w-24 h-24 text-gray-400" />
+                <ChefHat className="w-16 h-16 sm:w-24 sm:h-24 text-gray-400" />
               </div>
             )}
           </div>
