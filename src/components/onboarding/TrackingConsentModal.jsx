@@ -7,14 +7,14 @@ export default function TrackingConsentModal() {
 
   useEffect(() => {
     // Check if user has already responded
-    const consent = localStorage.getItem('moodfull_tracking_consent');
+    const consent = localStorage.getItem('moodfull_tracking_consent_v2');
     if (!consent) {
       setIsOpen(true);
     }
   }, []);
 
   const handleConsent = (granted) => {
-    localStorage.setItem('moodfull_tracking_consent', granted ? 'granted' : 'denied');
+    localStorage.setItem('moodfull_tracking_consent_v2', granted ? 'granted' : 'denied');
     setIsOpen(false);
     // If granted, we could initialize analytics here if needed.
   };

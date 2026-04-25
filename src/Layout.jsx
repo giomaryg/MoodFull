@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 export default function Layout({ children, currentPageName }) {
   useEffect(() => {
     if (currentPageName) {
-      const consent = localStorage.getItem('moodfull_tracking_consent');
+      const consent = localStorage.getItem('moodfull_tracking_consent_v2');
       if (consent === 'granted') {
         base44.analytics.track({
           eventName: "app_opened",
