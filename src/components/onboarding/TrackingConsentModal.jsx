@@ -35,9 +35,9 @@ export default function TrackingConsentModal() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Personalized Experience</h2>
+              <h2 className="text-xl font-bold text-gray-900">Data & Privacy</h2>
               <p className="text-sm text-gray-600">
-                To help us deliver better recipe recommendations and improve our AI suggestions, we may ask for permission to track certain activity on the next screen. You are fully in control of your data.
+                We use tracking technologies to understand how you use MoodFull, which helps us personalize your recipe recommendations and improve our app. Do you allow us to track your data?
               </p>
               
               <div className="space-y-3 pt-4">
@@ -45,14 +45,14 @@ export default function TrackingConsentModal() {
                   onClick={() => handleConsent(true)} 
                   className="w-full bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl py-6 text-base font-semibold"
                 >
-                  Continue
+                  Allow Tracking
                 </Button>
                 <Button 
                   onClick={() => handleConsent(false)} 
                   variant="outline" 
                   className="w-full border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl py-6 text-base font-semibold"
                 >
-                  Skip
+                  Decline
                 </Button>
               </div>
             </div>
