@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronRight, ChevronLeft, Play, Pause, CheckCircle2, Mic, MicOff, Bot, Loader2, Send, ChefHat } from 'lucide-react';
+import { X, ChevronRight, ChevronLeft, Play, Pause, CheckCircle2, Volume2, Bot, Loader2, Send, ChefHat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
@@ -10,7 +10,7 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [isVoiceActive, setIsVoiceActive] = useState(false);
+  const [isReading, setIsReading] = useState(false);
   const [aiQuery, setAiQuery] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
@@ -85,49 +85,31 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
   };
 
   useEffect(() => {
-    let recognition = null;
-    if (isVoiceActive && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = false;
-      
-      recognition.onstart = () => toast.success('Voice navigation active (say "next", "previous", "start timer")');
-      
-      recognition.onresult = (event) => {
-        const lastResultIndex = event.results.length - 1;
-        const transcript = event.results[lastResultIndex][0].transcript.toLowerCase();
-        
-        if (transcript.includes('next') || transcript.includes('forward')) {
-          setCurrentStep(prev => Math.min(instructions.length - 1, prev + 1));
-        } else if (transcript.includes('previous') || transcript.includes('back')) {
-          setCurrentStep(prev => Math.max(0, prev - 1));
-        } else if (transcript.includes('start timer') || transcript.includes('start the timer')) {
-          setIsTimerRunning(true);
-        } else if (transcript.includes('pause timer') || transcript.includes('stop timer')) {
-          setIsTimerRunning(false);
-        }
-      };
-      
-      recognition.onend = () => {
-         if (isVoiceActive && recognition) {
-             try { recognition.start(); } catch(e) {}
-         }
-      };
-      
-      recognition.start();
-    } else if (isVoiceActive) {
-        toast.error("Voice recognition not supported in this browser.");
-        setIsVoiceActive(false);
+    window.speechSynthesis.cancel();
+    setIsReading(false);
+  }, [currentStep]);
+
+  useEffect(() => {
+    return () => window.speechSynthesis.cancel();
+  }, []);
+
+  const readInstruction = () => {
+    if (isReading) {
+      window.speechSynthesis.cancel();
+      setIsReading(false);
+      return;
     }
     
-    return () => {
-      if (recognition) {
-        recognition.onend = null;
-        recognition.stop();
-      }
-    };
-  }, [isVoiceActive, instructions.length]);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(instructions[currentStep]);
+      utterance.onend = () => setIsReading(false);
+      setIsReading(true);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      toast.error("Text-to-speech not supported in this browser.");
+    }
+  };
 
   const handleAskAI = async (e, overrideQuery = null) => {
     if (e) e.preventDefault();
@@ -207,13 +189,13 @@ export default function InteractiveCookingMode({ recipe, onClose }) {
             )}
             
             <Button
-              onClick={() => setIsVoiceActive(!isVoiceActive)}
+              onClick={readInstruction}
               type="button"
               variant="outline"
-              className={`h-11 sm:h-12 px-3 sm:px-4 rounded-xl transition-all ${isVoiceActive ? 'border-red-500 text-red-500 bg-red-500/10' : 'border-gray-700 text-gray-400 bg-gray-900 hover:bg-gray-800'}`}
-              title="Voice Commands"
+              className={`h-11 sm:h-12 px-3 sm:px-4 rounded-xl transition-all ${isReading ? 'border-[#6b9b76] text-[#6b9b76] bg-[#6b9b76]/10' : 'border-gray-700 text-gray-400 bg-gray-900 hover:bg-gray-800'}`}
+              title="Read Instruction Aloud"
             >
-              {isVoiceActive ? <Mic className="w-5 h-5 animate-pulse" /> : <MicOff className="w-5 h-5" />}
+              <Volume2 className={`w-5 h-5 ${isReading ? 'animate-pulse' : ''}`} />
             </Button>
           </div>
         </div>
