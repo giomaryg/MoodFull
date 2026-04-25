@@ -299,9 +299,9 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                   aria-label={`View details for ${recipe.name}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
                   onClick={() => onRecipeClick(recipe)}
-                  className="cursor-pointer glass-panel p-3 flex gap-3 items-center hover:scale-[1.02] transition-transform duration-200 group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
+                  className="cursor-pointer glass-panel p-4 flex gap-4 items-center hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(107,155,118,0.12)] transition-all duration-400 ease-out group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
                 >
-                  <div className="w-11 h-11 rounded-[10px] flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65]">
+                  <div className="w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65] group-hover:scale-105 transition-transform duration-500">
                     🥗
                     {recipe.image_url && (
                       <img src={recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />

@@ -84,7 +84,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
               aria-label={`View details for ${recipe.name}`}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
               onClick={() => onRecipeClick(recipe)}
-              className="cursor-pointer rounded-[2rem] overflow-hidden border-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)] bg-white h-full flex flex-col hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] transition-all duration-300"
+              className="group cursor-pointer rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] bg-white h-full flex flex-col hover:-translate-y-2 transition-all duration-500 ease-out"
             >
               <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
                 {recipe._loading ? (
@@ -96,16 +96,16 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                      <ChefHat className="w-12 h-12 text-muted-foreground/50" />
                    </div>
                  ) : (recipe.imageUrl || recipe.image_url) ? (
-                  <img src={recipe.imageUrl || recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={recipe.imageUrl || recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
                  ) : (
                    <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
                      <ChefHat className="w-12 h-12 text-[#6b9b76]/50" />
                    </div>
                  )}
                  
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
                 
-                <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                <div className="absolute bottom-5 left-5 right-5 flex justify-between items-end">
                   <div className="flex-1 pr-3 sm:pr-4">
                     {recipe._loading ? (
                       <div className="space-y-2">
@@ -135,13 +135,13 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                       </>
                     )}
                   </div>
-                  <Button variant="ghost" size="icon" aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white rounded-full shadow-md shrink-0 text-red-500 hover:scale-110 transition-transform hover:bg-white hover:text-red-600">
+                  <Button variant="ghost" size="icon" aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white/90 backdrop-blur-sm rounded-full shadow-lg shrink-0 text-red-500 hover:scale-110 transition-transform hover:bg-white hover:text-red-600">
                     <Heart className="w-5 h-5 fill-current" />
                   </Button>
                 </div>
               </div>
               
-              <div className="p-5 flex justify-between items-center bg-card mt-auto border-t border-border/50">
+              <div className="px-6 py-5 flex justify-between items-center bg-white mt-auto border-t border-gray-100/60">
                 {recipe._loading ? (
                   <>
                     <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
