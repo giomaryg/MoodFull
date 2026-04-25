@@ -145,40 +145,6 @@ export default function RecipeGenerator() {
   const [forceShowTutorial, setForceShowTutorial] = useState(false);
   const fileInputRef = useRef(null);
 
-  const [customMoodInput, setCustomMoodInput] = useState('');
-  const { data: moodLogs = [], refetch: refetchMoodLogs } = useQuery({
-    queryKey: ['moodLogs'],
-    queryFn: () => base44.entities.MoodLog.list('-created_date', 100)
-  });
-
-  const moodChartData = useMemo(() => {
-    const counts = {};
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    moodLogs.forEach(log => {
-      if (new Date(log.created_date) >= oneWeekAgo) {
-        const moodCap = log.mood.charAt(0).toUpperCase() + log.mood.slice(1);
-        counts[moodCap] = (counts[moodCap] || 0) + 1;
-      }
-    });
-    return Object.entries(counts).map(([mood, count]) => ({ name: mood, count })).sort((a,b) => b.count - a.count);
-  }, [moodLogs]);
-
-  const handleRecordMood = async () => {
-    if (!customMoodInput.trim()) return;
-    try {
-      await base44.entities.MoodLog.create({
-        mood: customMoodInput.trim().toLowerCase(),
-        date: new Date().toISOString()
-      });
-      setCustomMoodInput('');
-      refetchMoodLogs();
-      toast.success('Mood recorded!');
-    } catch(err) {
-      toast.error('Failed to record mood.');
-    }
-  };
-
   const handleFridgeScan = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -1496,46 +1462,6 @@ export default function RecipeGenerator() {
                       }
                       return null;
                     })()}
-
-              {/* Mood Tracker Dashboard */}
-              {!globalSearchQuery && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white/80 backdrop-blur-sm p-4 sm:p-6 rounded-3xl border border-[#c5d9c9] shadow-sm mb-6"
-                >
-                  <h3 className="font-bold text-[#5a6f60] mb-3 sm:mb-4 text-base sm:text-lg">How are you feeling today?</h3>
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4 sm:mb-6">
-                    <Input 
-                      placeholder="I'm feeling..." 
-                      value={customMoodInput} 
-                      onChange={e => setCustomMoodInput(e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Enter') handleRecordMood(); }}
-                      className="bg-white border-[#c5d9c9] focus-visible:ring-[#6b9b76] rounded-xl flex-1"
-                    />
-                    <Button onClick={handleRecordMood} className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl whitespace-nowrap px-4 sm:px-6 w-full sm:w-auto h-11">
-                      Record Mood
-                    </Button>
-                  </div>
-                  
-                  {moodChartData.length > 0 && (
-                    <div className="pt-4 border-t border-[#c5d9c9]/50">
-                      <h4 className="text-xs font-semibold text-[#6b9b76] mb-4 uppercase tracking-wider flex items-center gap-1.5">
-                        <BarChart2 className="w-3.5 h-3.5" /> Your Moods (Last 7 Days)
-                      </h4>
-                      <div className="h-32 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={moodChartData} margin={{ top: 0, right: 0, left: -25, bottom: 0 }}>
-                            <XAxis dataKey="name" tick={{fontSize: 10, fill: '#5a6f60'}} axisLine={false} tickLine={false} />
-                            <RechartsTooltip cursor={{fill: '#f0f9f2'}} contentStyle={{borderRadius: '12px', border: '1px solid #c5d9c9', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'}} />
-                            <Bar dataKey="count" fill="#6b9b76" radius={[4, 4, 0, 0]} maxBarSize={40} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
 
               {/* Mood Selector - Only show when not searching */}
               {!globalSearchQuery &&

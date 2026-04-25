@@ -79,7 +79,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
               aria-label={`View details for ${recipe.name}`}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
               onClick={() => onRecipeClick(recipe)}
-              className="cursor-pointer rounded-[2rem] overflow-hidden border-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)] bg-white h-full flex flex-col hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-shadow duration-300"
+              className="cursor-pointer rounded-[2rem] overflow-hidden border-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)] bg-white h-full flex flex-col hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] transition-all duration-300"
             >
               <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
                 {recipe._loading ? (
