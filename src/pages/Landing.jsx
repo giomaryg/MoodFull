@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
-import { ChefHat, Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X } from 'lucide-react';
+import { ChefHat, Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X, Volume2, Mail, Bot } from 'lucide-react';
 
 export default function Landing() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -211,6 +211,38 @@ export default function Landing() {
               </div>
             </div>
             
+          </div>
+        </section>
+
+        {/* New Features Section */}
+        <section className="py-24 bg-white border-t border-[#e0ede4]">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="text-center mb-16">
+              <span className="text-[#6b9b76] font-semibold tracking-wider uppercase text-sm mb-4 block">
+                Constantly Evolving
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">New & Noteworthy Features</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                We're always adding new ways to make your cooking experience smarter, faster, and more enjoyable.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              <FeatureCard 
+                icon={<Volume2 className="w-6 h-6" />} 
+                title="Hands-Free Cooking" 
+                desc="Messy hands? No problem. Our new interactive cooking mode reads step-by-step instructions aloud, so you can keep your focus on the food." 
+              />
+              <FeatureCard 
+                icon={<Mail className="w-6 h-6" />} 
+                title="Smart Grocery Export" 
+                desc="Instantly export your AI-generated shopping lists to PDF, or email them directly to your inbox so you never miss an ingredient at the store." 
+              />
+              <FeatureCard 
+                icon={<Bot className="w-6 h-6" />} 
+                title="AI Culinary Coach" 
+                desc="Get personalized nutritional insights, smart ingredient substitutions from your pantry, and proactive meal suggestions tailored to your goals." 
+              />
+            </div>
           </div>
         </section>
 
