@@ -124,6 +124,25 @@
     "oura_access_token": {
       "type": "string",
       "description": "Simulated or real Oura access token"
+    },
+    "notifications_enabled": {
+      "type": "boolean",
+      "description": "Whether the user has enabled notifications",
+      "default": false
+    },
+    "notification_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Types of notifications the user wants to receive"
+    },
+    "notification_methods": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Methods to receive notifications"
     }
   },
   "required": []

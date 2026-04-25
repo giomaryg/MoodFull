@@ -5,22 +5,17 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         
         // This is an admin-only background job
-        const user = await base44.auth.me();
-        if (user?.role !== 'admin') { 
+        const adminUser = await base44.auth.me();
+        if (adminUser?.role !== 'admin') { 
             return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 }); 
         }
 
-        // Get all meal plans for today
-        const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD in UTC, might need timezone handling but this is a simple approach
-        
-        // Using service role to read all users' meal plans
-        const mealPlans = await base44.asServiceRole.entities.MealPlan.filter({ date: todayStr });
-        
-        if (!mealPlans || mealPlans.length === 0) {
-            return Response.json({ message: "No meals planned for today." });
-        }
+        // Get all users
+        const users = await base44.asServiceRole.entities.User.list();
 
-        // Group meal plans by user (created_by)
+        // Get all meal plans for today
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const mealPlans = await base44.asServiceRole.entities.MealPlan.filter({ date: todayStr });
         const userMeals = {};
         for (const plan of mealPlans) {
             if (!userMeals[plan.created_by]) {
@@ -28,25 +23,50 @@ Deno.serve(async (req) => {
             }
             userMeals[plan.created_by].push(plan);
         }
-
+        
         const emailsSent = [];
 
-        // Send an email to each user with their meals for the day
-        for (const [email, plans] of Object.entries(userMeals)) {
-            const mealListHtml = plans.map(p => `<li><strong>${p.meal_type.charAt(0).toUpperCase() + p.meal_type.slice(1)}:</strong> ${p.recipe_name}</li>`).join('');
-            const body = `
-                <h2>Your MoodFull Meals for Today!</h2>
-                <p>Here is what you have planned for today:</p>
-                <ul>${mealListHtml}</ul>
-                <p>Happy cooking!</p>
-            `;
+        for (const u of users) {
+            // Check if user has notifications enabled and has email method selected
+            if (u.notifications_enabled && 
+                u.notification_types?.includes('daily_reminder') && 
+                u.notification_methods?.includes('email') && 
+                u.email) {
+                
+                const plans = userMeals[u.email] || [];
+                let mealContent = "";
 
-            await base44.asServiceRole.integrations.Core.SendEmail({
-                to: email,
-                subject: "Your Daily Meal Plan",
-                body: body
-            });
-            emailsSent.push(email);
+                if (plans.length > 0) {
+                    const mealListHtml = plans.map(p => `<li><strong>${p.meal_type.charAt(0).toUpperCase() + p.meal_type.slice(1)}:</strong> ${p.recipe_name}</li>`).join('');
+                    mealContent = `
+                        <p>Here is what you have planned for today:</p>
+                        <ul>${mealListHtml}</ul>
+                        <p>Don't forget to log your mood this evening!</p>
+                    `;
+                } else {
+                    mealContent = `
+                        <p>Don't forget to log your mood and pick a meal for the evening.</p>
+                        <p>MoodFull is ready to help you find the perfect recipe for your current vibe.</p>
+                    `;
+                }
+
+                const body = `
+                    <h2>Time to plan your evening! 🌙</h2>
+                    <p>Hi ${u.display_name || u.full_name || 'there'},</p>
+                    ${mealContent}
+                    <br/>
+                    <a href="https://app.moodfull.com">Open MoodFull</a>
+                    <br/><br/>
+                    <p><small>You can change your notification settings in your Account info page.</small></p>
+                `;
+
+                await base44.asServiceRole.integrations.Core.SendEmail({
+                    to: u.email,
+                    subject: "Your Daily MoodFull Reminder",
+                    body: body
+                });
+                emailsSent.push(u.email);
+            }
         }
 
         return Response.json({ success: true, emailsSent });
