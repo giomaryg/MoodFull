@@ -98,8 +98,8 @@ export default function RecipeGenerator() {
           animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0.5, boxShadow: isTop ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
           exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0.5, boxShadow: direction === 'backward' ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
           transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-          className={`w-full bg-background ${isTop ? 'relative z-50' : 'absolute top-0 left-0 z-40 pointer-events-none'}`}
-          style={{ minHeight: '100vh' }}>
+          className={`fixed inset-0 bg-background overflow-y-auto overflow-x-hidden ${isTop ? 'z-[100]' : 'z-50 pointer-events-none'}`}
+          >
           
             <RecipeDisplay
             recipe={stackItem.recipe}
@@ -1266,7 +1266,6 @@ export default function RecipeGenerator() {
     if (recipe.mood && activeTab === 'saved') {
       setSelectedMoods(recipe.mood.split(', '));
     }
-    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleSavedRecipeClick = handleRecipeClick;
@@ -1342,7 +1341,7 @@ export default function RecipeGenerator() {
             <motion.div
                   animate={{ x: getStack('home').length > 0 ? '-30%' : 0, opacity: getStack('home').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               <>
 
@@ -1620,7 +1619,7 @@ export default function RecipeGenerator() {
             <motion.div
                   animate={{ x: getStack('saved').length > 0 ? '-30%' : 0, opacity: getStack('saved').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`space-y-6 w-full ${getStack('saved').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`space-y-6 w-full ${getStack('saved').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
           <div className="space-y-6">
 
@@ -1709,7 +1708,7 @@ export default function RecipeGenerator() {
             <motion.div
                   animate={{ x: getStack('planner').length > 0 ? '-30%' : 0, opacity: getStack('planner').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`w-full ${getStack('planner').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`w-full ${getStack('planner').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               <MealPlanner
                     onOpenShoppingList={() => setShowShoppingList(true)}
@@ -1725,7 +1724,7 @@ export default function RecipeGenerator() {
             <motion.div
                   animate={{ x: getStack('inventory').length > 0 ? '-30%' : 0, opacity: getStack('inventory').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`w-full ${getStack('inventory').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`w-full ${getStack('inventory').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               <InventoryManagement
                     onGenerateFromExpiring={(items) => {
@@ -1742,7 +1741,7 @@ export default function RecipeGenerator() {
             <motion.div
                   animate={{ x: getStack('analytics').length > 0 ? '-30%' : 0, opacity: getStack('analytics').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`space-y-6 w-full ${getStack('analytics').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`space-y-6 w-full ${getStack('analytics').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               {false ?
                   <div className="relative">
@@ -1772,7 +1771,7 @@ export default function RecipeGenerator() {
             <motion.div
                   animate={{ x: getStack('settings').length > 0 ? '-30%' : 0, opacity: getStack('settings').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`w-full ${getStack('settings').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`w-full ${getStack('settings').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               <AccountInfo
                     user={currentUser}
@@ -1789,7 +1788,7 @@ export default function RecipeGenerator() {
             <motion.div
                   animate={{ x: getStack('shopping').length > 0 ? '-30%' : 0, opacity: getStack('shopping').length > 0 ? 0.5 : 1 }}
                   transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-                  className={`w-full ${getStack('shopping').length > 0 ? 'absolute top-0 left-0 pointer-events-none' : 'relative'}`}>
+                  className={`w-full ${getStack('shopping').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               <ShoppingList
                   mealPlans={mealPlans}

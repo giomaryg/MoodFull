@@ -46,9 +46,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   const descriptionRef = useRef(null);
   const images = recipe.imageUrls || (recipe.imageUrl || recipe.image_url ? [recipe.imageUrl || recipe.image_url] : []);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }, [recipe.id]);
+  // Scroll behavior now handled by fixed container rendering
 
   // Reset servings when recipe changes
   React.useEffect(() => {
@@ -346,68 +344,104 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="bg-[#fdf8f4] rounded-[2rem] overflow-hidden shadow-2xl relative"
+      className="bg-white shadow-2xl relative min-h-screen"
     >
-      {/* Top Section */}
-      <div className="pt-6 px-6 sm:px-10 relative z-10 min-h-auto sm:min-h-[400px]">
+      {/* Hero Image Section */}
+      <div className="relative w-full h-[45vh] sm:h-[55vh] min-h-[350px] max-h-[600px] overflow-hidden">
+        {images.length > 0 ? (
+          <motion.img 
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            src={images[currentImageIndex]} 
+            alt={recipe.name} 
+            className="w-full h-full object-cover" 
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <ChefHat className="w-20 h-20 sm:w-24 sm:h-24 text-gray-300" />
+          </div>
+        )}
+        
+        {/* Soft elegant gradient for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 pointer-events-none" />
+        
+        {/* Back Button */}
         {onBack && (
-          <Button variant="ghost" size="icon" onClick={onBack} aria-label="Go back" className="bg-white rounded-full shadow-sm mb-6 hover:bg-gray-50 transition-colors min-h-[44px] min-w-[44px]">
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onBack} 
+            aria-label="Go back" 
+            className="absolute top-6 left-6 bg-black/20 hover:bg-black/40 backdrop-blur-md border border-white/20 rounded-full transition-all min-h-[44px] min-w-[44px] z-20 group"
+          >
+            <ChevronLeft className="w-5 h-5 text-white group-hover:-translate-x-0.5 transition-transform" />
           </Button>
         )}
-        <div className="flex flex-col-reverse sm:flex-row justify-between relative h-full gap-8 sm:gap-0">
-          <div className="w-full sm:w-1/2 z-10 flex flex-col">
-            <div className="flex items-start gap-3 mb-6 sm:mb-8 pr-0 sm:pr-4">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                {recipe.name}
-              </h1>
-              <Button variant="ghost" size="icon" onClick={() => setShowEditDialog(true)} className="mt-1 shrink-0 bg-white/50 hover:bg-white rounded-full min-h-[44px] min-w-[44px]">
-                <Pencil className="w-5 h-5 text-gray-700" />
-              </Button>
-            </div>
-            
-            <div className="flex flex-row sm:flex-col gap-6 sm:gap-5 mt-auto pb-2 sm:pb-8 flex-wrap">
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl sm:text-3xl font-bold text-gray-900">{recipe.nutrition?.calories || 240}</span>
-                  <span className="text-sm text-gray-500 font-medium">Calories</span>
-                </div>
-                <div className="h-0.5 w-12 bg-gray-200 mt-1"></div>
-              </div>
-              
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl sm:text-3xl font-bold text-gray-900">{parseMacro(recipe.nutrition?.protein) || 19}g</span>
-                  <span className="text-sm text-gray-500 font-medium">Protein</span>
-                </div>
-                <div className="h-0.5 w-12 bg-gray-200 mt-1"></div>
-              </div>
-              
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl sm:text-3xl font-bold text-gray-900">{parseMacro(recipe.nutrition?.carbs) || 5}g</span>
-                  <span className="text-sm text-gray-500 font-medium">Carbs</span>
-                </div>
-                <div className="h-0.5 w-12 bg-gray-200 mt-1"></div>
-              </div>
-            </div>
+        
+        {/* Title overlay */}
+        <div className="absolute bottom-10 left-0 right-0 px-6 sm:px-10 z-10 flex justify-between items-end">
+          <div className="flex-1 pr-6">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight drop-shadow-lg"
+            >
+              {recipe.name}
+            </motion.h1>
           </div>
-          
-          {/* Recipe image - Responsive layout */}
-          <div className="relative sm:absolute right-auto sm:right-[-4rem] top-0 w-full sm:w-80 sm:h-80 md:w-96 md:h-96 aspect-[4/3] sm:aspect-square rounded-3xl sm:rounded-full overflow-hidden shadow-xl sm:shadow-2xl border-4 sm:border-[8px] border-white z-0">
-            {images.length > 0 ? (
-              <img src={images[currentImageIndex]} alt={recipe.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <ChefHat className="w-16 h-16 sm:w-24 sm:h-24 text-gray-400" />
-              </div>
-            )}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setShowEditDialog(true)} 
+              className="shrink-0 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/20 rounded-full min-h-[48px] min-w-[48px] shadow-lg transition-all"
+            >
+              <Pencil className="w-5 h-5 text-white" />
+            </Button>
+          </motion.div>
         </div>
       </div>
 
-      {/* Bottom White Card Overlay */}
-      <div className="bg-white rounded-t-[2.5rem] px-6 sm:px-10 pt-8 pb-12 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] relative z-20">
+      {/* Content Overlay Card */}
+      <div className="bg-white rounded-t-[2.5rem] px-6 sm:px-10 pt-8 pb-12 shadow-[0_-20px_40px_rgba(0,0,0,0.15)] relative z-20 -mt-8 sm:-mt-12 min-h-screen">
+        
+        {/* Quick Nutrition Highlights */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="flex justify-around sm:justify-start gap-4 sm:gap-12 mb-10 pb-8 border-b border-gray-100"
+        >
+          <div className="text-center sm:text-left">
+            <div className="flex items-baseline justify-center sm:justify-start gap-1">
+              <span className="text-2xl sm:text-3xl font-bold text-gray-900">{recipe.nutrition?.calories || 240}</span>
+              <span className="text-xs sm:text-sm text-gray-500 font-medium">kcal</span>
+            </div>
+            <div className="h-1 w-8 bg-[#6b9b76] rounded-full mx-auto sm:mx-0 mt-1"></div>
+          </div>
+          
+          <div className="text-center sm:text-left">
+            <div className="flex items-baseline justify-center sm:justify-start gap-1">
+              <span className="text-2xl sm:text-3xl font-bold text-gray-900">{parseMacro(recipe.nutrition?.protein) || 19}</span>
+              <span className="text-xs sm:text-sm text-gray-500 font-medium">g pro</span>
+            </div>
+            <div className="h-1 w-8 bg-[#c17a7a] rounded-full mx-auto sm:mx-0 mt-1"></div>
+          </div>
+          
+          <div className="text-center sm:text-left">
+            <div className="flex items-baseline justify-center sm:justify-start gap-1">
+              <span className="text-2xl sm:text-3xl font-bold text-gray-900">{parseMacro(recipe.nutrition?.carbs) || 5}</span>
+              <span className="text-xs sm:text-sm text-gray-500 font-medium">g carb</span>
+            </div>
+            <div className="h-1 w-8 bg-[#f2b769] rounded-full mx-auto sm:mx-0 mt-1"></div>
+          </div>
+        </motion.div>
         
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-3 mb-8 justify-end">
