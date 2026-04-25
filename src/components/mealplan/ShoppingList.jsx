@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText, Barcode, MoreHorizontal, ExternalLink } from 'lucide-react';
+import { X, Download, CheckSquare, Square, ChevronDown, ChevronUp, Plus, ShoppingCart, Sparkles, Loader2, PackagePlus, Tag, FileText, Barcode, MoreHorizontal, ExternalLink, Mail } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -709,6 +709,33 @@ function ShoppingList({ mealPlans, recipes, onClose, currentUser, isInline = fal
                     className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2 text-sm rounded-md flex items-center text-gray-700 text-left"
                   >
                     <Download className="w-4 h-4 mr-2" /> PDF Document
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onSelect={async (e) => {
+                      e.preventDefault();
+                      setExportMenuOpen(false);
+                      if (!currentUser?.email) return;
+                      const loadingToast = toast.loading('Sending email...');
+                      try {
+                        let text = 'Your MoodFull Shopping List\n\n';
+                        displayCategories.forEach(({ category, items }) => {
+                          if (items.length > 0) {
+                            text += `--- ${category} ---\n`;
+                            items.forEach((item) => {
+                              text += `  • ${item.original}\n`;
+                            });
+                            text += '\n';
+                          }
+                        });
+                        await base44.functions.invoke('emailShoppingList', { listText: text });
+                        toast.success('Email sent successfully!', { id: loadingToast });
+                      } catch(err) {
+                        toast.error('Failed to send email.', { id: loadingToast });
+                      }
+                    }} 
+                    className="cursor-pointer hover:bg-[#f0f9f2] px-4 py-2 text-sm rounded-md flex items-center text-gray-700 text-left"
+                  >
+                    <Mail className="w-4 h-4 mr-2" /> Email to Me
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

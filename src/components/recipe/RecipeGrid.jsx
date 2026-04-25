@@ -112,9 +112,15 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                         <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
                           <HighlightedText text={recipe.name} query={searchQuery} />
                         </h3>
-                        <p className="text-white/80 text-xs sm:text-sm line-clamp-1">
-                          {recipe.description || `${recipe.prep_time || '25 min'} · ${recipe.difficulty || 'Easy'}`}
+                        <p className="text-white/80 text-xs sm:text-sm line-clamp-1 mb-1.5">
+                          {recipe.description}
                         </p>
+                        <div className="flex items-center gap-1.5 text-white/90 text-[10px] sm:text-xs font-medium">
+                          <Clock className="w-3 h-3" />
+                          <span>{recipe.prep_time || '25 min'}</span>
+                          <span className="opacity-50">•</span>
+                          <span>{recipe.difficulty || 'Easy'}</span>
+                        </div>
                         {recipe.searchReason && (
                           <div className="mt-2 text-[10px] sm:text-xs bg-black/40 backdrop-blur-md text-white px-2 py-1 rounded-md inline-flex items-center gap-1 border border-white/20">
                             <Sparkles className="w-3 h-3 text-yellow-300" />
