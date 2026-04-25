@@ -53,9 +53,14 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
             <Button
               onClick={onStartOver}
               variant="outline"
+              disabled={isGenerating}
               className="border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-600 text-sm flex-1 sm:flex-none min-h-[44px]"
             >
-              <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
+              {isGenerating ? (
+                <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 animate-spin" />
+              ) : (
+                <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
+              )}
               Start Over
             </Button>
           )}

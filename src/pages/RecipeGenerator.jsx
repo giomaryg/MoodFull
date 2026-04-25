@@ -650,7 +650,7 @@ export default function RecipeGenerator() {
     }
   };
 
-  const generateRecipe = async () => {
+  const generateRecipe = async (ignoreCache = false) => {
     if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
 
     // Free limit: 3 mood generations per day (resets every 24h)
@@ -673,10 +673,12 @@ export default function RecipeGenerator() {
       filters: advancedFilters
     };
 
-    const cached = getCachedRecipes('generator', cacheKeyParams);
-    if (cached) {
-      setGeneratedRecipes(cached);
-      return;
+    if (!ignoreCache) {
+      const cached = getCachedRecipes('generator', cacheKeyParams);
+      if (cached && cached.length > 0) {
+        setGeneratedRecipes(cached);
+        return;
+      }
     }
 
     const skeletons = Array(6).fill(null).map((_, i) => ({
@@ -852,7 +854,7 @@ export default function RecipeGenerator() {
             const next = prev.map((r, i) =>
               i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
             );
-            if (!next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
               setCachedRecipes('generator', cacheKeyParams, next);
             }
             return next;
@@ -862,7 +864,7 @@ export default function RecipeGenerator() {
             const next = prev.map((r, i) =>
               i === index ? { ...r, imageLoading: false } : r
             );
-            if (!next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
               setCachedRecipes('generator', cacheKeyParams, next);
             }
             return next;
@@ -877,7 +879,7 @@ export default function RecipeGenerator() {
     }
   };
 
-  const generateFromInventory = async (expiringItemsList = null) => {
+  const generateFromInventory = async (expiringItemsList = null, ignoreCache = false) => {
     if (inventory.length === 0 && !expiringItemsList) {
       toast.error('Add items to your pantry first!');
       handleTabChange('inventory');
@@ -904,10 +906,12 @@ export default function RecipeGenerator() {
       filters: advancedFilters
     };
 
-    const cached = getCachedRecipes('pantry', cacheKeyParams);
-    if (cached) {
-      setGeneratedRecipes(cached);
-      return;
+    if (!ignoreCache) {
+      const cached = getCachedRecipes('pantry', cacheKeyParams);
+      if (cached && cached.length > 0) {
+        setGeneratedRecipes(cached);
+        return;
+      }
     }
 
     const skeletons = Array(6).fill(null).map((_, i) => ({
@@ -1055,7 +1059,7 @@ export default function RecipeGenerator() {
             const next = prev.map((r, i) =>
               i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
             );
-            if (!next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
               setCachedRecipes('pantry', cacheKeyParams, next);
             }
             return next;
@@ -1065,7 +1069,7 @@ export default function RecipeGenerator() {
             const next = prev.map((r, i) =>
               i === index ? { ...r, imageLoading: false } : r
             );
-            if (!next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
               setCachedRecipes('pantry', cacheKeyParams, next);
             }
             return next;
@@ -1221,7 +1225,7 @@ export default function RecipeGenerator() {
             const next = prev.map((r, i) =>
               i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
             );
-            if (!next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
               setCachedRecipes('combine', cacheKeyParams, next);
             }
             return next;
@@ -1231,7 +1235,7 @@ export default function RecipeGenerator() {
             const next = prev.map((r, i) =>
               i === index ? { ...r, imageLoading: false } : r
             );
-            if (!next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
               setCachedRecipes('combine', cacheKeyParams, next);
             }
             return next;
@@ -1558,7 +1562,7 @@ export default function RecipeGenerator() {
 
                     <RecipeGrid
                           recipes={filteredGeneratedRecipes}
-                          isGenerating={isGenerating}
+                          isGenerating={isGenerating || generatedRecipes.some(r => r._loading)}
                           onRecipeClick={handleRecipeClick}
                           onStartOver={() => {
                             setGeneratedRecipes([]);
@@ -1568,11 +1572,11 @@ export default function RecipeGenerator() {
                           }}
                           onRefresh={() => {
                             if (generatedRecipes[0]?.mood === 'From Pantry') {
-                              generateFromInventory();
+                              generateFromInventory(null, true);
                             } else if (generatedRecipes[0]?.mood === 'Combined Creation') {
                               setShowCombineDialog(true);
                             } else {
-                              generateRecipe();
+                              generateRecipe(true);
                             }
                           }}
                           searchQuery={globalSearchQuery} />
