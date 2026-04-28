@@ -1300,7 +1300,19 @@ export default function RecipeGenerator() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center">
-                <header>
+                <header 
+                  className="cursor-pointer inline-block transition-transform hover:scale-105 active:scale-95"
+                  onClick={() => {
+                    handleTabChange('home');
+                    clearStack('home');
+                    setGeneratedRecipes([]);
+                    setSelectedMoods([]);
+                    setGlobalSearchQuery('');
+                    setAdvancedFilters({});
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  title="Go to Home"
+                >
                   <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
                     ◎ AI Recipe Generator
                   </div>
