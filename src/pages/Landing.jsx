@@ -26,7 +26,7 @@ export default function Landing() {
           />
         </div>
         <nav className="hidden md:flex items-center gap-8 text-[#5a6f60] font-medium">
-          <a href="#what-is" className="hover:text-[#6b9b76] transition-colors">What is it?</a>
+          <a href="#why-moodfull" className="hover:text-[#6b9b76] transition-colors">Why MoodFull?</a>
           <a href="#how-it-works" className="hover:text-[#6b9b76] transition-colors">How it works</a>
           <a href="#takeout" className="hover:text-[#6b9b76] transition-colors">Takeout Alternatives</a>
           <a href="#faq" className="hover:text-[#6b9b76] transition-colors">FAQ</a>
@@ -68,7 +68,7 @@ export default function Landing() {
                 </button>
               </div>
               <nav className="flex flex-col gap-6 text-[#5a6f60] font-medium text-lg">
-                <a href="#what-is" onClick={() => setIsMobileMenuOpen(false)}>What is it?</a>
+                <a href="#why-moodfull" onClick={() => setIsMobileMenuOpen(false)}>Why MoodFull?</a>
                 <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)}>How it works</a>
                 <a href="#takeout" onClick={() => setIsMobileMenuOpen(false)}>Takeout Alternatives</a>
                 <a href="#faq" onClick={() => setIsMobileMenuOpen(false)}>FAQ</a>
@@ -204,7 +204,7 @@ export default function Landing() {
         </section>
 
         {/* CORE HOOK SECTION */}
-        <section className="bg-white py-24 border-t border-[#e0ede4] text-center">
+        <section id="why-moodfull" className="bg-white py-24 border-t border-[#e0ede4] text-center">
           <div className="max-w-3xl mx-auto px-6">
             <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-8">Stop Overthinking Food</h2>
             <p className="text-xl text-gray-600 mb-6 leading-relaxed">
@@ -257,7 +257,7 @@ export default function Landing() {
         </section>
 
         {/* TAKEOUT KILLER SECTION */}
-        <section className="py-24 bg-[#fffcf7] border-t border-[#f2b769]/30">
+        <section id="takeout" className="py-24 bg-[#fffcf7] border-t border-[#f2b769]/30">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-6">Craving Takeout? This Is Better.</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-16">
