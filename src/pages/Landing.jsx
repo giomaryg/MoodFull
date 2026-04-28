@@ -282,7 +282,7 @@ export default function Landing() {
 
             <div className="grid md:grid-cols-3 gap-8 mb-12 text-left">
               <div className="bg-white rounded-2xl shadow-sm border border-[#e0ede4] overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
-                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=600" alt="Lean turkey burger" className="h-48 w-full object-cover" />
+                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/43aae0888_IMG_0129.jpg" alt="Lean turkey burger" className="h-48 w-full object-cover" />
                 <div className="p-6">
                   <div className="text-gray-500 line-through mb-2">Greasy fast food</div>
                   <div className="text-[#6b9b76] font-bold flex items-start gap-2">
@@ -291,7 +291,7 @@ export default function Landing() {
                 </div>
               </div>
               <div className="bg-white rounded-2xl shadow-sm border border-[#e0ede4] overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
-                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600" alt="Zucchini noodles" className="h-48 w-full object-cover" />
+                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/7c951bbb1_IMG_0130.jpg" alt="Zucchini noodles" className="h-48 w-full object-cover" />
                 <div className="p-6">
                   <div className="text-gray-500 line-through mb-2">Heavy cream pasta</div>
                   <div className="text-[#6b9b76] font-bold flex items-start gap-2">
@@ -300,7 +300,7 @@ export default function Landing() {
                 </div>
               </div>
               <div className="bg-white rounded-2xl shadow-sm border border-[#e0ede4] overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
-                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=600" alt="Cauliflower pizza" className="h-48 w-full object-cover" />
+                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/dd8894f01_IMG_0132.jpg" alt="Cauliflower pizza" className="h-48 w-full object-cover" />
                 <div className="p-6">
                   <div className="text-gray-500 line-through mb-2">Delivery pizza</div>
                   <div className="text-[#6b9b76] font-bold flex items-start gap-2">
