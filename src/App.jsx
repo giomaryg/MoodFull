@@ -74,6 +74,7 @@ const AuthenticatedApp = () => {
 const AnimatedRoutes = () => {
   const location = useLocation();
   const { direction } = useNavigationStack();
+  const { isAuthenticated } = useAuth();
   
   const variants = {
     initial: (direction) => ({
@@ -95,7 +96,7 @@ const AnimatedRoutes = () => {
 
   return (
     <>
-      <NavigationHeader />
+      {isAuthenticated && <NavigationHeader />}
       <div className="relative w-full h-full min-h-screen overflow-x-hidden">
       <AnimatePresence mode="wait" custom={direction}>
         <Routes location={location} key={location.pathname}>
@@ -109,9 +110,13 @@ const AnimatedRoutes = () => {
               transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }} 
               className="w-full h-full min-h-screen bg-background absolute top-0 left-0"
             >
-              <LayoutWrapper currentPageName={mainPageKey}>
-                <MainPage />
-              </LayoutWrapper>
+              {isAuthenticated ? (
+                <LayoutWrapper currentPageName={mainPageKey}>
+                  <MainPage />
+                </LayoutWrapper>
+              ) : (
+                <Landing />
+              )}
             </motion.div>
           } />
           {Object.entries(Pages).map(([path, Page]) => (
