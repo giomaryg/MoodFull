@@ -20,6 +20,10 @@ import { ThemeProvider } from '@/lib/ThemeProvider';
 import TrackingConsentModal from '@/components/onboarding/TrackingConsentModal';
 import NotificationConsentModal from '@/components/onboarding/NotificationConsentModal';
 
+// Added new imports below:
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
@@ -131,6 +135,36 @@ const AnimatedRoutes = () => {
               }
             />
           ))}
+          <Route path="/about" element={
+            <motion.div 
+              custom={direction}
+              variants={variants}
+              initial="initial" 
+              animate="animate" 
+              exit="exit" 
+              transition={{ type: "spring", stiffness: 300, damping: 30 }} 
+              className="w-full h-full min-h-screen bg-background"
+            >
+              <LayoutWrapper currentPageName="about">
+                <About />
+              </LayoutWrapper>
+            </motion.div>
+          } />
+          <Route path="/contact" element={
+            <motion.div 
+              custom={direction}
+              variants={variants}
+              initial="initial" 
+              animate="animate" 
+              exit="exit" 
+              transition={{ type: "spring", stiffness: 300, damping: 30 }} 
+              className="w-full h-full min-h-screen bg-background"
+            >
+              <LayoutWrapper currentPageName="contact">
+                <Contact />
+              </LayoutWrapper>
+            </motion.div>
+          } />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </AnimatePresence>

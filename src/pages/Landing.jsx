@@ -522,7 +522,11 @@ export default function Landing() {
       </main>
 
       <footer className="bg-[#1a231e] pt-4 pb-12 text-center text-white/50 text-sm flex flex-col items-center">
-        <p className="mb-2 font-medium text-white/70">MoodFull — Eat what you love, just smarter.</p>
+        <p className="mb-6 font-medium text-white/70">MoodFull — Eat what you love, just smarter.</p>
+        <div className="flex gap-6 mb-8">
+          <a href="/about" className="text-white/70 hover:text-white transition-colors">About Us</a>
+          <a href="/contact" className="text-white/70 hover:text-white transition-colors">Contact</a>
+        </div>
         <p className="mt-8 text-xs">© {new Date().getFullYear()} MoodFull. All rights reserved.</p>
       </footer>
     </div>
