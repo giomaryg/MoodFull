@@ -277,7 +277,7 @@ export default function Landing() {
                 </div>
               </div>
               <div className="bg-white rounded-3xl shadow-sm border border-[#e0ede4] overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
-                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/7c951bbb1_IMG_0130.jpg" alt="Zucchini noodles" className="h-56 w-full object-cover" />
+                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/7c951bbb1_IMG_0130.jpg" alt="Zucchini noodles" className="h-56 w-full object-cover object-top" />
                 <div className="p-6 bg-gradient-to-b from-white to-gray-50">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-gray-400 font-medium line-through">Creamy pasta</span>
