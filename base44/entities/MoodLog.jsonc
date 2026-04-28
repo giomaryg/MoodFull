@@ -9,6 +9,11 @@
     "date": {
       "type": "string",
       "format": "date-time"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description of the mood log"
     }
   },
   "required": [

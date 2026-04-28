@@ -1,0 +1,89 @@
+{
+  "name": "Ingredient",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the ingredient"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Amount of the ingredient"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement (e.g., cups, oz, lbs, items)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Produce",
+        "Dairy",
+        "Meat",
+        "Pantry",
+        "Spices",
+        "Frozen",
+        "Other"
+      ],
+      "default": "Other",
+      "description": "Category for organization"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional expiration date"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "Pantry",
+        "Fridge",
+        "Freezer"
+      ],
+      "default": "Pantry",
+      "description": "Where it's stored"
+    },
+    "min_stock": {
+      "type": "number",
+      "description": "Minimum stock level before alerting to restock",
+      "default": 0
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "description": "Whether the ingredient is a user favorite",
+      "default": false
+    },
+    "preferred_brand": {
+      "type": "string",
+      "description": "User's preferred brand for restocking"
+    },
+    "preferred_store": {
+      "type": "string",
+      "description": "User's preferred store for purchasing"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description of the ingredient"
+    }
+  },
+  "required": [
+    "name",
+    "quantity",
+    "unit"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}
