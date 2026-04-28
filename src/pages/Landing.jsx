@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { 
   Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X, 
-  Brain, ShoppingCart, Activity, ShieldCheck, Download
+  Brain, ShoppingCart, Activity, ShieldCheck, Download, Camera
 } from 'lucide-react';
 
 export default function Landing() {
@@ -121,13 +121,42 @@ export default function Landing() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="relative hidden md:block"
             >
-              <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800" alt="Healthy balanced meal" className="rounded-3xl shadow-2xl object-cover h-[500px] w-full" />
-              <div className="absolute -bottom-6 -left-6 bg-white p-5 rounded-3xl shadow-xl flex items-center gap-4">
-                <div className="bg-[#f0f9f2] p-3 rounded-full text-[#6b9b76]"><Sparkles className="w-6 h-6" /></div>
-                <div>
-                  <div className="font-bold text-[#3d5244]">Feeling Stressed?</div>
-                  <div className="text-sm text-gray-500">Try a calming chamomile soup</div>
-                </div>
+              <div className="relative h-[500px] w-full rounded-3xl bg-gradient-to-br from-[#e0ede4] to-[#f0f9f2] border border-[#c5d9c9] overflow-hidden flex items-center justify-center shadow-inner">
+                <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="absolute top-10 left-6 bg-white p-4 rounded-2xl shadow-lg border border-[#e0ede4] z-20">
+                  <div className="text-xs text-gray-500 font-medium mb-2 uppercase tracking-wider">Current Mood</div>
+                  <div className="flex gap-2">
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">🛋️ Lazy</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">🌧️ Stressed</span>
+                  </div>
+                </motion.div>
+                
+                <motion.div className="bg-white rounded-[2rem] shadow-2xl w-64 border border-[#e0ede4] overflow-hidden z-10 relative">
+                  <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&q=80&w=400" className="h-40 w-full object-cover" alt="Recipe mockup" />
+                  <div className="p-5">
+                    <h3 className="font-bold text-lg text-[#3d5244] leading-tight mb-1">15-Min Comfort Bowl</h3>
+                    <p className="text-xs text-gray-500 mb-3">Warm, soothing, and zero effort.</p>
+                    <div className="flex justify-between items-center text-xs font-semibold text-[#6b9b76] mb-3">
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3"/> 15m</span>
+                      <span>Easy</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="bg-gray-100 rounded-lg px-2 py-1 text-[10px] flex-1 text-center"><strong>320</strong><br/>Cal</div>
+                      <div className="bg-gray-100 rounded-lg px-2 py-1 text-[10px] flex-1 text-center"><strong>14g</strong><br/>Pro</div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }} className="absolute bottom-12 right-6 bg-white p-4 rounded-2xl shadow-lg border border-[#e0ede4] z-20">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#6b9b76] rounded-full p-2 text-white">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-[#3d5244]">AI Magic</div>
+                      <div className="text-xs text-gray-500">Perfect match found!</div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
           </div>
@@ -138,7 +167,31 @@ export default function Landing() {
           <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1 relative">
               <div className="absolute inset-0 bg-[#f0f9f2] rounded-3xl transform -rotate-3 scale-105" />
-              <img src="https://images.unsplash.com/photo-1498837167922-41cfa6f500ce?auto=format&fit=crop&q=80&w=800" alt="Fresh ingredients" className="relative rounded-3xl shadow-lg w-full h-[400px] object-cover" />
+              <div className="relative h-[400px] w-full rounded-3xl bg-white border border-[#e0ede4] shadow-lg overflow-hidden flex flex-col">
+                <div className="bg-[#f0f9f2] p-4 border-b border-[#e0ede4] flex items-center gap-3">
+                  <Camera className="w-5 h-5 text-[#6b9b76]" />
+                  <span className="font-semibold text-[#3d5244]">Smart Pantry Scanner</span>
+                </div>
+                <div className="p-6 flex-1 flex flex-col gap-4 bg-gray-50/50">
+                  <div className="bg-white p-3 rounded-xl border border-[#e0ede4] shadow-sm flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-xl">🥚</div>
+                      <span className="font-medium text-gray-700">Eggs</span>
+                    </div>
+                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">In stock</span>
+                  </div>
+                  <div className="bg-white p-3 rounded-xl border border-[#e0ede4] shadow-sm flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-xl">🥑</div>
+                      <span className="font-medium text-gray-700">Avocados</span>
+                    </div>
+                    <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-semibold">Expiring soon</span>
+                  </div>
+                  <div className="mt-auto bg-[#6b9b76] text-white p-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md">
+                    <Sparkles className="w-4 h-4" /> Generate recipes with these
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="order-1 md:order-2">
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-6">What Is MoodFull?</h2>
@@ -311,8 +364,21 @@ export default function Landing() {
               </ul>
             </div>
             
-            <div className="md:col-span-1 relative rounded-3xl overflow-hidden shadow-sm h-full min-h-[300px]">
-              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600" alt="Happy eating" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="md:col-span-1 relative rounded-3xl bg-white border border-[#e0ede4] shadow-sm p-6 flex flex-col justify-center h-full min-h-[300px]">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="font-bold text-[#3d5244] text-xl">Weekly Stats</h3>
+                <span className="text-[#6b9b76] bg-[#f0f9f2] px-3 py-1 rounded-full text-xs font-bold border border-[#c5d9c9]">On Track</span>
+              </div>
+              <div className="flex items-end gap-3 h-32 mb-6">
+                {[40, 70, 45, 90, 65, 80, 60].map((h, i) => (
+                  <div key={i} className="flex-1 bg-gray-100 rounded-t-md relative group overflow-hidden">
+                    <div className="absolute bottom-0 w-full bg-[#6b9b76] transition-all" style={{ height: `${h}%` }}></div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-between text-sm text-gray-400 font-medium px-2">
+                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+              </div>
             </div>
 
             <div className="md:col-span-1 bg-[#3d5244] text-white p-8 rounded-3xl shadow-sm flex flex-col justify-center">
