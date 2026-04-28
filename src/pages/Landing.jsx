@@ -344,8 +344,8 @@ export default function Landing() {
 
         {/* Insights & Personalization + Why Different */}
         <section className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
-          <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
-            <div className="md:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] flex flex-col justify-center">
+          <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] flex flex-col justify-center">
               <h2 className="text-3xl font-bold text-[#3d5244] mb-6">Understand Your Habits</h2>
               <p className="text-lg text-gray-600 mb-6">MoodFull doesn’t just suggest meals—it helps you understand your patterns.</p>
               <ul className="space-y-4 text-gray-700">
@@ -363,25 +363,8 @@ export default function Landing() {
                 </li>
               </ul>
             </div>
-            
-            <div className="md:col-span-1 relative rounded-3xl bg-white border border-[#e0ede4] shadow-sm p-6 flex flex-col justify-center h-full min-h-[300px]">
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="font-bold text-[#3d5244] text-xl">Weekly Stats</h3>
-                <span className="text-[#6b9b76] bg-[#f0f9f2] px-3 py-1 rounded-full text-xs font-bold border border-[#c5d9c9]">On Track</span>
-              </div>
-              <div className="flex items-end gap-3 h-32 mb-6">
-                {[40, 70, 45, 90, 65, 80, 60].map((h, i) => (
-                  <div key={i} className="flex-1 bg-gray-100 rounded-t-md relative group overflow-hidden">
-                    <div className="absolute bottom-0 w-full bg-[#6b9b76] transition-all" style={{ height: `${h}%` }}></div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-between text-sm text-gray-400 font-medium px-2">
-                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-              </div>
-            </div>
 
-            <div className="md:col-span-1 bg-[#3d5244] text-white p-8 rounded-3xl shadow-sm flex flex-col justify-center">
+            <div className="bg-[#3d5244] text-white p-8 rounded-3xl shadow-sm flex flex-col justify-center">
               <h2 className="text-3xl font-bold mb-6">Why Different?</h2>
               <p className="text-lg text-white/80 mb-6 font-medium">Most apps tell you what to eat. MoodFull understands why you eat.</p>
               <ul className="space-y-3 mb-8 text-white/90">
