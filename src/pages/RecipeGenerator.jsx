@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera, Frown, BarChart2 } from 'lucide-react';
+import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera, Frown, BarChart2, Home } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { useSmartSearch } from '@/hooks/useSmartSearch';
 import SmartSearchBar from '@/components/recipe/SmartSearchBar';
@@ -1295,11 +1295,28 @@ export default function RecipeGenerator() {
             className="glass-header relative z-50 border-b-0 pb-3"
             style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)' }}>
             
-            <div className="mx-auto px-3 max-w-6xl">
+            <div className="mx-auto px-3 max-w-6xl relative flex items-center justify-center">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="absolute left-3 text-[#6b9b76] hover:bg-[#6b9b76]/10 rounded-full"
+                onClick={() => {
+                  handleTabChange('home');
+                  clearStack('home');
+                  setGeneratedRecipes([]);
+                  setSelectedMoods([]);
+                  setGlobalSearchQuery('');
+                  setAdvancedFilters({});
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                title="Go to Home"
+              >
+                <Home className="w-5 h-5" />
+              </Button>
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center">
+                className="text-center flex-1">
                 <header 
                   className="cursor-pointer inline-block transition-transform hover:scale-105 active:scale-95"
                   onClick={() => {
