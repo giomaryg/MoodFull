@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
-import { ChefHat, Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X, Volume2, Mail, Bot } from 'lucide-react';
+import { 
+  Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X, 
+  Brain, ShoppingCart, Activity, ShieldCheck, Download
+} from 'lucide-react';
 
 export default function Landing() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,8 +26,9 @@ export default function Landing() {
           />
         </div>
         <nav className="hidden md:flex items-center gap-8 text-[#5a6f60] font-medium">
-          <a href="#features" className="hover:text-[#6b9b76] transition-colors">Features</a>
+          <a href="#what-is" className="hover:text-[#6b9b76] transition-colors">What is it?</a>
           <a href="#how-it-works" className="hover:text-[#6b9b76] transition-colors">How it works</a>
+          <a href="#takeout" className="hover:text-[#6b9b76] transition-colors">Takeout Alternatives</a>
           <a href="#faq" className="hover:text-[#6b9b76] transition-colors">FAQ</a>
         </nav>
         <div className="hidden md:block">
@@ -64,9 +68,10 @@ export default function Landing() {
                 </button>
               </div>
               <nav className="flex flex-col gap-6 text-[#5a6f60] font-medium text-lg">
-                <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#6b9b76] transition-colors">Features</a>
-                <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#6b9b76] transition-colors">How it works</a>
-                <a href="#faq" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#6b9b76] transition-colors">FAQ</a>
+                <a href="#what-is" onClick={() => setIsMobileMenuOpen(false)}>What is it?</a>
+                <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)}>How it works</a>
+                <a href="#takeout" onClick={() => setIsMobileMenuOpen(false)}>Takeout Alternatives</a>
+                <a href="#faq" onClick={() => setIsMobileMenuOpen(false)}>FAQ</a>
                 <div className="pt-6 border-t border-gray-100">
                   <Button onClick={handleLogin} variant="outline" className="w-full border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6 py-6 text-lg">
                     Sign In
@@ -78,25 +83,19 @@ export default function Landing() {
         )}
       </AnimatePresence>
 
-      {/* Hero Section */}
       <main className="flex-1">
+        {/* Hero Section */}
         <section className="px-6 pt-20 pb-16 md:pt-32 md:pb-24 max-w-5xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="text-[#6b9b76] font-semibold tracking-wider uppercase text-sm mb-4 block">
-              Meal decision engine
-            </span>
             <h1 className="text-5xl md:text-7xl font-bold text-[#3d5244] tracking-tight mb-6 leading-tight">
-              Where every mood meets its perfect meal.<br className="hidden md:block" />
-              <span className="block mt-2 md:mt-0 md:inline text-transparent bg-clip-text bg-gradient-to-r from-[#6b9b76] to-[#4a7a55]">
-                MoodFull does it for you.
-              </span>
+              AI Meal Planner Based on Your Mood
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Ditch the endless scrolling. Just tell us your vibe and what's in the fridge—we'll curate a tight lineup of 3–5 crave-worthy meals you can whip up right now. Zero decision fatigue, 100% satisfaction.
+            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+              Discover what to eat instantly with MoodFull—an AI-powered food assistant that creates meals based on your mood, health goals, and lifestyle.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
@@ -104,179 +103,192 @@ export default function Landing() {
                 className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-lg shadow-[#6b9b76]/30 transition-all hover:scale-105"
               >
                 Get Started Free
-                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-            </div>
-            
-            <div className="mt-12 flex flex-wrap justify-center gap-8 text-sm text-gray-500 font-medium">
-              <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-[#6b9b76]" /> AI-Powered</div>
-              <div className="flex items-center gap-2"><Leaf className="w-4 h-4 text-[#6b9b76]" /> Messy fridges welcome</div>
-              <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-[#6b9b76]" /> Built for busy people</div>
+              <Button 
+                onClick={handleLogin} 
+                variant="outline"
+                className="border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] px-8 py-6 rounded-full text-lg w-full sm:w-auto transition-all"
+              >
+                Try a Recipe Now
+              </Button>
             </div>
           </motion.div>
         </section>
 
-        {/* Features Section */}
-        <section id="features" className="bg-white py-24 border-t border-[#e0ede4]">
+        {/* What is MoodFull */}
+        <section id="what-is" className="bg-white py-24 border-t border-[#e0ede4]">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-6">What Is MoodFull?</h2>
+            <p className="text-lg text-gray-600 leading-relaxed mb-6">
+              MoodFull is an AI-powered meal planner that helps you decide what to eat based on how you feel. Instead of scrolling endlessly through recipes, MoodFull understands your mood, preferences, and health goals to generate personalized meals instantly.
+            </p>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Whether you’re feeling stressed, energized, tired, or just unsure what to eat, MoodFull removes the guesswork and gives you meals that match both your emotional and nutritional needs.
+            </p>
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section id="how-it-works" className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">Deciding what to cook shouldn't feel this hard.</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                You're drained. You're hungry. You stare blankly into the fridge and spiral into decision paralysis. Stop negotiating with yourself. MoodFull reads the room (and your ingredients) so you can just cook, eat, and vibe.
+              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-6">How Mood-Based Eating Works</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Food isn’t just fuel—it directly impacts how you feel. MoodFull uses AI to connect your emotional state with the right meals, helping you:
               </p>
             </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+              <FeatureCard icon={<Activity className="w-6 h-6" />} title="Improve energy levels" />
+              <FeatureCard icon={<Brain className="w-6 h-6" />} title="Reduce stress through balanced nutrition" />
+              <FeatureCard icon={<ShieldCheck className="w-6 h-6" />} title="Avoid unhealthy impulse eating" />
+              <FeatureCard icon={<Sparkles className="w-6 h-6" />} title="Stay consistent with your health goals" />
+            </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <FeatureCard 
-                icon={<Sparkles className="w-6 h-6" />} 
-                title="Drop your vibe" 
-                desc="Burnt out? Buzzing? Craving pure comfort? We don't ask what you want to eat—we ask how you feel. Your mood is the ultimate recipe filter." 
-              />
-              <FeatureCard 
-                icon={<Leaf className="w-6 h-6" />} 
-                title="Hack your fridge" 
-                desc="Snap a pic of your chaotic fridge. We hack your ingredients to find what's actually usable right now. Skip the grocery run." 
-              />
-              <FeatureCard 
-                icon={<Clock className="w-6 h-6" />} 
-                title="Vibe-matched menus" 
-                desc="We filter out the noise and hand you 3-5 hyper-curated meals that match your exact vibe. Tap one and cook. No second-guessing allowed." 
-              />
+            <p className="text-center text-lg text-[#3d5244] font-medium">
+              Simply select your mood—or type your own—and MoodFull generates meals tailored to you.
+            </p>
+          </div>
+        </section>
+
+        {/* AI Recipe Generator */}
+        <section className="bg-white py-24 border-t border-[#e0ede4]">
+          <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-6">AI-Powered Recipe Generator</h2>
+              <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                MoodFull’s AI creates recipes in seconds based on:
+              </p>
+              <ul className="space-y-4 mb-8 text-gray-700">
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Your mood</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Dietary preferences</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Health goals</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Available ingredients</li>
+              </ul>
+              <p className="text-lg font-bold text-[#3d5244] mb-6">No more searching. No more guessing.</p>
+              <p className="text-lg text-gray-600 leading-relaxed mb-4">Get complete recipes with:</p>
+              <ul className="space-y-2 text-gray-600">
+                <li>• Ingredients</li>
+                <li>• Step-by-step instructions</li>
+                <li>• Nutrition breakdown</li>
+                <li>• Smart substitutions</li>
+              </ul>
+            </div>
+            <div className="bg-[#f0f9f2] p-8 rounded-3xl border border-[#c5d9c9] shadow-inner h-full min-h-[400px] flex items-center justify-center">
+               <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Generating Recipe...</div>
+                      <div className="text-sm text-gray-500">Matching mood: Stressed</div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-4 bg-gray-100 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-100 rounded w-full"></div>
+                    <div className="h-4 bg-gray-100 rounded w-5/6"></div>
+                  </div>
+               </div>
             </div>
           </div>
         </section>
 
-        {/* Sneak Peeks Section */}
+        {/* Healthy Takeout Alternatives */}
+        <section id="takeout" className="py-24 bg-[#fffcf7] border-t border-[#f2b769]/30">
+          <div className="max-w-5xl mx-auto px-6 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-6">Healthy Alternatives to Takeout</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mb-12">
+              Craving takeout but want to stay healthy? MoodFull helps you find smarter choices by generating healthier versions of your favorite meals or suggesting better options from delivery apps.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-8 mb-12 text-left">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#e0ede4]">
+                <div className="text-gray-500 line-through mb-2">Fried chicken</div>
+                <div className="text-[#6b9b76] font-bold flex items-center gap-2">
+                  <ArrowRight className="w-4 h-4" /> Try oven-baked crispy chicken
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#e0ede4]">
+                <div className="text-gray-500 line-through mb-2">Heavy pasta</div>
+                <div className="text-[#6b9b76] font-bold flex items-center gap-2">
+                  <ArrowRight className="w-4 h-4" /> Try a lighter, protein-rich version
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-[#e0ede4]">
+                <div className="text-gray-500 line-through mb-2">Fast food</div>
+                <div className="text-[#6b9b76] font-bold flex items-center gap-2">
+                  <ArrowRight className="w-4 h-4" /> Discover balanced alternatives
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-2xl font-bold text-[#3d5244]">Eat what you love—just better.</p>
+          </div>
+        </section>
+
+        {/* Smart Meal Planning & Pantry */}
+        <section className="bg-white py-24 border-t border-[#e0ede4]">
+          <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16">
+            <div>
+              <h2 className="text-3xl font-bold text-[#3d5244] mb-6">Smarter Meal Planning with AI</h2>
+              <p className="text-lg text-gray-600 mb-6">Plan your entire week in seconds. MoodFull adapts your meals based on:</p>
+              <ul className="space-y-3 mb-8 text-gray-700">
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Your mood trends</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Nutrition goals</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Schedule</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Pantry items</li>
+              </ul>
+              <p className="font-bold text-[#3d5244]">No spreadsheets. No stress. Just smart planning.</p>
+            </div>
+            
+            <div>
+              <h2 className="text-3xl font-bold text-[#3d5244] mb-6">Smart Pantry & Auto-Generated Shopping Lists</h2>
+              <p className="text-lg text-gray-600 mb-6">MoodFull tracks what you have and what you need.</p>
+              <ul className="space-y-3 mb-8 text-gray-700">
+                <li className="flex items-center gap-3"><ShoppingCart className="w-5 h-5 text-[#6b9b76]" /> Scan your pantry</li>
+                <li className="flex items-center gap-3"><UtensilsCrossed className="w-5 h-5 text-[#6b9b76]" /> Get restock suggestions</li>
+                <li className="flex items-center gap-3"><Leaf className="w-5 h-5 text-[#6b9b76]" /> Generate shopping lists instantly</li>
+              </ul>
+              <p className="font-bold text-[#3d5244]">Everything stays organized automatically.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Insights & Personalization + Why Different */}
         <section className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">A sneak peek inside MoodFull</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                Sleek, intuitive, and built to cut the BS out of cooking. See how we turn your mood into your next meal.
-              </p>
+          <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16">
+            <div>
+              <h2 className="text-3xl font-bold text-[#3d5244] mb-6">Understand Your Eating Habits</h2>
+              <p className="text-lg text-gray-600 mb-6">MoodFull doesn’t just suggest meals—it helps you understand your patterns.</p>
+              <ul className="space-y-4 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <div className="mt-1 w-2 h-2 bg-[#6b9b76] rounded-full shrink-0" />
+                  Track nutrition
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="mt-1 w-2 h-2 bg-[#6b9b76] rounded-full shrink-0" />
+                  See mood-to-food insights
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="mt-1 w-2 h-2 bg-[#6b9b76] rounded-full shrink-0" />
+                  Improve your habits over time
+                </li>
+              </ul>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-              <div className="bg-[#f0f9f2] p-8 rounded-3xl border border-[#c5d9c9] shadow-inner relative overflow-hidden h-80 flex flex-col justify-center">
-                <div className="bg-white rounded-2xl shadow-xl p-4 border border-[#e0ede4] transform rotate-[-2deg] -mx-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
-                      <Sparkles className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-sm">How are you feeling?</div>
-                      <div className="text-xs text-gray-500">Pick a mood</div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-gray-50 p-2 rounded-xl text-center text-xs font-medium border border-gray-100">Exhausted</div>
-                    <div className="bg-green-50 p-2 rounded-xl text-center text-xs font-medium border border-green-200 text-green-700">Cozy</div>
-                    <div className="bg-gray-50 p-2 rounded-xl text-center text-xs font-medium border border-gray-100">Energized</div>
-                    <div className="bg-gray-50 p-2 rounded-xl text-center text-xs font-medium border border-gray-100">Stressed</div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Vibe-Synced Recipes</h3>
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  Forget endless recipe scrolling. Our AI reads your emotional and physical state, instantly matching your exact vibe with the ultimate recipe to either elevate your energy or wrap you in pure comfort.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="order-2 md:order-1">
-                <h3 className="text-2xl font-bold text-[#3d5244] mb-4">Fake-Out Takeout</h3>
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  About to order delivery? Tell us what you're craving, and MoodFull will hack it into a faster, fresher, home-cooked alternative that hits the exact same spot without killing your goals or your wallet.
-                </p>
-              </div>
-              <div className="bg-[#fffcf7] p-8 rounded-3xl border border-[#f2b769]/30 shadow-inner relative overflow-hidden h-80 flex flex-col justify-center order-1 md:order-2">
-                <div className="bg-white rounded-2xl shadow-xl p-4 border border-[#e0ede4] transform rotate-[2deg] -mx-4">
-                  <div className="font-bold text-sm mb-3 flex items-center gap-2">
-                    <UtensilsCrossed className="w-4 h-4 text-orange-500" />
-                    Instead of ordering Pizza...
-                  </div>
-                  <div className="flex gap-3 mb-2">
-                    <div className="w-16 h-16 bg-gray-200 rounded-xl overflow-hidden shrink-0">
-                      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=100&q=80" alt="Pizza" className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-sm text-[#3d5244]">Cauliflower Crust Margherita</div>
-                      <div className="text-xs text-gray-500 mt-1">25 min • 350 cals</div>
-                      <div className="text-[10px] text-green-600 bg-green-50 inline-block px-2 py-0.5 rounded-full mt-1">Saves $15</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-          </div>
-        </section>
-
-        {/* New Features Section */}
-        <section className="py-24 bg-white border-t border-[#e0ede4]">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <span className="text-[#6b9b76] font-semibold tracking-wider uppercase text-sm mb-4 block">
-                Constantly Evolving
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">New & Noteworthy Features</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                We're always adding new ways to make your cooking experience smarter, faster, and more enjoyable.
-              </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              <FeatureCard 
-                icon={<Volume2 className="w-6 h-6" />} 
-                title="Hands-Free Cooking" 
-                desc="Messy hands? No problem. Our new interactive cooking mode reads step-by-step instructions aloud, so you can keep your focus on the food." 
-              />
-              <FeatureCard 
-                icon={<Mail className="w-6 h-6" />} 
-                title="Smart Grocery Export" 
-                desc="Instantly export your AI-generated shopping lists to PDF, or email them directly to your inbox so you never miss an ingredient at the store." 
-              />
-              <FeatureCard 
-                icon={<Bot className="w-6 h-6" />} 
-                title="AI Culinary Coach" 
-                desc="Get personalized nutritional insights, smart ingredient substitutions from your pantry, and proactive meal suggestions tailored to your goals." 
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section id="how-it-works" className="py-24 bg-[#f0f9f2]">
-          <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-16 text-center">Three steps to your next meal. No scrolling, no stress.</h2>
-            
-            <div className="space-y-12">
-              <Step 
-                number="01" 
-                title="Set your status" 
-                desc="Running on empty? Craving pure comfort? Short on time? We read your vibe first. No endless scrolling, no generic search bars." 
-              />
-              <Step 
-                number="02" 
-                title="We cut the noise" 
-                desc="We cross-reference your current energy with your fridge inventory, cutting the noise to serve up a curated mini-menu. No doom-scrolling. No chef skills required." 
-              />
-              <Step 
-                number="03" 
-                title="Lock it in and cook" 
-                desc="Pick your vibe and hit the kitchen. We guide you step-by-step from prep to plate. No overthinking, just great food that fits your mood." 
-              />
-            </div>
-            
-            <div className="mt-20 text-center">
-              <Button 
-                onClick={handleLogin} 
-                className="bg-[#3d5244] hover:bg-[#2c3b31] text-white px-8 py-6 rounded-full text-lg shadow-lg transition-all hover:scale-105"
-              >
-                Start deciding faster
-                <UtensilsCrossed className="w-5 h-5 ml-2" />
-              </Button>
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4]">
+              <h2 className="text-3xl font-bold text-[#3d5244] mb-6">Why MoodFull Is Different</h2>
+              <p className="text-lg text-gray-600 mb-6 font-medium">Most apps tell you what to eat. MoodFull understands why you eat.</p>
+              <ul className="space-y-3 mb-8 text-gray-600">
+                <li>• Mood-based personalization</li>
+                <li>• AI-powered recommendations</li>
+                <li>• Real-time recipe generation</li>
+                <li>• Healthy takeout alternatives</li>
+                <li>• Smart pantry integration</li>
+              </ul>
+              <p className="font-bold text-[#6b9b76] text-lg">It’s not just a meal planner—it’s a food intelligence system.</p>
             </div>
           </div>
         </section>
@@ -287,24 +299,49 @@ export default function Landing() {
             <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-12 text-center">Frequently Asked Questions</h2>
             <div className="space-y-4">
               <FaqItem 
-                question="Do I need to know how to cook?" 
-                answer="Not at all! We provide step-by-step instructions tailored to your skill level. Even if you're a complete beginner, our recipes are designed to be foolproof." 
+                question="What should I eat based on my mood?" 
+                answer="MoodFull uses AI to recommend meals that match how you feel, helping improve both your mood and nutrition." 
               />
               <FaqItem 
-                question="Does it work for specific diets?" 
-                answer="Yes! During onboarding, you can set your dietary preferences (vegan, gluten-free, keto, etc.) and allergies. We'll only show you meals that fit your criteria." 
+                question="Is MoodFull free?" 
+                answer="MoodFull offers free features with optional premium upgrades." 
               />
               <FaqItem 
-                question="How does the fridge scanning work?" 
-                answer="Simply take a photo of your fridge or pantry, and our AI will identify the ingredients you have on hand and suggest recipes you can make right away." 
+                question="Can MoodFull help me eat healthier?" 
+                answer="Yes. MoodFull suggests balanced meals and healthier alternatives to common foods and takeout." 
               />
               <FaqItem 
-                question="Is it free to use?" 
-                answer="MoodFull is free to sign up and use basic features. We also offer premium features for advanced AI meal planning and analytics." 
+                question="Does MoodFull work with my diet?" 
+                answer="MoodFull supports various dietary preferences including high-protein, low-carb, and more." 
               />
             </div>
           </div>
         </section>
+
+        {/* Final CTA */}
+        <section className="py-24 bg-[#3d5244] text-white text-center">
+          <div className="max-w-3xl mx-auto px-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Stop Guessing What to Eat</h2>
+            <p className="text-xl text-white/80 mb-12">Let AI decide for you—based on your mood.</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                onClick={handleLogin} 
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-lg transition-all hover:scale-105"
+              >
+                Get Started Free
+              </Button>
+              <Button 
+                onClick={handleLogin} 
+                variant="outline"
+                className="border-white text-gray-900 bg-white hover:bg-gray-100 px-8 py-6 rounded-full text-lg w-full sm:w-auto transition-all"
+              >
+                <Download className="w-5 h-5 mr-2" />
+                Download MoodFull
+              </Button>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <footer className="bg-white border-t border-[#e0ede4] py-8 text-center text-gray-500 text-sm flex flex-col items-center">
@@ -323,24 +360,12 @@ export default function Landing() {
 
 function FeatureCard({ icon, title, desc }) {
   return (
-    <div className="bg-[#f8faf8] p-8 rounded-3xl border border-[#e0ede4] hover:shadow-md transition-shadow">
-      <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#6b9b76] shadow-sm mb-6 border border-[#e0ede4]">
+    <div className="bg-[#f8faf8] p-6 rounded-3xl border border-[#e0ede4] flex flex-col items-center text-center">
+      <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#6b9b76] shadow-sm mb-4 border border-[#e0ede4]">
         {icon}
       </div>
-      <h3 className="text-xl font-bold text-[#3d5244] mb-3">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{desc}</p>
-    </div>
-  );
-}
-
-function Step({ number, title, desc }) {
-  return (
-    <div className="flex gap-6 items-start bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4]">
-      <div className="text-5xl font-bold text-[#6b9b76]/20 pt-1 shrink-0">{number}</div>
-      <div>
-        <h3 className="text-2xl font-bold text-[#3d5244] mb-2">{title}</h3>
-        <p className="text-lg text-gray-600">{desc}</p>
-      </div>
+      <h3 className="text-xl font-bold text-[#3d5244]">{title}</h3>
+      {desc && <p className="text-gray-600 mt-2">{desc}</p>}
     </div>
   );
 }
