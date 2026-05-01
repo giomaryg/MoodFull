@@ -23,6 +23,7 @@ import NotificationConsentModal from '@/components/onboarding/NotificationConsen
 // Added new imports below:
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import SharedRecipe from '@/pages/SharedRecipe';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -59,6 +60,13 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
+      if (window.location.pathname.startsWith('/shared-recipe/')) {
+        return (
+          <SafeAreaContainer left right>
+            <AnimatedRoutes />
+          </SafeAreaContainer>
+        );
+      }
       return <Landing />;
     }
   }
@@ -168,6 +176,19 @@ const AnimatedRoutes = () => {
               <LayoutWrapper currentPageName="contact">
                 <Contact />
               </LayoutWrapper>
+            </motion.div>
+          } />
+          <Route path="/shared-recipe/:id" element={
+            <motion.div 
+              custom={direction}
+              variants={variants}
+              initial="initial" 
+              animate="animate" 
+              exit="exit" 
+              transition={{ type: "spring", stiffness: 300, damping: 30 }} 
+              className="w-full h-full min-h-screen bg-background absolute top-0 left-0 z-50 overflow-y-auto"
+            >
+              <SharedRecipe />
             </motion.div>
           } />
           <Route path="*" element={<PageNotFound />} />

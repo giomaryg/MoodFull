@@ -106,7 +106,14 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
+    queryFn: async () => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        return isAuth ? await base44.auth.me() : null;
+      } catch {
+        return null;
+      }
+    }
   });
 
   const { data: inventory = [] } = useQuery({
@@ -289,16 +296,30 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
   const [isRegeneratingSteps, setIsRegeneratingSteps] = useState(false);
   
-  const handleShare = () => {
-    const shareText = `Check out this recipe: ${recipe.name}\n\nIngredients:\n${recipe.ingredients.join('\n')}\n\nInstructions:\n${recipe.instructions.join('\n')}`;
-    if (navigator.share) {
-      navigator.share({
-        title: recipe.name,
-        text: shareText,
-      }).catch(console.error);
-    } else {
-      navigator.clipboard.writeText(shareText);
-      toast.success('Recipe copied to clipboard!');
+  const handleShare = async () => {
+    if (!recipe.id || String(recipe.id).startsWith('temp-')) {
+      toast.error('Please save the recipe first to share it!');
+      return;
+    }
+    try {
+      if (!recipe.is_public) {
+        updateRecipeMutation.mutate({ id: recipe.id, data: { is_public: true } });
+        if (onUpdate) onUpdate({ is_public: true });
+      }
+      
+      const shareUrl = `${window.location.origin}/shared-recipe/${recipe.id}`;
+      if (navigator.share) {
+        navigator.share({
+          title: recipe.name,
+          text: `Check out this recipe: ${recipe.name}`,
+          url: shareUrl
+        }).catch(console.error);
+      } else {
+        navigator.clipboard.writeText(shareUrl);
+        toast.success('Share link copied to clipboard!');
+      }
+    } catch (e) {
+      toast.error('Failed to share recipe');
     }
   };
 
@@ -472,6 +493,14 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
           >
             {isSaved ? <FolderPlus className="w-4 h-4 mr-2" /> : <BookmarkPlus className="w-4 h-4 mr-2" />}
             {isSaved ? 'Saved' : 'Save'}
+          </Button>
+          <Button
+            onClick={handleShare}
+            variant="outline"
+            className="rounded-full px-6 border-gray-200 hover:bg-gray-50"
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
           </Button>
           <Button
             onClick={() => setShowAddMeal(true)}
