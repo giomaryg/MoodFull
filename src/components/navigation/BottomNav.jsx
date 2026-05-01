@@ -93,7 +93,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
           }}
           exit={{ y: 150, x: "-50%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed left-1/2 w-[calc(100%-24px)] sm:max-w-md bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden"
+          className="fixed left-1/2 w-[calc(100%-24px)] sm:max-w-[90%] md:max-w-3xl bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden"
           style={{ bottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
         >
           <div className="w-full flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100 transition-opacity">

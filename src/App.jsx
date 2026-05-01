@@ -17,7 +17,7 @@ import Landing from '@/pages/Landing';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { NavigationStackProvider, useNavigationStack } from '@/lib/NavigationStackContext';
 import { ThemeProvider } from '@/lib/ThemeProvider';
-import TrackingConsentModal from '@/components/onboarding/TrackingConsentModal';
+
 import NotificationConsentModal from '@/components/onboarding/NotificationConsentModal';
 
 // Added new imports below:
@@ -214,7 +214,6 @@ function App() {
           </Router>
           <Toaster />
           <SonnerToaster position="top-center" offset="80px" />
-          <TrackingConsentModal />
           <NotificationConsentModal />
           <VisualEditAgent />
         </QueryClientProvider>
