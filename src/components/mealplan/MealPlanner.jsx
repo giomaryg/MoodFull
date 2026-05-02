@@ -778,6 +778,43 @@ Make them balanced, diverse, and delicious. Include:
             )}
           </div>
           <Button
+            onClick={() => {
+              let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//MoodFull//Meal Plan//EN\n";
+              mealPlans.forEach(meal => {
+                const date = new Date(meal.date + 'T00:00:00');
+                let hours = 12;
+                if (meal.meal_type === 'breakfast') hours = 8;
+                if (meal.meal_type === 'lunch') hours = 12;
+                if (meal.meal_type === 'dinner') hours = 19;
+                if (meal.meal_type === 'snack') hours = 15;
+                date.setHours(hours, 0, 0, 0);
+                const startStr = date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                date.setHours(hours + 1, 0, 0, 0);
+                const endStr = date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                icsContent += "BEGIN:VEVENT\n";
+                icsContent += `DTSTART:${startStr}\n`;
+                icsContent += `DTEND:${endStr}\n`;
+                icsContent += `SUMMARY:${meal.meal_type.toUpperCase()}: ${meal.recipe_name}\n`;
+                icsContent += `DESCRIPTION:Planned meal in MoodFull\n`;
+                icsContent += "END:VEVENT\n";
+              });
+              icsContent += "END:VCALENDAR\n";
+              const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+              const link = document.createElement('a');
+              link.href = window.URL.createObjectURL(blob);
+              link.download = 'MoodFull_Meals.ics';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              toast.success('Calendar file downloaded! Open it to add to Apple Calendar.');
+            }}
+            className="bg-[#3d5244] hover:bg-[#2b3a30] text-white w-full sm:w-auto min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
+          >
+            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <span className="hidden sm:inline">Apple Calendar</span>
+            <span className="sm:hidden">Apple Cal</span>
+          </Button>
+          <Button
             onClick={onOpenShoppingList}
             className="bg-[#c17a7a] hover:bg-[#b06a6a] text-white w-full sm:w-auto min-h-[44px] text-xs sm:text-sm px-2 sm:px-4 gap-1.5"
           >
