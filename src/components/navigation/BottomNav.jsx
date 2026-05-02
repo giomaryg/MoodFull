@@ -15,8 +15,6 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
   ];
 
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-  const [isHiddenBySwipe, setIsHiddenBySwipe] = useState(false);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleFocusIn = (e) => {
@@ -28,78 +26,30 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
     const handleFocusOut = () => {
       setIsKeyboardOpen(false);
     };
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      // reveal nav again if scrolled up
-      if (currentScrollY < lastScrollY.current - 10) {
-        setIsHiddenBySwipe(false);
-      }
-      lastScrollY.current = currentScrollY;
-    };
-
-    let touchStartY = 0;
-    const handleTouchStart = (e) => {
-      touchStartY = e.touches[0].clientY;
-    };
-    const handleTouchMove = (e) => {
-      if (!touchStartY) return;
-      const touchEndY = e.touches[0].clientY;
-      // reveal nav if swiped up anywhere on screen
-      if (touchStartY - touchEndY > 20) {
-        setIsHiddenBySwipe(false);
-      }
-    };
-    const handleTouchEnd = () => {
-      touchStartY = 0;
-    };
 
     window.addEventListener('focusin', handleFocusIn);
     window.addEventListener('focusout', handleFocusOut);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener('focusin', handleFocusIn);
       window.removeEventListener('focusout', handleFocusOut);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
-  const shouldShow = isVisible && !isKeyboardOpen && !isHiddenBySwipe;
+  const shouldShow = isVisible && !isKeyboardOpen;
 
   return (
     <AnimatePresence>
       {shouldShow ? (
         <motion.div 
           key="nav-bar"
-          drag="y"
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={{ top: 0, bottom: 0.5 }}
-          onDragEnd={(e, info) => {
-            if (info.offset.y > 40 || info.velocity.y > 200) {
-              setIsHiddenBySwipe(true);
-            }
-          }}
-          initial={{ y: 150, x: "-50%", opacity: 0 }}
-          animate={{ 
-            y: 0, 
-            x: "-50%", 
-            opacity: 1 
-          }}
-          exit={{ y: 150, x: "-50%", opacity: 0 }}
+          initial={{ x: -100, y: "-50%", opacity: 0 }}
+          animate={{ x: 0, y: "-50%", opacity: 1 }}
+          exit={{ x: -100, y: "-50%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed left-1/2 w-[calc(100%-24px)] sm:max-w-[90%] md:max-w-3xl bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden"
-          style={{ bottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
+          className="fixed left-4 md:left-6 top-1/2 -translate-y-1/2 h-auto max-h-[90vh] w-[72px] sm:w-[80px] bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden py-4"
         >
-          <div className="w-full flex justify-center pt-2 pb-1 cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100 transition-opacity">
-            <div className="w-10 h-1 bg-gray-400 rounded-full" />
-          </div>
-          <div className="flex items-center justify-around w-full gap-1 overflow-x-auto scroll-smooth px-2 pb-2 pt-0 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex flex-col items-center justify-center w-full gap-2 overflow-y-auto scroll-smooth px-2 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -111,7 +61,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                   onClick={() => onTabChange(tab.id)}
                   aria-label={tab.label}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`flex-col h-auto gap-1.5 px-3 py-2 rounded-2xl relative flex-shrink-0 min-w-[72px] sm:min-w-[80px] min-h-[44px] ${
+                  className={`flex-col justify-center h-auto gap-1.5 p-2 rounded-2xl relative flex-shrink-0 w-full min-h-[64px] ${
                     isActive ? 'bg-[#6b9b76]/10 hover:bg-[#6b9b76]/20' : 'hover:bg-gray-100/50'
                   }`}
                 >
@@ -132,7 +82,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                   {isActive && (
                     <motion.div
                       layoutId="activeTabDot"
-                      className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-[#6b9b76] rounded-full shadow-[0_0_5px_rgba(107,155,118,0.7)]"
+                      className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6b9b76] rounded-r-full shadow-[2px_0_5px_rgba(107,155,118,0.7)]"
                       transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
                   )}
@@ -140,24 +90,6 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
               );
             })}
           </div>
-        </motion.div>
-      ) : isHiddenBySwipe && !isKeyboardOpen ? (
-        <motion.div
-          key="restore-btn"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 50, opacity: 0 }}
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[100]"
-        >
-          <Button
-            variant="secondary"
-            size="icon"
-            className="rounded-full shadow-lg bg-background/90 backdrop-blur-md border border-border/60 w-12 h-12"
-            onClick={() => setIsHiddenBySwipe(false)}
-            aria-label="Show navigation"
-          >
-            <ChevronUp className="w-6 h-6 text-foreground" />
-          </Button>
         </motion.div>
       ) : null}
     </AnimatePresence>
