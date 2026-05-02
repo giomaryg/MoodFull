@@ -47,7 +47,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
           animate={{ x: 0, y: "-50%", opacity: 1 }}
           exit={{ x: -100, y: "-50%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed left-4 md:left-6 top-1/2 -translate-y-1/2 h-auto max-h-[90vh] w-[72px] sm:w-[80px] bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden py-4"
+          className="fixed left-4 md:left-6 top-1/2 -translate-y-1/2 h-auto max-h-[90vh] w-auto min-w-[72px] sm:min-w-[80px] bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden py-4"
         >
           <div className="flex flex-col items-center justify-center w-full gap-2 overflow-y-auto scroll-smooth px-2 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {tabs.map((tab) => {
@@ -72,7 +72,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                     }`}
                   />
                   <span
-                    className={`font-mono text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center break-words whitespace-normal leading-tight px-1 ${
+                    className={`font-mono text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center whitespace-nowrap px-2 ${
                       isActive ? 'text-primary font-medium' : 'text-muted-foreground'
                     }`}
                   >
