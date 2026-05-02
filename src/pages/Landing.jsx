@@ -29,6 +29,7 @@ export default function Landing() {
         <nav className="hidden md:flex items-center gap-8 text-[#5a6f60] font-medium">
           <a href="#why-moodfull" className="hover:text-[#6b9b76] transition-colors">Why MoodFull?</a>
           <a href="#how-it-works" className="hover:text-[#6b9b76] transition-colors">How it works</a>
+          <a href="#features" className="hover:text-[#6b9b76] transition-colors">Features</a>
           <a href="#takeout" className="hover:text-[#6b9b76] transition-colors">Takeout Alternatives</a>
           <a href="#faq" className="hover:text-[#6b9b76] transition-colors">FAQ</a>
         </nav>
@@ -71,6 +72,7 @@ export default function Landing() {
               <nav className="flex flex-col gap-6 text-[#5a6f60] font-medium text-lg">
                 <a href="#why-moodfull" onClick={() => setIsMobileMenuOpen(false)}>Why MoodFull?</a>
                 <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)}>How it works</a>
+                <a href="#features" onClick={() => setIsMobileMenuOpen(false)}>Features</a>
                 <a href="#takeout" onClick={() => setIsMobileMenuOpen(false)}>Takeout Alternatives</a>
                 <a href="#faq" onClick={() => setIsMobileMenuOpen(false)}>FAQ</a>
                 <div className="pt-6 border-t border-gray-100">
@@ -454,7 +456,7 @@ export default function Landing() {
         </section>
 
         {/* FEATURE STACK */}
-        <section className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
+        <section id="features" className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
