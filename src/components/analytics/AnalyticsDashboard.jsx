@@ -28,6 +28,11 @@ export default function AnalyticsDashboard() {
     queryFn: () => base44.entities.Recipe.list()
   });
 
+  const { data: moodLogs = [] } = useQuery({
+    queryKey: ['moodLogs'],
+    queryFn: () => base44.entities.MoodLog.list('-date', 100)
+  });
+
   const stats = useMemo(() => {
     // 1. Most frequent recipes
     const recipeCounts = {};
@@ -151,8 +156,17 @@ export default function AnalyticsDashboard() {
       .sort((a, b) => b.value - a.value)
       .slice(0, 5);
 
-    return { frequentRecipes, avgNutrition, avgCalories, intakeOverTime, complianceRate, spendingData, moodData };
-  }, [mealPlans, recipes, currentUser]);
+    const recentRatedRecipes = [...recipes]
+      .filter(r => r.rating > 0)
+      .sort((a, b) => new Date(b.updated_date || b.created_date || 0) - new Date(a.updated_date || a.created_date || 0))
+      .slice(0, 5);
+
+    const recentMoodLogs = [...moodLogs]
+      .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+      .slice(0, 5);
+
+    return { frequentRecipes, avgNutrition, avgCalories, intakeOverTime, complianceRate, spendingData, moodData, recentRatedRecipes, recentMoodLogs };
+  }, [mealPlans, recipes, currentUser, moodLogs]);
 
   const COLORS = ['#6b9b76', '#c17a7a', '#e8d5c4', '#5a6f60'];
 
@@ -444,6 +458,60 @@ Provide a detailed, structured report in markdown offering:
                 </LineChart>
               </ResponsiveContainer>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-2 border-[#c5d9c9]">
+          <CardHeader>
+            <CardTitle className="text-lg text-[#5a6f60]">Recent Mood History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {stats.recentMoodLogs.length > 0 ? (
+              <div className="space-y-4 overflow-y-auto h-64 pr-2">
+                {stats.recentMoodLogs.map((log, i) => (
+                  <div key={i} className="flex justify-between items-center border-b border-gray-100 pb-3 last:border-0">
+                    <div>
+                      <p className="font-bold text-gray-800 capitalize">{log.mood}</p>
+                      {log.description && <p className="text-xs text-gray-500 truncate max-w-[180px]">{log.description}</p>}
+                    </div>
+                    <div className="text-xs font-medium text-gray-400">
+                      {log.date ? new Date(log.date).toLocaleDateString() : ''}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex h-64 items-center justify-center">
+                <p className="text-gray-400">No recent moods logged.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-2 border-[#c5d9c9]">
+          <CardHeader>
+            <CardTitle className="text-lg text-[#5a6f60]">Recent Recipe Ratings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {stats.recentRatedRecipes.length > 0 ? (
+              <div className="space-y-4 overflow-y-auto h-64 pr-2">
+                {stats.recentRatedRecipes.map((recipe, i) => (
+                  <div key={i} className="flex justify-between items-center border-b border-gray-100 pb-3 last:border-0">
+                    <div>
+                      <p className="font-bold text-gray-800 truncate max-w-[180px]">{recipe.name}</p>
+                    </div>
+                    <div className="flex items-center gap-1 bg-[#fdf6f0] px-2 py-1 rounded text-[#d4a373]">
+                      <span className="font-bold">{recipe.rating}</span>
+                      <span className="text-xs opacity-80">/ 5</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex h-64 items-center justify-center">
+                <p className="text-gray-400">No recipes rated recently.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>

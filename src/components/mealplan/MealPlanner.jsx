@@ -796,6 +796,7 @@ Make them balanced, diverse, and delicious. Include:
                 icsContent += `DTEND:${endStr}\n`;
                 icsContent += `SUMMARY:${meal.meal_type.toUpperCase()}: ${meal.recipe_name}\n`;
                 icsContent += `DESCRIPTION:Planned meal in MoodFull\n`;
+                icsContent += `BEGIN:VALARM\nTRIGGER:-PT30M\nACTION:DISPLAY\nDESCRIPTION:Reminder: Time to prepare ${meal.recipe_name}\nEND:VALARM\n`;
                 icsContent += "END:VEVENT\n";
               });
               icsContent += "END:VCALENDAR\n";
