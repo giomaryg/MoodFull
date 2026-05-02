@@ -53,6 +53,10 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     if (recipe?.servings) {
       setCurrentServings(recipe.servings);
     }
+    // Reset substitution states
+    setActiveSubstitutions({});
+    setAiSubstitutions({});
+    setLoadingSubs({});
   }, [recipe?.id, recipe?.servings]);
 
   const { data: recipes = [] } = useQuery({
@@ -102,7 +106,8 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
 
   const [activeSubstitutions, setActiveSubstitutions] = useState({});
   const [aiSubstitutions, setAiSubstitutions] = useState({});
-  const [loadingSubFor, setLoadingSubFor] = useState(null);
+  const [loadingSubs, setLoadingSubs] = useState({});
+  const autoFetchedSubs = useRef(new Set());
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
@@ -128,7 +133,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
       return;
     }
 
-    setLoadingSubFor(index);
+    setLoadingSubs(prev => ({ ...prev, [index]: true }));
     try {
       const inventoryContext = inventory.length > 0 
         ? `\nPrioritize using these ingredients from their pantry if possible: ${inventory.map(i => i.name).join(', ')}` 
@@ -154,9 +159,35 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     } catch (e) {
       console.error(e);
     } finally {
-      setLoadingSubFor(null);
+      setLoadingSubs(prev => ({ ...prev, [index]: false }));
     }
   };
+
+  useEffect(() => {
+    if (inventory.length > 0 && recipe?.ingredients) {
+      recipe.ingredients.forEach((ingredient, index) => {
+        const fetchKey = `${recipe.id}-${index}`;
+        if (autoFetchedSubs.current.has(fetchKey)) return;
+
+        const words = ingredient.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(w => w.length > 2);
+        const invMatch = inventory.find(i => {
+           const iName = i.name.toLowerCase();
+           return words.some(w => iName.includes(w)) || iName.includes(words[words.length-1]);
+        });
+        const isMissingOrLow = inventory.length > 0 && (!invMatch || invMatch.quantity <= (invMatch.min_stock || 0));
+        
+        if (isMissingOrLow) {
+          autoFetchedSubs.current.add(fetchKey);
+          const hasPredefinedSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
+          if (!hasPredefinedSub) {
+            handleAISubstitution(index, ingredient);
+          } else {
+            setActiveSubstitutions(prev => ({ ...prev, [index]: true }));
+          }
+        }
+      });
+    }
+  }, [inventory, recipe?.ingredients, recipe?.id]);
 
   const toggleSubstitution = (index, ingredient) => {
     const hasPredefinedSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
@@ -668,7 +699,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                       variant="ghost"
                       size="icon"
                       onClick={() => toggleSubstitution(index, ingredient)}
-                      disabled={loadingSubFor === index}
+                      disabled={loadingSubs[index]}
                       aria-label={`Substitute ${name}`}
                       className={`rounded-xl transition-colors min-h-[44px] min-w-[44px] ${
                         isSubbed 
@@ -681,7 +712,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                       }`}
                       title={isSubbed ? "Revert ingredient" : hasSub ? "Use suggested substitute" : "Ask AI for pantry-based substitute"}
                     >
-                      {loadingSubFor === index ? (
+                      {loadingSubs[index] ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         isSubbed || hasSub ? <RefreshCw className="w-4 h-4" /> : <Wand2 className="w-4 h-4" />
