@@ -72,7 +72,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                     }`}
                   />
                   <span
-                    className={`font-mono text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center truncate px-1 ${
+                    className={`font-mono text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center break-words whitespace-normal leading-tight px-1 ${
                       isActive ? 'text-primary font-medium' : 'text-muted-foreground'
                     }`}
                   >
