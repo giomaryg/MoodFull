@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { 
   Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X, 
-  Brain, ShoppingCart, Activity, ShieldCheck, Download, Camera, Loader2
+  Brain, ShoppingCart, Activity, ShieldCheck, Download, Camera, Loader2,
+  Calendar, LineChart
 } from 'lucide-react';
 
 export default function Landing() {
@@ -350,14 +351,16 @@ export default function Landing() {
         <section className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-12">Everything Works Together</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
                 { icon: <Sparkles className="w-6 h-6"/>, title: 'AI Recipe Generator' },
                 { icon: <Camera className="w-6 h-6"/>, title: 'Smart Pantry Scanner' },
                 { icon: <Clock className="w-6 h-6"/>, title: 'Weekly Meal Planning' },
-                { icon: <Brain className="w-6 h-6"/>, title: 'AI Assistant (ask anything)' },
+                { icon: <Calendar className="w-6 h-6"/>, title: 'Apple Calendar Sync' },
+                { icon: <Brain className="w-6 h-6"/>, title: 'AI Diet Assistant' },
                 { icon: <UtensilsCrossed className="w-6 h-6"/>, title: 'Appliance Adaptation' },
-                { icon: <Activity className="w-6 h-6"/>, title: 'Insights & Analytics' }
+                { icon: <Activity className="w-6 h-6"/>, title: 'Insights & Spending' },
+                { icon: <LineChart className="w-6 h-6"/>, title: 'Mood & Rating History' }
               ].map((feature, i) => (
                 <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-[#e0ede4] flex flex-col items-center text-center gap-4 hover:border-[#6b9b76] transition-colors cursor-default">
                   <div className="w-12 h-12 bg-[#f0f9f2] rounded-full flex items-center justify-center text-[#6b9b76]">
