@@ -206,53 +206,88 @@ export default function Landing() {
 
         {/* CORE HOOK SECTION */}
         <section id="why-moodfull" className="bg-white py-24 border-t border-[#e0ede4] text-center">
-          <div className="max-w-3xl mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto px-6"
+          >
             <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-8">Stop Overthinking Food</h2>
             <p className="text-xl text-gray-600 mb-6 leading-relaxed">
               Most people don’t struggle with cooking.<br/>They struggle with deciding.
             </p>
             <p className="text-xl font-bold text-[#6b9b76] mb-8">MoodFull removes that completely.</p>
             
-            <div className="inline-flex flex-col items-start text-left bg-[#f8faf8] p-8 rounded-3xl border border-[#e0ede4] shadow-sm mb-8">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="inline-flex flex-col items-start text-left bg-[#f8faf8] p-8 rounded-3xl border border-[#e0ede4] shadow-sm mb-8 transition-transform"
+            >
               <ul className="space-y-4 text-lg text-gray-700 font-medium">
                 <li className="flex items-center gap-3"><X className="w-5 h-5 text-red-400" /> No more scrolling recipes</li>
                 <li className="flex items-center gap-3"><X className="w-5 h-5 text-red-400" /> No more “what should I eat?”</li>
                 <li className="flex items-center gap-3"><X className="w-5 h-5 text-red-400" /> No more defaulting to takeout</li>
               </ul>
-            </div>
+            </motion.div>
             
             <p className="text-2xl font-bold text-[#3d5244]">Just open the app—and get your answer instantly.</p>
-          </div>
+          </motion.div>
         </section>
 
         {/* HOW IT WORKS */}
         <section id="how-it-works" className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-16">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">How It Works</h2>
               <p className="text-lg text-[#6b9b76] font-bold">Takes less than 10 seconds</p>
-            </div>
+            </motion.div>
             
             <div className="grid md:grid-cols-3 gap-8 items-start relative">
               <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-[#c5d9c9] z-0 -mx-12"></div>
               
-              <div className="relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] text-center flex flex-col items-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                whileHover={{ y: -5, boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.1)' }}
+                className="relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] text-center flex flex-col items-center transition-all"
+              >
                 <div className="w-16 h-16 bg-[#f0f9f2] rounded-full flex items-center justify-center text-[#6b9b76] font-bold text-2xl mb-6 shadow-sm border border-[#c5d9c9]">1</div>
                 <h3 className="text-xl font-bold text-[#3d5244] mb-3">Choose your mood</h3>
                 <p className="text-gray-600">Lazy, stressed, energetic—or type your own</p>
-              </div>
+              </motion.div>
               
-              <div className="relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] text-center flex flex-col items-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                whileHover={{ y: -5, boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.1)' }}
+                className="relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] text-center flex flex-col items-center transition-all"
+              >
                 <div className="w-16 h-16 bg-[#f0f9f2] rounded-full flex items-center justify-center text-[#6b9b76] font-bold text-2xl mb-6 shadow-sm border border-[#c5d9c9]">2</div>
                 <h3 className="text-xl font-bold text-[#3d5244] mb-3">Add what you have</h3>
                 <p className="text-gray-600">Pantry scan or quick select</p>
-              </div>
+              </motion.div>
               
-              <div className="relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] text-center flex flex-col items-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ y: -5, boxShadow: '0 15px 30px -5px rgba(0, 0, 0, 0.1)' }}
+                className="relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-[#e0ede4] text-center flex flex-col items-center transition-all"
+              >
                 <div className="w-16 h-16 bg-[#6b9b76] rounded-full flex items-center justify-center text-white font-bold text-2xl mb-6 shadow-md border border-[#5a8a65]"><Sparkles className="w-8 h-8" /></div>
                 <h3 className="text-xl font-bold text-[#3d5244] mb-3">Get your meal instantly</h3>
                 <p className="text-gray-600">Full recipe, nutrition, steps</p>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -260,15 +295,31 @@ export default function Landing() {
         {/* TAKEOUT KILLER SECTION */}
         <section id="takeout" className="py-24 bg-[#fffcf7] border-t border-[#f2b769]/30">
           <div className="max-w-6xl mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-6">Craving Takeout? This Is Better.</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-16">
-              MoodFull turns your cravings into smarter meals.
-            </p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-6">Craving Takeout? This Is Better.</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-16">
+                MoodFull turns your cravings into smarter meals.
+              </p>
+            </motion.div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12 text-left">
-              <div className="bg-white rounded-3xl shadow-sm border border-[#e0ede4] overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
-                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/43aae0888_IMG_0129.jpg" alt="Lean turkey burger" className="h-56 w-full object-cover" />
-                <div className="p-6 bg-gradient-to-b from-white to-gray-50">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="bg-white rounded-3xl shadow-md hover:shadow-xl border border-[#e0ede4] overflow-hidden flex flex-col transition-all cursor-pointer"
+              >
+                <div className="relative overflow-hidden group">
+                  <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/43aae0888_IMG_0129.jpg" alt="Lean turkey burger" className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+                <div className="p-6 bg-gradient-to-b from-white to-gray-50 z-10 relative">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-gray-400 font-medium line-through">Fast food burger</span>
                   </div>
@@ -276,10 +327,20 @@ export default function Landing() {
                     <ArrowRight className="w-5 h-5 shrink-0" /> Lean turkey burger
                   </div>
                 </div>
-              </div>
-              <div className="bg-white rounded-3xl shadow-sm border border-[#e0ede4] overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
-                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/7c951bbb1_IMG_0130.jpg" alt="Zucchini noodles" className="h-56 w-full object-cover object-top" />
-                <div className="p-6 bg-gradient-to-b from-white to-gray-50">
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="bg-white rounded-3xl shadow-md hover:shadow-xl border border-[#e0ede4] overflow-hidden flex flex-col transition-all cursor-pointer"
+              >
+                <div className="relative overflow-hidden group">
+                  <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/7c951bbb1_IMG_0130.jpg" alt="Zucchini noodles" className="h-56 w-full object-cover object-top transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+                <div className="p-6 bg-gradient-to-b from-white to-gray-50 z-10 relative">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-gray-400 font-medium line-through">Creamy pasta</span>
                   </div>
@@ -287,10 +348,20 @@ export default function Landing() {
                     <ArrowRight className="w-5 h-5 shrink-0" /> Zucchini noodles
                   </div>
                 </div>
-              </div>
-              <div className="bg-white rounded-3xl shadow-sm border border-[#e0ede4] overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
-                <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/dd8894f01_IMG_0132.jpg" alt="Cauliflower pizza" className="h-56 w-full object-cover" />
-                <div className="p-6 bg-gradient-to-b from-white to-gray-50">
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="bg-white rounded-3xl shadow-md hover:shadow-xl border border-[#e0ede4] overflow-hidden flex flex-col transition-all cursor-pointer"
+              >
+                <div className="relative overflow-hidden group">
+                  <img src="https://media.base44.com/images/public/691ce8ad33694c9622f52699/dd8894f01_IMG_0132.jpg" alt="Cauliflower pizza" className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+                <div className="p-6 bg-gradient-to-b from-white to-gray-50 z-10 relative">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-gray-400 font-medium line-through">Delivery pizza</span>
                   </div>
@@ -298,34 +369,69 @@ export default function Landing() {
                     <ArrowRight className="w-5 h-5 shrink-0" /> Cauliflower crust pizza
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
             
-            <p className="text-2xl font-bold text-[#3d5244]">Eat what you love—without sacrificing your goals.</p>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-2xl font-bold text-[#3d5244]"
+            >
+              Eat what you love—without sacrificing your goals.
+            </motion.p>
           </div>
         </section>
 
         {/* PRODUCT VALUE (WHAT YOU ACTUALLY GET) */}
         <section className="bg-white py-24 border-t border-[#e0ede4]">
           <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-6">Not Just Recipes—Decisions Made For You</h2>
               <p className="text-lg text-gray-600 leading-relaxed mb-8">
                 MoodFull instantly generates:
               </p>
-              <ul className="space-y-4 text-gray-700 text-lg font-medium mb-8">
-                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Full recipes</li>
-                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Step-by-step instructions</li>
-                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Nutrition breakdown</li>
-                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Smart substitutions</li>
-                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Appliance-based adjustments</li>
-              </ul>
-              <p className="text-2xl font-bold text-[#6b9b76]">All tailored to <em className="text-[#3d5244]">you</em>.</p>
-            </div>
-            <div className="bg-[#f0f9f2] p-8 rounded-3xl border border-[#c5d9c9] shadow-inner h-full min-h-[400px] flex items-center justify-center relative overflow-hidden">
-               <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10 border border-[#e0ede4]">
+              <motion.ul 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
+                className="space-y-4 text-gray-700 text-lg font-medium mb-8"
+              >
+                <motion.li variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0 } }} className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Full recipes</motion.li>
+                <motion.li variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0 } }} className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Step-by-step instructions</motion.li>
+                <motion.li variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0 } }} className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Nutrition breakdown</motion.li>
+                <motion.li variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0 } }} className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Smart substitutions</motion.li>
+                <motion.li variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0 } }} className="flex items-center gap-3"><div className="w-2 h-2 bg-[#6b9b76] rounded-full" /> Appliance-based adjustments</motion.li>
+              </motion.ul>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5 }}
+                className="text-2xl font-bold text-[#6b9b76]"
+              >
+                All tailored to <em className="text-[#3d5244]">you</em>.
+              </motion.p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="bg-[#f0f9f2] p-8 rounded-3xl border border-[#c5d9c9] shadow-inner h-full min-h-[400px] flex items-center justify-center relative overflow-hidden group"
+            >
+               <motion.div 
+                 whileHover={{ scale: 1.02 }}
+                 className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10 border border-[#e0ede4] transition-all duration-300 group-hover:shadow-[0_20px_40px_rgba(107,155,118,0.15)]"
+               >
                   <div className="p-4 border-b border-gray-100 bg-gray-50 flex items-center gap-3">
-                    <Sparkles className="w-5 h-5 text-[#6b9b76]" />
+                    <Sparkles className="w-5 h-5 text-[#6b9b76] animate-pulse" />
                     <span className="font-bold text-gray-800">Your AI Chef</span>
                   </div>
                   <div className="p-6 space-y-4">
@@ -342,16 +448,32 @@ export default function Landing() {
                       <div className="text-sm">Swap <span className="line-through text-gray-400">butter</span> for <span className="font-bold text-[#6b9b76]">olive oil</span></div>
                     </div>
                   </div>
-               </div>
-            </div>
+               </motion.div>
+            </motion.div>
           </div>
         </section>
 
         {/* FEATURE STACK */}
         <section className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
           <div className="max-w-6xl mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-12">Everything Works Together</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-12"
+            >
+              Everything Works Together
+            </motion.h2>
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.1 } }
+              }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            >
               {[
                 { icon: <Sparkles className="w-6 h-6"/>, title: 'AI Recipe Generator' },
                 { icon: <Camera className="w-6 h-6"/>, title: 'Smart Pantry Scanner' },
@@ -362,14 +484,19 @@ export default function Landing() {
                 { icon: <Activity className="w-6 h-6"/>, title: 'Insights & Spending' },
                 { icon: <LineChart className="w-6 h-6"/>, title: 'Mood & Rating History' }
               ].map((feature, i) => (
-                <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-[#e0ede4] flex flex-col items-center text-center gap-4 hover:border-[#6b9b76] transition-colors cursor-default">
+                <motion.div 
+                  key={i} 
+                  variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                  whileHover={{ scale: 1.05, borderColor: '#6b9b76', boxShadow: '0 10px 25px -5px rgba(107, 155, 118, 0.1)' }}
+                  className="bg-white p-6 rounded-2xl shadow-sm border border-[#e0ede4] flex flex-col items-center text-center gap-4 transition-colors cursor-default"
+                >
                   <div className="w-12 h-12 bg-[#f0f9f2] rounded-full flex items-center justify-center text-[#6b9b76]">
                     {feature.icon}
                   </div>
                   <span className="font-bold text-[#3d5244]">{feature.title}</span>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -398,27 +525,41 @@ export default function Landing() {
         {/* PRODUCT SHOWCASE */}
         <section className="py-24 bg-white border-t border-[#e0ede4]">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-16">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
               <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">Built for real life—not perfect routines.</h2>
-            </div>
-            <div className="grid md:grid-cols-4 gap-6">
-              <div className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4">
+            </motion.div>
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.1 } }
+              }}
+              className="grid md:grid-cols-4 gap-6"
+            >
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ y: -5 }} className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4 shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-[#c5d9c9] flex items-center justify-center text-[#6b9b76]"><Sparkles className="w-8 h-8"/></div>
                 <div className="font-bold text-[#3d5244]">Recipe Screen</div>
-              </div>
-              <div className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4">
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ y: -5 }} className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4 shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-[#c5d9c9] flex items-center justify-center text-[#6b9b76]"><Clock className="w-8 h-8"/></div>
                 <div className="font-bold text-[#3d5244]">Planner Calendar</div>
-              </div>
-              <div className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4">
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ y: -5 }} className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4 shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-[#c5d9c9] flex items-center justify-center text-[#6b9b76]"><Camera className="w-8 h-8"/></div>
                 <div className="font-bold text-[#3d5244]">Pantry Scanner</div>
-              </div>
-              <div className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4">
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ y: -5 }} className="bg-[#f8faf8] rounded-3xl p-6 border border-[#e0ede4] flex flex-col items-center text-center gap-4 shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-[#c5d9c9] flex items-center justify-center text-[#6b9b76]"><Activity className="w-8 h-8"/></div>
                 <div className="font-bold text-[#3d5244]">Insights Dashboard</div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
 
@@ -446,29 +587,49 @@ export default function Landing() {
         {/* BEHAVIORAL BENEFITS */}
         <section className="py-24 bg-white border-t border-[#e0ede4]">
           <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-6">Eat Better Without Trying Harder</h2>
-            <p className="text-xl text-gray-600 mb-12">MoodFull helps you:</p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-6">Eat Better Without Trying Harder</h2>
+              <p className="text-xl text-gray-600 mb-12">MoodFull helps you:</p>
+            </motion.div>
             
-            <div className="grid md:grid-cols-2 gap-6 text-left mb-12">
-              <div className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4">
-                <div className="w-3 h-3 bg-[#6b9b76] rounded-full"></div>
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
+              className="grid md:grid-cols-2 gap-6 text-left mb-12"
+            >
+              <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4 hover:shadow-md hover:border-[#c5d9c9] transition-all">
+                <div className="w-3 h-3 bg-[#6b9b76] rounded-full shrink-0 shadow-[0_0_10px_rgba(107,155,118,0.5)]"></div>
                 <span className="text-lg font-bold text-gray-800">Reduce stress around food</span>
-              </div>
-              <div className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4">
-                <div className="w-3 h-3 bg-[#6b9b76] rounded-full"></div>
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4 hover:shadow-md hover:border-[#c5d9c9] transition-all">
+                <div className="w-3 h-3 bg-[#6b9b76] rounded-full shrink-0 shadow-[0_0_10px_rgba(107,155,118,0.5)]"></div>
                 <span className="text-lg font-bold text-gray-800">Avoid impulsive eating</span>
-              </div>
-              <div className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4">
-                <div className="w-3 h-3 bg-[#6b9b76] rounded-full"></div>
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4 hover:shadow-md hover:border-[#c5d9c9] transition-all">
+                <div className="w-3 h-3 bg-[#6b9b76] rounded-full shrink-0 shadow-[0_0_10px_rgba(107,155,118,0.5)]"></div>
                 <span className="text-lg font-bold text-gray-800">Stay consistent with your goals</span>
-              </div>
-              <div className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4">
-                <div className="w-3 h-3 bg-[#6b9b76] rounded-full"></div>
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} className="bg-[#f8faf8] p-6 rounded-2xl border border-[#e0ede4] flex items-center gap-4 hover:shadow-md hover:border-[#c5d9c9] transition-all">
+                <div className="w-3 h-3 bg-[#6b9b76] rounded-full shrink-0 shadow-[0_0_10px_rgba(107,155,118,0.5)]"></div>
                 <span className="text-lg font-bold text-gray-800">Improve energy levels</span>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <p className="text-2xl font-bold text-[#6b9b76] italic">Without forcing discipline.</p>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="text-2xl font-bold text-[#6b9b76] italic"
+            >
+              Without forcing discipline.
+            </motion.p>
           </div>
         </section>
 
@@ -500,26 +661,32 @@ export default function Landing() {
         {/* FINAL CTA (DARK SECTION) */}
         <section className="py-32 bg-[#1a231e] text-white text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
-          <div className="max-w-3xl mx-auto px-6 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="max-w-3xl mx-auto px-6 relative z-10"
+          >
             <h2 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">Stop Thinking About Food</h2>
             <p className="text-2xl text-[#6b9b76] font-bold mb-12">Let AI handle it—for you.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
                 onClick={handleLogin} 
-                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-8 py-7 rounded-full text-xl w-full sm:w-auto shadow-[0_0_30px_rgba(107,155,118,0.3)] transition-all hover:scale-105 font-bold"
+                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-8 py-7 rounded-full text-xl w-full sm:w-auto shadow-[0_0_30px_rgba(107,155,118,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(107,155,118,0.5)] font-bold"
               >
                 Generate My Meal
               </Button>
               <Button 
                 onClick={handleLogin} 
                 variant="outline"
-                className="border-white/20 text-white bg-white/5 hover:bg-white/10 px-8 py-7 rounded-full text-xl w-full sm:w-auto transition-all font-bold backdrop-blur-sm"
+                className="border-white/20 text-white bg-white/5 hover:bg-white/10 px-8 py-7 rounded-full text-xl w-full sm:w-auto transition-all font-bold backdrop-blur-sm hover:border-white/40"
               >
                 <Download className="w-5 h-5 mr-2" />
                 Download MoodFull
               </Button>
             </div>
-          </div>
+          </motion.div>
         </section>
 
       </main>
