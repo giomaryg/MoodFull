@@ -94,6 +94,7 @@ export default function PrivacyPolicyPanel({ isOpen, onClose }) {
                   <h4 className="font-medium text-gray-800">App Features & Permissions</h4>
                   <ul className="list-disc pl-5 mt-1 space-y-1 text-gray-600">
                     <li>Environment Scanning (e.g., camera or barcode scanning for food items)</li>
+                    <li><strong>Speech Recognition (Guideline 5.1.1(ii)):</strong> MoodFull may use speech recognition technology to allow for voice-to-text input (e.g., dictating mood, ingredients, or search queries). The speech data is processed securely and is used solely to provide and improve the voice input features of the app. It is not used for any other purpose and is not shared with unauthorized third parties.</li>
                   </ul>
                 </div>
 
