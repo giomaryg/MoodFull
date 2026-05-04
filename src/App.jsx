@@ -23,6 +23,7 @@ import NotificationConsentModal from '@/components/onboarding/NotificationConsen
 // Added new imports below:
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import Privacy from '@/pages/Privacy';
 import SharedRecipe from '@/pages/SharedRecipe';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -175,6 +176,21 @@ const AnimatedRoutes = () => {
             >
               <LayoutWrapper currentPageName="contact">
                 <Contact />
+              </LayoutWrapper>
+            </motion.div>
+          } />
+          <Route path="/privacy" element={
+            <motion.div 
+              custom={direction}
+              variants={variants}
+              initial="initial" 
+              animate="animate" 
+              exit="exit" 
+              transition={{ type: "spring", stiffness: 300, damping: 30 }} 
+              className="w-full h-full min-h-screen bg-background"
+            >
+              <LayoutWrapper currentPageName="privacy">
+                <Privacy />
               </LayoutWrapper>
             </motion.div>
           } />

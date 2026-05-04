@@ -698,6 +698,7 @@ export default function Landing() {
         <div className="flex gap-6 mb-8">
           <a href="/about" className="text-white/70 hover:text-white transition-colors">About Us</a>
           <a href="/contact" className="text-white/70 hover:text-white transition-colors">Contact</a>
+          <a href="/privacy" className="text-white/70 hover:text-white transition-colors">Privacy Policy</a>
         </div>
         <p className="mt-8 text-xs">© {new Date().getFullYear()} MoodFull. All rights reserved.</p>
       </footer>
