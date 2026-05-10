@@ -4,21 +4,20 @@ Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
         
-        const recipeData = {
-          name: "Test Recipe",
-          mood: "Test Mood",
-          description: "Test Description"
+        const user = await base44.auth.me();
+        const planData = {
+          recipe_name: "Test Meal",
+          date: "2026-05-10",
+          meal_type: "dinner"
         };
         
-        const res = await base44.asServiceRole.entities.Recipe.create(recipeData);
+        const res = await base44.entities.MealPlan.create(planData);
         
-        // Wait a bit just in case
         await new Promise(r => setTimeout(r, 500));
         
-        const fetchBack = await base44.asServiceRole.entities.Recipe.list();
-        const getById = await base44.asServiceRole.entities.Recipe.get(res.id);
+        const list = await base44.entities.MealPlan.list();
         
-        return Response.json({ success: true, createdId: res.id, count: fetchBack.length, fetchBack, getById });
+        return Response.json({ success: true, userEmail: user.email, createdId: res?.id, listLength: list.length, res, list });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
