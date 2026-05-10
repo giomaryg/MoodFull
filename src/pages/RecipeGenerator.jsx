@@ -297,7 +297,7 @@ export default function RecipeGenerator() {
 
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes', currentUser?.email],
-    queryFn: () => currentUser?.email ? base44.entities.Recipe.filter({ created_by: currentUser.email }, '-created_date', 100) : [],
+    queryFn: () => currentUser?.email ? base44.entities.Recipe.list('-created_date', 100) : [],
     enabled: !!currentUser?.email
   });
 
@@ -1259,7 +1259,7 @@ export default function RecipeGenerator() {
     const recipeToSave = recipeArg || peekStack(activeTab)?.recipe;
     if (recipeToSave && !isRecipeSaved(recipeToSave)) {
       // Persist the photo URL under image_url field
-      const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = recipeToSave;
+      const { id, searchReason, imageUrl, imageUrls, imageLoading, _loading, ...rest } = recipeToSave;
       saveRecipeMutation.mutate({ ...rest, image_url: imageUrl || (imageUrls ? imageUrls[0] : null) });
     }
   }
