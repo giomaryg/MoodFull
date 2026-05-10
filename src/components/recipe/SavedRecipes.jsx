@@ -123,6 +123,12 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
     });
   }, [recipes, displayQuery, selectedCollection]);
 
+  const parseMacro = (str) => {
+    if (!str) return 0;
+    const match = String(str).match(/(\d+)/);
+    return match ? parseInt(match[1]) : 0;
+  };
+
   if (!recipes || recipes.length === 0) return null;
 
   return (
@@ -279,73 +285,46 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 px-3 py-2 font-mono text-[7px] tracking-[0.15em] uppercase text-[#6b9b76]/45">
-            <span>Recent</span>
-            <div className="flex-1 h-px bg-gradient-to-r from-[#c5d9c9]/50 to-transparent"></div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 pt-4">
           <AnimatePresence>
             {filteredRecipes.map((recipe, index) => (
               <motion.div
                 key={recipe.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: index * 0.05 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+                className="h-full"
               >
-                <div
+                <Card
                   role="button"
                   tabIndex={0}
                   aria-label={`View details for ${recipe.name}`}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
                   onClick={() => onRecipeClick(recipe)}
-                  className="cursor-pointer glass-panel p-4 flex gap-4 items-center hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(107,155,118,0.12)] transition-all duration-400 ease-out group relative shadow-[0_2px_8px_rgba(107,155,118,0.06)]"
+                  className="group cursor-pointer rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] bg-white h-full flex flex-col hover:-translate-y-2 transition-all duration-500 ease-out"
                 >
-                  <div className="w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center text-xl relative overflow-hidden bg-gradient-to-br from-[#8db894] to-[#5a8a65] group-hover:scale-105 transition-transform duration-500">
-                    🥗
-                    {recipe.image_url && (
-                      <img src={recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
+                    {(recipe.imageUrl || recipe.image_url) ? (
+                      <img src={recipe.imageUrl || recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50 text-4xl">
+                        🥗
+                      </div>
                     )}
+                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+                    
                     {recipe.last_cooked_date && (
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[1px]">
-                        <Check className="w-6 h-6 text-white drop-shadow-md" />
+                      <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md text-white px-3 py-1 rounded-full inline-flex items-center gap-1.5 border border-white/20 text-xs font-medium z-10">
+                        <Check className="w-3.5 h-3.5 text-green-400" /> Cooked
                       </div>
                     )}
-                  </div>
-                  <div className="flex-1 min-w-0 pr-2">
-                    <div className="text-[11px] font-semibold text-[#3d5244] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
-                      <HighlightedText text={recipe.name} query={displayQuery} />
-                    </div>
-                    <div className="text-[#6b9b76] text-[8px] tracking-widest mb-0.5">
-                      {'★'.repeat(recipe.rating || 5)}{'☆'.repeat(5 - (recipe.rating || 5))}
-                    </div>
-                    <div className="font-mono text-[8px] text-[#5a6f60]/45 tracking-[0.04em]">
-                      {recipe.prep_time || '25 min'} · {recipe.difficulty || 'Easy'} {recipe.nutrition?.calories ? `· ${recipe.nutrition.calories} kcal` : ''}
-                    </div>
-                    {recipe.collections && recipe.collections.length > 0 && (
-                      <div className="flex gap-1 mt-1 flex-wrap">
-                        {recipe.collections.map((c, i) => (
-                          <span key={i} className="text-[7px] bg-[#6b9b76]/10 text-[#6b9b76] px-1.5 py-0.5 rounded-sm border border-[#6b9b76]/20 uppercase tracking-widest font-mono">{c}</span>
-                        ))}
-                      </div>
-                    )}
-                    {recipe.ai_tags && recipe.ai_tags.length > 0 && (
-                      <div className="flex gap-1 mt-1 flex-wrap">
-                        {recipe.ai_tags.map((t, i) => (
-                          <span key={i} className="text-[7px] bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-sm border border-purple-200 uppercase tracking-widest font-mono">{t}</span>
-                        ))}
-                      </div>
-                    )}
-                    {recipe.searchReason && (
-                      <div className="text-[9px] mt-1.5 bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-sm inline-block border border-blue-100">
-                        <Sparkles className="w-2.5 h-2.5 inline mr-1 opacity-70" />
-                        {recipe.searchReason}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex flex-col items-end justify-between self-stretch flex-shrink-0">
-                    <div className="flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-all z-10">
-                      <button
+
+                    <div className="absolute top-4 right-4 flex flex-col gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
                           updateRecipeMutation.mutate({ 
@@ -354,14 +333,16 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                           });
                           toast.success(recipe.last_cooked_date ? 'Marked as uncooked' : 'Marked as cooked!');
                         }}
-                        className={`p-1.5 rounded-full shadow-sm flex items-center justify-center w-7 h-7 ${recipe.last_cooked_date ? 'bg-[#6b9b76] text-white hover:bg-[#5a8a65]' : 'bg-white/80 hover:bg-green-50 text-green-600'}`}
+                        className={`w-9 h-9 min-h-[36px] min-w-[36px] rounded-full shadow-lg ${recipe.last_cooked_date ? 'bg-[#6b9b76] text-white hover:bg-[#5a8a65]' : 'bg-white/90 backdrop-blur-sm hover:bg-green-50 text-green-600'}`}
                         title={recipe.last_cooked_date ? "Mark as uncooked" : "Mark as cooked"}
                       >
-                        <Check className="w-3.5 h-3.5" />
-                      </button>
-                      {/* Dev Edit Button for testing */}
+                        <Check className="w-4 h-4" />
+                      </Button>
+                      
                       {currentUser?.role === 'admin' && (
-                        <button
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           onClick={(e) => {
                             e.stopPropagation();
                             const randomData = {
@@ -369,26 +350,74 @@ function SavedRecipes({ recipes, onRecipeClick, searchQuery: externalSearchQuery
                               difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)]
                             };
                             updateRecipeMutation.mutate({ id: recipe.id, data: randomData });
-                            toast.success('Dev: Recipe updated for testing');
+                            toast.success('Dev: Recipe updated');
                           }}
-                          className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-blue-50 text-[8px] font-bold text-blue-500 uppercase flex items-center justify-center w-7 h-7"
+                          className="w-9 h-9 min-h-[36px] min-w-[36px] bg-white/90 backdrop-blur-sm rounded-full shadow-lg text-[9px] font-bold text-blue-500 hover:bg-blue-50 hover:text-blue-600 uppercase"
                           title="Dev: Randomly update recipe info"
                         >
                           DEV
-                        </button>
+                        </Button>
                       )}
-                      <button
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={(e) => handleDelete(e, recipe.id)}
-                        className="p-1.5 bg-white/80 rounded-full shadow-sm hover:bg-red-50 flex items-center justify-center w-7 h-7"
+                        className="w-9 h-9 min-h-[36px] min-w-[36px] bg-white/90 backdrop-blur-sm rounded-full shadow-lg text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
                       >
-                        <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                      </button>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
-                    <div className="w-5 h-5 rounded-full border border-[#c5d9c9]/70 flex items-center justify-center text-[9px] text-[#6b9b76] mt-auto">
-                      →
+
+                    <div className="absolute bottom-5 left-5 right-5 flex justify-between items-end">
+                      <div className="flex-1 pr-3 sm:pr-4">
+                        <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
+                          <HighlightedText text={recipe.name} query={displayQuery} />
+                        </h3>
+                        <p className="text-white/80 text-xs sm:text-sm line-clamp-1 mb-1.5">
+                          {recipe.description}
+                        </p>
+                        <div className="flex items-center gap-1.5 text-white/90 text-[10px] sm:text-xs font-medium">
+                          <Clock className="w-3 h-3" />
+                          <span>{recipe.prep_time || '25 min'}</span>
+                          <span className="opacity-50">•</span>
+                          <span>{recipe.difficulty || 'Easy'}</span>
+                        </div>
+                        {recipe.searchReason && (
+                          <div className="mt-2 text-[10px] sm:text-xs bg-black/40 backdrop-blur-md text-white px-2 py-1 rounded-md inline-flex items-center gap-1 border border-white/20">
+                            <Sparkles className="w-3 h-3 text-yellow-300" />
+                            {recipe.searchReason}
+                          </div>
+                        )}
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {recipe.collections && recipe.collections.map((c, i) => (
+                            <span key={`col-${i}`} className="text-[10px] bg-white/20 backdrop-blur-md text-white px-1.5 py-0.5 rounded border border-white/10 uppercase tracking-wider font-mono">{c}</span>
+                          ))}
+                          {recipe.ai_tags && recipe.ai_tags.map((t, i) => (
+                            <span key={`tag-${i}`} className="text-[10px] bg-purple-500/30 backdrop-blur-md text-purple-100 px-1.5 py-0.5 rounded border border-purple-400/20 uppercase tracking-wider font-mono">{t}</span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                  
+                  <div className="px-6 py-5 flex justify-between items-center bg-white mt-auto border-t border-gray-100/60">
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-foreground">{recipe.nutrition?.calories || 290}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Calories</p>
+                    </div>
+                    <div className="w-px h-8 bg-border"></div>
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Protein</p>
+                    </div>
+                    <div className="w-px h-8 bg-border"></div>
+                    <div className="text-center">
+                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Carbs</p>
+                    </div>
+                  </div>
+                </Card>
               </motion.div>
             ))}
           </AnimatePresence>
