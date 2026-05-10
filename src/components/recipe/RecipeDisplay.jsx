@@ -17,6 +17,8 @@ import RecipeReview from './RecipeReview';
 import RecipeComments from './RecipeComments';
 import InteractiveCookingMode from './InteractiveCookingMode';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import RecipeTimer from './RecipeTimer';
 import SaveToCollectionDialog from './SaveToCollectionDialog';
 import { Play, Flame, Zap, Wand2, Twitter, Facebook, Link as LinkIcon, Send, Coffee, CupSoda, Beer, Droplets, GlassWater, Utensils } from 'lucide-react';
 import { useOptimisticMutation } from '@/hooks/useOptimisticMutation';
@@ -560,14 +562,43 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 mb-8">
-          <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl">
-            <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
-            {displayRecipe.prep_time || '-'} prep
-          </Badge>
-          <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl">
-            <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
-            {displayRecipe.cook_time || '-'} cook
-          </Badge>
+          {displayRecipe.prep_time && displayRecipe.prep_time !== '-' ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl cursor-pointer hover:bg-[#f5ece4] transition-colors" title="Click to start prep timer">
+                  <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
+                  {displayRecipe.prep_time} prep
+                </Badge>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-none shadow-none bg-transparent">
+                <RecipeTimer timeString={displayRecipe.prep_time} label="Prep Timer" />
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl">
+              <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
+              - prep
+            </Badge>
+          )}
+          
+          {displayRecipe.cook_time && displayRecipe.cook_time !== '-' ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl cursor-pointer hover:bg-[#f5ece4] transition-colors" title="Click to start cook timer">
+                  <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
+                  {displayRecipe.cook_time} cook
+                </Badge>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-none shadow-none bg-transparent">
+                <RecipeTimer timeString={displayRecipe.cook_time} label="Cook Timer" />
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl">
+              <Clock className="w-4 h-4 mr-1.5 text-gray-400" />
+              - cook
+            </Badge>
+          )}
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl flex items-center gap-2 min-h-[44px]">
             <Users className="w-4 h-4 mr-1 text-gray-400" />
             <Button variant="ghost" size="icon" aria-label="Decrease servings" onClick={() => setCurrentServings(Math.max(1, currentServings - 1))} className="hover:text-gray-900 p-0 min-w-[44px] min-h-[44px]"><Minus className="w-4 h-4" /></Button>
