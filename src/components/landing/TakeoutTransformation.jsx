@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const items = [
   { bad: 'Fast food burger', good: 'Lean turkey burger', badImg: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=400', goodImg: 'https://media.base44.com/images/public/691ce8ad33694c9622f52699/43aae0888_IMG_0129.jpg' },
-  { bad: 'Creamy pasta', good: 'Zucchini noodles', badImg: 'https://images.unsplash.com/photo-1621996316585-f2083ce81b0a?auto=format&fit=crop&q=80&w=400', goodImg: 'https://media.base44.com/images/public/691ce8ad33694c9622f52699/7c951bbb1_IMG_0130.jpg' },
+  { bad: 'Creamy pasta', good: 'Zucchini noodles', badImg: 'https://images.unsplash.com/photo-1611270629569-8b357cb88da9?auto=format&fit=crop&q=80&w=400', goodImg: 'https://media.base44.com/images/public/691ce8ad33694c9622f52699/7c951bbb1_IMG_0130.jpg' },
   { bad: 'Delivery pizza', good: 'Cauliflower crust pizza', badImg: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=400', goodImg: 'https://media.base44.com/images/public/691ce8ad33694c9622f52699/dd8894f01_IMG_0132.jpg' }
 ];
 
