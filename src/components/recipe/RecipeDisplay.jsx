@@ -79,7 +79,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   });
 
   const handleReviewSave = (review) => {
-    if (recipe.id) {
+    if (recipe.id && !String(recipe.id).startsWith('temp-')) {
       updateReviewMutation.mutate({ id: recipe.id, data: { review } });
     }
     if (onUpdate) onUpdate({ review });
@@ -92,7 +92,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   });
 
   const handleEditSave = (formData) => {
-    if (recipe.id) {
+    if (recipe.id && !String(recipe.id).startsWith('temp-')) {
       updateRecipeMutation.mutate({ id: recipe.id, data: formData });
     }
     if (onUpdate) onUpdate(formData);
@@ -100,7 +100,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   };
 
   const handleRate = (rating) => {
-    if (recipe.id) {
+    if (recipe.id && !String(recipe.id).startsWith('temp-')) {
       updateRatingMutation.mutate({ id: recipe.id, data: { rating } });
     }
     if (onUpdate) onUpdate({ rating });

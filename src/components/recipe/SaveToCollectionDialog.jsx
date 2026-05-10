@@ -30,10 +30,10 @@ export default function SaveToCollectionDialog({ recipe, onClose, onSaveComplete
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      if (recipe.id) {
+      if (recipe.id && !String(recipe.id).startsWith('temp-')) {
         return base44.entities.Recipe.update(recipe.id, { collections: selectedCollections });
       } else {
-        const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = recipe;
+        const { imageUrl, imageUrls, imageLoading, _loading, searchReason, ...rest } = recipe;
         const recipeData = { 
           ...rest, 
           collections: selectedCollections,
