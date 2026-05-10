@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Trash2, Package, Sparkles, Loader2, AlertTriangle, ChefHat, Camera, Mic, PlusCircle, Barcode, Edit2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { X } from 'lucide-react';
+import { X, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import PantryAnalytics from './PantryAnalytics';
@@ -21,6 +21,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
   const [isListening, setIsListening] = useState(false);
   const [hideExpiringAlert, setHideExpiringAlert] = useState(false);
   const [restockSuggestions, setRestockSuggestions] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isGeneratingRestock, setIsGeneratingRestock] = useState(false);
   const fileInputRef = React.useRef(null);
   const pantryFileInputRef = React.useRef(null);
@@ -355,6 +356,13 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
       .slice(0, 5);
   }, [inventory]);
 
+  const filteredInventory = React.useMemo(() => {
+    return inventory.filter(item => 
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      (item.category && item.category.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  }, [inventory, searchQuery]);
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="text-center space-y-2 mb-6">
@@ -650,6 +658,15 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
       )}
 
       <div className="bg-white rounded-2xl border-2 border-[#c5d9c9] overflow-hidden">
+        <div className="p-4 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
+          <Search className="w-5 h-5 text-gray-400" />
+          <Input 
+            placeholder="Search pantry items..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border-none shadow-none bg-transparent focus-visible:ring-0 px-2"
+          />
+        </div>
         {isLoading ? (
           <div className="p-12 text-center text-gray-500 animate-pulse">Loading inventory...</div>
         ) : inventory.length === 0 ? (
@@ -660,7 +677,7 @@ export default function InventoryManagement({ onGenerateFromExpiring }) {
           </div>
         ) : (
           <div className="divide-y divide-[#e0ede4]">
-            {inventory.map((item, index) => (
+            {filteredInventory.map((item, index) => (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

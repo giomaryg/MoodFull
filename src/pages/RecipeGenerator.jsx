@@ -283,8 +283,9 @@ export default function RecipeGenerator() {
   }, [activeTab, currentRecipe, showSurvey, getScrollPosition]);
 
   const { data: savedRecipes = [] } = useQuery({
-    queryKey: ['recipes'],
-    queryFn: () => base44.entities.Recipe.list('-created_date', 100)
+    queryKey: ['recipes', currentUser?.email],
+    queryFn: () => currentUser?.email ? base44.entities.Recipe.filter({ created_by: currentUser.email }, '-created_date', 100) : [],
+    enabled: !!currentUser?.email
   });
 
   const { data: mealPlans = [] } = useQuery({
