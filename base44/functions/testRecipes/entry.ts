@@ -6,24 +6,34 @@ Deno.serve(async (req) => {
         
         const user = await base44.auth.me();
         const recipeData1 = {
-          name: "Test Recipe By User Again",
+          name: "Test Recipe By User",
           mood: "Test Mood",
           description: "Test Description"
         };
         
-        // Use regular user token
         const recipeData2 = {
           name: "Test Recipe By Admin",
           mood: "Test Mood",
           description: "Test Description"
         };
-        const res = await base44.asServiceRole.entities.Recipe.create(recipeData2);
-        
-        const fetched = await base44.asServiceRole.entities.Recipe.get(res.id).catch(e => e.message);
-        
+        const resAdmin = await base44.asServiceRole.entities.Recipe.create(recipeData2);
+        const fetchedAdmin = await base44.asServiceRole.entities.Recipe.get(resAdmin.id).catch(e => e.message);
         const listAdmin = await base44.asServiceRole.entities.Recipe.list();
+
+        let userRes = null, userFetched = null, listUser = [];
+        try {
+            userRes = await base44.entities.Recipe.create(recipeData1);
+            userFetched = await base44.entities.Recipe.get(userRes.id).catch(e => e.message);
+            listUser = await base44.entities.Recipe.list();
+        } catch (err) {
+            userRes = err.message;
+        }
         
-        return Response.json({ success: true, createdId: res.id, fetched, listAdminLength: listAdmin.length });
+        return Response.json({ 
+            success: true, 
+            admin: { createdId: resAdmin.id, fetched: fetchedAdmin, listLength: listAdmin.length },
+            user: { createdId: userRes?.id || userRes, fetched: userFetched, listLength: listUser.length }
+        });
     } catch (error) {
         return Response.json({ error: error.message }, { status: 500 });
     }
