@@ -5,17 +5,18 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         
         const user = await base44.auth.me();
-        const planData = {
-          recipe_name: "Test Meal",
-          date: "2026-05-10",
-          meal_type: "dinner"
+        const recipeData = {
+          name: "Test Recipe By User",
+          mood: "Test Mood",
+          description: "Test Description"
         };
         
-        const res = await base44.entities.MealPlan.create(planData);
+        const res = await base44.entities.Recipe.create(recipeData);
         
+        // Wait a bit just in case
         await new Promise(r => setTimeout(r, 500));
         
-        const list = await base44.entities.MealPlan.list();
+        const list = await base44.entities.Recipe.list();
         
         return Response.json({ success: true, userEmail: user.email, createdId: res?.id, listLength: list.length, res, list });
     } catch (error) {

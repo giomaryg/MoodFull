@@ -191,12 +191,12 @@
   ],
   "rls": {
     "create": {
-      "created_by": "{{user.email}}"
+      "created_by_id": "{{user.id}}"
     },
     "read": {
       "or": [
         {
-          "created_by": "{{user.email}}"
+          "created_by_id": "{{user.id}}"
         },
         {
           "is_public": true
@@ -204,13 +204,13 @@
       ]
     },
     "update": {
-      "created_by": "{{user.email}}"
+      "created_by_id": "{{user.id}}"
     },
     "delete": {
-      "created_by": "{{user.email}}"
+      "created_by_id": "{{user.id}}"
     },
     "write": {
-      "created_by": "{{user.email}}"
+      "created_by_id": "{{user.id}}"
     }
   }
 }
