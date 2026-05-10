@@ -86,8 +86,8 @@ export default function RecipeGenerator() {
     replaceTopStack(activeTab, { recipe });
   };
 
-  const renderTabStack = (tabName) =>
-  <AnimatePresence custom={direction}>
+  function renderTabStack(tabName) {
+    return <AnimatePresence custom={direction}>
       {getStack(tabName).map((stackItem, index) => {
       const isTop = index === getStack(tabName).length - 1;
       return (
@@ -116,6 +116,7 @@ export default function RecipeGenerator() {
 
     })}
     </AnimatePresence>;
+  }
 
 
   const handleRefresh = async () => {
@@ -1250,26 +1251,30 @@ export default function RecipeGenerator() {
     }
   };
 
-  const isRecipeSaved = (recipe) => !!savedRecipes.find((r) => r.id === recipe.id || r.name === recipe.name && r.description === recipe.description);
+  function isRecipeSaved(recipe) {
+    return !!savedRecipes.find((r) => r.id === recipe.id || r.name === recipe.name && r.description === recipe.description);
+  }
 
-  const handleSaveRecipe = (recipeArg) => {
+  function handleSaveRecipe(recipeArg) {
     const recipeToSave = recipeArg || peekStack(activeTab)?.recipe;
     if (recipeToSave && !isRecipeSaved(recipeToSave)) {
       // Persist the photo URL under image_url field
       const { imageUrl, imageUrls, imageLoading, _loading, ...rest } = recipeToSave;
       saveRecipeMutation.mutate({ ...rest, image_url: imageUrl || (imageUrls ? imageUrls[0] : null) });
     }
-  };
+  }
 
-  const handleRecipeClick = (recipe) => {
+  function handleRecipeClick(recipe) {
     saveScrollPosition(activeTab, window.scrollY);
     setCurrentRecipe(recipe);
     if (recipe.mood && activeTab === 'saved') {
       setSelectedMoods(recipe.mood.split(', '));
     }
-  };
+  }
 
-  const handleSavedRecipeClick = handleRecipeClick;
+  function handleSavedRecipeClick(recipe) {
+    return handleRecipeClick(recipe);
+  }
 
 
 
