@@ -282,6 +282,18 @@ export default function RecipeGenerator() {
     }
   }, [activeTab, currentRecipe, showSurvey, getScrollPosition]);
 
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      setUserPreferences(user);
+      if (!user.survey_completed) {
+        setShowSurvey(true);
+      }
+      return user;
+    }
+  });
+
   const { data: savedRecipes = [] } = useQuery({
     queryKey: ['recipes', currentUser?.email],
     queryFn: () => currentUser?.email ? base44.entities.Recipe.filter({ created_by: currentUser.email }, '-created_date', 100) : [],
@@ -601,18 +613,6 @@ export default function RecipeGenerator() {
 
     return filtered;
   }, [generatedRecipes, globalSearchQuery, advancedFilters, inventory]);
-
-  const { data: currentUser } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      setUserPreferences(user);
-      if (!user.survey_completed) {
-        setShowSurvey(true);
-      }
-      return user;
-    }
-  });
 
   const saveRecipeMutation = useOptimisticMutation({
     queryKey: ['recipes'],
