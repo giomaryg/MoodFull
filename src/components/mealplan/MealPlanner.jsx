@@ -828,41 +828,43 @@ Make them balanced, diverse, and delicious. Include:
 
       {/* Weekly Nutrition Summary */}
       {currentUser?.daily_calorie_target > 0 && (
-        <div className="bg-gradient-to-r from-[#f0f9f2] to-white rounded-xl p-5 border-2 border-[#c5d9c9] flex flex-col md:flex-row gap-6 items-center justify-between shadow-sm">
-          <div>
-            <h4 className="font-bold text-[#6b9b76] flex items-center gap-2">
+        <div className="bg-gradient-to-r from-[#f0f9f2] to-white rounded-xl p-4 sm:p-5 border-2 border-[#c5d9c9] flex flex-col xl:flex-row gap-4 sm:gap-6 items-start sm:items-center justify-between shadow-sm">
+          <div className="w-full text-center sm:text-left">
+            <h4 className="font-bold text-[#6b9b76] flex items-center justify-center xl:justify-start gap-2">
               <Target className="w-5 h-5" />
               Weekly Nutrition Average
             </h4>
-            <p className="text-sm text-gray-500 mt-1">Daily average based on planned meals</p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">Daily average based on planned meals</p>
           </div>
-          <div className="flex gap-4 sm:gap-8 text-sm">
-            <div className="text-center">
-              <p className="font-medium text-gray-500 mb-1">Calories</p>
-              <p className={`font-bold text-xl ${weeklyAverages.calories > currentUser.daily_calorie_target * 1.1 ? 'text-red-500' : weeklyAverages.calories < currentUser.daily_calorie_target * 0.9 ? 'text-orange-400' : 'text-[#6b9b76]'}`}>
-                {weeklyAverages.calories} <span className="text-sm font-normal text-gray-400">/ {currentUser.daily_calorie_target}</span>
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="font-medium text-gray-500 mb-1">Protein</p>
-              <p className="font-bold text-xl text-gray-800">{weeklyAverages.protein}g</p>
-            </div>
-            <div className="text-center">
-              <p className="font-medium text-gray-500 mb-1">Carbs</p>
-              <p className="font-bold text-xl text-gray-800">{weeklyAverages.carbs}g</p>
-            </div>
-            <div className="text-center">
-              <p className="font-medium text-gray-500 mb-1">Fat</p>
-              <p className="font-bold text-xl text-gray-800">{weeklyAverages.fat}g</p>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm w-full xl:w-auto items-center">
+            <div className="flex flex-wrap justify-between sm:justify-start gap-2 sm:gap-8 w-full xl:w-auto">
+              <div className="text-center flex-1 sm:flex-none bg-white/50 sm:bg-transparent rounded-lg p-2 sm:p-0">
+                <p className="font-medium text-gray-500 mb-1 text-[11px] sm:text-sm">Calories</p>
+                <p className={`font-bold text-sm sm:text-xl ${weeklyAverages.calories > currentUser.daily_calorie_target * 1.1 ? 'text-red-500' : weeklyAverages.calories < currentUser.daily_calorie_target * 0.9 ? 'text-orange-400' : 'text-[#6b9b76]'}`}>
+                  {weeklyAverages.calories} <span className="text-[10px] sm:text-sm font-normal text-gray-400 hidden sm:inline">/ {currentUser.daily_calorie_target}</span>
+                </p>
+              </div>
+              <div className="text-center flex-1 sm:flex-none bg-white/50 sm:bg-transparent rounded-lg p-2 sm:p-0">
+                <p className="font-medium text-gray-500 mb-1 text-[11px] sm:text-sm">Protein</p>
+                <p className="font-bold text-sm sm:text-xl text-gray-800">{weeklyAverages.protein}g</p>
+              </div>
+              <div className="text-center flex-1 sm:flex-none bg-white/50 sm:bg-transparent rounded-lg p-2 sm:p-0">
+                <p className="font-medium text-gray-500 mb-1 text-[11px] sm:text-sm">Carbs</p>
+                <p className="font-bold text-sm sm:text-xl text-gray-800">{weeklyAverages.carbs}g</p>
+              </div>
+              <div className="text-center flex-1 sm:flex-none bg-white/50 sm:bg-transparent rounded-lg p-2 sm:p-0">
+                <p className="font-medium text-gray-500 mb-1 text-[11px] sm:text-sm">Fat</p>
+                <p className="font-bold text-sm sm:text-xl text-gray-800">{weeklyAverages.fat}g</p>
+              </div>
             </div>
             
-            <div className="flex flex-col gap-2 border-l border-gray-200 pl-4 sm:pl-8 ml-2 sm:ml-4">
+            <div className="w-full sm:w-auto pt-3 sm:pt-0 border-t border-[#c5d9c9]/50 sm:border-t-0 sm:border-l sm:border-gray-200 sm:pl-8 sm:ml-4 flex justify-center">
               <Button 
                 onClick={analyzeNutrition} 
                 disabled={isAnalyzingNutrition}
                 variant="outline" 
                 size="sm"
-                className="bg-white border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] min-h-[44px]"
+                className="w-full sm:w-auto bg-white border-[#6b9b76] text-[#6b9b76] hover:bg-[#f0f9f2] min-h-[44px]"
               >
                 {isAnalyzingNutrition ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Sparkles className="w-4 h-4 mr-2" />}
                 Analyze Balance
