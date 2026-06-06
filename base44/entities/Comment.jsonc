@@ -1,0 +1,39 @@
+{
+  "name": "Comment",
+  "type": "object",
+  "properties": {
+    "recipe_id": {
+      "type": "string",
+      "description": "ID of the recipe this comment belongs to"
+    },
+    "content": {
+      "type": "string",
+      "description": "The comment text"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Name of the user who commented"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Optional rating given with the comment",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Moderation status"
+    }
+  },
+  "required": [
+    "recipe_id",
+    "content",
+    "author_name",
+    "status"
+  ]
+}

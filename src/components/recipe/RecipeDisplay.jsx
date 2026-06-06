@@ -28,7 +28,8 @@ import ApplianceSelector from './ApplianceSelector';
 import RecipeAssistantSheet from './RecipeAssistantSheet';
 import InteractivePairingSheet from './InteractivePairingSheet';
 
-function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
+function RecipeDisplay({ recipe: incomingRecipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
+  const recipe = incomingRecipe || {};
   const [isGeneratingVariation, setIsGeneratingVariation] = useState(false);
   const [showAddMeal, setShowAddMeal] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -166,14 +167,16 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   };
 
   useEffect(() => {
-    if (inventory.length > 0 && recipe?.ingredients) {
+    if (inventory.length > 0 && Array.isArray(recipe?.ingredients)) {
       recipe.ingredients.forEach((ingredient, index) => {
+        if (!ingredient) return;
         const fetchKey = `${recipe.id}-${index}`;
         if (autoFetchedSubs.current.has(fetchKey)) return;
 
-        const words = ingredient.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(w => w.length > 2);
+        const words = String(ingredient).toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(w => w.length > 2);
         const invMatch = inventory.find(i => {
-           const iName = i.name.toLowerCase();
+           if (!i?.name) return false;
+           const iName = String(i.name).toLowerCase();
            return words.some(w => iName.includes(w)) || iName.includes(words[words.length-1]);
         });
         const isMissingOrLow = inventory.length > 0 && (!invMatch || invMatch.quantity <= (invMatch.min_stock || 0));
@@ -192,7 +195,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   }, [inventory, recipe?.ingredients, recipe?.id]);
 
   const toggleSubstitution = (index, ingredient) => {
-    const hasPredefinedSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
+    const hasPredefinedSub = recipe?.substitutions?.find(s => s.ingredient && String(ingredient).toLowerCase().includes(String(s.ingredient).toLowerCase()));
     
     if (activeSubstitutions[index]) {
       // Revert back to original
@@ -207,13 +210,13 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
   };
 
   const scaledIngredients = useMemo(() => {
-    if (!recipe?.ingredients) return [];
+    if (!recipe?.ingredients || !Array.isArray(recipe.ingredients)) return [];
     const factor = currentServings / (recipe.servings || 1);
-    if (factor === 1) return recipe.ingredients;
+    if (factor === 1) return recipe.ingredients.filter(Boolean);
 
-    return recipe.ingredients.map(ing => {
+    return recipe.ingredients.filter(Boolean).map(ing => {
       // Matches: "1 cup", "1/2 cup", "1.5 cups", "1-2 cups"
-      const match = ing.match(/^((?:\d+(?:[\/.]\d+)?)(?:\s*-\s*\d+(?:[\/.]\d+)?)?)(.*)$/);
+      const match = String(ing).match(/^((?:\d+(?:[\/.]\d+)?)(?:\s*-\s*\d+(?:[\/.]\d+)?)?)(.*)$/);
       
       if (!match) return ing;
       
@@ -385,7 +388,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
     setIsRegeneratingSteps(false);
   };
 
-  if (!recipe) return null;
+  if (!incomingRecipe || Object.keys(recipe).length === 0) return null;
 
   const parseMacro = (str) => {
     if (!str) return 0;
@@ -674,20 +677,23 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
             
             <div className="space-y-3">
               {scaledIngredients.map((ingredient, index) => {
-                const hasSub = recipe?.substitutions?.find(s => ingredient.toLowerCase().includes(s.ingredient.toLowerCase()));
+                if (!ingredient) return null;
+                const ingStr = String(ingredient);
+                const hasSub = recipe?.substitutions?.find(s => s.ingredient && ingStr.toLowerCase().includes(String(s.ingredient).toLowerCase()));
                 const isSubbed = activeSubstitutions[index];
                 
-                const words = ingredient.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(w => w.length > 2);
+                const words = ingStr.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(w => w.length > 2);
                 const invMatch = inventory.find(i => {
-                   const iName = i.name.toLowerCase();
+                   if (!i?.name) return false;
+                   const iName = String(i.name).toLowerCase();
                    return words.some(w => iName.includes(w)) || iName.includes(words[words.length-1]);
                 });
                 const isMissingOrLow = inventory.length > 0 && (!invMatch || invMatch.quantity <= (invMatch.min_stock || 0));
                 
                 // Try to extract amount and name for better display
-                const match = ingredient.match(/^((?:\d+(?:[\/.]\d+)?)(?:\s*-\s*\d+(?:[\/.]\d+)?)?(?:\s*[a-zA-Z]+)?)\s+(.*)$/);
+                const match = ingStr.match(/^((?:\d+(?:[\/.]\d+)?)(?:\s*-\s*\d+(?:[\/.]\d+)?)?(?:\s*[a-zA-Z]+)?)\s+(.*)$/);
                 const amount = match ? match[1] : '';
-                const name = match ? match[2] : ingredient;
+                const name = match ? match[2] : ingStr;
                 
                 return (
                   <motion.div
@@ -705,7 +711,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                         {name.charAt(0).toUpperCase() + name.slice(1)}
                       </h4>
                       <p className={`text-xs sm:text-sm text-gray-500 ${isSubbed ? 'line-through opacity-50' : ''}`}>
-                        {amount || ingredient}
+                        {amount || ingStr}
                         {isMissingOrLow && !isSubbed && <span className="inline-block ml-2 text-[10px] uppercase tracking-wider text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded">Low/Missing</span>}
                       </p>
                       
@@ -729,7 +735,7 @@ function RecipeDisplay({ recipe, onSave, isSaved, onSimilarRecipeClick, onUpdate
                     <Button 
                       variant="ghost"
                       size="icon"
-                      onClick={() => toggleSubstitution(index, ingredient)}
+                      onClick={() => toggleSubstitution(index, ingStr)}
                       disabled={loadingSubs[index]}
                       aria-label={`Substitute ${name}`}
                       className={`rounded-xl transition-colors min-h-[44px] min-w-[44px] ${

@@ -1,0 +1,73 @@
+{
+  "name": "MealPlan",
+  "type": "object",
+  "properties": {
+    "recipe_id": {
+      "type": "string",
+      "description": "ID of the recipe (optional if custom meal)"
+    },
+    "recipe_name": {
+      "type": "string",
+      "description": "Name of the recipe or custom meal"
+    },
+    "custom_ingredients": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ingredients for custom meals"
+    },
+    "custom_instructions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Instructions for custom meals"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Planned date for this meal"
+    },
+    "meal_type": {
+      "type": "string",
+      "enum": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack"
+      ],
+      "description": "Type of meal"
+    },
+    "servings": {
+      "type": "number",
+      "description": "Number of servings planned"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "recipe_name",
+    "date",
+    "meal_type"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

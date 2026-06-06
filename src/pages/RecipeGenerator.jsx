@@ -414,7 +414,7 @@ export default function RecipeGenerator() {
       const maxMinutes = parseInt(advancedFilters.maxPrepTime);
       filtered = filtered.filter((recipe) => {
         if (!recipe.prep_time) return false;
-        const prepMatch = recipe.prep_time.match(/(\d+)/);
+        const prepMatch = String(recipe.prep_time).match(/(\d+)/);
         if (!prepMatch) return false;
         return parseInt(prepMatch[1]) <= maxMinutes;
       });
@@ -453,7 +453,7 @@ export default function RecipeGenerator() {
         case 'rating':
           return (b.rating || 0) - (a.rating || 0);
         case 'time_asc':{
-            const getMin = (t) => parseInt(t?.match(/(\d+)/)?.[1] || 999);
+            const getMin = (t) => parseInt(String(t || '').match(/(\d+)/)?.[1] || 999);
             return getMin(a.prep_time) - getMin(b.prep_time);
           }
         case 'calories_asc':
@@ -559,7 +559,7 @@ export default function RecipeGenerator() {
       const maxMinutes = parseInt(advancedFilters.maxPrepTime);
       filtered = filtered.filter((recipe) => {
         if (!recipe.prep_time) return false;
-        const prepMatch = recipe.prep_time.match(/(\d+)/);
+        const prepMatch = String(recipe.prep_time).match(/(\d+)/);
         if (!prepMatch) return false;
         return parseInt(prepMatch[1]) <= maxMinutes;
       });
@@ -598,7 +598,7 @@ export default function RecipeGenerator() {
         case 'rating':
           return (b.rating || 0) - (a.rating || 0);
         case 'time_asc':{
-            const getMin = (t) => parseInt(t?.match(/(\d+)/)?.[1] || 999);
+            const getMin = (t) => parseInt(String(t || '').match(/(\d+)/)?.[1] || 999);
             return getMin(a.prep_time) - getMin(b.prep_time);
           }
         case 'calories_asc':
@@ -1252,6 +1252,7 @@ export default function RecipeGenerator() {
   };
 
   function isRecipeSaved(recipe) {
+    if (!recipe) return false;
     return !!savedRecipes.find((r) => r.id === recipe.id || r.name === recipe.name && r.description === recipe.description);
   }
 
