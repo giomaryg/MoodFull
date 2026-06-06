@@ -1,9 +1,11 @@
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/pagination";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const recipes = [
   {
@@ -49,60 +51,62 @@ export default function MoodCarousel() {
         </p>
       </div>
 
-      <Swiper
-        modules={[Pagination, Autoplay]}
-        pagination={{ clickable: true }}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false
+      <Carousel
+        opts={{
+          loop: true,
         }}
-        loop
-        className="rounded-[40px] overflow-hidden"
+        className="w-full"
       >
-        {recipes.map((recipe) => (
-          <SwiperSlide key={recipe.id}>
-            <div className="relative overflow-hidden h-[550px] shadow-2xl">
+        <CarouselContent className="rounded-[40px]">
+          {recipes.map((recipe) => (
+            <CarouselItem key={recipe.id}>
+              <div className="relative overflow-hidden h-[550px] shadow-2xl rounded-[40px]">
 
-              <img
-                src={recipe.image}
-                alt={recipe.title}
-                className="w-full h-full object-cover"
-              />
+                <img
+                  src={recipe.image}
+                  alt={recipe.title}
+                  className="w-full h-full object-cover"
+                />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              <div className="absolute bottom-0 left-0 p-8 text-white w-full">
+                <div className="absolute bottom-0 left-0 p-8 text-white w-full">
 
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md mb-4 text-sm font-medium">
-                  ✨ {recipe.match}% Mood Match
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md mb-4 text-sm font-medium">
+                    ✨ {recipe.match}% Mood Match
+                  </div>
+
+                  <h2 className="text-4xl md:text-5xl font-bold mb-4 max-w-md leading-tight">
+                    {recipe.title}
+                  </h2>
+
+                  <div className="flex gap-3 mb-4">
+                    <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
+                      😫 {recipe.mood}
+                    </span>
+
+                    <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
+                      🍴 AI Generated
+                    </span>
+                  </div>
+
+                  <p className="max-w-lg text-white/90 mb-6 text-lg">
+                    {recipe.reason}
+                  </p>
+
+                  <button className="bg-white text-[#3d5244] px-8 py-3 rounded-full font-bold hover:scale-105 transition shadow-lg">
+                    View Recipe
+                  </button>
                 </div>
-
-                <h2 className="text-4xl md:text-5xl font-bold mb-4 max-w-md leading-tight">
-                  {recipe.title}
-                </h2>
-
-                <div className="flex gap-3 mb-4">
-                  <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
-                    😫 {recipe.mood}
-                  </span>
-
-                  <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
-                    🍴 AI Generated
-                  </span>
-                </div>
-
-                <p className="max-w-lg text-white/90 mb-6 text-lg">
-                  {recipe.reason}
-                </p>
-
-                <button className="bg-white text-[#3d5244] px-8 py-3 rounded-full font-bold hover:scale-105 transition shadow-lg">
-                  View Recipe
-                </button>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="flex items-center justify-end gap-2 mt-4 pr-4">
+          <CarouselPrevious className="static translate-y-0 text-gray-700 bg-white hover:bg-gray-100 hover:text-gray-900 border-gray-200" />
+          <CarouselNext className="static translate-y-0 text-gray-700 bg-white hover:bg-gray-100 hover:text-gray-900 border-gray-200" />
+        </div>
+      </Carousel>
 
       <div className="flex flex-wrap gap-3 mt-8 justify-center">
         <div className="px-5 py-3 bg-red-50 text-red-700 rounded-full font-medium">
