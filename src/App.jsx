@@ -28,7 +28,7 @@ import SharedRecipe from '@/pages/SharedRecipe';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
-const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
+const MainPage = mainPageKey ? Pages[mainPageKey] : () => <></>;
 
 const LoadingFallback = () => (
   <div className="fixed inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-50">
@@ -238,4 +238,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
