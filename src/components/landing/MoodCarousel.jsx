@@ -1,0 +1,140 @@
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
+const recipes = [
+  {
+    id: 1,
+    title: "Truffle Mushroom Pasta",
+    image:
+      "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9",
+    mood: "Stressed",
+    match: 96,
+    reason: "Comforting and rich in umami flavors."
+  },
+  {
+    id: 2,
+    title: "Mediterranean Protein Bowl",
+    image:
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd",
+    mood: "Energetic",
+    match: 93,
+    reason: "Protein packed for sustained energy."
+  },
+  {
+    id: 3,
+    title: "Chocolate Berry Oats",
+    image:
+      "https://images.unsplash.com/photo-1517673400267-0251440c45dc",
+    mood: "Romantic",
+    match: 89,
+    reason: "Sweet, comforting and mood boosting."
+  }
+];
+
+export default function MoodCarousel() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-10">
+
+      <div className="mb-6">
+        <h2 className="text-4xl font-bold text-[#3d5244]">
+          Your Mood Match
+        </h2>
+
+        <p className="text-gray-500 mt-2 text-lg">
+          AI-generated meals based on your mood and pantry.
+        </p>
+      </div>
+
+      <Swiper
+        modules={[Pagination, Autoplay]}
+        pagination={{ clickable: true }}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false
+        }}
+        loop
+        className="rounded-[40px] overflow-hidden"
+      >
+        {recipes.map((recipe) => (
+          <SwiperSlide key={recipe.id}>
+            <div className="relative overflow-hidden h-[550px] shadow-2xl">
+
+              <img
+                src={recipe.image}
+                alt={recipe.title}
+                className="w-full h-full object-cover"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+              <div className="absolute bottom-0 left-0 p-8 text-white w-full">
+
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md mb-4 text-sm font-medium">
+                  ✨ {recipe.match}% Mood Match
+                </div>
+
+                <h2 className="text-4xl md:text-5xl font-bold mb-4 max-w-md leading-tight">
+                  {recipe.title}
+                </h2>
+
+                <div className="flex gap-3 mb-4">
+                  <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
+                    😫 {recipe.mood}
+                  </span>
+
+                  <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
+                    🍴 AI Generated
+                  </span>
+                </div>
+
+                <p className="max-w-lg text-white/90 mb-6 text-lg">
+                  {recipe.reason}
+                </p>
+
+                <button className="bg-white text-[#3d5244] px-8 py-3 rounded-full font-bold hover:scale-105 transition shadow-lg">
+                  View Recipe
+                </button>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      <div className="flex flex-wrap gap-3 mt-8 justify-center">
+        <div className="px-5 py-3 bg-red-50 text-red-700 rounded-full font-medium">
+          😫 Stressed
+        </div>
+
+        <div className="px-5 py-3 bg-yellow-50 text-yellow-700 rounded-full font-medium">
+          ⚡ Energetic
+        </div>
+
+        <div className="px-5 py-3 bg-orange-50 text-orange-700 rounded-full font-medium">
+          🍂 Cozy
+        </div>
+
+        <div className="px-5 py-3 bg-pink-50 text-pink-700 rounded-full font-medium">
+          ✨ Romantic
+        </div>
+      </div>
+
+      <div className="mt-10 bg-white rounded-[32px] p-8 shadow-sm border border-[#e0ede4]">
+        <h3 className="font-bold text-[#3d5244] text-xl mb-5">
+          Pantry Ingredients
+        </h3>
+
+        <div className="flex gap-6 text-5xl mb-5">
+          🥑 🥚 🥬
+        </div>
+
+        <div className="inline-flex px-5 py-3 rounded-full bg-[#f0f9f2] text-[#6b9b76] font-bold text-sm">
+          ✨ 3 meals generated from pantry
+        </div>
+      </div>
+    </div>
+  );
+}
