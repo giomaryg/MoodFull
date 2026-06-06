@@ -11,7 +11,6 @@ import FloatingSmartBowl from '@/components/landing/FloatingSmartBowl';
 import MoodToMealOrb from '@/components/landing/MoodToMealOrb';
 import TakeoutTransformation from '@/components/landing/TakeoutTransformation';
 import AnalyticsCrystal from '@/components/landing/AnalyticsCrystal';
-import PantryScannerVisualization from '@/components/landing/PantryScannerVisualization';
 import MoodCarousel from '@/components/landing/MoodCarousel';
 
 export default function Landing() {
@@ -192,8 +191,6 @@ export default function Landing() {
             </motion.div>
             
             <MoodCarousel />
-            
-            <PantryScannerVisualization />
           </div>
         </section>
 
