@@ -64,7 +64,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
   });
 
   const handleLogout = () => {
-    base44.auth.logout();
+    base44.auth.logout('/');
   };
 
   const handleDeleteAccount = async () => {
