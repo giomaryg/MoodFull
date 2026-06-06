@@ -10,30 +10,39 @@ import {
 const recipes = [
   {
     id: 1,
-    title: "Truffle Mushroom Pasta",
-    image:
-      "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9",
+    title: "Rich Truffle Mushroom Pasta",
+    image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9",
     mood: "Stressed",
-    match: 96,
-    reason: "Comforting and rich in umami flavors."
+    match: 98,
+    reason: "Earthy, comforting umami flavors that melt your stress away.",
+    emoji: "😫"
   },
   {
     id: 2,
-    title: "Mediterranean Protein Bowl",
-    image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd",
+    title: "Seared Salmon & Quinoa Bowl",
+    image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288",
     mood: "Energetic",
-    match: 93,
-    reason: "Protein packed for sustained energy."
+    match: 95,
+    reason: "Packed with lean protein and superfoods for sustained, clean energy.",
+    emoji: "⚡"
   },
   {
     id: 3,
-    title: "Chocolate Berry Oats",
-    image:
-      "https://images.unsplash.com/photo-1517673400267-0251440c45dc",
+    title: "Cozy Butternut Squash Soup",
+    image: "https://images.unsplash.com/photo-1547592166-23ac45744acd",
+    mood: "Cozy",
+    match: 97,
+    reason: "A warm, soothing bowl of autumn comfort to relax your evening.",
+    emoji: "🍂"
+  },
+  {
+    id: 4,
+    title: "Filet Mignon & Asparagus",
+    image: "https://images.unsplash.com/photo-1558030006-450675393462",
     mood: "Romantic",
-    match: 89,
-    reason: "Sweet, comforting and mood boosting."
+    match: 99,
+    reason: "A restaurant-quality elegant classic to set the perfect mood.",
+    emoji: "✨"
   }
 ];
 
@@ -82,7 +91,7 @@ export default function MoodCarousel() {
 
                   <div className="flex gap-3 mb-4">
                     <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
-                      😫 {recipe.mood}
+                      {recipe.emoji} {recipe.mood}
                     </span>
 
                     <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
