@@ -177,23 +177,24 @@ export default function Landing() {
           </motion.div>
         </section>
 
-<Swiper
-  slidesPerView={1}
-  pagination={{ clickable: true }}
-  autoplay={{ delay: 5000 }}
->
-  <SwiperSlide>
-    <RecipeCard recipe={recipe1} />
-  </SwiperSlide>
-
-  <SwiperSlide>
-    <RecipeCard recipe={recipe2} />
-  </SwiperSlide>
-
-  <SwiperSlide>
-    <RecipeCard recipe={recipe3} />
-  </SwiperSlide>
-</Swiper>
+        {/* HOW IT WORKS */}
+        <section id="how-it-works" className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
+          <div className="max-w-6xl mx-auto px-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">How It Works</h2>
+              <p className="text-lg text-[#6b9b76] font-bold">Takes less than 10 seconds</p>
+            </motion.div>
+            
+            <MoodToMealOrb />
+            
+            <PantryScannerVisualization />
+          </div>
+        </section>
 
         {/* TAKEOUT KILLER SECTION */}
         <section id="takeout" className="py-24 bg-[#fffcf7] border-t border-[#f2b769]/30">
