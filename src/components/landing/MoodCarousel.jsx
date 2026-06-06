@@ -125,20 +125,6 @@ export default function MoodCarousel() {
           ✨ Romantic
         </div>
       </div>
-
-      <div className="mt-10 bg-white rounded-[32px] p-8 shadow-sm border border-[#e0ede4]">
-        <h3 className="font-bold text-[#3d5244] text-xl mb-5">
-          Pantry Ingredients
-        </h3>
-
-        <div className="flex gap-6 text-5xl mb-5">
-          🥑 🥚 🥬
-        </div>
-
-        <div className="inline-flex px-5 py-3 rounded-full bg-[#f0f9f2] text-[#6b9b76] font-bold text-sm">
-          ✨ 3 meals generated from pantry
-        </div>
-      </div>
     </div>
   );
 }

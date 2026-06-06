@@ -44,7 +44,7 @@ const AICoach = lazy(() => import('../components/recipe/AICoach'));
 const TutorialOverlay = lazy(() => import('../components/onboarding/TutorialOverlay'));
 const SmartTakeoutPanel = lazy(() => import('../components/takeout/SmartTakeoutPanel'));
 
-const ENABLE_PANTRY_FEATURE = true;
+const ENABLE_PANTRY_FEATURE = false;
 
 export default function RecipeGenerator() {
   const [selectedMoods, setSelectedMoods] = useState([]);

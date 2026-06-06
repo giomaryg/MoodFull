@@ -47,31 +47,6 @@ export default function CombinationCookingDialog({ isOpen, onClose, inventory = 
 
         <div className="flex-1 overflow-hidden flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-[#c5d9c9]/50">
           <div className="flex-1 flex flex-col max-h-[40vh] sm:max-h-full">
-            <div className="p-3 bg-[#f0f9f2] font-semibold text-[#5a6f60] flex items-center gap-2 border-b border-[#c5d9c9]/50">
-              <Package className="w-4 h-4" /> Pantry Ingredients
-              <Badge variant="outline" className="ml-auto bg-white">{selectedIngredients.size} selected</Badge>
-            </div>
-            <ScrollArea className="flex-1 p-3">
-              {inventory.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-4">Your pantry is empty.</p>
-              ) : (
-                <div className="space-y-1">
-                  {inventory.map((item, i) => (
-                    <div 
-                      key={i} 
-                      onClick={() => toggleIngredient(item.name)}
-                      className="flex items-center gap-3 p-2 hover:bg-[#e8f0ea] rounded-lg cursor-pointer transition-colors"
-                    >
-                      {selectedIngredients.has(item.name) ? <CheckSquare className="w-4 h-4 text-[#6b9b76]" /> : <Square className="w-4 h-4 text-gray-400" />}
-                      <span className="text-sm text-gray-700">{item.name}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </div>
-
-          <div className="flex-1 flex flex-col max-h-[40vh] sm:max-h-full">
             <div className="p-3 bg-[#fdf6f0] font-semibold text-[#8a6849] flex items-center gap-2 border-b border-[#c5d9c9]/50">
               <UtensilsCrossed className="w-4 h-4" /> Saved Recipes
               <Badge variant="outline" className="ml-auto bg-white">{selectedRecipes.size} selected</Badge>
