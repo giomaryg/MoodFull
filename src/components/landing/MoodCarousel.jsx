@@ -12,7 +12,7 @@ const recipes = [
   {
     id: 1,
     title: "Rich Truffle Mushroom Pasta",
-    image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601",
+    image: "https://i0.wp.com/www.everylastbite.com/wp-content/uploads/2025/04/creamy-truffle-and-mushroom-pasta-26.jpg?w=1365&ssl=1",
     mood: "Stressed",
     match: 98,
     reason: "Earthy, comforting umami flavors that melt your stress away.",
