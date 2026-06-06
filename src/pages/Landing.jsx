@@ -177,24 +177,153 @@ export default function Landing() {
           </motion.div>
         </section>
 
-        {/* HOW IT WORKS */}
-        <section id="how-it-works" className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
-          <div className="max-w-6xl mx-auto px-6">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">How It Works</h2>
-              <p className="text-lg text-[#6b9b76] font-bold">Takes less than 10 seconds</p>
-            </motion.div>
-            
-            <MoodToMealOrb />
-            
-            <PantryScannerVisualization />
-          </div>
-        </section>
+          npm install swiper
+          "use client";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
+const recipes = [
+  {
+    id: 1,
+    title: "Truffle Mushroom Pasta",
+    image:
+      "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9",
+    mood: "Stressed",
+    match: 96,
+    reason: "Comforting and rich in umami flavors."
+  },
+  {
+    id: 2,
+    title: "Mediterranean Protein Bowl",
+    image:
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd",
+    mood: "Energetic",
+    match: 93,
+    reason: "Protein packed for sustained energy."
+  },
+  {
+    id: 3,
+    title: "Chocolate Berry Oats",
+    image:
+      "https://images.unsplash.com/photo-1517673400267-0251440c45dc",
+    mood: "Romantic",
+    match: 89,
+    reason: "Sweet, comforting and mood boosting."
+  }
+];
+
+export default function MoodCarousel() {
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-10">
+
+      <div className="mb-6">
+        <h2 className="text-4xl font-bold">
+          Your Mood Match
+        </h2>
+
+        <p className="text-gray-500 mt-2">
+          AI-generated meals based on your mood and pantry.
+        </p>
+      </div>
+
+      <Swiper
+        modules={[Pagination, Autoplay]}
+        pagination={{ clickable: true }}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false
+        }}
+        loop
+      >
+        {recipes.map((recipe) => (
+          <SwiperSlide key={recipe.id}>
+            <div className="relative overflow-hidden rounded-[40px] h-[550px] shadow-2xl">
+
+              <img
+                src={recipe.image}
+                alt={recipe.title}
+                className="w-full h-full object-cover"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+              <div className="absolute bottom-0 left-0 p-8 text-white">
+
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md mb-4">
+                  ✨ {recipe.match}% Mood Match
+                </div>
+
+                <h2 className="text-5xl font-bold mb-4 max-w-md">
+                  {recipe.title}
+                </h2>
+
+                <div className="flex gap-3 mb-4">
+
+                  <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+                    😫 {recipe.mood}
+                  </span>
+
+                  <span className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+                    🍴 AI Generated
+                  </span>
+
+                </div>
+
+                <p className="max-w-lg text-white/90 mb-6">
+                  {recipe.reason}
+                </p>
+
+                <button className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:scale-105 transition">
+                  View Recipe
+                </button>
+
+              </div>
+
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+  );
+}
+
+<div className="flex flex-wrap gap-3 mt-8 justify-center">
+  <div className="px-5 py-3 bg-rose-50 rounded-full">
+    😫 Stressed
+  </div>
+
+  <div className="px-5 py-3 bg-yellow-50 rounded-full">
+    ⚡ Energetic
+  </div>
+
+  <div className="px-5 py-3 bg-orange-50 rounded-full">
+    🍂 Cozy
+  </div>
+
+  <div className="px-5 py-3 bg-pink-50 rounded-full">
+    ✨ Romantic
+  </div>
+</div>
+
+        <div className="mt-10 bg-white rounded-[32px] p-8 shadow-lg border">
+
+  <h3 className="font-semibold text-xl mb-5">
+    Pantry Ingredients
+  </h3>
+
+  <div className="flex gap-6 text-5xl mb-5">
+    🥑 🥚 🥬
+  </div>
+
+  <div className="inline-flex px-5 py-3 rounded-full bg-green-50">
+    ✨ 3 meals generated from pantry
+  </div>
+
+</div>
 
         {/* TAKEOUT KILLER SECTION */}
         <section id="takeout" className="py-24 bg-[#fffcf7] border-t border-[#f2b769]/30">
