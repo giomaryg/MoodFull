@@ -8,7 +8,6 @@ import {
   Calendar, LineChart
 } from 'lucide-react';
 import FloatingSmartBowl from '@/components/landing/FloatingSmartBowl';
-import MoodToMealOrb from '@/components/landing/MoodToMealOrb';
 import TakeoutTransformation from '@/components/landing/TakeoutTransformation';
 import AnalyticsCrystal from '@/components/landing/AnalyticsCrystal';
 import MoodCarousel from '@/components/landing/MoodCarousel';
