@@ -16,18 +16,32 @@ const getImage = (name) => {
   return 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
 };
 
-export default function InlineTakeoutResults({ suggestions, isGenerating }) {
+export default function InlineTakeoutResults({ suggestions, isGenerating, userLocationStr }) {
   const [viewMode, setViewMode] = useState('dominant'); // 'dominant' | 'alternatives'
   const [userLoc, setUserLoc] = useState([40.7128, -74.0060]);
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (userLocationStr) {
+      const parts = userLocationStr.split(',');
+      if (parts.length === 2 && !isNaN(parseFloat(parts[0])) && !isNaN(parseFloat(parts[1]))) {
+        setUserLoc([parseFloat(parts[0]), parseFloat(parts[1])]);
+      } else {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(userLocationStr)}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.length > 0) {
+              setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+            }
+          })
+          .catch(err => console.log("Geocoding error:", err));
+      }
+    } else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => setUserLoc([pos.coords.latitude, pos.coords.longitude]),
         (err) => console.log("Geolocation error:", err)
       );
     }
-  }, []);
+  }, [userLocationStr]);
 
   const getMockLocation = (center, index) => {
     const offsets = [

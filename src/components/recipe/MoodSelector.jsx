@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer, Feather, Frown, HelpCircle, Plus, X } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer, Feather, Frown, HelpCircle, Plus, X, MapPin } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -144,7 +144,7 @@ const moods = [
 ];
 
 
-export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName }) {
+export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName, location, onLocationChange, onDetectLocation }) {
   const [customMoodInput, setCustomMoodInput] = useState('');
 
   const handleMoodToggle = (moodId) => {
@@ -224,13 +224,37 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
       </div>
 
       {/* 3. Effort Pillar */}
-      <div className="w-full mb-4">
+      <div className="w-full mb-8">
         <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
           <span className="uppercase tracking-wider">3. Effort</span>
           <span className="text-gray-900">Low</span>
         </div>
         <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden relative cursor-pointer">
           <div className="absolute top-0 left-0 h-full bg-[#FFE9D6] w-[20%] rounded-full" />
+        </div>
+      </div>
+
+      {/* 4. Location Pillar */}
+      <div className="w-full mb-4">
+        <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
+          <span className="uppercase tracking-wider">4. Location (For Takeout)</span>
+        </div>
+        <div className="relative flex items-center">
+            <Input 
+                value={location || ''}
+                onChange={(e) => onLocationChange && onLocationChange(e.target.value)}
+                placeholder="Enter city or zip code (or use pin)"
+                className="w-full bg-gray-50 border-gray-200 pr-10"
+            />
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={onDetectLocation}
+                title="Use current location"
+                className="absolute right-1 text-[#6b9b76] hover:bg-transparent"
+            >
+                <MapPin className="w-5 h-5" />
+            </Button>
         </div>
       </div>
       

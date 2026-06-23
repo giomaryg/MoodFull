@@ -149,6 +149,42 @@ export default function RecipeGenerator() {
   
   const [takeoutSuggestions, setTakeoutSuggestions] = useState(null);
   const [isGeneratingTakeout, setIsGeneratingTakeout] = useState(false);
+  const [userLocation, setUserLocation] = useState('');
+
+  const handleDetectLocation = () => {
+    if (navigator.geolocation) {
+      toast.loading("Detecting location...");
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          try {
+            const { latitude, longitude } = pos.coords;
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+            const data = await res.json();
+            toast.dismiss();
+            if (data && data.address) {
+              const locStr = data.address.city || data.address.town || data.address.village || data.address.suburb || data.address.county || "Current Location";
+              const fullLoc = `${locStr}, ${data.address.state || ''}`.replace(/,\s*$/, "");
+              setUserLocation(fullLoc);
+              toast.success(`Location set to ${fullLoc}`);
+            } else {
+              setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+              toast.success("Location set");
+            }
+          } catch (e) {
+             toast.dismiss();
+             setUserLocation(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+             toast.success("Location set");
+          }
+        },
+        (err) => {
+          toast.dismiss();
+          toast.error("Could not detect location. Please type it manually.");
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by your browser.");
+    }
+  };
 
   const handleFridgeScan = async (e) => {
     const file = e.target.files?.[0];
@@ -690,6 +726,10 @@ export default function RecipeGenerator() {
       const preg = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status)
         ? `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).`
         : '';
+        
+      const locContext = userLocation 
+        ? `\nUSER LOCATION: ${userLocation}. CRITICAL: You MUST include REAL RESTAURANT NAMES (chains or local favorites available in this specific location) and ACTUAL MENU ITEMS from them.` 
+        : `\nCRITICAL: INCLUDE REAL RESTAURANT NAMES (prefer widely available chains or known local types if location isn't provided) and ACTUAL MENU ITEMS.`;
 
       base44.integrations.Core.InvokeLLM({
         prompt: `You are MoodFull's Smart Takeout AI. The user wants to order takeout instead of cooking.
@@ -697,10 +737,11 @@ Current mood/vibe: ${selectedMoods.join(', ')}
 User clicked "Find My Food" - pick the absolute best option for them right now based on time of day and general healthy habits.
 ${diet}
 ${preg}
+${locContext}
 
 Based on this, suggest 1 dominant best order, and 2 alternatives.
 For each, provide:
-1. The restaurant type or generic name (e.g. "Fresh Bowl Co." or "Local Mediterranean")
+1. The restaurant type or specific restaurant name (e.g. "Sweetgreen", "Chipotle", or a local name if inferred from location)
 2. The specific item name to order
 3. What typical unhealthy meal this replaces (Swap Instead of Sacrifice)
 4. Regret Reduction (e.g. "Saves ~400 calories vs typical order" or "High protein keeps you full")
@@ -1673,7 +1714,10 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                         onMoodSelect={setSelectedMoods}
                         selectedMealTypes={selectedMealTypes}
                         onMealTypeSelect={setSelectedMealTypes}
-                        userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]} />
+                        userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]}
+                        location={userLocation}
+                        onLocationChange={setUserLocation}
+                        onDetectLocation={handleDetectLocation} />
 
                 </motion.div>
                     }
@@ -1746,7 +1790,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                     
                     <div className="mb-10 w-full">
                       {(isGeneratingTakeout || takeoutSuggestions) && (
-                        <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} />
+                        <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} userLocationStr={userLocation} />
                       )}
                     </div>
 
