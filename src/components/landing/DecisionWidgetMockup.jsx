@@ -18,7 +18,7 @@ export default function DecisionWidgetMockup() {
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         className="absolute top-1/3 -left-6 sm:-left-12 bg-white px-4 py-2 rounded-full shadow-xl border border-[#e0ede4] text-sm font-bold flex items-center gap-2 text-[#3A6B4F] z-10"
       >
-        <span className="text-lg leading-none">😫</span> Mood: Stressed
+        <span className="text-lg leading-none">✨</span> Mood: Stressed
       </motion.div>
       <motion.div 
         animate={{ y: [0, -8, 0] }} 
@@ -32,11 +32,11 @@ export default function DecisionWidgetMockup() {
         <h3 className="text-2xl font-bold text-[#3A6B4F] mb-1">What should I eat?</h3>
         <p className="text-sm text-gray-500 font-medium mb-6">Tell us how you feel</p>
         
-        {/* Mood Emojis */}
-        <div className="flex justify-between mb-8">
-          {['😫', '😴', '😊', '🛋️'].map((emoji, i) => (
-            <div key={i} className={`w-12 h-12 rounded-full flex flex-col items-center justify-center text-2xl transition-all ${i===0 ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] shadow-md scale-110' : 'bg-gray-50 opacity-50 grayscale'}`}>
-              {emoji}
+        {/* Mood Words */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {['Stressed', 'Tired', 'Happy', 'Lazy', 'Hangover', 'Healthy', 'Treat', 'Cozy'].map((word, i) => (
+            <div key={i} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${i===0 ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] shadow-md text-[#3A6B4F] scale-105' : 'bg-gray-50 text-gray-500 opacity-70 grayscale'}`}>
+              {word}
             </div>
           ))}
         </div>

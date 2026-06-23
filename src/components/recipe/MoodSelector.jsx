@@ -185,23 +185,27 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
       {/* 1. Mood Pillar */}
       <div className="w-full mb-8">
         <div className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wider">1. Tell us how you feel</div>
-        <div className="flex justify-between items-center gap-2">
+        <div className="flex flex-wrap gap-2">
           {[
-            { id: 'stressed', emoji: '😫' },
-            { id: 'tired', emoji: '😴' },
-            { id: 'happy', emoji: '😊' },
-            { id: 'lazy', emoji: '🛋️' }
+            { id: 'stressed', label: 'Stressed' },
+            { id: 'tired', label: 'Tired' },
+            { id: 'happy', label: 'Happy' },
+            { id: 'lazy', label: 'Lazy' },
+            { id: 'hangover', label: 'Hangover' },
+            { id: 'healthy', label: 'Healthy' },
+            { id: 'treat', label: 'Treat' },
+            { id: 'cozy', label: 'Cozy' }
           ].map((mood) => {
             const isSelected = selectedMoods.includes(mood.id);
             return (
               <button
                 key={mood.id}
                 onClick={() => handleMoodToggle(mood.id)}
-                className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl transition-all ${
-                  isSelected ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] shadow-md scale-110' : 'bg-gray-50 opacity-50 grayscale hover:opacity-100 hover:grayscale-0'
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  isSelected ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] shadow-md text-[#3A6B4F] scale-105' : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                 }`}
               >
-                {mood.emoji}
+                {mood.label}
               </button>
             );
           })}
