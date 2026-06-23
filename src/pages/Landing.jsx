@@ -147,13 +147,21 @@ export default function Landing() {
         </section>
 
         {/* INSTANT VALUE STRIP */}
-        <section className="bg-[#0E1511] text-[#6DBE7C] py-6 border-y border-white/5 font-mono tracking-widest uppercase text-xs sm:text-sm">
-          <div className="max-w-6xl mx-auto px-6 flex flex-wrap justify-center md:justify-between items-center gap-6">
-            <div className="flex items-center gap-2"><Zap className="w-4 h-4" /> Takeout First</div>
-            <div className="flex items-center gap-2"><Activity className="w-4 h-4" /> Cooking Second</div>
-            <div className="flex items-center gap-2"><Brain className="w-4 h-4" /> AI Powered</div>
-            <div className="flex items-center gap-2"><Check className="w-4 h-4" /> Decisions Always</div>
-          </div>
+        <section className="bg-[#0E1511] text-[#6DBE7C] py-6 border-y border-white/5 font-mono tracking-widest uppercase text-xs sm:text-sm overflow-hidden relative flex">
+          <motion.div 
+            className="flex whitespace-nowrap w-max"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
+          >
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex gap-12 sm:gap-24 px-6 sm:px-12 items-center">
+                <div className="flex items-center gap-2"><Zap className="w-4 h-4" /> Takeout First</div>
+                <div className="flex items-center gap-2"><Activity className="w-4 h-4" /> Cooking Second</div>
+                <div className="flex items-center gap-2"><Brain className="w-4 h-4" /> AI Powered</div>
+                <div className="flex items-center gap-2"><Check className="w-4 h-4" /> Decisions Always</div>
+              </div>
+            ))}
+          </motion.div>
         </section>
 
         {/* CORE HOOK SECTION */}
