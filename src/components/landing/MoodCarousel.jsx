@@ -60,10 +60,7 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <div 
-      className="relative h-[550px] cursor-pointer" 
-      onClick={() => setFlipped(!flipped)}
-      onMouseEnter={() => setFlipped(true)}
-      onMouseLeave={() => setFlipped(false)}
+      className="relative h-[550px]" 
       style={{ perspective: "1000px" }}
     >
       <motion.div
