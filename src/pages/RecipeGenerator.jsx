@@ -1337,10 +1337,10 @@ export default function RecipeGenerator() {
                   }}
                   title="Go to Home"
                 >
-                  <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-1 opacity-80">
-                    ◎ AI Recipe Generator
+                  <div className="font-sans font-bold text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6DBE7C] mb-1 opacity-80">
+                    ◎ AI Decision Engine
                   </div>
-                  <h1 className="text-gradient py-2 text-2xl font-normal tracking-tight sm:text-5xl" style={{ fontFamily: "'Brittany Signature', cursive", lineHeight: '1.2' }}>
+                  <h1 className="text-[#3A6B4F] py-2 text-3xl font-extrabold tracking-tight sm:text-5xl" style={{ lineHeight: '1.2' }}>
                     MoodFull
                   </h1>
                 </header>
@@ -1531,9 +1531,9 @@ export default function RecipeGenerator() {
                     <Button
                           onClick={generateRecipe}
                           disabled={isGenerating}
-                          aria-label="Generate Recipes"
-                          className="bg-gradient-to-br from-[#6b9b76] to-[#5a8a65] text-white shadow-[0_0_18px_rgba(107,155,118,0.35)] hover:shadow-[0_0_24px_rgba(107,155,118,0.5)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
-                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Wait...</> : <>✦ Generate</>}
+                          aria-label="Find My Food"
+                          className="bg-[#3A6B4F] text-white shadow-[0_0_18px_rgba(58,107,79,0.35)] hover:shadow-[0_0_24px_rgba(58,107,79,0.5)] hover:bg-[#6DBE7C] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Deciding...</> : <><Sparkles className="w-5 h-5"/> Find My Food</>}
                     </Button>
 
                     {ENABLE_PANTRY_FEATURE &&
@@ -1567,25 +1567,7 @@ export default function RecipeGenerator() {
                       }
               </AnimatePresence>
 
-              {/* Takeout Option */}
-              <AnimatePresence mode="wait">
-                {(selectedMoods.length > 0 || globalSearchQuery.trim().length > 0) && !currentRecipe && generatedRecipes.length === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="flex justify-center w-full"
-                  >
-                    <Button
-                      variant="ghost"
-                      onClick={() => setShowTakeoutPanel(true)}
-                      className="text-gray-500 hover:text-[#6b9b76] hover:bg-[#f0f9f2] rounded-full px-6 py-2 h-auto mt-2 text-sm transition-colors border border-transparent hover:border-[#c5d9c9]"
-                    >
-                      🥡 Not in the mood to cook? Order smarter
-                    </Button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Removed original Takeout Option button here as we moved it to the results section */}
 
               {/* Recipe Grid */}
               <AnimatePresence mode="wait">
@@ -1594,6 +1576,32 @@ export default function RecipeGenerator() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}>
+
+                    <div className="flex items-center gap-4 mb-6 mt-8">
+                      <div className="h-px bg-[#e0ede4] flex-1"></div>
+                      <span className="bg-[#DFF5E6] text-[#3A6B4F] font-bold px-4 py-2 rounded-full text-sm">
+                        🥡 Takeout First
+                      </span>
+                      <div className="h-px bg-[#e0ede4] flex-1"></div>
+                    </div>
+                    
+                    <div className="mb-10 w-full flex justify-center">
+                      <Button
+                        onClick={() => setShowTakeoutPanel(true)}
+                        className="bg-white border-2 border-[#3A6B4F] text-[#3A6B4F] hover:bg-[#DFF5E6] w-full max-w-md py-6 rounded-2xl font-bold shadow-lg"
+                      >
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        Show Local Takeout Options
+                      </Button>
+                    </div>
+
+                    <div className="flex items-center gap-4 mb-6 mt-12">
+                      <div className="h-px bg-[#e0ede4] flex-1"></div>
+                      <span className="bg-[#FFE9D6] text-orange-800 font-bold px-4 py-2 rounded-full text-sm">
+                        🍳 Or Cook This
+                      </span>
+                      <div className="h-px bg-[#e0ede4] flex-1"></div>
+                    </div>
 
                     <RecipeGrid
                           recipes={filteredGeneratedRecipes}

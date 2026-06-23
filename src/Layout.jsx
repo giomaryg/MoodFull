@@ -14,11 +14,11 @@ export default function Layout({ children, currentPageName }) {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
         @import url('https://fonts.cdnfonts.com/css/brittany-signature');
 
         * {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Poppins', sans-serif;
         }
         
         .font-mono {

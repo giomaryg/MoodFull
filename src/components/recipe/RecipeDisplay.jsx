@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight, FolderPlus, Loader2, Share2 } from 'lucide-react';
+import { Clock, Users, ChefHat, Brain, BookmarkPlus, Check, CalendarPlus, Lightbulb, RefreshCw, Wine, Sparkles, Star, Minus, Plus, Pencil, Leaf, ChevronLeft, ChevronRight, FolderPlus, Loader2, Share2 } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddMealDialog from '../mealplan/AddMealDialog';
 import { useQuery } from '@tanstack/react-query';
@@ -416,7 +416,7 @@ function RecipeDisplay({ recipe: incomingRecipe, onSave, isSaved, onSimilarRecip
           />
         ) : (
           <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-            <ChefHat className="w-20 h-20 sm:w-24 sm:h-24 text-gray-300" />
+            <Brain className="w-20 h-20 sm:w-24 sm:h-24 text-gray-300" />
           </div>
         )}
         
@@ -609,7 +609,7 @@ function RecipeDisplay({ recipe: incomingRecipe, onSave, isSaved, onSimilarRecip
             <Button variant="ghost" size="icon" aria-label="Increase servings" onClick={() => setCurrentServings(currentServings + 1)} className="hover:text-gray-900 p-0 min-w-[44px] min-h-[44px]"><Plus className="w-4 h-4" /></Button>
           </Badge>
           <Badge variant="secondary" className="bg-[#fdf8f4] text-gray-700 px-3 py-1.5 rounded-xl capitalize">
-            <ChefHat className="w-4 h-4 mr-1.5 text-gray-400" />
+            <Brain className="w-4 h-4 mr-1.5 text-gray-400" />
             {recipe.difficulty || '-'}
           </Badge>
         </div>

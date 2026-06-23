@@ -76,8 +76,8 @@ button:focus-visible {
 
 @layer base {
   :root {
-    --brand-primary: 144 20% 50%;
-    --brand-secondary: 36 85% 68%;
+    --brand-primary: 146 29% 32%;
+    --brand-secondary: 131 39% 58%;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;

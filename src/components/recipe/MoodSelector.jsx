@@ -179,132 +179,62 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
   };
 
   return (
-    <div className="flex flex-col h-full -mx-4 sm:mx-0">
-      <div className="glass-header py-6 sm:py-8 px-4 text-center rounded-t-3xl sm:rounded-3xl mb-4 sm:mb-6">
-        <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6b9b76] mb-2 opacity-70">
-          ◎ Mood Interface
-        </div>
-        <div className="text-xl sm:text-2xl font-bold tracking-tight text-gradient">
-          How are you feeling?
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 px-4 flex-1">
-        {moods.map((mood) => {
-          const Icon = mood.icon;
-          const isSelected = selectedMoods.includes(mood.id);
-
-          return (
-            <button
-              key={mood.id}
-              role="switch"
-              aria-checked={isSelected}
-              onClick={() => handleMoodToggle(mood.id)}
-              className={`p-4 rounded-2xl flex flex-col items-center gap-2 transition-all duration-200 min-h-[44px] min-w-[44px] ${
-              isSelected ?
-              'bg-[#6b9b76]/10 border border-[#6b9b76]/50 shadow-[0_2px_12px_rgba(107,155,118,0.15)] relative overflow-hidden' :
-              'glass-panel hover:bg-white/70'}`
-              }>
-
-              {isSelected &&
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#6b9b76]/50 to-transparent" />
-              }
-              
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 relative ${
-              isSelected ?
-              'border border-transparent scale-105 shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.05),_inset_2px_2px_6px_rgba(255,255,255,0.5),_0_0_10px_rgba(107,155,118,0.2)]' :
-              'bg-white/40 border border-[#c5d9c9]/30 shadow-[inset_-1px_-1px_4px_rgba(0,0,0,0.03),_inset_1px_1px_4px_rgba(255,255,255,0.4)] hover:shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.06),_inset_2px_2px_5px_rgba(255,255,255,0.5)]'}`
-              }
-              style={{
-                background: isSelected ? 'radial-gradient(circle at 30% 30%, #e8f0ea 0%, #8db894 100%)' : ''
-              }}>
-                {isSelected &&
-                <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${mood.color} mix-blend-overlay opacity-50`} />
-                }
-                <Icon className={`w-6 h-6 relative z-10 transition-transform duration-300 ${isSelected ? 'text-[#3d5244] scale-110 drop-shadow-md' : 'text-[#5a6f60]/80'}`} />
-              </div>
-              <span className={`text-xs font-semibold ${isSelected ? 'text-[#3d5244]' : 'text-[#3d5244]/60'}`}>
-                {mood.label}
-              </span>
-            </button>);
-
-        })}
-      </div>
-
-      {/* Custom Mood Input */}
-      <div className="px-4 mt-6 flex flex-col items-center max-w-sm mx-auto w-full">
-        <form onSubmit={handleAddCustomMood} className="flex items-center w-full relative">
-          <Input
-            type="text"
-            placeholder="Type your mood, we’ll cook the rest..."
-            value={customMoodInput}
-            onChange={(e) => setCustomMoodInput(e.target.value)}
-            className="pr-10 text-xs sm:text-sm h-9 border-[#c5d9c9] focus:border-[#6b9b76] bg-white/50 rounded-full text-center placeholder:text-gray-400"
-            maxLength={30}
-          />
-          <Button
-            type="submit"
-            size="icon"
-            variant="ghost"
-            className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full text-[#6b9b76] hover:bg-[#6b9b76]/10"
-            disabled={!customMoodInput.trim()}
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
-        </form>
-
-        {/* Selected Custom Moods Chips */}
-        {selectedMoods.filter(moodId => !moods.some(m => m.id === moodId)).length > 0 && (
-          <div className="flex flex-wrap justify-center gap-2 mt-3">
-            {selectedMoods
-              .filter(moodId => !moods.some(m => m.id === moodId))
-              .map(customMood => (
-                <div key={customMood} className="flex items-center gap-1 bg-[#6b9b76]/10 text-[#3d5244] border border-[#6b9b76]/30 px-3 py-1 rounded-full text-xs font-medium">
-                  {customMood}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleMoodToggle(customMood);
-                    }}
-                    className="ml-1 hover:text-red-500 transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Meal Type Selector */}
-      <div className="px-4 py-8 flex flex-col items-center">
-        <div className="text-[#6f8f66] mb-3 font-mono text-center uppercase tracking-[0.15em] sm:text-[10px] w-full">
-          Meal Type
-        </div>
-        <div className="bg-transparent flex flex-wrap justify-center gap-2">
-          {mealTypes.map((type) => {
-            const Icon = type.icon;
-            const isSelected = selectedMealTypes.includes(type.id);
+    <div className="flex flex-col items-center max-w-lg mx-auto w-full bg-white rounded-[32px] p-6 shadow-sm border border-[#e0ede4] mb-8">
+      <h2 className="text-2xl font-bold text-[#3A6B4F] mb-6">What should I eat?</h2>
+      
+      {/* 1. Mood Pillar */}
+      <div className="w-full mb-8">
+        <div className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wider">1. Tell us how you feel</div>
+        <div className="flex justify-between items-center gap-2">
+          {[
+            { id: 'stressed', emoji: '😫' },
+            { id: 'tired', emoji: '😴' },
+            { id: 'happy', emoji: '😊' },
+            { id: 'lazy', emoji: '🛋️' }
+          ].map((mood) => {
+            const isSelected = selectedMoods.includes(mood.id);
             return (
               <button
-                key={type.id}
-                role="switch"
-                aria-checked={isSelected}
-                onClick={() => handleMealTypeToggle(type.id)} 
-                className={`flex items-center gap-1.5 px-4 py-1.5 min-h-[44px] min-w-[44px] rounded-full border text-xs transition-all duration-200 ${
-                  isSelected
-                    ? 'bg-[#6b9b76]/20 border-[#6b9b76]/45 text-[#6b9b76] font-medium'
-                    : 'bg-transparent border-[#c5d9c9]/60 text-[#8c8c8c]'
+                key={mood.id}
+                onClick={() => handleMoodToggle(mood.id)}
+                className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl transition-all ${
+                  isSelected ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] shadow-md scale-110' : 'bg-gray-50 opacity-50 grayscale hover:opacity-100 hover:grayscale-0'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                {type.label}
-              </button>);
-
+                {mood.emoji}
+              </button>
+            );
           })}
         </div>
+      </div>
+
+      {/* 2. Budget Pillar */}
+      <div className="w-full mb-8">
+        <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
+          <span className="uppercase tracking-wider">2. Budget</span>
+          <span className="text-gray-900">$15</span>
+        </div>
+        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden relative cursor-pointer">
+          <div className="absolute top-0 left-0 h-full bg-[#6DBE7C] w-[40%] rounded-full shadow-[0_0_10px_rgba(109,190,124,0.5)]" />
+        </div>
+      </div>
+
+      {/* 3. Effort Pillar */}
+      <div className="w-full mb-4">
+        <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
+          <span className="uppercase tracking-wider">3. Effort</span>
+          <span className="text-gray-900">Low</span>
+        </div>
+        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden relative cursor-pointer">
+          <div className="absolute top-0 left-0 h-full bg-[#FFE9D6] w-[20%] rounded-full" />
+        </div>
+      </div>
+      
+      {/* Hidden legacy meal types for backward compatibility just in case */}
+      <div className="hidden">
+        {mealTypes.map((type) => (
+          <button key={type.id} onClick={() => handleMealTypeToggle(type.id)} />
+        ))}
       </div>
     </div>);
 

@@ -7,8 +7,8 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
   const [isExpanded, setIsExpanded] = useState(false);
 
   const tabs = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'saved', label: 'Saved', icon: BookMarked },
+    { id: 'home', label: 'Find My Food', icon: Home },
+    { id: 'saved', label: 'My Meals', icon: BookMarked },
     { id: 'planner', label: 'Planner', icon: Calendar },
     { id: 'shopping', label: 'Shopping', icon: ShoppingCart },
     ...(enablePantry ? [{ id: 'inventory', label: 'Pantry', icon: Package }] : []),
@@ -105,12 +105,12 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                     <Icon
                       strokeWidth={isActive ? 2.5 : 2}
                       className={`w-5 h-5 transition-colors ${
-                        isActive ? 'text-primary' : 'text-muted-foreground'
+                        isActive ? 'text-[#3A6B4F]' : 'text-muted-foreground'
                       }`}
                     />
                     <span
-                      className={`font-mono text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center whitespace-nowrap px-2 ${
-                        isActive ? 'text-primary font-medium' : 'text-muted-foreground'
+                      className={`font-sans text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center whitespace-nowrap px-2 ${
+                        isActive ? 'text-[#3A6B4F] font-bold' : 'text-muted-foreground'
                       }`}
                     >
                       {tab.label}
@@ -119,7 +119,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
                     {isActive && (
                       <motion.div
                         layoutId="activeTabDot"
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6b9b76] rounded-r-full shadow-[2px_0_5px_rgba(107,155,118,0.7)]"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6DBE7C] rounded-r-full shadow-[2px_0_5px_rgba(109,190,124,0.7)]"
                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                       />
                     )}

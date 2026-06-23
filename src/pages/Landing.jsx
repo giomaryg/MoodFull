@@ -5,9 +5,9 @@ import { base44 } from '@/api/base44Client';
 import { 
   Sparkles, Clock, Leaf, ArrowRight, UtensilsCrossed, Menu, X, 
   Brain, ShoppingCart, Activity, ShieldCheck, Download, Camera, Loader2,
-  Calendar, LineChart
+  Calendar, LineChart, MapPin, Zap
 } from 'lucide-react';
-import FloatingSmartBowl from '@/components/landing/FloatingSmartBowl';
+import DecisionWidgetMockup from '@/components/landing/DecisionWidgetMockup';
 import TakeoutTransformation from '@/components/landing/TakeoutTransformation';
 import AnalyticsCrystal from '@/components/landing/AnalyticsCrystal';
 import MoodCarousel from '@/components/landing/MoodCarousel';
@@ -100,19 +100,19 @@ export default function Landing() {
               transition={{ duration: 0.5 }}
               className="text-left"
             >
-              <h1 className="text-5xl md:text-7xl font-bold text-[#3d5244] tracking-tight mb-6 leading-tight">
-                Your Next Meal Is 3 Seconds Away
+              <h1 className="text-5xl md:text-7xl font-bold text-[#3A6B4F] tracking-tight mb-6 leading-tight">
+              AI decides.<br/>You enjoy.
               </h1>
               <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
-                MoodFull uses AI to instantly create meals based on your mood, health goals, and what’s already in your kitchen.
+              MoodFull is an AI decision engine — tells you what to eat based on mood, budget, and effort. Takeout first. Cooking second. Decisions always.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-center md:justify-start mb-4">
-                <Button 
-                  onClick={handleLogin} 
-                  className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-lg shadow-[#6b9b76]/30 transition-all hover:scale-105"
-                >
-                  Generate My Meal
-                </Button>
+              <Button 
+                onClick={handleLogin} 
+                className="bg-[#3A6B4F] hover:bg-[#6DBE7C] text-white px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-lg shadow-[#6DBE7C]/30 transition-all hover:scale-105"
+              >
+                Find My Food
+              </Button>
                 <Button 
                   onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} 
                   variant="outline"
@@ -124,25 +124,25 @@ export default function Landing() {
               <p className="text-sm text-gray-500 font-medium">No planning. No stress. Free to start.</p>
             </motion.div>
 
-            {/* 3D FLOATING BOWL HERO */}
+            {/* DECISION WIDGET HERO */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="relative hidden md:block"
             >
-              <FloatingSmartBowl />
+              <DecisionWidgetMockup />
             </motion.div>
           </div>
         </section>
 
         {/* INSTANT VALUE STRIP */}
-        <section className="bg-[#6b9b76] text-white py-6 border-y border-[#5a8a65]">
+        <section className="bg-[#3A6B4F] text-white py-6 border-y border-[#2b523b]">
           <div className="max-w-6xl mx-auto px-6 flex flex-wrap justify-center md:justify-between items-center gap-6 font-medium text-sm md:text-base">
-            <div className="flex items-center gap-2">⚡ Instant meals</div>
-            <div className="flex items-center gap-2">🧠 Personalized to you</div>
-            <div className="flex items-center gap-2">🥗 Healthier without effort</div>
-            <div className="flex items-center gap-2">🛒 Uses what you already have</div>
+            <div className="flex items-center gap-2">🥡 Takeout First</div>
+            <div className="flex items-center gap-2">🍳 Cooking Second</div>
+            <div className="flex items-center gap-2">✨ AI Powered</div>
+            <div className="flex items-center gap-2">✓ Decisions Always</div>
           </div>
         </section>
 
@@ -168,7 +168,6 @@ export default function Landing() {
               <ul className="space-y-4 text-lg text-gray-700 font-medium">
                 <li className="flex items-center gap-3"><X className="w-5 h-5 text-red-400" /> No more scrolling recipes</li>
                 <li className="flex items-center gap-3"><X className="w-5 h-5 text-red-400" /> No more “what should I eat?”</li>
-                <li className="flex items-center gap-3"><X className="w-5 h-5 text-red-400" /> No more defaulting to takeout</li>
               </ul>
             </motion.div>
             
@@ -176,7 +175,7 @@ export default function Landing() {
           </motion.div>
         </section>
 
-        {/* HOW IT WORKS */}
+        {/* MOOD CAROUSEL */}
         <section id="how-it-works" className="py-24 bg-[#f8faf8] border-t border-[#e0ede4]">
           <div className="max-w-6xl mx-auto px-6">
             <motion.div 
@@ -185,8 +184,8 @@ export default function Landing() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-[#3d5244] mb-4">How It Works</h2>
-              <p className="text-lg text-[#6b9b76] font-bold">Takes less than 10 seconds</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#3A6B4F] mb-4">AI-Matched for Your Mood</h2>
+              <p className="text-lg text-[#6DBE7C] font-bold">Instantly recommended based on how you feel.</p>
             </motion.div>
             
             <MoodCarousel />
@@ -201,9 +200,9 @@ export default function Landing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-[#3d5244] mb-6">Craving Takeout? This Is Better.</h2>
+              <h2 className="text-3xl md:text-5xl font-bold text-[#3A6B4F] mb-6">Takeout That Matches Your Mood</h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-16">
-                MoodFull turns your cravings into smarter meals.
+                Personalized picks from top restaurants near you — in seconds.
               </p>
             </motion.div>
 
@@ -271,7 +270,7 @@ export default function Landing() {
                >
                   <div className="p-4 border-b border-gray-100 bg-gray-50 flex items-center gap-3">
                     <Sparkles className="w-5 h-5 text-[#6b9b76] animate-pulse" />
-                    <span className="font-bold text-gray-800">Your AI Chef</span>
+                    <span className="font-bold text-gray-800">Your AI Decision</span>
                   </div>
                   <div className="p-6 space-y-4">
                     <div className="flex justify-between items-center">
@@ -314,14 +313,14 @@ export default function Landing() {
               className="grid grid-cols-2 md:grid-cols-4 gap-6"
             >
               {[
-                { icon: <Sparkles className="w-6 h-6"/>, title: 'AI Recipe Generator' },
-                { icon: <Camera className="w-6 h-6"/>, title: 'Smart Pantry Scanner' },
-                { icon: <Clock className="w-6 h-6"/>, title: 'Weekly Meal Planning' },
-                { icon: <Calendar className="w-6 h-6"/>, title: 'Apple Calendar Sync' },
-                { icon: <Brain className="w-6 h-6"/>, title: 'AI Diet Assistant' },
-                { icon: <UtensilsCrossed className="w-6 h-6"/>, title: 'Appliance Adaptation' },
-                { icon: <Activity className="w-6 h-6"/>, title: 'Insights & Spending' },
-                { icon: <LineChart className="w-6 h-6"/>, title: 'Mood & Rating History' }
+                { icon: <Brain className="w-6 h-6"/>, title: 'AI Decision Engine' },
+                { icon: <MapPin className="w-6 h-6"/>, title: 'Smart Takeout Locator' },
+                { icon: <Zap className="w-6 h-6"/>, title: 'Effort & Budget Matching' },
+                { icon: <Sparkles className="w-6 h-6"/>, title: 'Personalized Recommendations' },
+                { icon: <Camera className="w-6 h-6"/>, title: 'Pantry Scanning' },
+                { icon: <UtensilsCrossed className="w-6 h-6"/>, title: 'Cooking Alternatives' },
+                { icon: <Activity className="w-6 h-6"/>, title: 'Nutrition & Insights' },
+                { icon: <LineChart className="w-6 h-6"/>, title: 'Mood Tracking' }
               ].map((feature, i) => (
                 <motion.div 
                   key={i} 
@@ -465,7 +464,7 @@ export default function Landing() {
               />
               <FaqItem 
                 question="Do I need to cook?" 
-                answer="No—get healthy takeout alternatives too." 
+                answer="No — MoodFull recommends the best takeout near you first. Cooking is always an option." 
               />
               <FaqItem 
                 question="Can it match my diet?" 
@@ -490,9 +489,9 @@ export default function Landing() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
                 onClick={handleLogin} 
-                className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-8 py-7 rounded-full text-xl w-full sm:w-auto shadow-[0_0_30px_rgba(107,155,118,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(107,155,118,0.5)] font-bold"
+                className="bg-[#6DBE7C] hover:bg-[#5aa86a] text-white px-8 py-7 rounded-full text-xl w-full sm:w-auto shadow-[0_0_30px_rgba(109,190,124,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(109,190,124,0.5)] font-bold"
               >
-                Generate My Meal
+                Find My Food
               </Button>
               <Button 
                 onClick={handleLogin} 

@@ -47,6 +47,9 @@ export default function NavigationHeader() {
       <span className={`font-semibold text-gray-800 capitalize ${!isIOS ? 'ml-4' : ''}`}>
         {location.pathname.replace('/', '').replace(/([A-Z])/g, ' $1').trim()}
       </span>
+      <div className="ml-auto mr-4 flex items-center bg-[#DFF5E6] text-[#3A6B4F] px-3 py-1 rounded-full text-xs font-bold gap-1 shadow-sm">
+        <span className="text-base leading-none">✨</span> AI POWERED
+      </div>
     </div>
   );
 }
