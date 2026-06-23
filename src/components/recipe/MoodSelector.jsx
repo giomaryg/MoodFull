@@ -144,7 +144,7 @@ const moods = [
 ];
 
 
-export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName, location, onLocationChange, onDetectLocation }) {
+export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName, location, onLocationChange, onDetectLocation, effortLevel, onEffortSelect }) {
   const [customMoodInput, setCustomMoodInput] = useState('');
 
   const handleMoodToggle = (moodId) => {
@@ -226,11 +226,20 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
       {/* 3. Effort Pillar */}
       <div className="w-full mb-8">
         <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
-          <span className="uppercase tracking-wider">3. Effort</span>
-          <span className="text-gray-900">Low</span>
+          <span className="uppercase tracking-wider">3. Effort Level</span>
         </div>
-        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden relative cursor-pointer">
-          <div className="absolute top-0 left-0 h-full bg-[#FFE9D6] w-[20%] rounded-full" />
+        <div className="flex gap-2">
+          {['Fast Takeout', 'Quick & Easy', 'Involved Cooking'].map(level => (
+            <button
+              key={level}
+              onClick={() => onEffortSelect && onEffortSelect(level)}
+              className={`flex-1 py-2 px-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all ${
+                effortLevel === level ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] text-[#3A6B4F]' : 'bg-gray-50 border-2 border-transparent text-gray-500 hover:bg-gray-100'
+              }`}
+            >
+              {level}
+            </button>
+          ))}
         </div>
       </div>
 

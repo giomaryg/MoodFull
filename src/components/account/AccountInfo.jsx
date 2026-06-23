@@ -40,6 +40,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     email: user?.email || '',
     phone_number: user?.phone_number || '',
     preferred_language: user?.preferred_language || 'en',
+    diet_preferences: user?.diet_preferences || '',
     advanced_dietary: user?.advanced_dietary || '',
     allergies: user?.allergies || '',
     techniques_to_practice: user?.techniques_to_practice || '',
@@ -86,6 +87,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
       email: user?.email || '',
       phone_number: user?.phone_number || '',
       preferred_language: user?.preferred_language || 'en',
+      diet_preferences: user?.diet_preferences || '',
       advanced_dietary: user?.advanced_dietary || '',
       allergies: user?.allergies || '',
       techniques_to_practice: user?.techniques_to_practice || '',
@@ -207,6 +209,26 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                       <SelectItem value="zh">中文</SelectItem>
                       <SelectItem value="ar">العربية</SelectItem>
                       <SelectItem value="he">עברית</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Dietary Preference</label>
+                  <Select
+                    value={formData.diet_preferences}
+                    onValueChange={(value) => setFormData({ ...formData, diet_preferences: value })}
+                  >
+                    <SelectTrigger className="w-full border-2 border-[#c5d9c9] focus:border-[#6b9b76] rounded-md bg-white min-h-[44px]">
+                      <SelectValue placeholder="Select Diet" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Anything">Anything</SelectItem>
+                      <SelectItem value="Vegetarian">Vegetarian</SelectItem>
+                      <SelectItem value="Vegan">Vegan</SelectItem>
+                      <SelectItem value="Pescatarian">Pescatarian</SelectItem>
+                      <SelectItem value="Paleo">Paleo</SelectItem>
+                      <SelectItem value="Keto">Keto</SelectItem>
+                      <SelectItem value="Gluten-Free">Gluten-Free</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

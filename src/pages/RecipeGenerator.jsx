@@ -150,6 +150,7 @@ export default function RecipeGenerator() {
   const [takeoutSuggestions, setTakeoutSuggestions] = useState(null);
   const [isGeneratingTakeout, setIsGeneratingTakeout] = useState(false);
   const [userLocation, setUserLocation] = useState('');
+  const [effortLevel, setEffortLevel] = useState('Quick & Easy');
 
   const handleDetectLocation = () => {
     if (navigator.geolocation) {
@@ -731,9 +732,16 @@ export default function RecipeGenerator() {
         ? `\nUSER LOCATION: ${userLocation}. CRITICAL: You MUST include REAL RESTAURANT NAMES (chains or local favorites available in this specific location) and ACTUAL MENU ITEMS from them.` 
         : `\nCRITICAL: INCLUDE REAL RESTAURANT NAMES (prefer widely available chains or known local types if location isn't provided) and ACTUAL MENU ITEMS.`;
 
+      const effortTakeoutContext = effortLevel === 'Fast Takeout' 
+        ? 'User is explicitly looking for the fastest and easiest takeout option right now.' 
+        : effortLevel === 'Involved Cooking' 
+        ? 'User actually wants to cook, but provide a high-quality restaurant option just in case they decide to order in.' 
+        : '';
+
       base44.integrations.Core.InvokeLLM({
         prompt: `You are MoodFull's Smart Takeout AI. The user wants to order takeout instead of cooking.
 Current mood/vibe: ${selectedMoods.join(', ')}
+${effortTakeoutContext}
 User clicked "Find My Food" - pick the absolute best option for them right now based on time of day and general healthy habits.
 ${diet}
 ${preg}
@@ -940,6 +948,11 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       const searchContext = globalSearchQuery ? `matching "${globalSearchQuery}"` : '';
       const moodPart = selectedMoods.length > 0 ? `for mood: ${moodContext}` : '';
       const mealTypePart = selectedMealTypes.length > 0 ? ` Meal type(s): ${selectedMealTypes.join(', ')}.` : '';
+      const effortContext = effortLevel === 'Fast Takeout' 
+        ? `CRITICAL: The user wants "Fast Takeout". Keep the cooking recipes EXTREMELY fast and simple (under 15 mins), basically assembling ingredients.` 
+        : effortLevel === 'Involved Cooking'
+        ? `CRITICAL: The user wants "Involved Cooking". Provide impressive, scratch-made recipes that take time and focus, using advanced techniques.` 
+        : `User prefers "Quick & Easy" recipes. Keep prep time under 30 minutes.`;
 
       let filtersContext = [];
       if (advancedFilters.cuisine) filtersContext.push(`Cuisine: ${advancedFilters.cuisine}`);
@@ -954,7 +967,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
 
       // Phase 1: Fast - generate just names, descriptions, and basic info (< 5 seconds)
       const quickResponse = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
-        prompt: `Generate 6 diverse recipe ideas ${moodPart} ${searchContext}.${mealTypePart}${preferencesContext}${filterString} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Focus heavily on requested nutritional goals and cooking techniques. Do NOT generate 6 similar recipes - make them varied and interesting.`,
+        prompt: `Generate 6 diverse recipe ideas ${moodPart} ${searchContext}.${mealTypePart} ${effortContext} ${preferencesContext}${filterString} Include a wide variety of proteins (e.g. steak, chicken, salmon, shrimp, pork, lamb, tofu) and cuisines and difficulty levels. Focus heavily on requested nutritional goals and cooking techniques. Do NOT generate 6 similar recipes - make them varied and interesting.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -1002,7 +1015,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       // Phase 2: Enrich all recipes in parallel (ingredients, instructions, nutrition, etc.)
       const enrichPromises = quickRecipes.map(async (recipe, index) => {
         const detail = await base44.integrations.Core.InvokeLLM({ model: 'gemini_3_flash',
-          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). Factor in any specific nutritional goals, specific dietary restrictions, and teach any requested cooking techniques in the instructions. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items focusing on user targets if any), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
+          prompt: `Generate full recipe details for "${recipe.name}" (${recipe.description}). ${effortContext} Factor in any specific nutritional goals, specific dietary restrictions, and teach any requested cooking techniques in the instructions. Include: ingredients with measurements, step-by-step instructions, nutrition per serving (calories as number, protein/carbs/fat/fiber/sodium/sugar/saturated_fat/cholesterol as strings), vitamins_minerals (name/amount/daily_value, 4 items focusing on user targets if any), health_benefits (3), cooking_tips (3), substitutions (ingredient+substitute, 3), pairings (2).`,
           response_json_schema: {
             type: "object",
             properties: {
@@ -1717,7 +1730,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                         userName={(currentUser?.display_name || currentUser?.full_name)?.split(' ')[0]}
                         location={userLocation}
                         onLocationChange={setUserLocation}
-                        onDetectLocation={handleDetectLocation} />
+                        onDetectLocation={handleDetectLocation}
+                        effortLevel={effortLevel}
+                        onEffortSelect={setEffortLevel} />
 
                 </motion.div>
                     }
