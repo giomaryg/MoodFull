@@ -6,32 +6,32 @@ import { Sparkles, Brain, Zap, Activity, ChevronRight, Check } from 'lucide-reac
 const TUTORIAL_STEPS = [
   {
     id: 'welcome',
-    title: 'The AI Decision Engine',
-    description: 'Stop overthinking your meals. MoodFull analyzes your mood, budget, and effort levels to make the perfect food decision for you instantly.',
+    title: 'Your AI Food Guide',
+    description: 'Stop overthinking. MoodFull looks at your mood, budget, and energy to find the perfect meal instantly.',
     icon: Brain,
     color: 'text-[#3A6B4F]',
     bg: 'bg-[#f0f9f2]'
   },
   {
     id: 'takeout',
-    title: 'Optimized Takeout First',
-    description: 'Not in the mood to cook? Our AI maps your cravings to the best local takeout options, prioritizing convenience and budget.',
+    title: 'Smart Takeout First',
+    description: "Don't want to cook? Our AI finds the best local takeout options that fit your budget and cravings.",
     icon: Zap,
     color: 'text-[#6DBE7C]',
     bg: 'bg-[#DFF5E6]'
   },
   {
     id: 'cooking',
-    title: 'Adaptive Cooking Second',
-    description: 'When you want to cook, MoodFull generates personalized recipes based on what is already in your kitchen, adapting to your dietary profile.',
+    title: 'Smart Cooking Second',
+    description: "When you want to cook, MoodFull creates custom recipes using what's already in your kitchen.",
     icon: Sparkles,
     color: 'text-[#3A6B4F]',
     bg: 'bg-[#f0f9f2]'
   },
   {
     id: 'insights',
-    title: 'Continuous Learning',
-    description: 'Every interaction improves your neural profile. Over time, MoodFull anticipates your cravings before you even feel them.',
+    title: 'Always Learning',
+    description: 'The more you use it, the smarter it gets. Soon, MoodFull will know what you want before you do.',
     icon: Activity,
     color: 'text-[#6DBE7C]',
     bg: 'bg-[#DFF5E6]'
@@ -132,7 +132,7 @@ export default function TutorialOverlay({ forceShow = false, onCloseForceShow })
                 >
                   {currentStep === TUTORIAL_STEPS.length - 1 ? (
                     <>
-                      Initialize <Check className="w-4 h-4 ml-2" />
+                      Get Started <Check className="w-4 h-4 ml-2" />
                     </>
                   ) : (
                     <>

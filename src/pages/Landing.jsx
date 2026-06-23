@@ -37,14 +37,14 @@ export default function Landing() {
           <span className="text-xl font-bold tracking-tight text-white">MoodFull</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-[#A8C7B3] font-medium text-sm">
-          <a href="#why-moodfull" className="hover:text-white transition-colors">Neural Architecture</a>
-          <a href="#how-it-works" className="hover:text-white transition-colors">System Protocol</a>
-          <a href="#features" className="hover:text-white transition-colors">Capabilities</a>
-          <a href="#takeout" className="hover:text-white transition-colors">Takeout Intelligence</a>
+          <a href="#why-moodfull" className="hover:text-white transition-colors">How it Thinks</a>
+          <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
+          <a href="#features" className="hover:text-white transition-colors">Features</a>
+          <a href="#takeout" className="hover:text-white transition-colors">Smart Takeout</a>
         </nav>
         <div className="hidden md:block">
           <Button onClick={handleLogin} variant="outline" className="border-[#3A6B4F] text-[#6DBE7C] hover:bg-[#3A6B4F]/20 hover:text-white rounded-full px-6 transition-all bg-transparent">
-            Initialize Session
+            Get Started
           </Button>
         </div>
         <button 
@@ -79,13 +79,13 @@ export default function Landing() {
                 </button>
               </div>
               <nav className="flex flex-col gap-6 text-[#A8C7B3] font-medium text-lg">
-                <a href="#why-moodfull" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Neural Architecture</a>
-                <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">System Protocol</a>
-                <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Capabilities</a>
-                <a href="#takeout" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Takeout Intelligence</a>
+                <a href="#why-moodfull" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">How it Thinks</a>
+                <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">How it Works</a>
+                <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Features</a>
+                <a href="#takeout" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Smart Takeout</a>
                 <div className="pt-6 border-t border-white/10">
                   <Button onClick={handleLogin} className="w-full bg-[#3A6B4F] text-white hover:bg-[#6DBE7C] rounded-full px-6 py-6 text-lg transition-all shadow-[0_0_20px_rgba(58,107,79,0.3)] border-0">
-                    Initialize Session
+                    Get Started
                   </Button>
                 </div>
               </nav>
@@ -106,31 +106,31 @@ export default function Landing() {
             >
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#183525] border border-[#3A6B4F] text-[#6DBE7C] text-sm font-mono mb-6">
                 <div className="w-2 h-2 rounded-full bg-[#6DBE7C] animate-pulse" />
-                SYSTEM ONLINE
+                AI READY
               </div>
               <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-tight">
                 AI Decides.<br/>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6DBE7C] to-[#3A6B4F]">You Enjoy.</span>
               </h1>
               <p className="text-lg md:text-xl text-[#A8C7B3] mb-8 leading-relaxed font-light">
-                MoodFull is an algorithmic decision engine determining your optimal meal based on mood parameters, financial threshold, and energy limits. Takeout priorities first. Culinary protocols second. Decisions always.
+                An AI decision engine that finds your perfect meal based on your mood, budget, and energy. We check takeout first, then recipes. No more guessing.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-center md:justify-start mb-4">
                 <Button 
                   onClick={handleLogin} 
                   className="bg-white text-[#0A0D10] px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all hover:scale-105 font-bold"
                 >
-                  Initiate Scan
+                  Find My Food
                 </Button>
                 <Button 
                   onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} 
                   variant="outline"
                   className="border-white/20 text-white bg-transparent hover:bg-white/5 px-8 py-6 rounded-full text-lg w-full sm:w-auto transition-all flex items-center gap-2"
                 >
-                  View Protocol <ArrowRight className="w-4 h-4" />
+                  See How It Works <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-sm text-white/40 font-mono">ZERO COGNITIVE LOAD. ACCESS GRANTED.</p>
+              <p className="text-sm text-white/40 font-mono">ZERO EFFORT. INSTANT RESULTS.</p>
             </motion.div>
 
             {/* DECISION WIDGET HERO */}
@@ -165,23 +165,23 @@ export default function Landing() {
             transition={{ duration: 0.8 }}
             className="max-w-3xl mx-auto px-6 relative z-10"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">Eradicate Choice Paralysis</h2>
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">Stop Overthinking</h2>
             <p className="text-xl text-[#A8C7B3] mb-6 leading-relaxed font-light">
-              Most individuals do not struggle with the mechanics of cooking.<br/>They struggle with the cognitive load of decision-making.
+              Most individuals do not struggle with the mechanics of cooking.<br/>They struggle with the stress of deciding what to eat.
             </p>
-            <p className="text-xl font-bold text-[#6DBE7C] mb-8 uppercase tracking-widest text-sm">System Override Enabled.</p>
+            <p className="text-xl font-bold text-[#6DBE7C] mb-8 uppercase tracking-widest text-sm">Let AI Take the Wheel.</p>
             
             <motion.div 
               whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.03)" }}
               className="inline-flex flex-col items-start text-left bg-white/5 p-8 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-sm mb-8 transition-all"
             >
               <ul className="space-y-4 text-lg text-gray-300 font-medium">
-                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center"><X className="w-4 h-4 text-red-400" /></div> Endless scrolling terminated</li>
-                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center"><X className="w-4 h-4 text-red-400" /></div> Ambiguous cravings resolved</li>
+                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center"><X className="w-4 h-4 text-red-400" /></div> Endless scrolling eliminated</li>
+                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center"><X className="w-4 h-4 text-red-400" /></div> Confusing cravings solved</li>
               </ul>
             </motion.div>
             
-            <p className="text-2xl font-light text-white">Initialize the interface. Receive the directive.</p>
+            <p className="text-2xl font-light text-white">Open the app. Get your answer.</p>
           </motion.div>
         </section>
 
@@ -196,8 +196,8 @@ export default function Landing() {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Algorithmic Mood Matching</h2>
-              <p className="text-lg text-[#6DBE7C] font-mono tracking-widest text-sm uppercase">Synchronizing with user state parameters</p>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Smart Mood Matching</h2>
+              <p className="text-lg text-[#6DBE7C] font-mono tracking-widest text-sm uppercase">Adapting perfectly to how you feel</p>
             </motion.div>
             
             <MoodCarousel />
@@ -213,9 +213,9 @@ export default function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Intelligent Takeout Logistics</h2>
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Smart Takeout Finder</h2>
               <p className="text-xl text-[#A8C7B3] max-w-3xl mx-auto leading-relaxed mb-16 font-light">
-                Optimized selections from proximal culinary providers — computed in milliseconds.
+                The best options from restaurants near you — found in milliseconds.
               </p>
             </motion.div>
 
@@ -236,7 +236,7 @@ export default function Landing() {
               transition={{ duration: 1, delay: 0.4 }}
               className="text-2xl font-light text-white"
             >
-              Consume optimally. No compromises necessary.
+              Eat what you love. No compromises.
             </motion.p>
           </div>
         </section>
@@ -250,9 +250,9 @@ export default function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Generated Directives, Not Just Recipes</h2>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Complete Meals, Not Just Recipes</h2>
               <p className="text-lg text-[#A8C7B3] leading-relaxed mb-8 font-light">
-                MoodFull computes comprehensive outputs instantaneously:
+                MoodFull creates everything you need instantly:
               </p>
               <motion.ul 
                 initial="hidden"
@@ -262,10 +262,10 @@ export default function Landing() {
                 className="space-y-6 text-gray-300 text-lg font-medium mb-8"
               >
                 {[
-                  "Complete nutritional breakdown matrices",
-                  "Step-by-step procedural instructions",
-                  "Inventory-aware ingredient adaptations",
-                  "Hardware-specific cooking parameter shifts"
+                  "Full nutritional breakdowns",
+                  "Clear, step-by-step instructions",
+                  "Smart ingredient swaps based on your pantry",
+                  "Adjustments for your kitchen appliances"
                 ].map((item, idx) => (
                   <motion.li 
                     key={idx}
@@ -286,7 +286,7 @@ export default function Landing() {
                 transition={{ delay: 0.8, duration: 1 }}
                 className="text-2xl font-light text-white"
               >
-                Computed specifically for <span className="font-bold text-[#6DBE7C]">User Profile</span>.
+                Created specifically for <span className="font-bold text-[#6DBE7C]">you</span>.
               </motion.p>
             </motion.div>
 
@@ -308,7 +308,7 @@ export default function Landing() {
                   </div>
                   <div className="p-6 space-y-5">
                     <div className="flex justify-between items-center">
-                      <div className="font-bold text-lg text-white">Target: Protein Rich</div>
+                      <div className="font-bold text-lg text-white">Goal: Protein Rich</div>
                       <div className="text-xs bg-[#183525] text-[#6DBE7C] px-3 py-1 rounded-md font-mono border border-[#3A6B4F]">MATCH 98%</div>
                     </div>
                     <div className="space-y-3">
@@ -318,8 +318,8 @@ export default function Landing() {
                       <div className="h-2 bg-white/10 rounded-full w-5/6"></div>
                     </div>
                     <div className="pt-5 border-t border-white/5 space-y-2">
-                      <div className="text-xs font-mono text-[#A8C7B3] uppercase tracking-wider">Computation Log</div>
-                      <div className="text-sm text-gray-400 font-light">Inventory lack detected. Swapped <span className="line-through text-white/40">butter</span> for <span className="text-[#6DBE7C] font-bold">olive oil</span>.</div>
+                      <div className="text-xs font-mono text-[#A8C7B3] uppercase tracking-wider">AI Log</div>
+                      <div className="text-sm text-gray-400 font-light">Missing ingredient. Swapped <span className="line-through text-white/40">butter</span> for <span className="text-[#6DBE7C] font-bold">olive oil</span>.</div>
                     </div>
                   </div>
                </motion.div>
@@ -336,7 +336,7 @@ export default function Landing() {
               viewport={{ once: true }}
               className="text-3xl md:text-5xl font-bold text-white mb-16 tracking-tight"
             >
-              Integrated Systems Framework
+              Everything Works Together
             </motion.h2>
             <motion.div 
               initial="hidden"
@@ -349,14 +349,14 @@ export default function Landing() {
               className="grid grid-cols-2 md:grid-cols-4 gap-6"
             >
               {[
-                { icon: <Brain className="w-6 h-6"/>, title: 'Neural Engine' },
-                { icon: <MapPin className="w-6 h-6"/>, title: 'Spatial Locator' },
-                { icon: <Zap className="w-6 h-6"/>, title: 'Energy Calibration' },
-                { icon: <Sparkles className="w-6 h-6"/>, title: 'Dynamic Output' },
-                { icon: <Camera className="w-6 h-6"/>, title: 'Vision Scanner' },
-                { icon: <UtensilsCrossed className="w-6 h-6"/>, title: 'Protocol Adaptation' },
-                { icon: <Activity className="w-6 h-6"/>, title: 'Data Telemetry' },
-                { icon: <LineChart className="w-6 h-6"/>, title: 'State Tracking' }
+                { icon: <Brain className="w-6 h-6"/>, title: 'AI Engine' },
+                { icon: <MapPin className="w-6 h-6"/>, title: 'Location Tracker' },
+                { icon: <Zap className="w-6 h-6"/>, title: 'Energy Matching' },
+                { icon: <Sparkles className="w-6 h-6"/>, title: 'Smart Results' },
+                { icon: <Camera className="w-6 h-6"/>, title: 'Pantry Scanner' },
+                { icon: <UtensilsCrossed className="w-6 h-6"/>, title: 'Smart Swaps' },
+                { icon: <Activity className="w-6 h-6"/>, title: 'Health Insights' },
+                { icon: <LineChart className="w-6 h-6"/>, title: 'Mood History' }
               ].map((feature, i) => (
                 <motion.div 
                   key={i} 
@@ -383,9 +383,9 @@ export default function Landing() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Telemetry & Interface</h2>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Your Health Dashboard</h2>
               <p className="text-xl text-[#A8C7B3] max-w-2xl mx-auto font-light">
-                Holographic data visualization reacting to user parameters in real-time.
+                Beautiful data visualizations that adapt to your mood and history.
               </p>
             </motion.div>
             
@@ -407,14 +407,14 @@ export default function Landing() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-sm font-mono mb-8 uppercase tracking-widest">
               <Brain className="w-4 h-4 text-[#6DBE7C]" /> Intelligence Ready
             </div>
-            <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight text-white">Disengage Manual Selection</h2>
-            <p className="text-2xl text-[#A8C7B3] font-light mb-12">Allow the system to compute the optimal path.</p>
+            <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight text-white">Stop Guessing</h2>
+            <p className="text-2xl text-[#A8C7B3] font-light mb-12">Let our AI find the perfect meal for you.</p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Button 
                 onClick={handleLogin} 
                 className="bg-white text-[#0A0D10] hover:bg-[#E0EDE4] px-10 py-7 rounded-full text-xl w-full sm:w-auto shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all hover:scale-105 font-bold"
               >
-                Initiate Sequence
+                Start Now
               </Button>
               <Button 
                 onClick={handleLogin} 
@@ -422,7 +422,7 @@ export default function Landing() {
                 className="border-white/20 text-white bg-white/5 hover:bg-white/10 px-10 py-7 rounded-full text-xl w-full sm:w-auto transition-all font-medium backdrop-blur-md hover:border-white/40"
               >
                 <Download className="w-5 h-5 mr-3" />
-                Deploy App
+                Download App
               </Button>
             </div>
           </motion.div>
@@ -431,11 +431,11 @@ export default function Landing() {
       </main>
 
       <footer className="bg-[#050709] pt-12 pb-12 text-center text-[#A8C7B3] text-sm flex flex-col items-center border-t border-white/5 relative z-10 font-mono uppercase tracking-widest">
-        <p className="mb-8 font-bold text-white/50 tracking-[0.2em]">MoodFull — Algorithmic Sustenance.</p>
+        <p className="mb-8 font-bold text-white/50 tracking-[0.2em]">MoodFull — Eat Smarter.</p>
         <div className="flex gap-8 mb-12">
-          <a href="/about" className="hover:text-white transition-colors">Architecture</a>
-          <a href="/contact" className="hover:text-white transition-colors">Comms</a>
-          <a href="/privacy" className="hover:text-white transition-colors">Security</a>
+          <a href="/about" className="hover:text-white transition-colors">About</a>
+          <a href="/contact" className="hover:text-white transition-colors">Contact</a>
+          <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
         </div>
         <p className="text-xs text-white/20">© {new Date().getFullYear()} MoodFull Systems. All rights reserved.</p>
       </footer>
