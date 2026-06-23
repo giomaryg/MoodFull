@@ -349,25 +349,26 @@ export default function Landing() {
               className="grid grid-cols-2 md:grid-cols-4 gap-6"
             >
               {[
-                { icon: <Brain className="w-6 h-6"/>, title: 'AI Engine' },
-                { icon: <MapPin className="w-6 h-6"/>, title: 'Location Tracker' },
-                { icon: <Zap className="w-6 h-6"/>, title: 'Energy Matching' },
-                { icon: <Sparkles className="w-6 h-6"/>, title: 'Smart Results' },
-                { icon: <Camera className="w-6 h-6"/>, title: 'Pantry Scanner' },
-                { icon: <UtensilsCrossed className="w-6 h-6"/>, title: 'Smart Swaps' },
-                { icon: <Activity className="w-6 h-6"/>, title: 'Health Insights' },
-                { icon: <LineChart className="w-6 h-6"/>, title: 'Mood History' }
+                { icon: <Brain className="w-6 h-6"/>, title: 'AI Engine', desc: 'Analyzes your mood to generate precise food recommendations instantly.' },
+                { icon: <MapPin className="w-6 h-6"/>, title: 'Location Tracker', desc: 'Maps out top-tier takeout options in your immediate vicinity.' },
+                { icon: <Zap className="w-6 h-6"/>, title: 'Energy Matching', desc: 'Adjusts meal complexity based on how much effort you can spare.' },
+                { icon: <Sparkles className="w-6 h-6"/>, title: 'Smart Results', desc: 'Provides full nutritional breakdowns and step-by-step instructions.' },
+                { icon: <Camera className="w-6 h-6"/>, title: 'Pantry Scanner', desc: 'Uses your camera to identify ingredients you already have at home.' },
+                { icon: <UtensilsCrossed className="w-6 h-6"/>, title: 'Smart Swaps', desc: 'Adapts recipes dynamically based on your available inventory.' },
+                { icon: <Activity className="w-6 h-6"/>, title: 'Health Insights', desc: 'Monitors your nutritional intake and highlights wellness trends.' },
+                { icon: <LineChart className="w-6 h-6"/>, title: 'Mood History', desc: 'Tracks how your feelings correlate with your eating habits over time.' }
               ].map((feature, i) => (
                 <motion.div 
                   key={i} 
                   variants={{ hidden: { opacity: 0, scale: 0.8, filter: "blur(10px)" }, visible: { opacity: 1, scale: 1, filter: "blur(0px)" } }}
                   whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.05)", borderColor: "rgba(109,190,124,0.5)" }}
-                  className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col items-center text-center gap-6 transition-all cursor-default backdrop-blur-sm"
+                  className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col items-center text-center gap-4 transition-all cursor-default backdrop-blur-sm"
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#183525] to-[#0A0D10] border border-[#3A6B4F] rounded-2xl flex items-center justify-center text-[#6DBE7C] shadow-[0_0_15px_rgba(58,107,79,0.5)]">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#183525] to-[#0A0D10] border border-[#3A6B4F] rounded-2xl flex items-center justify-center text-[#6DBE7C] shadow-[0_0_15px_rgba(58,107,79,0.5)] shrink-0">
                     {feature.icon}
                   </div>
-                  <span className="font-medium text-gray-200 tracking-wide">{feature.title}</span>
+                  <h3 className="font-bold text-gray-200 tracking-wide text-lg">{feature.title}</h3>
+                  <p className="text-sm text-gray-400 font-light leading-relaxed">{feature.desc}</p>
                 </motion.div>
               ))}
             </motion.div>

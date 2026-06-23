@@ -3,9 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Sparkles, Utensils, Search, Leaf, ShieldAlert, ArrowRight, ExternalLink, X, Clock, ShieldCheck, Zap } from 'lucide-react';
+import { Loader2, Sparkles, Utensils, Search, Leaf, ShieldAlert, ArrowRight, ExternalLink, X, Clock, ShieldCheck, Zap, MapPin } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
 const getImage = (name) => {
   const n = name.toLowerCase();
@@ -23,6 +26,40 @@ export default function SmartTakeoutPanel({ isOpen, onClose, contextMoods = [], 
   const [isGenerating, setIsGenerating] = useState(false);
   const [suggestions, setSuggestions] = useState(null);
   const [viewMode, setViewMode] = useState('dominant'); // 'dominant' | 'alternatives'
+  const [userLoc, setUserLoc] = useState([40.7128, -74.0060]); // Default to NYC
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLoc([pos.coords.latitude, pos.coords.longitude]),
+        (err) => console.log("Geolocation error:", err)
+      );
+    }
+  }, []);
+
+  const getMockLocation = (center, index) => {
+    const offsets = [
+      [0.004, 0.005],
+      [-0.003, -0.006],
+      [0.007, -0.002],
+    ];
+    const offset = offsets[index % offsets.length];
+    return [center[0] + offset[0], center[1] + offset[1]];
+  };
+
+  const mapMarkers = React.useMemo(() => {
+    if (!suggestions) return [];
+    const markers = [];
+    if (suggestions.dominant_recommendation) {
+      markers.push({ ...suggestions.dominant_recommendation, loc: getMockLocation(userLoc, 0), isTop: true });
+    }
+    if (suggestions.alternatives) {
+      suggestions.alternatives.forEach((alt, i) => {
+        markers.push({ ...alt, loc: getMockLocation(userLoc, i + 1), isTop: false });
+      });
+    }
+    return markers;
+  }, [suggestions, userLoc]);
 
   // Pre-fill if there's a recipe context
   useEffect(() => {
@@ -226,6 +263,41 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
               <div className="bg-[#f0f9f2] p-4 rounded-xl border border-[#c5d9c9] flex items-start gap-3">
                 <Sparkles className="w-5 h-5 text-[#6b9b76] mt-0.5 shrink-0" />
                 <p className="text-[#3d5244] font-medium leading-snug">{suggestions.personalization_hook}</p>
+              </div>
+
+              {/* Map View */}
+              <div className="h-56 w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
+                <MapContainer center={userLoc} zoom={13} style={{ height: '100%', width: '100%' }} zoomControl={false}>
+                  <TileLayer
+                    attribution='&copy; OpenStreetMap'
+                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                  />
+                  {mapMarkers.map((m, idx) => (
+                    <Marker 
+                      key={idx} 
+                      position={m.loc}
+                      icon={new L.Icon({
+                        iconUrl: m.isTop ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' : 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                      })}
+                    >
+                      <Popup className="rounded-xl">
+                        <div className="text-center p-1 min-w-[120px]">
+                          <p className="font-bold text-[#3d5244] text-[13px] leading-tight mb-1">{m.restaurant_type}</p>
+                          <p className="text-[11px] text-gray-600 mb-2 leading-tight">{m.item_name}</p>
+                          <Button size="sm" className="h-7 text-[10px] w-full bg-[#6b9b76] hover:bg-[#5a8a65]" onClick={() => openDeliveryPlatform('ubereats', m.item_name)}>Order Here</Button>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
+                <div className="absolute top-2 left-2 z-[400] bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-[#3d5244] border border-[#c5d9c9] flex items-center gap-1 shadow-sm">
+                  <MapPin className="w-3.5 h-3.5" /> Nearby Options
+                </div>
               </div>
 
               {viewMode === 'dominant' && suggestions.dominant_recommendation && (

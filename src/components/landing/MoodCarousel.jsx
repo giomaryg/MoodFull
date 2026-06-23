@@ -102,8 +102,11 @@ const RecipeCard = ({ recipe }) => {
             <p className="max-w-lg text-white/90 mb-6 text-lg">
               {recipe.reason}
             </p>
-            <button className="bg-white text-[#3d5244] px-8 py-3 rounded-full font-bold transition shadow-lg pointer-events-none">
-              View Recipe
+            <button 
+              onClick={(e) => { e.stopPropagation(); setFlipped(true); }}
+              className="bg-white text-[#3d5244] px-8 py-3 rounded-full font-bold transition shadow-lg pointer-events-auto hover:bg-gray-100"
+            >
+              Tap to Flip
             </button>
           </div>
         </div>
@@ -146,7 +149,10 @@ const RecipeCard = ({ recipe }) => {
           </div>
           
           <div className="pt-6 mt-auto">
-            <button className="w-full bg-[#3d5244] text-white px-8 py-3 rounded-full font-bold transition shadow-lg pointer-events-none">
+            <button 
+              onClick={(e) => { e.stopPropagation(); setFlipped(false); }}
+              className="w-full bg-[#3d5244] text-white px-8 py-3 rounded-full font-bold transition shadow-lg pointer-events-auto hover:bg-[#2c3d32]"
+            >
               Flip Back
             </button>
           </div>
