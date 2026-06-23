@@ -194,7 +194,9 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
             { id: 'hangover', label: 'Hangover' },
             { id: 'healthy', label: 'Healthy' },
             { id: 'treat', label: 'Treat' },
-            { id: 'cozy', label: 'Cozy' }
+            { id: 'cozy', label: 'Cozy' },
+            { id: 'energetic', label: 'Energetic' },
+            { id: 'romantic', label: 'Romantic' }
           ].map((mood) => {
             const isSelected = selectedMoods.includes(mood.id);
             return (
