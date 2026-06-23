@@ -18,8 +18,6 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { NavigationStackProvider, useNavigationStack } from '@/lib/NavigationStackContext';
 import { ThemeProvider } from '@/lib/ThemeProvider';
 
-import NotificationConsentModal from '@/components/onboarding/NotificationConsentModal';
-
 // Added new imports below:
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
@@ -230,7 +228,6 @@ function App() {
           </Router>
           <Toaster />
           <SonnerToaster position="top-center" offset="80px" />
-          <NotificationConsentModal />
           <VisualEditAgent />
         </QueryClientProvider>
       </AuthProvider>

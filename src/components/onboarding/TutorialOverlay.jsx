@@ -1,40 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Package, Calendar, Search, ChevronRight, Check } from 'lucide-react';
+import { Sparkles, Brain, Zap, Activity, ChevronRight, Check } from 'lucide-react';
 
 const TUTORIAL_STEPS = [
   {
     id: 'welcome',
-    title: 'Welcome to MoodFull',
-    description: 'Your personal AI chef. Generate delicious recipes based on your current mood, dietary needs, and cravings.',
-    icon: Sparkles,
-    color: 'text-[#f2b769]',
-    bg: 'bg-[#fffcf7]'
-  },
-  {
-    id: 'pantry',
-    title: 'Smart Pantry & Fridge Scan',
-    description: 'Track your ingredients to get smarter recipe suggestions. Use your camera to scan your fridge and let AI identify your items automatically!',
-    icon: Package,
-    color: 'text-[#6b9b76]',
+    title: 'The AI Decision Engine',
+    description: 'Stop overthinking your meals. MoodFull analyzes your mood, budget, and effort levels to make the perfect food decision for you instantly.',
+    icon: Brain,
+    color: 'text-[#3A6B4F]',
     bg: 'bg-[#f0f9f2]'
   },
   {
-    id: 'planner',
-    title: 'Intelligent Meal Planning',
-    description: 'Plan your week, track your nutritional goals, and instantly generate smart shopping lists from your selected recipes.',
-    icon: Calendar,
-    color: 'text-[#c17a7a]',
-    bg: 'bg-[#fdf5f5]'
+    id: 'takeout',
+    title: 'Optimized Takeout First',
+    description: 'Not in the mood to cook? Our AI maps your cravings to the best local takeout options, prioritizing convenience and budget.',
+    icon: Zap,
+    color: 'text-[#6DBE7C]',
+    bg: 'bg-[#DFF5E6]'
   },
   {
-    id: 'discovery',
-    title: 'Search & Discover',
-    description: 'Find exactly what you are looking for. Use advanced filters to sort by cuisine, prep time, calories, and more.',
-    icon: Search,
-    color: 'text-blue-500',
-    bg: 'bg-blue-50'
+    id: 'cooking',
+    title: 'Adaptive Cooking Second',
+    description: 'When you want to cook, MoodFull generates personalized recipes based on what is already in your kitchen, adapting to your dietary profile.',
+    icon: Sparkles,
+    color: 'text-[#3A6B4F]',
+    bg: 'bg-[#f0f9f2]'
+  },
+  {
+    id: 'insights',
+    title: 'Continuous Learning',
+    description: 'Every interaction improves your neural profile. Over time, MoodFull anticipates your cravings before you even feel them.',
+    icon: Activity,
+    color: 'text-[#6DBE7C]',
+    bg: 'bg-[#DFF5E6]'
   }
 ];
 
@@ -79,16 +79,22 @@ export default function TutorialOverlay({ forceShow = false, onCloseForceShow })
         >
           <motion.div
             key={currentStep}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 30, scale: 0.9, rotateX: 10 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+            exit={{ opacity: 0, y: -30, scale: 0.9, rotateX: -10 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            style={{ perspective: 1000 }}
             className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border-2 border-[#c5d9c9]"
           >
             <div className={`p-8 flex flex-col items-center text-center transition-colors duration-500 ${TUTORIAL_STEPS[currentStep].bg}`}>
-              <div className={`w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center mb-6 ${TUTORIAL_STEPS[currentStep].color}`}>
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1, rotate: 360 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
+                className={`w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center mb-6 ${TUTORIAL_STEPS[currentStep].color}`}
+              >
                 <StepIcon className="w-10 h-10" />
-              </div>
+              </motion.div>
               <h2 className="text-2xl font-bold text-gray-800 mb-3">
                 {TUTORIAL_STEPS[currentStep].title}
               </h2>
@@ -104,7 +110,7 @@ export default function TutorialOverlay({ forceShow = false, onCloseForceShow })
                   <div
                     key={idx}
                     className={`h-2 rounded-full transition-all duration-300 ${
-                      idx === currentStep ? 'w-6 bg-[#6b9b76]' : 'w-2 bg-gray-200'
+                      idx === currentStep ? 'w-6 bg-[#3A6B4F]' : 'w-2 bg-gray-200'
                     }`}
                   />
                 ))}
@@ -122,11 +128,11 @@ export default function TutorialOverlay({ forceShow = false, onCloseForceShow })
                 
                 <Button
                   onClick={handleNext}
-                  className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white px-8 rounded-xl font-semibold shadow-md"
+                  className="bg-[#3A6B4F] hover:bg-[#6DBE7C] text-white px-8 rounded-xl font-semibold shadow-md transition-colors"
                 >
                   {currentStep === TUTORIAL_STEPS.length - 1 ? (
                     <>
-                      Get Started <Check className="w-4 h-4 ml-2" />
+                      Initialize <Check className="w-4 h-4 ml-2" />
                     </>
                   ) : (
                     <>

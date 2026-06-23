@@ -45,10 +45,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
     techniques_to_practice: user?.techniques_to_practice || '',
     extra_equipment: user?.extra_equipment || '',
     vitamin_targets: user?.vitamin_targets || '',
-    pregnancy_status: user?.pregnancy_status || 'not_applicable',
-    notifications_enabled: user?.notifications_enabled || false,
-    notification_types: user?.notification_types || [],
-    notification_methods: user?.notification_methods || []
+    pregnancy_status: user?.pregnancy_status || 'not_applicable'
   });
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -94,10 +91,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
       techniques_to_practice: user?.techniques_to_practice || '',
       extra_equipment: user?.extra_equipment || '',
       vitamin_targets: user?.vitamin_targets || '',
-      pregnancy_status: user?.pregnancy_status || 'not_applicable',
-      notifications_enabled: user?.notifications_enabled || false,
-      notification_types: user?.notification_types || [],
-      notification_methods: user?.notification_methods || []
+      pregnancy_status: user?.pregnancy_status || 'not_applicable'
     });
     setIsEditing(false);
   };
@@ -261,69 +255,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                     className="border-2 border-[#c5d9c9] focus:border-[#6b9b76]"
                   />
                 </div>
-                <div className="pt-4 border-t border-[#c5d9c9]">
-                  <h3 className="text-lg font-semibold text-[#6b9b76] mb-4 flex items-center gap-2">
-                    <Bell className="w-5 h-5" />
-                    Notification Settings
-                  </h3>
-                  <div className="flex items-center justify-between mb-4">
-                    <label className="text-sm font-semibold text-gray-700">Enable Notifications</label>
-                    <Switch 
-                      checked={formData.notifications_enabled} 
-                      onCheckedChange={(checked) => setFormData({ ...formData, notifications_enabled: checked })} 
-                    />
-                  </div>
-                  {formData.notifications_enabled && (
-                    <div className="space-y-4 pl-2 border-l-2 border-[#e8f0ea]">
-                      <div>
-                        <label className="text-sm font-semibold text-gray-700 mb-2 block">Notification Types</label>
-                        <div className="space-y-2">
-                          <label className="flex items-center gap-2 text-sm text-gray-600">
-                            <Checkbox 
-                              checked={formData.notification_types.includes('daily_reminder')} 
-                              onCheckedChange={(checked) => {
-                                const types = checked 
-                                  ? [...formData.notification_types, 'daily_reminder'] 
-                                  : formData.notification_types.filter(t => t !== 'daily_reminder');
-                                setFormData({ ...formData, notification_types: types });
-                              }}
-                            />
-                            Daily Reminders (Log mood & pick meal)
-                          </label>
-                          <label className="flex items-center gap-2 text-sm text-gray-600">
-                            <Checkbox 
-                              checked={formData.notification_types.includes('promotions')} 
-                              onCheckedChange={(checked) => {
-                                const types = checked 
-                                  ? [...formData.notification_types, 'promotions'] 
-                                  : formData.notification_types.filter(t => t !== 'promotions');
-                                setFormData({ ...formData, notification_types: types });
-                              }}
-                            />
-                            Promotions & Updates
-                          </label>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-sm font-semibold text-gray-700 mb-2 block">Receive Notifications Via</label>
-                        <div className="space-y-2">
-                          <label className="flex items-center gap-2 text-sm text-gray-600">
-                            <Checkbox 
-                              checked={formData.notification_methods.includes('email')} 
-                              onCheckedChange={(checked) => {
-                                const methods = checked 
-                                  ? [...formData.notification_methods, 'email'] 
-                                  : formData.notification_methods.filter(m => m !== 'email');
-                                setFormData({ ...formData, notification_methods: methods });
-                              }}
-                            />
-                            Email
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+
                 <div className="flex gap-3 pt-2">
                   <Button
                     onClick={handleSave}
@@ -377,22 +309,7 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
                   )}
                 </div>
 
-                <div className="border-t border-[#e0ede4] pt-4 mt-4">
-                  <h4 className="font-semibold text-gray-800 flex items-center gap-2 mb-2">
-                    <Bell className="w-4 h-4 text-[#6b9b76]" />
-                    Notifications
-                  </h4>
-                  {user?.notifications_enabled ? (
-                    <div className="text-sm text-gray-600">
-                      <p>✅ Enabled via {user.notification_methods?.join(', ') || 'Email'}</p>
-                      <p className="mt-1">Receiving: {user.notification_types?.map(t => t.replace('_', ' ')).join(', ') || 'Daily Reminders'}</p>
-                    </div>
-                  ) : (
-                    <div className="text-sm text-gray-500">
-                      🔕 Notifications are currently disabled
-                    </div>
-                  )}
-                </div>
+
 
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div className="bg-[#f5e6dc] rounded-xl p-4 text-center">
