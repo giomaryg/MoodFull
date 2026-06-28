@@ -516,6 +516,17 @@ function RecipeDisplay({ recipe: incomingRecipe, onSave, isSaved, onSimilarRecip
                 eventName: "recipe_cooking_started",
                 properties: { recipe_id: recipe.id, recipe_name: recipe.name }
               });
+              
+              if (recipe.mood && recipe.name) {
+                base44.entities.MoodLog.create({
+                  mood: recipe.mood,
+                  date: new Date().toISOString(),
+                  recipe_name: recipe.name,
+                  recipe_id: recipe.id || '',
+                  image_url: recipe.imageUrl || recipe.imageUrls?.[0] || '',
+                  meal_type: 'cooked'
+                });
+              }
             }}
             className="bg-gray-900 hover:bg-gray-800 text-white rounded-full px-6"
           >

@@ -44,6 +44,7 @@ const AICoach = lazy(() => import('../components/recipe/AICoach'));
 const TutorialOverlay = lazy(() => import('../components/onboarding/TutorialOverlay'));
 const SmartTakeoutPanel = lazy(() => import('../components/takeout/SmartTakeoutPanel'));
 const InlineTakeoutResults = lazy(() => import('../components/takeout/InlineTakeoutResults'));
+const MoodLogHistory = lazy(() => import('../components/analytics/MoodLogHistory'));
 
 const ENABLE_PANTRY_FEATURE = false;
 
@@ -2023,6 +2024,19 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   }
             </motion.div>
             {renderTabStack('analytics')}
+          </div>
+
+          {/* Mood Log Tab */}
+          <div style={{ display: !showSurvey && activeTab === 'moodlog' ? 'block' : 'none' }} className="relative w-full">
+            <motion.div
+                  animate={{ x: getStack('moodlog').length > 0 ? '-30%' : 0, opacity: getStack('moodlog').length > 0 ? 0.5 : 1 }}
+                  transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+                  className={`w-full ${getStack('moodlog').length > 0 ? 'pointer-events-none' : 'relative'}`}>
+                  
+              <MoodLogHistory />
+                  
+            </motion.div>
+            {renderTabStack('moodlog')}
           </div>
 
           {/* Settings Tab */}

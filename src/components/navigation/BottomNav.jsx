@@ -13,6 +13,7 @@ export default function BottomNav({ activeTab, onTabChange, isVisible = true, en
     { id: 'shopping', label: 'Shopping', icon: ShoppingCart },
     ...(enablePantry ? [{ id: 'inventory', label: 'Pantry', icon: Package }] : []),
     { id: 'analytics', label: 'Insights', icon: BarChart2 },
+    { id: 'moodlog', label: 'Mood Log', icon: BookMarked },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
 
