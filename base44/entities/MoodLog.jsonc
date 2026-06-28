@@ -14,6 +14,22 @@
       "type": "string",
       "maxLength": 1000,
       "description": "Optional description of the mood log"
+    },
+    "recipe_name": {
+      "type": "string",
+      "description": "Name of the recipe eaten"
+    },
+    "recipe_id": {
+      "type": "string",
+      "description": "ID of the recipe eaten"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image URL of the recipe"
+    },
+    "meal_type": {
+      "type": "string",
+      "description": "Type of meal (e.g. cooked, takeout)"
     }
   },
   "required": [
@@ -24,6 +40,12 @@
       "created_by": "{{user.email}}"
     },
     "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
       "created_by": "{{user.email}}"
     }
   }
