@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin } from 'lucide-react';
+import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin, Share2 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { toast } from 'sonner';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -75,6 +76,19 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  const handleShare = (item) => {
+    const text = `I'm thinking of getting the ${item.item_name} from ${item.restaurant_type}!`;
+    if (navigator.share) {
+      navigator.share({
+        title: item.item_name,
+        text: text,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(text);
+      toast.success('Recommendation copied to clipboard!');
+    }
+  };
+
   if (isGenerating) {
     return (
       <div className="bg-[#f0f9f2] p-8 rounded-2xl border border-[#c5d9c9] flex flex-col items-center justify-center space-y-4 shadow-sm w-full">
@@ -105,8 +119,18 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
         <div className="space-y-6">
             {viewMode === 'dominant' && suggestions.dominant_recommendation && (
               <div className="bg-white rounded-[2rem] border-[3px] border-[#6b9b76] shadow-xl overflow-hidden relative group">
-                <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full z-10 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5" /> {suggestions.dominant_recommendation.speed_urgency}
+                <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleShare(suggestions.dominant_recommendation)}
+                    className="bg-black/70 hover:bg-black/90 backdrop-blur-md text-white rounded-full min-h-[32px] min-w-[32px] w-8 h-8"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </Button>
+                  <div className="bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" /> {suggestions.dominant_recommendation.speed_urgency}
+                  </div>
                 </div>
                 <div className="h-48 relative overflow-hidden">
                   <img 
@@ -193,8 +217,18 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
                         <h4 className="text-xl font-bold leading-tight drop-shadow-md">{sug.item_name}</h4>
                         <p className="text-xs font-bold text-white/90 uppercase">{sug.restaurant_type}</p>
                       </div>
-                      <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {sug.speed_urgency}
+                      <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleShare(sug)}
+                          className="bg-black/60 hover:bg-black/80 backdrop-blur-sm text-white rounded-full h-6 w-6 min-w-[24px] min-h-[24px]"
+                        >
+                          <Share2 className="w-3 h-3" />
+                        </Button>
+                        <div className="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> {sug.speed_urgency}
+                        </div>
                       </div>
                     </div>
                     <div className="p-4">

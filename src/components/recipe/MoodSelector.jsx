@@ -144,7 +144,7 @@ const moods = [
 ];
 
 
-export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName, location, onLocationChange, onDetectLocation, effortLevel, onEffortSelect }) {
+export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName, location, onLocationChange, onDetectLocation, effortLevel, onEffortSelect, budgetAmount = 15, onBudgetAmountChange, budgetCurrency = '$', onBudgetCurrencyChange }) {
   const [customMoodInput, setCustomMoodInput] = useState('');
 
   const handleMoodToggle = (moodId) => {
@@ -216,12 +216,42 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
 
       {/* 2. Budget Pillar */}
       <div className="w-full mb-8">
-        <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
+        <div className="flex justify-between items-center text-sm font-bold text-[#3A6B4F] mb-3">
           <span className="uppercase tracking-wider">2. Budget</span>
-          <span className="text-gray-900">$15</span>
+          <div className="flex items-center gap-2">
+            <select
+              value={budgetCurrency}
+              onChange={(e) => onBudgetCurrencyChange && onBudgetCurrencyChange(e.target.value)}
+              className="bg-transparent text-[#3A6B4F] font-bold border-none outline-none cursor-pointer focus:ring-0 appearance-none"
+            >
+              <option value="$">$</option>
+              <option value="€">€</option>
+              <option value="£">£</option>
+              <option value="¥">¥</option>
+              <option value="₹">₹</option>
+            </select>
+            <input
+              type="number"
+              min="0"
+              max="200"
+              value={budgetAmount}
+              onChange={(e) => onBudgetAmountChange && onBudgetAmountChange(Number(e.target.value))}
+              className="w-16 text-right font-bold text-gray-900 border-none outline-none bg-transparent focus:ring-0 p-0"
+            />
+          </div>
         </div>
-        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden relative cursor-pointer">
-          <div className="absolute top-0 left-0 h-full bg-[#6DBE7C] w-[40%] rounded-full shadow-[0_0_10px_rgba(109,190,124,0.5)]" />
+        <div className="px-2">
+          <input 
+            type="range" 
+            min="0" 
+            max="100" 
+            value={budgetAmount} 
+            onChange={(e) => onBudgetAmountChange && onBudgetAmountChange(Number(e.target.value))}
+            className="w-full h-3 bg-gray-100 rounded-full appearance-none outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-[#6DBE7C] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(109,190,124,0.5)]"
+            style={{
+              background: `linear-gradient(to right, #6DBE7C 0%, #6DBE7C ${budgetAmount}%, #f3f4f6 ${budgetAmount}%, #f3f4f6 100%)`
+            }}
+          />
         </div>
       </div>
 
