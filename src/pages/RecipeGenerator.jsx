@@ -91,32 +91,32 @@ export default function RecipeGenerator() {
   function renderTabStack(tabName) {
     return <AnimatePresence custom={direction}>
       {getStack(tabName).map((stackItem, index) => {
-      const isTop = index === getStack(tabName).length - 1;
-      return (
-        <motion.div
-          key={`${tabName}-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
-          custom={direction}
-          initial={{ x: direction === 'backward' ? '-30%' : '100%', opacity: direction === 'backward' ? 0.5 : 1, boxShadow: direction === 'backward' ? 'none' : '-10px 0 20px rgba(0,0,0,0.1)' }}
-          animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0.5, boxShadow: isTop ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
-          exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0.5, boxShadow: direction === 'backward' ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
-          transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
-          className={`fixed inset-0 bg-background overflow-y-auto overflow-x-hidden ${isTop ? 'z-[100]' : 'z-50 pointer-events-none'}`}
-          >
+        const isTop = index === getStack(tabName).length - 1;
+        return (
+          <motion.div
+            key={`${tabName}-stack-${index}-${stackItem.recipe?.id || stackItem.recipe?.name}`}
+            custom={direction}
+            initial={{ x: direction === 'backward' ? '-30%' : '100%', opacity: direction === 'backward' ? 0.5 : 1, boxShadow: direction === 'backward' ? 'none' : '-10px 0 20px rgba(0,0,0,0.1)' }}
+            animate={{ x: isTop ? 0 : '-30%', opacity: isTop ? 1 : 0.5, boxShadow: isTop ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
+            exit={{ x: direction === 'backward' ? '100%' : '-30%', opacity: direction === 'backward' ? 1 : 0.5, boxShadow: direction === 'backward' ? '-10px 0 20px rgba(0,0,0,0.1)' : 'none' }}
+            transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.4 }}
+            className={`fixed inset-0 bg-background overflow-y-auto overflow-x-hidden ${isTop ? 'z-[100]' : 'z-50 pointer-events-none'}`}>
+            
           
             <RecipeDisplay
-            recipe={stackItem.recipe}
-            onSave={handleSaveRecipe}
-            isSaved={isRecipeSaved(stackItem.recipe)}
-            onBack={() => popFromStack(tabName)}
-            onUpdate={(updatedRecipe) => {if (isTop) replaceTopStack(tabName, { recipe: { ...stackItem.recipe, ...updatedRecipe } });}}
-            onSimilarRecipeClick={(recipe) => {
-              pushToStack(tabName, { recipe });
-              window.scrollTo({ top: 0, behavior: 'instant' });
-            }} />
+              recipe={stackItem.recipe}
+              onSave={handleSaveRecipe}
+              isSaved={isRecipeSaved(stackItem.recipe)}
+              onBack={() => popFromStack(tabName)}
+              onUpdate={(updatedRecipe) => {if (isTop) replaceTopStack(tabName, { recipe: { ...stackItem.recipe, ...updatedRecipe } });}}
+              onSimilarRecipeClick={(recipe) => {
+                pushToStack(tabName, { recipe });
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }} />
           
           </motion.div>);
 
-    })}
+      })}
     </AnimatePresence>;
   }
 
@@ -147,7 +147,7 @@ export default function RecipeGenerator() {
   const [hideLimitAlert, setHideLimitAlert] = useState(false);
   const [forceShowTutorial, setForceShowTutorial] = useState(false);
   const fileInputRef = useRef(null);
-  
+
   const [takeoutSuggestions, setTakeoutSuggestions] = useState(null);
   const [showChatModal, setShowChatModal] = useState(false);
   const [isGeneratingTakeout, setIsGeneratingTakeout] = useState(false);
@@ -176,9 +176,9 @@ export default function RecipeGenerator() {
               toast.success("Location set");
             }
           } catch (e) {
-             toast.dismiss();
-             setUserLocation(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
-             toast.success("Location set");
+            toast.dismiss();
+            setUserLocation(`${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+            toast.success("Location set");
           }
         },
         (err) => {
@@ -359,12 +359,12 @@ export default function RecipeGenerator() {
   });
 
   const availableRecipesForSearch = activeTab === 'saved' ? savedRecipes : generatedRecipes;
-  const { 
-    query: globalSearchQuery, 
-    setQuery: setGlobalSearchQuery, 
-    isSearching: isSmartSearching, 
-    smartResults, 
-    searchIntent 
+  const {
+    query: globalSearchQuery,
+    setQuery: setGlobalSearchQuery,
+    isSearching: isSmartSearching,
+    smartResults,
+    searchIntent
   } = useSmartSearch(availableRecipesForSearch);
 
   // Sync the text version for legacy usages
@@ -378,21 +378,21 @@ export default function RecipeGenerator() {
     // Apply Smart Search Results if available
     if (globalSearchQuery.trim() && smartResults !== null) {
       if (smartResults.length === 0) return []; // No results found by AI
-      
+
       // Filter by the IDs returned by the AI, and attach the reason
-      const resultIds = new Set(smartResults.map(r => r.id));
-      filtered = filtered.filter(recipe => resultIds.has(recipe.id));
-      
+      const resultIds = new Set(smartResults.map((r) => r.id));
+      filtered = filtered.filter((recipe) => resultIds.has(recipe.id));
+
       // Inject the reason into the recipe object for display
-      filtered = filtered.map(recipe => {
-        const match = smartResults.find(r => r.id === recipe.id);
+      filtered = filtered.map((recipe) => {
+        const match = smartResults.find((r) => r.id === recipe.id);
         return { ...recipe, searchReason: match?.reason };
       });
-      
+
       // Sort by AI score
       filtered.sort((a, b) => {
-        const scoreA = smartResults.find(r => r.id === a.id)?.score || 0;
-        const scoreB = smartResults.find(r => r.id === b.id)?.score || 0;
+        const scoreA = smartResults.find((r) => r.id === a.id)?.score || 0;
+        const scoreB = smartResults.find((r) => r.id === b.id)?.score || 0;
         return scoreB - scoreA;
       });
     } else if (globalSearchQuery.trim()) {
@@ -523,21 +523,21 @@ export default function RecipeGenerator() {
     // Apply Smart Search Results if available
     if (globalSearchQuery.trim() && smartResults !== null) {
       if (smartResults.length === 0) return []; // No results found by AI
-      
+
       // Filter by the IDs returned by the AI, and attach the reason
-      const resultIds = new Set(smartResults.map(r => r.id));
-      filtered = filtered.filter(recipe => resultIds.has(recipe.id));
-      
+      const resultIds = new Set(smartResults.map((r) => r.id));
+      filtered = filtered.filter((recipe) => resultIds.has(recipe.id));
+
       // Inject the reason into the recipe object for display
-      filtered = filtered.map(recipe => {
-        const match = smartResults.find(r => r.id === recipe.id);
+      filtered = filtered.map((recipe) => {
+        const match = smartResults.find((r) => r.id === recipe.id);
         return { ...recipe, searchReason: match?.reason };
       });
-      
+
       // Sort by AI score
       filtered.sort((a, b) => {
-        const scoreA = smartResults.find(r => r.id === a.id)?.score || 0;
-        const scoreB = smartResults.find(r => r.id === b.id)?.score || 0;
+        const scoreA = smartResults.find((r) => r.id === a.id)?.score || 0;
+        const scoreB = smartResults.find((r) => r.id === b.id)?.score || 0;
         return scoreB - scoreA;
       });
     } else if (globalSearchQuery.trim()) {
@@ -686,7 +686,7 @@ export default function RecipeGenerator() {
       await updateUserMutation.mutateAsync(updatedPrefs);
       // Ensure we also save to localStorage for immediate fallback consistency
       localStorage.setItem('moodfull_last_seen_features_version', latestVersion.toString());
-      
+
       setUserPreferences({ ...userPreferences, ...updatedPrefs });
       setShowSurvey(false);
       setSelectedMoods([]);
@@ -725,23 +725,23 @@ export default function RecipeGenerator() {
     const triggerTakeoutGeneration = () => {
       setIsGeneratingTakeout(true);
       setTakeoutSuggestions(null);
-      const diet = userPreferences?.diet_preferences || userPreferences?.allergies 
-        ? `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` 
-        : '';
-      const preg = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status)
-        ? `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).`
-        : '';
-        
-      const locContext = userLocation 
-        ? `\nUSER LOCATION: ${userLocation}. CRITICAL: You MUST include REAL RESTAURANT NAMES (chains or local favorites available in this specific location) and ACTUAL MENU ITEMS from them.` 
-        : `\nCRITICAL: INCLUDE REAL RESTAURANT NAMES (prefer widely available chains or known local types if location isn't provided) and ACTUAL MENU ITEMS.`;
+      const diet = userPreferences?.diet_preferences || userPreferences?.allergies ?
+      `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` :
+      '';
+      const preg = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status) ?
+      `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).` :
+      '';
 
-      const effortTakeoutContext = effortLevel === 'Fast Takeout' 
-        ? 'User is explicitly looking for the fastest and easiest takeout option right now.' 
-        : effortLevel === 'Involved Cooking' 
-        ? 'User actually wants to cook, but provide a high-quality restaurant option just in case they decide to order in.' 
-        : '';
-        
+      const locContext = userLocation ?
+      `\nUSER LOCATION: ${userLocation}. CRITICAL: You MUST include REAL RESTAURANT NAMES (chains or local favorites available in this specific location) and ACTUAL MENU ITEMS from them.` :
+      `\nCRITICAL: INCLUDE REAL RESTAURANT NAMES (prefer widely available chains or known local types if location isn't provided) and ACTUAL MENU ITEMS.`;
+
+      const effortTakeoutContext = effortLevel === 'Fast Takeout' ?
+      'User is explicitly looking for the fastest and easiest takeout option right now.' :
+      effortLevel === 'Involved Cooking' ?
+      'User actually wants to cook, but provide a high-quality restaurant option just in case they decide to order in.' :
+      '';
+
       const budgetContext = `The user has a budget of roughly ${budgetCurrency}${budgetAmount}. Ensure suggestions fit within this price range where possible.`;
 
       base44.integrations.Core.InvokeLLM({
@@ -801,9 +801,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
           },
           required: ["personalization_hook", "dominant_recommendation", "alternatives"]
         }
-      }).then(response => {
+      }).then((response) => {
         setTakeoutSuggestions(response);
-      }).catch(error => {
+      }).catch((error) => {
         console.error('Failed to generate takeout options:', error);
       }).finally(() => {
         setIsGeneratingTakeout(false);
@@ -827,7 +827,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       _loading: true,
       imageLoading: true
     }));
-    
+
     setGeneratedRecipes(skeletons);
     // Setting isGenerating to false gives an instant response feel 
     setIsGenerating(false);
@@ -836,12 +836,12 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
     // Run Takeout generation simultaneously
     setIsGeneratingTakeout(true);
     setTakeoutSuggestions(null);
-    const dietaryContext = userPreferences?.diet_preferences || userPreferences?.allergies 
-      ? `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` 
-      : '';
-    const pregnancyContext = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status)
-      ? `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).`
-      : '';
+    const dietaryContext = userPreferences?.diet_preferences || userPreferences?.allergies ?
+    `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` :
+    '';
+    const pregnancyContext = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status) ?
+    `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).` :
+    '';
 
     base44.integrations.Core.InvokeLLM({
       prompt: `You are MoodFull's Smart Takeout AI. The user wants to order takeout instead of cooking.
@@ -898,9 +898,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
         },
         required: ["personalization_hook", "dominant_recommendation", "alternatives"]
       }
-    }).then(response => {
+    }).then((response) => {
       setTakeoutSuggestions(response);
-    }).catch(error => {
+    }).catch((error) => {
       console.error('Failed to generate takeout options:', error);
     }).finally(() => {
       setIsGeneratingTakeout(false);
@@ -956,12 +956,12 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       const searchContext = globalSearchQuery ? `matching "${globalSearchQuery}"` : '';
       const moodPart = selectedMoods.length > 0 ? `for mood: ${moodContext}` : '';
       const mealTypePart = selectedMealTypes.length > 0 ? ` Meal type(s): ${selectedMealTypes.join(', ')}.` : '';
-      const effortContext = effortLevel === 'Fast Takeout' 
-        ? `CRITICAL: The user wants "Fast Takeout". Keep the cooking recipes EXTREMELY fast and simple (under 15 mins), basically assembling ingredients.` 
-        : effortLevel === 'Involved Cooking'
-        ? `CRITICAL: The user wants "Involved Cooking". Provide impressive, scratch-made recipes that take time and focus, using advanced techniques.` 
-        : `User prefers "Quick & Easy" recipes. Keep prep time under 30 minutes.`;
-        
+      const effortContext = effortLevel === 'Fast Takeout' ?
+      `CRITICAL: The user wants "Fast Takeout". Keep the cooking recipes EXTREMELY fast and simple (under 15 mins), basically assembling ingredients.` :
+      effortLevel === 'Involved Cooking' ?
+      `CRITICAL: The user wants "Involved Cooking". Provide impressive, scratch-made recipes that take time and focus, using advanced techniques.` :
+      `User prefers "Quick & Easy" recipes. Keep prep time under 30 minutes.`;
+
       const budgetContextRecipe = `The user has a budget of roughly ${budgetCurrency}${budgetAmount} per meal. Recommend recipes with ingredients that fit this cost profile.`;
 
       let filtersContext = [];
@@ -1071,9 +1071,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
           });
           setGeneratedRecipes((prev) => {
             const next = prev.map((r, i) =>
-              i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
+            i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
             );
-            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some((r) => r._loading || r.imageLoading)) {
               setCachedRecipes('generator', cacheKeyParams, next);
             }
             return next;
@@ -1081,9 +1081,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
         } catch {
           setGeneratedRecipes((prev) => {
             const next = prev.map((r, i) =>
-              i === index ? { ...r, imageLoading: false } : r
+            i === index ? { ...r, imageLoading: false } : r
             );
-            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some((r) => r._loading || r.imageLoading)) {
               setCachedRecipes('generator', cacheKeyParams, next);
             }
             return next;
@@ -1120,7 +1120,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
     setAdvancedFilters({});
 
     const cacheKeyParams = {
-      inventoryItems: inventory.map(i => i.name),
+      inventoryItems: inventory.map((i) => i.name),
       expiringItemsList,
       filters: advancedFilters
     };
@@ -1141,7 +1141,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       _loading: true,
       imageLoading: true
     }));
-    
+
     setGeneratedRecipes(skeletons);
     setIsGenerating(false);
     setIsGeneratingTakeout(false);
@@ -1278,9 +1278,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
           });
           setGeneratedRecipes((prev) => {
             const next = prev.map((r, i) =>
-              i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
+            i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
             );
-            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some((r) => r._loading || r.imageLoading)) {
               setCachedRecipes('pantry', cacheKeyParams, next);
             }
             return next;
@@ -1288,9 +1288,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
         } catch {
           setGeneratedRecipes((prev) => {
             const next = prev.map((r, i) =>
-              i === index ? { ...r, imageLoading: false } : r
+            i === index ? { ...r, imageLoading: false } : r
             );
-            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some((r) => r._loading || r.imageLoading)) {
               setCachedRecipes('pantry', cacheKeyParams, next);
             }
             return next;
@@ -1330,7 +1330,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       _loading: true,
       imageLoading: true
     }));
-    
+
     setGeneratedRecipes(skeletons);
     setIsGenerating(false);
     setIsGeneratingTakeout(false);
@@ -1446,9 +1446,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
           });
           setGeneratedRecipes((prev) => {
             const next = prev.map((r, i) =>
-              i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
+            i === index ? { ...r, imageUrls: [img1.url], imageUrl: img1.url, imageLoading: false } : r
             );
-            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some((r) => r._loading || r.imageLoading)) {
               setCachedRecipes('combine', cacheKeyParams, next);
             }
             return next;
@@ -1456,9 +1456,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
         } catch {
           setGeneratedRecipes((prev) => {
             const next = prev.map((r, i) =>
-              i === index ? { ...r, imageLoading: false } : r
+            i === index ? { ...r, imageLoading: false } : r
             );
-            if (next.length > 0 && !next.some(r => r._loading || r.imageLoading)) {
+            if (next.length > 0 && !next.some((r) => r._loading || r.imageLoading)) {
               setCachedRecipes('combine', cacheKeyParams, next);
             }
             return next;
@@ -1524,7 +1524,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
             style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.5rem)' }}>
             
             <div className="mx-auto px-6 max-w-[1400px] flex items-center justify-between">
-              <div 
+              <div
                 className="flex items-center gap-2 cursor-pointer transition-transform hover:scale-105"
                 onClick={() => {
                   handleTabChange('home');
@@ -1535,18 +1535,18 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   setAdvancedFilters({});
                   setTakeoutSuggestions(null);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-              >
+                }}>
+                
                 <Brain className="w-8 h-8 text-[#A29BE3]" />
                 <span className="text-2xl font-semibold text-gray-800 tracking-tight">MoodFull</span>
               </div>
 
-              <Button variant="outline" className="rounded-full bg-white text-gray-800 border-gray-200 shadow-sm hover:bg-gray-50 font-medium text-xs sm:text-sm h-10 px-5">
-                {isGenerating || isGeneratingTakeout || generatedRecipes.some(r => r._loading) ? (
-                  <><Loader2 className="w-4 h-4 mr-2 text-[#A29BE3] animate-spin" /> AI DECIDING...</>
-                ) : (
-                  <><Sparkles className="w-4 h-4 mr-2 text-[#A29BE3]" /> FIND FOOD <Search className="w-4 h-4 ml-1 opacity-50 hidden sm:inline" /></>
-                )}
+              <Button variant="outline" className="rounded-full bg-white text-gray-800 border-gray-200 shadow-sm hover:bg-gray-50 font-medium text-xs sm:text-sm h-10 px-5 hidden">
+                {isGenerating || isGeneratingTakeout || generatedRecipes.some((r) => r._loading) ?
+                <><Loader2 className="w-4 h-4 mr-2 text-[#A29BE3] animate-spin" /> AI DECIDING...</> :
+
+                <><Sparkles className="w-4 h-4 mr-2 text-[#A29BE3]" /> FIND FOOD <Search className="w-4 h-4 ml-1 opacity-50 hidden sm:inline" /></>
+                }
               </Button>
             </div>
           </div>
@@ -1635,15 +1635,15 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   {/* Global Search */}
                   <div className="relative flex-1">
                     <SmartSearchBar
-                      query={globalSearchQuery}
-                      setQuery={setGlobalSearchQuery}
-                      isSearching={isSmartSearching}
-                      intent={searchIntent}
-                      onEnter={() => {
-                        if (activeTab === 'home' && generatedRecipes.length === 0) generateRecipe();
-                      }}
-                      placeholder="Search your recipes or generate new ones..."
-                    />
+                            query={globalSearchQuery}
+                            setQuery={setGlobalSearchQuery}
+                            isSearching={isSmartSearching}
+                            intent={searchIntent}
+                            onEnter={() => {
+                              if (activeTab === 'home' && generatedRecipes.length === 0) generateRecipe();
+                            }}
+                            placeholder="Search your recipes or generate new ones..." />
+                          
                   </div>
 
                   {/* Update Preferences Button */}
@@ -1747,7 +1747,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                           aria-label="Find My Food"
                           className="btn-shimmer bg-gradient-to-r from-[#DFF5E6] via-[#E6DDF2] to-[#FDF0D5] text-gray-800 shadow-[0_8px_32px_rgba(162,155,227,0.15)] hover:shadow-[0_12px_40px_rgba(162,155,227,0.3)] transition-all duration-300 text-lg px-2 sm:px-8 py-6 min-h-[56px] rounded-2xl font-bold tracking-tight w-full flex items-center justify-between">
                       <span className="flex-1 text-center">Find My Food</span>
-                      {isGenerating ? <Loader2 className="w-5 h-5 animate-spin text-[#A29BE3]" /> : <Sparkles className="w-5 h-5 text-[#A29BE3]"/>}
+                      {isGenerating ? <Loader2 className="w-5 h-5 animate-spin text-[#A29BE3]" /> : <Sparkles className="w-5 h-5 text-[#A29BE3]" />}
                     </Button>
 
                     {ENABLE_PANTRY_FEATURE &&
@@ -1790,8 +1790,8 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="mt-8 flex flex-col xl:flex-row gap-6 xl:gap-8 items-start relative z-10 w-full"
-                      >
+                        className="mt-8 flex flex-col xl:flex-row gap-6 xl:gap-8 items-start relative z-10 w-full">
+                        
 
                     {/* Left Column - Takeout */}
                     <div className="w-full xl:w-[400px] shrink-0 xl:sticky xl:top-24 space-y-6">
@@ -1804,9 +1804,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                       </div>
                       
                       <div className="w-full">
-                        {(isGeneratingTakeout || takeoutSuggestions) && (
-                          <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} userLocationStr={userLocation} />
-                        )}
+                        {(isGeneratingTakeout || takeoutSuggestions) &&
+                            <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} userLocationStr={userLocation} />
+                            }
                       </div>
                     </div>
 
@@ -1821,26 +1821,26 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                       </div>
 
                       <RecipeGrid
-                          recipes={filteredGeneratedRecipes}
-                          isGenerating={isGenerating || generatedRecipes.some(r => r._loading)}
-                          onRecipeClick={handleRecipeClick}
-                          onStartOver={() => {
-                            setGeneratedRecipes([]);
-                            setSelectedMoods([]);
-                            setGlobalSearchQuery('');
-                            setAdvancedFilters({});
-                            setTakeoutSuggestions(null);
-                          }}
-                          onRefresh={() => {
-                            if (generatedRecipes[0]?.mood === 'From Pantry') {
-                              generateFromInventory(null, true);
-                            } else if (generatedRecipes[0]?.mood === 'Combined Creation') {
-                              setShowCombineDialog(true);
-                            } else {
-                              generateRecipe(true);
-                            }
-                          }}
-                          searchQuery={globalSearchQuery} />
+                            recipes={filteredGeneratedRecipes}
+                            isGenerating={isGenerating || generatedRecipes.some((r) => r._loading)}
+                            onRecipeClick={handleRecipeClick}
+                            onStartOver={() => {
+                              setGeneratedRecipes([]);
+                              setSelectedMoods([]);
+                              setGlobalSearchQuery('');
+                              setAdvancedFilters({});
+                              setTakeoutSuggestions(null);
+                            }}
+                            onRefresh={() => {
+                              if (generatedRecipes[0]?.mood === 'From Pantry') {
+                                generateFromInventory(null, true);
+                              } else if (generatedRecipes[0]?.mood === 'Combined Creation') {
+                                setShowCombineDialog(true);
+                              } else {
+                                generateRecipe(true);
+                              }
+                            }}
+                            searchQuery={globalSearchQuery} />
                     </div>
 
                   </motion.div>
@@ -1926,12 +1926,12 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   <div className="space-y-3">
                     <div className="relative">
                       <SmartSearchBar
-                        query={globalSearchQuery}
-                        setQuery={setGlobalSearchQuery}
-                        isSearching={isSmartSearching}
-                        intent={searchIntent}
-                        placeholder="Search your saved recipes..."
-                      />
+                            query={globalSearchQuery}
+                            setQuery={setGlobalSearchQuery}
+                            isSearching={isSmartSearching}
+                            intent={searchIntent}
+                            placeholder="Search your saved recipes..." />
+                          
                     </div>
 
                     <AdvancedFilters
@@ -2067,10 +2067,10 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   className={`w-full ${getStack('shopping').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               <ShoppingList
-                  mealPlans={mealPlans}
-                  recipes={savedRecipes}
-                  isInline={true}
-                  currentUser={currentUser} />
+                    mealPlans={mealPlans}
+                    recipes={savedRecipes}
+                    isInline={true}
+                    currentUser={currentUser} />
                   
             </motion.div>
             {renderTabStack('shopping')}
@@ -2083,12 +2083,12 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       {!showIntro && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} isVisible={!showShoppingList} onOpenChat={() => setShowChatModal(true)} />}
 
       <SwipeDownNav
-        isOpen={isSwipeNavOpen}
-        onClose={() => setIsSwipeNavOpen(false)}
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        enablePantry={ENABLE_PANTRY_FEATURE}
-      />
+          isOpen={isSwipeNavOpen}
+          onClose={() => setIsSwipeNavOpen(false)}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          enablePantry={ENABLE_PANTRY_FEATURE} />
+        
 
       {/* Paywall Modal */}
       <AnimatePresence>
@@ -2114,14 +2114,14 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
           isGenerating={isGenerating} />
 
       <Suspense fallback={null}>
-        {showTakeoutPanel && (
+        {showTakeoutPanel &&
           <SmartTakeoutPanel
             isOpen={showTakeoutPanel}
             onClose={() => setShowTakeoutPanel(false)}
             contextMoods={selectedMoods}
-            userPreferences={userPreferences}
-          />
-        )}
+            userPreferences={userPreferences} />
+
+          }
       </Suspense>
 
 
@@ -2129,14 +2129,14 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
         
 
       {/* Chat Modal */}
-      {showChatModal && (
+      {showChatModal &&
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95, y: 20 }} 
-            animate={{ opacity: 1, scale: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl relative"
-          >
+            className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl relative">
+            
             <Button variant="ghost" size="icon" className="absolute top-4 right-4 rounded-full" onClick={() => setShowChatModal(false)}>
               <X className="w-5 h-5 text-gray-500" />
             </Button>
@@ -2158,15 +2158,15 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                 placeholder="e.g. Something spicy with chicken, under 30 mins..."
                 className="w-full p-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent transition-all mb-4"
                 value={globalSearchQuery}
-                onChange={(e) => setGlobalSearchQuery(e.target.value)}
-              />
+                onChange={(e) => setGlobalSearchQuery(e.target.value)} />
+              
               <Button type="submit" className="w-full h-12 rounded-xl bg-[#6b9b76] hover:bg-[#5a8a65] text-white font-medium text-lg">
                 Find My Food
               </Button>
             </form>
           </motion.div>
         </div>
-      )}
+        }
 
       {/* Global Shopping List Modal */}
       {showShoppingList &&
