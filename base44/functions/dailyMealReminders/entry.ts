@@ -37,7 +37,15 @@ Deno.serve(async (req) => {
                 let mealContent = "";
 
                 if (plans.length > 0) {
-                    const mealListHtml = plans.map(p => `<li><strong>${p.meal_type.charAt(0).toUpperCase() + p.meal_type.slice(1)}:</strong> ${p.recipe_name}</li>`).join('');
+                    const escapeHtml = (unsafe) => {
+                        return (unsafe || '').toString()
+                            .replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;")
+                            .replace(/"/g, "&quot;")
+                            .replace(/'/g, "&#039;");
+                    };
+                    const mealListHtml = plans.map(p => `<li><strong>${escapeHtml(p.meal_type).charAt(0).toUpperCase() + escapeHtml(p.meal_type).slice(1)}:</strong> ${escapeHtml(p.recipe_name)}</li>`).join('');
                     mealContent = `
                         <p>Here is what you have planned for today:</p>
                         <ul>${mealListHtml}</ul>
