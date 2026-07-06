@@ -149,6 +149,7 @@ export default function RecipeGenerator() {
   const fileInputRef = useRef(null);
   
   const [takeoutSuggestions, setTakeoutSuggestions] = useState(null);
+  const [showChatModal, setShowChatModal] = useState(false);
   const [isGeneratingTakeout, setIsGeneratingTakeout] = useState(false);
   const [userLocation, setUserLocation] = useState('');
   const [effortLevel, setEffortLevel] = useState('Quick & Easy');
@@ -2075,7 +2076,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
       </div>
 
       {/* Bottom Navigation */}
-      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} isVisible={!showShoppingList} enablePantry={ENABLE_PANTRY_FEATURE} />}
+      {!showIntro && <BottomNav activeTab={activeTab} onTabChange={handleTabChange} isVisible={!showShoppingList} onOpenChat={() => setShowChatModal(true)} />}
 
       <SwipeDownNav
         isOpen={isSwipeNavOpen}
@@ -2122,6 +2123,46 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
 
 
         
+
+      {/* Chat Modal */}
+      {showChatModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+            animate={{ opacity: 1, scale: 1, y: 0 }} 
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl relative"
+          >
+            <Button variant="ghost" size="icon" className="absolute top-4 right-4 rounded-full" onClick={() => setShowChatModal(false)}>
+              <X className="w-5 h-5 text-gray-500" />
+            </Button>
+            
+            <h3 className="text-xl font-bold text-gray-800 mb-2">What are you craving?</h3>
+            <p className="text-sm text-gray-500 mb-6">Type anything you're in the mood for, and our AI will find or generate the perfect recipe.</p>
+            
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              setShowChatModal(false);
+              if (globalSearchQuery) {
+                if (activeTab !== 'home') handleTabChange('home');
+                generateRecipe();
+              }
+            }}>
+              <input
+                autoFocus
+                type="text"
+                placeholder="e.g. Something spicy with chicken, under 30 mins..."
+                className="w-full p-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent transition-all mb-4"
+                value={globalSearchQuery}
+                onChange={(e) => setGlobalSearchQuery(e.target.value)}
+              />
+              <Button type="submit" className="w-full h-12 rounded-xl bg-[#6b9b76] hover:bg-[#5a8a65] text-white font-medium text-lg">
+                Find My Food
+              </Button>
+            </form>
+          </motion.div>
+        </div>
+      )}
 
       {/* Global Shopping List Modal */}
       {showShoppingList &&

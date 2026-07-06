@@ -1,136 +1,82 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Home, BookMarked, User, Calendar, Package, BarChart2, ChevronUp, ShoppingCart, Settings, Menu, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Home, Clock, Heart, User, Sparkles, Brain } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-export default function BottomNav({ activeTab, onTabChange, isVisible = true, enablePantry = true }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+export default function BottomNav({ activeTab, onTabChange, isVisible = true, onOpenChat }) {
+  if (!isVisible) return null;
 
   const tabs = [
-    { id: 'home', label: 'Find My Food', icon: Home },
-    { id: 'saved', label: 'My Meals', icon: BookMarked },
-    { id: 'planner', label: 'Planner', icon: Calendar },
-    { id: 'shopping', label: 'Shopping', icon: ShoppingCart },
-    ...(enablePantry ? [{ id: 'inventory', label: 'Pantry', icon: Package }] : []),
-    { id: 'analytics', label: 'Insights', icon: BarChart2 },
-    { id: 'moodlog', label: 'Mood Log', icon: BookMarked },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'home', icon: Home, label: 'Home' },
+    { id: 'moodlog', icon: Clock, label: 'History' },
+    { id: 'chat', icon: null, label: 'Chat', isCenter: true },
+    { id: 'saved', icon: Heart, label: 'Favorites' },
+    { id: 'settings', icon: User, label: 'Profile' },
   ];
 
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-
-  useEffect(() => {
-    const handleFocusIn = (e) => {
-      const tag = e.target.tagName?.toLowerCase();
-      if (tag === 'input' || tag === 'textarea') {
-        setIsKeyboardOpen(true);
-      }
-    };
-    const handleFocusOut = () => {
-      setIsKeyboardOpen(false);
-    };
-
-    window.addEventListener('focusin', handleFocusIn);
-    window.addEventListener('focusout', handleFocusOut);
-
-    return () => {
-      window.removeEventListener('focusin', handleFocusIn);
-      window.removeEventListener('focusout', handleFocusOut);
-    };
-  }, []);
-
-  const shouldShow = isVisible && !isKeyboardOpen;
-
   return (
-    <>
-      <AnimatePresence>
-        {shouldShow && !isExpanded ? (
-          <motion.div 
-            key="nav-toggle"
-            initial={{ x: -100, y: "-50%", opacity: 0 }}
-            animate={{ x: 0, y: "-50%", opacity: 1 }}
-            exit={{ x: -100, y: "-50%", opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed left-0 top-1/2 -translate-y-1/2 z-[100]"
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsExpanded(true)}
-              className="bg-background/80 backdrop-blur-md border border-border/60 border-l-0 rounded-l-none rounded-r-2xl shadow-md hover:bg-accent h-16 w-8 flex items-center justify-center"
-            >
-              <Menu className="w-5 h-5 text-muted-foreground" />
-            </Button>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+    <div className="fixed bottom-6 left-0 w-full flex justify-center z-[100] px-4 pointer-events-none">
+      <div className="bg-white/90 backdrop-blur-xl border border-border/40 shadow-xl rounded-[2rem] flex items-center justify-between px-6 py-3 w-full max-w-md pointer-events-auto relative">
+        {tabs.map((tab) => {
+          if (tab.isCenter) {
+            return (
+              <div key="center-brain" className="relative -top-6 flex flex-col items-center justify-center">
+                <button
+                  onClick={onOpenChat}
+                  className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border-[3px] border-transparent cursor-pointer hover:scale-105 transition-transform"
+                  style={{
+                    background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #7A9F87, #A29BE3, #89B6D9) border-box',
+                  }}
+                  aria-label="Chat with AI"
+                >
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#brainGrad)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <defs>
+                      <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#7A9F87" />
+                        <stop offset="50%" stopColor="#A29BE3" />
+                        <stop offset="100%" stopColor="#89B6D9" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+                    <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+                    <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" />
+                    <path d="M17.599 6.5a3 3 0 0 0 .399-1.375" />
+                    <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" />
+                    <path d="M3.477 10.896a4 4 0 0 1 .585-.396" />
+                    <path d="M19.938 10.5a4 4 0 0 1 .585.396" />
+                    <path d="M6 18a4 4 0 0 1-1.967-.516" />
+                    <path d="M19.967 17.484A4 4 0 0 1 18 18" />
+                  </svg>
+                </button>
+              </div>
+            );
+          }
 
-      <AnimatePresence>
-        {shouldShow && isExpanded ? (
-          <motion.div 
-            key="nav-bar"
-            initial={{ x: -100, y: "-50%", opacity: 0 }}
-            animate={{ x: 0, y: "-50%", opacity: 1 }}
-            exit={{ x: -100, y: "-50%", opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed left-4 md:left-6 top-1/2 -translate-y-1/2 h-auto max-h-[90vh] w-auto min-w-[72px] sm:min-w-[80px] bg-background/80 backdrop-blur-md border border-border/60 rounded-3xl shadow-lg z-[100] overflow-hidden py-4"
-          >
-            <div className="flex flex-col items-center justify-center w-full gap-2 overflow-y-auto scroll-smooth px-2 min-h-[64px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsExpanded(false)}
-                className="w-full rounded-2xl hover:bg-gray-100/50 mb-2 h-10"
+          const isActive = activeTab === tab.id;
+          const Icon = tab.icon;
+
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              className="flex flex-col items-center justify-center gap-1 min-w-[50px]"
+            >
+              <Icon
+                className={`w-6 h-6 transition-colors ${
+                  isActive ? 'text-[#6b9b76] fill-[#6b9b76]/20' : 'text-gray-400'
+                }`}
+                strokeWidth={isActive ? 2 : 1.5}
+              />
+              <span
+                className={`text-[10px] transition-colors ${
+                  isActive ? 'text-[#6b9b76] font-medium' : 'text-gray-400'
+                }`}
               >
-                <X className="w-5 h-5 text-muted-foreground" />
-              </Button>
-              
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                
-                return (
-                  <Button
-                    key={tab.id}
-                    variant="ghost"
-                    onClick={() => {
-                      onTabChange(tab.id);
-                      setIsExpanded(false);
-                    }}
-                    aria-label={tab.label}
-                    aria-current={isActive ? 'page' : undefined}
-                    className={`flex-col justify-center h-auto gap-1.5 p-2 rounded-2xl relative flex-shrink-0 w-full min-h-[64px] ${
-                      isActive ? 'bg-[#6b9b76]/10 hover:bg-[#6b9b76]/20' : 'hover:bg-gray-100/50'
-                    }`}
-                  >
-                    <Icon
-                      strokeWidth={isActive ? 2.5 : 2}
-                      className={`w-5 h-5 transition-colors ${
-                        isActive ? 'text-[#3A6B4F]' : 'text-muted-foreground'
-                      }`}
-                    />
-                    <span
-                      className={`font-sans text-[10px] sm:text-xs tracking-wider uppercase transition-colors w-full text-center whitespace-nowrap px-2 ${
-                        isActive ? 'text-[#3A6B4F] font-bold' : 'text-muted-foreground'
-                      }`}
-                    >
-                      {tab.label}
-                    </span>
-                    
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeTabDot"
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#6DBE7C] rounded-r-full shadow-[2px_0_5px_rgba(109,190,124,0.7)]"
-                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      />
-                    )}
-                  </Button>
-                );
-              })}
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </>
+                {tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
