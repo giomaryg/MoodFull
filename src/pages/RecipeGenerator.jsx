@@ -1542,7 +1542,11 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
               </div>
 
               <Button variant="outline" className="rounded-full bg-white text-gray-800 border-gray-200 shadow-sm hover:bg-gray-50 font-medium text-xs sm:text-sm h-10 px-5">
-                <Sparkles className="w-4 h-4 mr-2 text-[#A29BE3]" /> AI DECIDING... <Search className="w-4 h-4 ml-1 opacity-50 hidden sm:inline" />
+                {isGenerating || isGeneratingTakeout || generatedRecipes.some(r => r._loading) ? (
+                  <><Loader2 className="w-4 h-4 mr-2 text-[#A29BE3] animate-spin" /> AI DECIDING...</>
+                ) : (
+                  <><Sparkles className="w-4 h-4 mr-2 text-[#A29BE3]" /> FIND FOOD <Search className="w-4 h-4 ml-1 opacity-50 hidden sm:inline" /></>
+                )}
               </Button>
             </div>
           </div>
