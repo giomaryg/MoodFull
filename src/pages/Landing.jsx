@@ -124,12 +124,12 @@ export default function Landing() {
                 <div className="w-2 h-2 rounded-full bg-[#A29BE3] animate-pulse" />
                 AI READY
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold text-gray-900 tracking-tight mb-6 leading-tight">
-                AI Thinks.<br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7A9F87] via-[#A29BE3] to-[#89B6D9]">You Enjoy.</span>
+              <h1 className="text-5xl md:text-7xl font-serif text-gray-900 tracking-tight mb-6 leading-[1.1]">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A29BE3] to-[#89B6D9] font-sans font-bold italic">AI</span> decides<br/>
+                what you should <span className="text-[#6DBE7C] italic font-serif">eat.</span>
               </h1>
               <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed font-light">
-                An AI thinking engine that finds your perfect meal based on your mood, budget, and energy. We check takeout first, then recipes. No more guessing.
+                Personalized picks based on your mood, budget, location & energy.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-center md:justify-start mb-4">
                 <Button 

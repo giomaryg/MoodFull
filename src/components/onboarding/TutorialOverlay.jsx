@@ -6,8 +6,8 @@ import { Sparkles, Brain, Zap, Activity, ChevronRight, Check } from 'lucide-reac
 const TUTORIAL_STEPS = [
   {
     id: 'welcome',
-    title: 'Your AI Food Guide',
-    description: 'Stop overthinking. MoodFull looks at your mood, budget, and energy to find the perfect meal instantly.',
+    title: 'AI decides what you should eat.',
+    description: 'Personalized picks based on your mood, budget, location & energy.',
     icon: Brain,
     color: 'text-[#3A6B4F]',
     bg: 'bg-[#f0f9f2]'

@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera, Frown, BarChart2, Home } from 'lucide-react';
+import { Sparkles, Loader2, UtensilsCrossed, Search, X, Package, Camera, Frown, BarChart2, Home, Brain, Zap } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 import { useSmartSearch } from '@/hooks/useSmartSearch';
 import SmartSearchBar from '@/components/recipe/SmartSearchBar';
@@ -1519,14 +1519,12 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
         {/* Hero Section */}
         {!showIntro &&
           <div
-            className="glass-header relative z-50 border-b-0 pb-3"
-            style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.5rem)' }}>
+            className="relative z-50 pt-6 pb-2"
+            style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 1.5rem)' }}>
             
-            <div className="mx-auto px-3 max-w-6xl relative flex items-center justify-center">
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="absolute left-3 text-[#6b9b76] hover:bg-[#6b9b76]/10 rounded-full"
+            <div className="mx-auto px-6 max-w-[1400px] flex items-center justify-between">
+              <div 
+                className="flex items-center gap-2 cursor-pointer transition-transform hover:scale-105"
                 onClick={() => {
                   handleTabChange('home');
                   clearStack('home');
@@ -1537,43 +1535,21 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   setTakeoutSuggestions(null);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                title="Go to Home"
               >
-                <Home className="w-5 h-5" />
+                <Brain className="w-8 h-8 text-[#A29BE3]" />
+                <span className="text-2xl font-semibold text-gray-800 tracking-tight">MoodFull</span>
+              </div>
+
+              <Button variant="outline" className="rounded-full bg-white text-gray-800 border-gray-200 shadow-sm hover:bg-gray-50 font-medium text-xs sm:text-sm h-10 px-5">
+                <Sparkles className="w-4 h-4 mr-2 text-[#A29BE3]" /> AI DECIDING... <Search className="w-4 h-4 ml-1 opacity-50 hidden sm:inline" />
               </Button>
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center flex-1">
-                <header 
-                  className="cursor-pointer inline-block transition-transform hover:scale-105 active:scale-95"
-                  onClick={() => {
-                    handleTabChange('home');
-                    clearStack('home');
-                    setGeneratedRecipes([]);
-                    setSelectedMoods([]);
-                    setGlobalSearchQuery('');
-                    setAdvancedFilters({});
-                    setTakeoutSuggestions(null);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  title="Go to Home"
-                >
-                  <div className="font-sans font-bold text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-gradient mb-1 opacity-80">
-                    ◎ AI Thinking Engine
-                  </div>
-                  <h1 className="text-gradient py-2 text-3xl font-extrabold tracking-tight sm:text-5xl" style={{ lineHeight: '1.2' }}>
-                    MoodFull
-                  </h1>
-                </header>
-              </motion.div>
             </div>
           </div>
           }
 
         {/* Main Content */}
         <div
-            className="mx-auto px-4 sm:px-6 max-w-6xl space-y-6 sm:space-y-8 relative z-10 pt-4 sm:pt-6"
+            className="mx-auto px-6 max-w-[1400px] relative z-10 pt-8"
             style={{
               paddingBottom: 'calc(8rem + env(safe-area-inset-bottom))'
             }}>
@@ -1763,8 +1739,9 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                           onClick={generateRecipe}
                           disabled={isGenerating}
                           aria-label="Find My Food"
-                          className="btn-shimmer bg-gradient-to-r from-[#7A9F87] to-[#A29BE3] text-white shadow-[0_8px_32px_rgba(162,155,227,0.3)] hover:shadow-[0_12px_40px_rgba(162,155,227,0.5)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
-                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Thinking...</> : <><Sparkles className="w-5 h-5"/> Find My Food</>}
+                          className="btn-shimmer bg-gradient-to-r from-[#DFF5E6] via-[#E6DDF2] to-[#FDF0D5] text-gray-800 shadow-[0_8px_32px_rgba(162,155,227,0.15)] hover:shadow-[0_12px_40px_rgba(162,155,227,0.3)] transition-all duration-300 text-lg px-2 sm:px-8 py-6 min-h-[56px] rounded-2xl font-bold tracking-tight w-full flex items-center justify-between">
+                      <span className="flex-1 text-center">Find My Food</span>
+                      {isGenerating ? <Loader2 className="w-5 h-5 animate-spin text-[#A29BE3]" /> : <Sparkles className="w-5 h-5 text-[#A29BE3]"/>}
                     </Button>
 
                     {ENABLE_PANTRY_FEATURE &&

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer, Feather, Frown, HelpCircle, Plus, X, MapPin } from 'lucide-react';
+import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer, Feather, Frown, HelpCircle, Plus, X, MapPin, Orbit, Target, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -179,35 +179,43 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
   };
 
   return (
-    <div className="flex flex-col items-center max-w-lg mx-auto w-full glass-panel p-6 mb-8">
-      <h2 className="text-2xl font-bold text-gradient mb-6">What should I eat?</h2>
+    <div className="flex flex-col items-center w-full glass-panel bg-white/70 shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-[2.5rem] p-8 border border-white/60 mb-8 max-w-xl mx-auto md:mx-0">
       
       {/* 1. Mood Pillar */}
-      <div className="w-full mb-8">
-        <div className="text-sm font-bold text-gray-500 mb-4 uppercase tracking-wider">1. Tell us how you feel</div>
-        <div className="flex flex-wrap gap-2">
+      <div className="w-full mb-10">
+        <div className="flex items-start gap-4 mb-5">
+          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-medium text-sm shrink-0">1</div>
+          <div>
+            <div className="text-lg font-bold text-gray-800 tracking-tight">How are you feeling?</div>
+            <div className="text-sm text-gray-500 font-light">Pick your current mood</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-4 gap-3">
           {[
-            { id: 'stressed', label: 'Stressed' },
-            { id: 'tired', label: 'Tired' },
-            { id: 'happy', label: 'Happy' },
-            { id: 'lazy', label: 'Lazy' },
-            { id: 'hangover', label: 'Hangover' },
-            { id: 'healthy', label: 'Healthy' },
-            { id: 'treat', label: 'Treat' },
-            { id: 'cozy', label: 'Cozy' },
-            { id: 'energetic', label: 'Energetic' },
-            { id: 'romantic', label: 'Romantic' }
+            { id: 'stressed', label: 'Stressed', icon: Orbit },
+            { id: 'tired', label: 'Tired', icon: Frown },
+            { id: 'happy', label: 'Happy', icon: Smile },
+            { id: 'lazy', label: 'Lazy', icon: Moon },
+            { id: 'hangover', label: 'Hangover', icon: Frown },
+            { id: 'healthy', label: 'Healthy', icon: Feather },
+            { id: 'cozy', label: 'Cozy', icon: Coffee },
+            { id: 'romantic', label: 'Romantic', icon: Heart }
           ].map((mood) => {
             const isSelected = selectedMoods.includes(mood.id);
+            const Icon = mood.icon;
             return (
               <button
                 key={mood.id}
                 onClick={() => handleMoodToggle(mood.id)}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  isSelected ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] shadow-md text-[#3A6B4F] scale-105' : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                className={`flex flex-col items-center justify-center py-4 px-2 rounded-2xl transition-all ${
+                  isSelected ? 'bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)] scale-[1.02] relative border-0' : 'bg-gray-50/50 text-gray-500 hover:bg-gray-100/50 border border-gray-100'
                 }`}
               >
-                {mood.label}
+                {isSelected && (
+                  <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-[#7A9F87] via-[#A29BE3] to-[#89B6D9] -z-10" style={{ WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude' }}></div>
+                )}
+                <Icon className={`w-6 h-6 mb-2 ${isSelected ? 'text-[#A29BE3]' : 'text-gray-400'}`} strokeWidth={isSelected ? 2 : 1.5} />
+                <span className={`text-[11px] font-medium ${isSelected ? 'text-gray-800' : 'text-gray-500'}`}>{mood.label}</span>
               </button>
             );
           })}
@@ -215,80 +223,101 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
       </div>
 
       {/* 2. Budget Pillar */}
-      <div className="w-full mb-8">
-        <div className="flex justify-between items-center text-sm font-bold text-[#3A6B4F] mb-3">
-          <span className="uppercase tracking-wider">2. Budget</span>
-          <div className="flex items-center gap-2">
-            <select
-              value={budgetCurrency}
-              onChange={(e) => onBudgetCurrencyChange && onBudgetCurrencyChange(e.target.value)}
-              className="bg-transparent text-[#3A6B4F] font-bold border-none outline-none cursor-pointer focus:ring-0 appearance-none"
-            >
-              <option value="$">$</option>
-              <option value="€">€</option>
-              <option value="£">£</option>
-              <option value="¥">¥</option>
-              <option value="₹">₹</option>
-            </select>
-            <span className="w-16 text-right font-bold text-gray-900 bg-transparent p-0">{budgetAmount}</span>
+      <div className="w-full mb-10">
+        <div className="flex items-start gap-4 mb-2">
+          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-medium text-sm shrink-0">2</div>
+          <div className="w-full">
+            <div className="text-lg font-bold text-gray-800 tracking-tight">What's your budget?</div>
+            <div className="text-sm text-gray-500 font-light mb-4">Choose your range</div>
+            
+            <div className="flex items-end gap-1 mb-4">
+              <span className="text-4xl font-bold text-[#6b9b76] tracking-tight">{budgetCurrency}{budgetAmount}</span>
+              <span className="text-gray-400 text-sm mb-1 font-medium">/ person</span>
+            </div>
+
+            <div className="flex items-center gap-4 w-full">
+              <span className="text-gray-400 text-sm font-medium">$</span>
+              <input 
+                type="range" 
+                min="0" 
+                max="100" 
+                value={budgetAmount} 
+                onChange={(e) => onBudgetAmountChange && onBudgetAmountChange(Number(e.target.value))}
+                className="flex-1 h-1 bg-gray-200 rounded-full appearance-none outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-[#A29BE3] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(162,155,227,0.6)] [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white"
+                style={{
+                  background: `linear-gradient(to right, #A29BE3 0%, #A29BE3 ${budgetAmount}%, #e5e7eb ${budgetAmount}%, #e5e7eb 100%)`
+                }}
+              />
+              <span className="text-gray-400 text-sm font-medium">$$$</span>
+            </div>
           </div>
-        </div>
-        <div className="px-2">
-          <input 
-            type="range" 
-            min="0" 
-            max="100" 
-            value={budgetAmount} 
-            onChange={(e) => onBudgetAmountChange && onBudgetAmountChange(Number(e.target.value))}
-            className="w-full h-3 bg-gray-100 rounded-full appearance-none outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-[#6DBE7C] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(109,190,124,0.5)]"
-            style={{
-              background: `linear-gradient(to right, #6DBE7C 0%, #6DBE7C ${budgetAmount}%, #f3f4f6 ${budgetAmount}%, #f3f4f6 100%)`
-            }}
-          />
         </div>
       </div>
 
       {/* 3. Effort Pillar */}
-      <div className="w-full mb-8">
-        <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
-          <span className="uppercase tracking-wider">3. Effort Level</span>
+      <div className="w-full mb-10">
+        <div className="flex items-start gap-4 mb-5">
+          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-medium text-sm shrink-0">3</div>
+          <div>
+            <div className="text-lg font-bold text-gray-800 tracking-tight">How much effort?</div>
+            <div className="text-sm text-gray-500 font-light">What are you in the mood for?</div>
+          </div>
         </div>
-        <div className="flex gap-2">
-          {['Fast Takeout', 'Quick & Easy', 'Involved Cooking'].map(level => (
-            <button
-              key={level}
-              onClick={() => onEffortSelect && onEffortSelect(level)}
-              className={`flex-1 py-2 px-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all ${
-                effortLevel === level ? 'bg-[#DFF5E6] border-2 border-[#6DBE7C] text-[#3A6B4F]' : 'bg-gray-50 border-2 border-transparent text-gray-500 hover:bg-gray-100'
-              }`}
-            >
-              {level}
-            </button>
-          ))}
+        <div className="flex gap-3 pl-12">
+          {[
+            { id: 'Fast Takeout', label: 'Order it', sub: 'Takeout / Delivery', icon: Zap },
+            { id: 'Quick & Easy', label: 'Keep it easy', sub: 'Simple to make', icon: Coffee },
+            { id: 'Involved Cooking', label: 'Cook it', sub: 'More involved', icon: Thermometer }
+          ].map(level => {
+            const isSelected = effortLevel === level.id;
+            const Icon = level.icon;
+            return (
+              <button
+                key={level.id}
+                onClick={() => onEffortSelect && onEffortSelect(level.id)}
+                className={`flex-1 flex flex-col items-center justify-center py-4 px-2 rounded-2xl transition-all ${
+                  isSelected ? 'bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)] scale-[1.02] relative border-0' : 'bg-gray-50/50 text-gray-500 hover:bg-gray-100/50 border border-gray-100'
+                }`}
+              >
+                {isSelected && (
+                  <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-[#7A9F87] via-[#A29BE3] to-[#89B6D9] -z-10" style={{ WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude' }}></div>
+                )}
+                <Icon className={`w-6 h-6 mb-2 ${isSelected ? 'text-[#6b9b76]' : 'text-gray-400'}`} strokeWidth={isSelected ? 2 : 1.5} />
+                <span className={`text-[13px] font-bold ${isSelected ? 'text-gray-800' : 'text-gray-600'}`}>{level.label}</span>
+                <span className={`text-[10px] ${isSelected ? 'text-gray-500' : 'text-gray-400'}`}>{level.sub}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* 4. Location Pillar */}
-      <div className="w-full mb-4">
-        <div className="flex justify-between text-sm font-bold text-[#3A6B4F] mb-3">
-          <span className="uppercase tracking-wider">4. Location (For Takeout)</span>
-        </div>
-        <div className="relative flex items-center">
-            <Input 
-                value={location || ''}
-                onChange={(e) => onLocationChange && onLocationChange(e.target.value)}
-                placeholder="Enter city or zip code (or use pin)"
-                className="w-full bg-gray-50 border-gray-200 pr-10"
-            />
-            <Button
-                variant="ghost"
-                size="icon"
-                onClick={onDetectLocation}
-                title="Use current location"
-                className="absolute right-1 text-[#6b9b76] hover:bg-transparent"
-            >
-                <MapPin className="w-5 h-5" />
-            </Button>
+      <div className="w-full mb-6">
+        <div className="flex items-start gap-4 mb-4">
+          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-medium text-sm shrink-0">4</div>
+          <div className="w-full">
+            <div className="text-lg font-bold text-gray-800 tracking-tight">Where are you?</div>
+            <div className="text-sm text-gray-500 font-light mb-3">For best local options</div>
+            
+            <div className="relative flex items-center w-full">
+                <Search className="w-5 h-5 absolute left-4 text-gray-400 pointer-events-none" strokeWidth={2} />
+                <Input 
+                    value={location || ''}
+                    onChange={(e) => onLocationChange && onLocationChange(e.target.value)}
+                    placeholder="Use current location"
+                    className="w-full bg-white border border-gray-200 h-14 pl-12 pr-12 rounded-2xl text-gray-700 shadow-sm focus-visible:ring-[#A29BE3]/30 focus-visible:border-[#A29BE3]/50"
+                />
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={onDetectLocation}
+                    title="Use current location"
+                    className="absolute right-2 text-gray-400 hover:text-[#A29BE3] hover:bg-transparent"
+                >
+                    <Target className="w-5 h-5" strokeWidth={2} />
+                </Button>
+            </div>
+          </div>
         </div>
       </div>
       

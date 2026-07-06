@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin, Share2 } from 'lucide-react';
+import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin, Share2, ChevronRight, Heart, Brain } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { toast } from 'sonner';
 import 'leaflet/dist/leaflet.css';
@@ -110,26 +110,21 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
         )}
       </div>
 
-      <div className="bg-[#f0f9f2] p-4 rounded-xl border border-[#c5d9c9] flex items-start gap-3 shadow-sm">
-        <Sparkles className="w-5 h-5 text-[#6b9b76] mt-0.5 shrink-0" />
-        <p className="text-[#3d5244] font-medium leading-snug text-lg">{suggestions.personalization_hook}</p>
+      <div className="flex items-start gap-4 mb-8">
+        <Sparkles className="w-8 h-8 text-[#A29BE3] shrink-0" />
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Here's what we found</h2>
+          <p className="text-gray-500 font-medium">{suggestions.personalization_hook}</p>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-6">
-            {viewMode === 'dominant' && suggestions.dominant_recommendation && (
-              <div className="glass-panel ai-glow rounded-[2rem] overflow-hidden relative group">
+      <div className="flex flex-col gap-6">
+        <div className="space-y-6 w-full max-w-md mx-auto lg:max-w-none">
+            {suggestions.dominant_recommendation && (
+              <div className="glass-panel ai-glow rounded-[2rem] overflow-hidden relative group shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-white/60">
                 <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleShare(suggestions.dominant_recommendation)}
-                    className="bg-black/70 hover:bg-black/90 backdrop-blur-md text-white rounded-full min-h-[32px] min-w-[32px] w-8 h-8"
-                  >
-                    <Share2 className="w-4 h-4" />
-                  </Button>
-                  <div className="bg-black/70 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5" /> {suggestions.dominant_recommendation.speed_urgency}
+                  <div className="bg-[#DFF5E6]/90 backdrop-blur-md text-[#3A6B4F] text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm border border-[#DFF5E6]">
+                    <Sparkles className="w-3 h-3" /> TOP PICK <ChevronRight className="w-3 h-3 ml-1" />
                   </div>
                 </div>
                 <div className="h-48 relative overflow-hidden">
@@ -209,58 +204,38 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
               <div className="space-y-4">
                 <h3 className="font-bold text-[#3d5244] text-lg px-1">Alternative Options</h3>
                 {suggestions.alternatives?.map((sug, idx) => (
-                  <div key={idx} className="glass-panel rounded-2xl overflow-hidden group hover:shadow-md transition-all">
-                    <div className="h-32 relative">
+                  <div key={idx} className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 group cursor-pointer hover:bg-gray-50/50 rounded-xl px-2 transition-colors">
+                    <div className="w-12 h-12 rounded-full border border-gray-100 bg-white flex items-center justify-center text-[10px] font-bold text-center leading-tight shrink-0 shadow-sm text-gray-800 uppercase overflow-hidden">
+                      {sug.restaurant_type.split(' ').map(w => w[0]).join('').substring(0, 4)}
+                    </div>
+                    <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-sm">
                       <img src={getImage(sug.item_name)} alt={sug.item_name} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/40"></div>
-                      <div className="absolute bottom-3 left-4 right-4 text-white">
-                        <h4 className="text-xl font-bold leading-tight drop-shadow-md">{sug.item_name}</h4>
-                        <p className="text-xs font-bold text-white/90 uppercase">{sug.restaurant_type}</p>
-                      </div>
-                      <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleShare(sug)}
-                          className="bg-black/60 hover:bg-black/80 backdrop-blur-sm text-white rounded-full h-6 w-6 min-w-[24px] min-h-[24px]"
-                        >
-                          <Share2 className="w-3 h-3" />
-                        </Button>
-                        <div className="bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                          <Clock className="w-3 h-3" /> {sug.speed_urgency}
-                        </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-gray-900 text-sm truncate">{sug.restaurant_type}</h4>
+                      <p className="text-sm text-gray-600 truncate">{sug.item_name}</p>
+                      <div className="flex items-center gap-3 text-xs text-gray-400 mt-1 font-medium">
+                        <div className="flex items-center gap-1"><Clock className="w-3 h-3" /> {sug.speed_urgency}</div>
+                        <div className="flex items-center gap-1">$ 12.00</div>
+                        <div className="flex items-center gap-1"><MapPin className="w-3 h-3" /> 0.6 mi</div>
                       </div>
                     </div>
-                    <div className="p-4">
-                      {sug.replaces && (
-                        <p className="text-xs text-gray-500 mb-3 font-medium">Instead of: <span className="line-through">{sug.replaces}</span></p>
-                      )}
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                          <div>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Modifications</p>
-                            <ul className="text-xs text-gray-700 space-y-1">
-                              {sug.modifications?.map((m, i) => <li key={i}>• {m}</li>)}
-                            </ul>
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Add sides</p>
-                            <ul className="text-xs text-gray-700 space-y-1">
-                              {sug.smart_defaults?.map((m, i) => <li key={i}>+ {m}</li>)}
-                            </ul>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 p-2 rounded-lg">
-                          <ShieldCheck className="w-4 h-4 shrink-0" /> {sug.regret_reduction}
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 pt-2">
-                          <Button onClick={() => openDeliveryPlatform('ubereats', sug.item_name)} variant="outline" size="sm" className="h-10 text-xs">Uber Eats</Button>
-                          <Button onClick={() => openDeliveryPlatform('doordash', sug.item_name)} variant="outline" size="sm" className="h-10 text-xs">DoorDash</Button>
-                        </div>
-                      </div>
-                    </div>
+                    <Button variant="ghost" size="icon" className="text-gray-300 hover:text-red-400 shrink-0 h-8 w-8">
+                      <Heart className="w-4 h-4" />
+                    </Button>
                   </div>
                 ))}
+                
+                <Button variant="ghost" className="w-full mt-2 text-gray-500 hover:text-gray-800 font-medium justify-between group">
+                  See more options <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+                
+                <div className="mt-12 text-center pb-8">
+                  <p className="text-lg font-serif italic text-gray-800 leading-relaxed max-w-[200px] mx-auto">
+                    "You don't have to overthink it.<br/>
+                    <span className="text-[#6b9b76]">We've got you.</span>"
+                  </p>
+                </div>
               </div>
             )}
         </div>
