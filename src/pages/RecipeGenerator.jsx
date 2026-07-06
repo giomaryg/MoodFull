@@ -1777,37 +1777,44 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
 
               {/* Removed original Takeout Option button here as we moved it to the results section */}
 
-              {/* Recipe Grid */}
+              {/* Results Area (2-column layout) */}
               <AnimatePresence mode="wait">
                 {generatedRecipes.length > 0 && !currentRecipe &&
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}>
+                        exit={{ opacity: 0, y: -20 }}
+                        className="mt-8 flex flex-col xl:flex-row gap-6 xl:gap-8 items-start relative z-10 w-full"
+                      >
 
-                    <div className="flex items-center gap-4 mb-6 mt-8">
-                      <div className="h-px bg-[#e0ede4] flex-1"></div>
-                      <span className="bg-[#DFF5E6] text-[#3A6B4F] font-bold px-4 py-2 rounded-full text-sm">
-                        🥡 Takeout First
-                      </span>
-                      <div className="h-px bg-[#e0ede4] flex-1"></div>
-                    </div>
-                    
-                    <div className="mb-10 w-full">
-                      {(isGeneratingTakeout || takeoutSuggestions) && (
-                        <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} userLocationStr={userLocation} />
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-4 mb-6 mt-12">
-                      <div className="h-px bg-[#e0ede4] flex-1"></div>
-                      <span className="bg-[#FFE9D6] text-orange-800 font-bold px-4 py-2 rounded-full text-sm">
-                        🍳 Or Cook This
-                      </span>
-                      <div className="h-px bg-[#e0ede4] flex-1"></div>
+                    {/* Left Column - Takeout */}
+                    <div className="w-full xl:w-[400px] shrink-0 xl:sticky xl:top-24 space-y-6">
+                      <div className="flex items-center gap-4">
+                        <div className="h-px bg-[#e0ede4] flex-1"></div>
+                        <span className="bg-[#DFF5E6] text-[#3A6B4F] font-bold px-4 py-2 rounded-full text-sm whitespace-nowrap">
+                          🥡 Takeout First
+                        </span>
+                        <div className="h-px bg-[#e0ede4] flex-1"></div>
+                      </div>
+                      
+                      <div className="w-full">
+                        {(isGeneratingTakeout || takeoutSuggestions) && (
+                          <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} userLocationStr={userLocation} />
+                        )}
+                      </div>
                     </div>
 
-                    <RecipeGrid
+                    {/* Right Column - Recipe Grid */}
+                    <div className="flex-1 w-full min-w-0 space-y-6">
+                      <div className="flex items-center gap-4">
+                        <div className="h-px bg-[#e0ede4] flex-1"></div>
+                        <span className="bg-[#FFE9D6] text-orange-800 font-bold px-4 py-2 rounded-full text-sm whitespace-nowrap">
+                          🍳 Or Cook This
+                        </span>
+                        <div className="h-px bg-[#e0ede4] flex-1"></div>
+                      </div>
+
+                      <RecipeGrid
                           recipes={filteredGeneratedRecipes}
                           isGenerating={isGenerating || generatedRecipes.some(r => r._loading)}
                           onRecipeClick={handleRecipeClick}
@@ -1828,6 +1835,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                             }
                           }}
                           searchQuery={globalSearchQuery} />
+                    </div>
 
                   </motion.div>
                       }
