@@ -20,35 +20,51 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0D10] text-[#E0EDE4] flex flex-col font-sans overflow-x-hidden selection:bg-[#6DBE7C] selection:text-white">
+    <div className="min-h-screen bg-[#FAFCFB] text-gray-800 flex flex-col font-sans overflow-x-hidden selection:bg-[#A29BE3] selection:text-white">
       {/* Dynamic Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#183525] mix-blend-screen filter blur-[100px] animate-pulse opacity-50" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#122A1E] mix-blend-screen filter blur-[150px] animate-pulse opacity-40 delay-1000" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#D4E4E6] rounded-full mix-blend-multiply filter blur-[100px] opacity-60 animate-blob"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[120px] opacity-50 animate-blob" style={{animationDelay: "2s"}}></div>
+        <div className="absolute bottom-[-20%] left-[20%] w-[70%] h-[70%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[120px] opacity-60 animate-blob" style={{animationDelay: "4s"}}></div>
+        <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#FDF0D5] rounded-full mix-blend-multiply filter blur-[90px] opacity-50 animate-blob" style={{animationDelay: "6s"}}></div>
+        
+        {/* Subtle Neural Network SVG Overlay */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="neural-net-landing" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M10 10L90 90M90 10L10 90M50 10L50 90M10 50L90 50" stroke="currentColor" strokeWidth="0.5" fill="none"/>
+              <circle cx="10" cy="10" r="2" fill="currentColor"/>
+              <circle cx="90" cy="90" r="2" fill="currentColor"/>
+              <circle cx="90" cy="10" r="2" fill="currentColor"/>
+              <circle cx="10" cy="90" r="2" fill="currentColor"/>
+              <circle cx="50" cy="50" r="3" fill="currentColor"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#neural-net-landing)"/>
+        </svg>
       </div>
 
       {/* Header */}
-      <header className="px-6 py-4 flex justify-between items-center bg-[#0A0D10]/50 backdrop-blur-xl sticky top-0 z-50 border-b border-white/5">
+      <header className="px-6 py-4 flex justify-between items-center bg-[#FAFCFB]/60 backdrop-blur-2xl sticky top-0 z-50 border-b border-black/5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3A6B4F] to-[#6DBE7C] flex items-center justify-center shadow-[0_0_15px_rgba(109,190,124,0.3)]">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#7A9F87] to-[#A29BE3] flex items-center justify-center shadow-[0_0_15px_rgba(162,155,227,0.3)]">
             <Orbit className="w-6 h-6 text-white" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">MoodFull</span>
+          <span className="text-xl font-bold tracking-tight text-gray-900">MoodFull</span>
         </div>
-        <nav className="hidden md:flex items-center gap-8 text-[#A8C7B3] font-medium text-sm">
-          <a href="#why-moodfull" className="hover:text-white transition-colors">How it Thinks</a>
-          <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
-          <a href="#features" className="hover:text-white transition-colors">Features</a>
-          <a href="#takeout" className="hover:text-white transition-colors">Smart Takeout</a>
+        <nav className="hidden md:flex items-center gap-8 text-gray-500 font-medium text-sm">
+          <a href="#why-moodfull" className="hover:text-gray-900 transition-colors">How it Thinks</a>
+          <a href="#how-it-works" className="hover:text-gray-900 transition-colors">How it Works</a>
+          <a href="#features" className="hover:text-gray-900 transition-colors">Features</a>
+          <a href="#takeout" className="hover:text-gray-900 transition-colors">Smart Takeout</a>
         </nav>
         <div className="hidden md:block">
-          <Button onClick={handleLogin} variant="outline" className="border-[#3A6B4F] text-[#6DBE7C] hover:bg-[#3A6B4F]/20 hover:text-white rounded-full px-6 transition-all bg-transparent">
+          <Button onClick={handleLogin} variant="outline" className="border-[#A29BE3]/50 text-[#A29BE3] hover:bg-[#A29BE3]/10 hover:text-[#7A9F87] rounded-full px-6 transition-all bg-transparent">
             Get Started
           </Button>
         </div>
         <button 
-          className="md:hidden text-white p-2" 
+          className="md:hidden text-gray-900 p-2" 
           onClick={() => setIsMobileMenuOpen(true)}
         >
           <Menu className="w-6 h-6" />
@@ -64,27 +80,27 @@ export default function Landing() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] md:hidden"
+              className="fixed inset-0 bg-white/60 backdrop-blur-sm z-[60] md:hidden"
             />
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-72 bg-[#0E1511] border-l border-white/10 z-[70] shadow-2xl flex flex-col p-6 md:hidden"
+              className="fixed top-0 right-0 h-full w-72 bg-[#FAFCFB] border-l border-black/10 z-[70] shadow-2xl flex flex-col p-6 md:hidden"
             >
               <div className="flex justify-end mb-8">
-                <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-400 hover:text-white p-2 transition-colors">
+                <button onClick={() => setIsMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-900 p-2 transition-colors">
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              <nav className="flex flex-col gap-6 text-[#A8C7B3] font-medium text-lg">
-                <a href="#why-moodfull" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">How it Thinks</a>
-                <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">How it Works</a>
-                <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Features</a>
-                <a href="#takeout" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white transition-colors">Smart Takeout</a>
-                <div className="pt-6 border-t border-white/10">
-                  <Button onClick={handleLogin} className="w-full bg-[#3A6B4F] text-white hover:bg-[#6DBE7C] rounded-full px-6 py-6 text-lg transition-all shadow-[0_0_20px_rgba(58,107,79,0.3)] border-0">
+              <nav className="flex flex-col gap-6 text-gray-600 font-medium text-lg">
+                <a href="#why-moodfull" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-900 transition-colors">How it Thinks</a>
+                <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-900 transition-colors">How it Works</a>
+                <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-900 transition-colors">Features</a>
+                <a href="#takeout" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-900 transition-colors">Smart Takeout</a>
+                <div className="pt-6 border-t border-black/10">
+                  <Button onClick={handleLogin} className="w-full bg-gradient-to-r from-[#7A9F87] to-[#A29BE3] text-white hover:opacity-90 rounded-full px-6 py-6 text-lg transition-all shadow-[0_4px_14px_rgba(162,155,227,0.3)] border-0">
                     Get Started
                   </Button>
                 </div>
@@ -104,33 +120,33 @@ export default function Landing() {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="text-left"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#183525] border border-[#3A6B4F] text-[#6DBE7C] text-sm font-mono mb-6">
-                <div className="w-2 h-2 rounded-full bg-[#6DBE7C] animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/50 backdrop-blur-md border border-gray-200 text-[#7A9F87] text-sm font-mono mb-6 shadow-sm">
+                <div className="w-2 h-2 rounded-full bg-[#A29BE3] animate-pulse" />
                 AI READY
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-tight">
-                AI Decides.<br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6DBE7C] to-[#3A6B4F]">You Enjoy.</span>
+              <h1 className="text-5xl md:text-7xl font-bold text-gray-900 tracking-tight mb-6 leading-tight">
+                AI Thinks.<br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7A9F87] via-[#A29BE3] to-[#89B6D9]">You Enjoy.</span>
               </h1>
-              <p className="text-lg md:text-xl text-[#A8C7B3] mb-8 leading-relaxed font-light">
-                An AI decision engine that finds your perfect meal based on your mood, budget, and energy. We check takeout first, then recipes. No more guessing.
+              <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed font-light">
+                An AI thinking engine that finds your perfect meal based on your mood, budget, and energy. We check takeout first, then recipes. No more guessing.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-center md:justify-start mb-4">
                 <Button 
                   onClick={handleLogin} 
-                  className="bg-white text-[#0A0D10] px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all hover:scale-105 font-bold"
+                  className="btn-shimmer bg-gradient-to-r from-[#7A9F87] to-[#A29BE3] text-white px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-[0_8px_32px_rgba(162,155,227,0.3)] transition-all hover:scale-105 hover:shadow-[0_12px_40px_rgba(162,155,227,0.5)] font-bold"
                 >
                   Find My Food
                 </Button>
                 <Button 
                   onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} 
                   variant="outline"
-                  className="border-white/20 text-white bg-transparent hover:bg-white/5 px-8 py-6 rounded-full text-lg w-full sm:w-auto transition-all flex items-center gap-2"
+                  className="border-gray-200 text-gray-700 bg-white/50 backdrop-blur-md hover:bg-white/80 px-8 py-6 rounded-full text-lg w-full sm:w-auto transition-all flex items-center gap-2"
                 >
                   See How It Works <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-sm text-white/40 font-mono">ZERO EFFORT. INSTANT RESULTS.</p>
+              <p className="text-sm text-gray-400 font-mono">ZERO EFFORT. INSTANT RESULTS.</p>
             </motion.div>
 
             {/* DECISION WIDGET HERO */}

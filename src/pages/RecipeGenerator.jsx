@@ -1559,10 +1559,10 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   }}
                   title="Go to Home"
                 >
-                  <div className="font-sans font-bold text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6DBE7C] mb-1 opacity-80">
-                    ◎ AI Decision Engine
+                  <div className="font-sans font-bold text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-gradient mb-1 opacity-80">
+                    ◎ AI Thinking Engine
                   </div>
-                  <h1 className="text-[#3A6B4F] py-2 text-3xl font-extrabold tracking-tight sm:text-5xl" style={{ lineHeight: '1.2' }}>
+                  <h1 className="text-gradient py-2 text-3xl font-extrabold tracking-tight sm:text-5xl" style={{ lineHeight: '1.2' }}>
                     MoodFull
                   </h1>
                 </header>
@@ -1763,8 +1763,8 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                           onClick={generateRecipe}
                           disabled={isGenerating}
                           aria-label="Find My Food"
-                          className="bg-[#3A6B4F] text-white shadow-[0_0_18px_rgba(58,107,79,0.35)] hover:shadow-[0_0_24px_rgba(58,107,79,0.5)] hover:bg-[#6DBE7C] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
-                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Deciding...</> : <><Sparkles className="w-5 h-5"/> Find My Food</>}
+                          className="btn-shimmer bg-gradient-to-r from-[#7A9F87] to-[#A29BE3] text-white shadow-[0_8px_32px_rgba(162,155,227,0.3)] hover:shadow-[0_12px_40px_rgba(162,155,227,0.5)] transition-all duration-300 text-xs sm:text-base px-2 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-xl sm:rounded-[20px] font-bold tracking-tight w-full sm:w-auto flex items-center justify-center gap-1.5 sm:gap-2">
+                      {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Thinking...</> : <><Sparkles className="w-5 h-5"/> Find My Food</>}
                     </Button>
 
                     {ENABLE_PANTRY_FEATURE &&

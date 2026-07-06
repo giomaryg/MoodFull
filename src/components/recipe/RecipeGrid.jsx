@@ -84,7 +84,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
               aria-label={`View details for ${recipe.name}`}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
               onClick={() => onRecipeClick(recipe)}
-              className="group cursor-pointer rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] bg-white h-full flex flex-col hover:-translate-y-2 transition-all duration-500 ease-out"
+              className="group cursor-pointer rounded-[2rem] overflow-hidden glass-panel ai-glow h-full flex flex-col hover:-translate-y-2 transition-all duration-500 ease-out"
             >
               <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
                 {recipe._loading ? (
@@ -141,7 +141,7 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
                 </div>
               </div>
               
-              <div className="px-6 py-5 flex justify-between items-center bg-white mt-auto border-t border-gray-100/60">
+              <div className="px-6 py-5 flex justify-between items-center bg-transparent mt-auto border-t border-gray-100/30">
                 {recipe._loading ? (
                   <>
                     <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>

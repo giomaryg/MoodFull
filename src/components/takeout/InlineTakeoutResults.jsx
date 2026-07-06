@@ -118,7 +118,7 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-6">
             {viewMode === 'dominant' && suggestions.dominant_recommendation && (
-              <div className="bg-white rounded-[2rem] border-[3px] border-[#6b9b76] shadow-xl overflow-hidden relative group">
+              <div className="glass-panel ai-glow rounded-[2rem] overflow-hidden relative group">
                 <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
                   <Button
                     variant="ghost"
@@ -209,7 +209,7 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
               <div className="space-y-4">
                 <h3 className="font-bold text-[#3d5244] text-lg px-1">Alternative Options</h3>
                 {suggestions.alternatives?.map((sug, idx) => (
-                  <div key={idx} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden group hover:border-[#c5d9c9] hover:shadow-md transition-all">
+                  <div key={idx} className="glass-panel rounded-2xl overflow-hidden group hover:shadow-md transition-all">
                     <div className="h-32 relative">
                       <img src={getImage(sug.item_name)} alt={sug.item_name} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-black/40"></div>

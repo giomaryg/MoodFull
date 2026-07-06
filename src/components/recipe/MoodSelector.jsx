@@ -179,8 +179,8 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
   };
 
   return (
-    <div className="flex flex-col items-center max-w-lg mx-auto w-full bg-white rounded-[32px] p-6 shadow-sm border border-[#e0ede4] mb-8">
-      <h2 className="text-2xl font-bold text-[#3A6B4F] mb-6">What should I eat?</h2>
+    <div className="flex flex-col items-center max-w-lg mx-auto w-full glass-panel p-6 mb-8">
+      <h2 className="text-2xl font-bold text-gradient mb-6">What should I eat?</h2>
       
       {/* 1. Mood Pillar */}
       <div className="w-full mb-8">
