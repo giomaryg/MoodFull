@@ -162,8 +162,9 @@ export default function Landing() {
           </div>
         </section>
 
+        <div className="bg-black/60 backdrop-blur-2xl text-white border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
         {/* INSTANT VALUE STRIP */}
-        <section className="bg-[#0E1511] text-[#6DBE7C] py-6 border-y border-white/5 font-mono tracking-widest uppercase text-xs sm:text-sm overflow-hidden relative flex">
+        <section className="bg-black/40 text-[#6DBE7C] py-6 border-b border-white/10 font-mono tracking-widest uppercase text-xs sm:text-sm overflow-hidden relative flex">
           <motion.div 
             className="flex whitespace-nowrap w-max"
             animate={{ x: ["0%", "-50%"] }}
@@ -210,7 +211,7 @@ export default function Landing() {
         </section>
 
         {/* MOOD CAROUSEL */}
-        <section id="how-it-works" className="py-32 bg-[#0E1511] border-y border-white/5 relative">
+        <section id="how-it-works" className="py-32 border-y border-white/10 relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-[#6DBE7C] to-transparent opacity-30"></div>
           <div className="max-w-6xl mx-auto px-6">
             <motion.div 
@@ -266,7 +267,7 @@ export default function Landing() {
         </section>
 
         {/* PRODUCT VALUE (WHAT YOU ACTUALLY GET) */}
-        <section className="py-32 bg-[#0E1511] border-y border-white/5">
+        <section className="py-32 border-y border-white/10">
           <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -324,7 +325,7 @@ export default function Landing() {
             >
                <motion.div 
                  whileHover={{ scale: 1.05, rotateY: 0 }}
-                 className="bg-[#0E1511] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10 border border-white/10 transition-all duration-500"
+                 className="bg-black/40 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10 border border-white/10 transition-all duration-500"
                >
                   <div className="p-4 border-b border-white/5 bg-white/5 flex items-center gap-3 backdrop-blur-md">
                     <Brain className="w-5 h-5 text-[#6DBE7C] animate-pulse" />
@@ -400,7 +401,7 @@ export default function Landing() {
         </section>
 
         {/* ANALYTICS CRYSTAL DASHBOARD */}
-        <section className="py-32 bg-[#0E1511] border-y border-white/5">
+        <section className="py-32 border-y border-white/10">
           <div className="max-w-6xl mx-auto px-6">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -419,7 +420,7 @@ export default function Landing() {
         </section>
 
         {/* FINAL CTA (DARK SECTION) */}
-        <section className="py-40 relative overflow-hidden text-center flex flex-col items-center justify-center border-t border-white/10">
+        <section className="py-40 relative overflow-hidden text-center flex flex-col items-center justify-center border-t border-white/10 bg-black/40 backdrop-blur-xl">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-[#183525] to-transparent rounded-full mix-blend-screen filter blur-[150px] opacity-40 pointer-events-none"></div>
           
           <motion.div 
@@ -452,10 +453,11 @@ export default function Landing() {
             </div>
           </motion.div>
         </section>
+        </div>
 
       </main>
 
-      <footer className="bg-[#050709] pt-12 pb-12 text-center text-[#A8C7B3] text-sm flex flex-col items-center border-t border-white/5 relative z-10 font-mono uppercase tracking-widest">
+      <footer className="bg-black/90 backdrop-blur-3xl pt-12 pb-12 text-center text-[#A8C7B3] text-sm flex flex-col items-center border-t border-white/10 relative z-10 font-mono uppercase tracking-widest">
         <p className="mb-8 font-bold text-white/50 tracking-[0.2em]">MoodFull — Eat Smarter.</p>
         <div className="flex gap-8 mb-12">
           <a href="/about" className="hover:text-white transition-colors">About</a>
