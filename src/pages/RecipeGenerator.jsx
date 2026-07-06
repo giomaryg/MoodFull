@@ -1786,18 +1786,18 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
               {/* Removed original Takeout Option button here as we moved it to the results section */}
               </div>
 
-              {/* Results Area (2-column layout) */}
+              {/* Results Area */}
               <AnimatePresence mode="wait">
                 {generatedRecipes.length > 0 && !currentRecipe &&
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="flex-1 w-full min-w-0 mt-8 xl:mt-0 flex flex-col lg:flex-row gap-6 lg:gap-8 items-start relative z-10">
+                        className="flex-1 w-full min-w-0 mt-8 xl:mt-0 flex flex-col gap-6 lg:gap-8 items-start relative z-10">
                         
 
-                    {/* Left Column - Takeout */}
-                    <div className="w-full xl:w-[400px] shrink-0 xl:sticky xl:top-24 space-y-6">
+                    {/* Takeout */}
+                    <div className="w-full space-y-6">
                       <div className="flex items-center gap-4">
                         <div className="h-px bg-[#e0ede4] flex-1"></div>
                         <span className="bg-[#DFF5E6] text-[#3A6B4F] font-bold px-4 py-2 rounded-full text-sm whitespace-nowrap">
@@ -1813,8 +1813,8 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                       </div>
                     </div>
 
-                    {/* Right Column - Recipe Grid */}
-                    <div className="flex-1 w-full min-w-0 space-y-6">
+                    {/* Recipe Grid */}
+                    <div className="w-full space-y-6">
                       <div className="flex items-center gap-4">
                         <div className="h-px bg-[#e0ede4] flex-1"></div>
                         <span className="bg-[#FFE9D6] text-orange-800 font-bold px-4 py-2 rounded-full text-sm whitespace-nowrap">
