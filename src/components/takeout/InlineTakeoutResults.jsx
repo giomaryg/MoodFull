@@ -121,7 +121,7 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
       <div className="flex flex-col gap-6">
         <div className="space-y-6 w-full max-w-md mx-auto lg:max-w-none">
             {suggestions.dominant_recommendation && (
-              <div className="glass-panel ai-glow rounded-[2rem] overflow-hidden relative group shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-white/60">
+              <div className="glass-panel bg-white/40 backdrop-blur-xl ai-glow rounded-[2rem] overflow-hidden relative group shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-white/60">
                 <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
                   <div className="bg-[#DFF5E6]/90 backdrop-blur-md text-[#3A6B4F] text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm border border-[#DFF5E6]">
                     <Sparkles className="w-3 h-3" /> TOP PICK <ChevronRight className="w-3 h-3 ml-1" />

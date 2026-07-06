@@ -179,7 +179,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
   };
 
   return (
-    <div className="flex flex-col items-center w-full glass-panel bg-white/70 shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-[2.5rem] p-8 border border-white/60 mb-8 max-w-xl mx-auto md:mx-0">
+    <div className="flex flex-col items-center w-full glass-panel bg-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)] backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/60 mb-8 max-w-xl mx-auto">
       
       {/* 1. Mood Pillar */}
       <div className="w-full mb-10">
@@ -208,7 +208,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
                 key={mood.id}
                 onClick={() => handleMoodToggle(mood.id)}
                 className={`flex flex-col items-center justify-center py-4 px-2 rounded-2xl transition-all ${
-                  isSelected ? 'bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)] scale-[1.02] relative border-0' : 'bg-gray-50/50 text-gray-500 hover:bg-gray-100/50 border border-gray-100'
+                  isSelected ? 'glass-panel bg-white/60 shadow-[0_4px_20px_rgba(0,0,0,0.08)] scale-[1.02] relative border border-white/80' : 'bg-white/20 backdrop-blur-md text-gray-500 hover:bg-white/40 border border-white/40'
                 }`}
               >
                 {isSelected && (
