@@ -1739,7 +1739,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4 w-full">
+                        className="flex flex-col justify-center items-center gap-3 sm:gap-4 w-full">
 
                     <Button
                           onClick={generateRecipe}
