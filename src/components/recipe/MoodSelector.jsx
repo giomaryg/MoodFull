@@ -230,14 +230,7 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
               <option value="¥">¥</option>
               <option value="₹">₹</option>
             </select>
-            <input
-              type="number"
-              min="0"
-              max="200"
-              value={budgetAmount}
-              onChange={(e) => onBudgetAmountChange && onBudgetAmountChange(Number(e.target.value))}
-              className="w-16 text-right font-bold text-gray-900 border-none outline-none bg-transparent focus:ring-0 p-0"
-            />
+            <span className="w-16 text-right font-bold text-gray-900 bg-transparent p-0">{budgetAmount}</span>
           </div>
         </div>
         <div className="px-2">
