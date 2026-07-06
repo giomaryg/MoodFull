@@ -1583,6 +1583,8 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   className={`space-y-6 sm:space-y-8 w-full ${getStack('home').length > 0 ? 'pointer-events-none' : 'relative'}`}>
                   
               <>
+              <div className={`transition-all duration-700 ease-in-out w-full flex flex-col ${generatedRecipes.length > 0 && !currentRecipe ? 'xl:flex-row gap-6 xl:gap-8 items-start w-full' : 'max-w-2xl mx-auto'}`}>
+                <div className={`w-full transition-all duration-700 ${generatedRecipes.length > 0 && !currentRecipe ? 'xl:w-[350px] shrink-0 xl:sticky xl:top-24 space-y-6' : 'space-y-6 sm:space-y-8'}`}>
 
               {/* Proactive Expiring Items Alert */}
               {(() => {
@@ -1782,6 +1784,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
               </AnimatePresence>
 
               {/* Removed original Takeout Option button here as we moved it to the results section */}
+              </div>
 
               {/* Results Area (2-column layout) */}
               <AnimatePresence mode="wait">
@@ -1790,7 +1793,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="mt-8 flex flex-col xl:flex-row gap-6 xl:gap-8 items-start relative z-10 w-full">
+                        className="flex-1 w-full min-w-0 mt-8 xl:mt-0 flex flex-col lg:flex-row gap-6 lg:gap-8 items-start relative z-10">
                         
 
                     {/* Left Column - Takeout */}
@@ -1846,8 +1849,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                   </motion.div>
                       }
               </AnimatePresence>
-
-
+              </div>
 
               {/* Personalized Recommendations - Only show when not searching */}
               {!currentRecipe && generatedRecipes.length === 0 && !globalSearchQuery && Object.keys(advancedFilters).length === 0 &&
