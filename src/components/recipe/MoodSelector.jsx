@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Smile, Cloud, Zap, Heart, Compass, Coffee, Baby, Clock, Moon, AlertCircle, Sun, Salad, Utensils, Cookie, Apple, Users, Thermometer, Timer, Feather, Frown, HelpCircle, Plus, X, MapPin, Orbit, Target, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -146,6 +146,49 @@ const moods = [
 
 export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMealTypes = [], onMealTypeSelect, userName, location, onLocationChange, onDetectLocation, effortLevel, onEffortSelect, budgetAmount = 15, onBudgetAmountChange, budgetCurrency = '$', onBudgetCurrencyChange }) {
   const [customMoodInput, setCustomMoodInput] = useState('');
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [isSearchingLocation, setIsSearchingLocation] = useState(false);
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+
+  React.useEffect(() => {
+    const fetchSuggestions = async () => {
+      // Don't search if it's too short or if the suggestions drop-down was closed explicitly
+      if (!location || location.length < 3 || !showLocationSuggestions) {
+        setLocationSuggestions([]);
+        return;
+      }
+      setIsSearchingLocation(true);
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=5&addressdetails=1`);
+        const data = await res.json();
+        
+        // Filter out duplicates and format nice City, State, Country
+        const uniqueSet = new Set();
+        const formatted = [];
+        for (const item of data) {
+          const addr = item.address || {};
+          const city = addr.city || addr.town || addr.village || addr.municipality || item.name;
+          const state = addr.state;
+          const country = addr.country;
+          const parts = [city, state, country].filter(Boolean);
+          const label = parts.join(', ');
+          
+          if (!uniqueSet.has(label)) {
+            uniqueSet.add(label);
+            formatted.push({ id: item.place_id, label });
+          }
+        }
+        setLocationSuggestions(formatted);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsSearchingLocation(false);
+      }
+    };
+
+    const timeoutId = setTimeout(fetchSuggestions, 400);
+    return () => clearTimeout(timeoutId);
+  }, [location, showLocationSuggestions]);
 
   const handleMoodToggle = (moodId) => {
     if (selectedMoods.includes(moodId)) {
@@ -303,10 +346,29 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
                 <Search className="w-5 h-5 absolute left-4 text-gray-400 pointer-events-none" strokeWidth={2} />
                 <Input 
                     value={location || ''}
-                    onChange={(e) => onLocationChange && onLocationChange(e.target.value)}
+                    onChange={(e) => {
+                      onLocationChange && onLocationChange(e.target.value);
+                      setShowLocationSuggestions(true);
+                    }}
+                    onFocus={() => {
+                      if (location && location.length >= 3) {
+                        setShowLocationSuggestions(true);
+                      }
+                    }}
+                    onBlur={() => {
+                      // Small delay to allow click on suggestion
+                      setTimeout(() => setShowLocationSuggestions(false), 200);
+                    }}
                     placeholder="Use current location"
                     className="w-full bg-white border border-gray-200 h-14 pl-12 pr-12 rounded-2xl text-gray-700 shadow-sm focus-visible:ring-[#A29BE3]/30 focus-visible:border-[#A29BE3]/50"
                 />
+                
+                {isSearchingLocation && (
+                  <div className="absolute right-12 flex items-center justify-center">
+                     <div className="w-4 h-4 border-2 border-[#A29BE3] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+
                 <Button
                     variant="ghost"
                     size="icon"
@@ -316,6 +378,25 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
                 >
                     <Target className="w-5 h-5" strokeWidth={2} />
                 </Button>
+
+                {showLocationSuggestions && locationSuggestions.length > 0 && (
+                  <div className="absolute top-[100%] left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50 max-h-60 overflow-y-auto">
+                    {locationSuggestions.map(suggestion => (
+                      <button
+                        key={suggestion.id}
+                        onMouseDown={(e) => {
+                           e.preventDefault(); // Prevent input blur
+                           onLocationChange && onLocationChange(suggestion.label);
+                           setShowLocationSuggestions(false);
+                        }}
+                        className="w-full text-left px-4 py-3 hover:bg-gray-50 text-gray-700 text-sm border-b border-gray-50 last:border-0 transition-colors flex items-center gap-3"
+                      >
+                        <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
+                        <span className="truncate">{suggestion.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
         </div>
