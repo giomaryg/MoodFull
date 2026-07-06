@@ -163,7 +163,7 @@ export default function Landing() {
         </section>
 
         {/* INSTANT VALUE STRIP */}
-        <section className="bg-[#0E1511] text-[#6DBE7C] py-6 border-y border-white/5 font-mono tracking-widest uppercase text-xs sm:text-sm overflow-hidden relative flex">
+        <section className="bg-white/40 backdrop-blur-md text-[#7A9F87] py-6 border-y border-black/5 font-mono tracking-widest uppercase text-xs sm:text-sm overflow-hidden relative flex">
           <motion.div 
             className="flex whitespace-nowrap w-max"
             animate={{ x: ["0%", "-50%"] }}
@@ -189,29 +189,29 @@ export default function Landing() {
             transition={{ duration: 0.8 }}
             className="max-w-3xl mx-auto px-6 relative z-10"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight">Stop Overthinking</h2>
-            <p className="text-xl text-[#A8C7B3] mb-6 leading-relaxed font-light">
+            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 tracking-tight">Stop Overthinking</h2>
+            <p className="text-xl text-gray-600 mb-6 leading-relaxed font-light">
               Most individuals do not struggle with the mechanics of cooking.<br/>They struggle with the stress of deciding what to eat.
             </p>
-            <p className="text-xl font-bold text-[#6DBE7C] mb-8 uppercase tracking-widest text-sm">Let AI Take the Wheel.</p>
+            <p className="text-xl font-bold text-[#7A9F87] mb-8 uppercase tracking-widest text-sm">Let AI Take the Wheel.</p>
             
             <motion.div 
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.03)" }}
-              className="inline-flex flex-col items-start text-left bg-white/5 p-8 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-sm mb-8 transition-all"
+              whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.6)" }}
+              className="inline-flex flex-col items-start text-left bg-white/40 p-8 rounded-3xl border border-white/60 shadow-xl backdrop-blur-xl mb-8 transition-all"
             >
-              <ul className="space-y-4 text-lg text-gray-300 font-medium">
-                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center"><X className="w-4 h-4 text-red-400" /></div> Endless scrolling eliminated</li>
-                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center"><X className="w-4 h-4 text-red-400" /></div> Confusing cravings solved</li>
+              <ul className="space-y-4 text-lg text-gray-700 font-medium">
+                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center"><X className="w-4 h-4 text-red-500" /></div> Endless scrolling eliminated</li>
+                <li className="flex items-center gap-4"><div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center"><X className="w-4 h-4 text-red-500" /></div> Confusing cravings solved</li>
               </ul>
             </motion.div>
             
-            <p className="text-2xl font-light text-white">Open the app. Get your answer.</p>
+            <p className="text-2xl font-light text-gray-900">Open the app. Get your answer.</p>
           </motion.div>
         </section>
 
         {/* MOOD CAROUSEL */}
-        <section id="how-it-works" className="py-32 bg-[#0E1511] border-y border-white/5 relative">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-[#6DBE7C] to-transparent opacity-30"></div>
+        <section id="how-it-works" className="py-32 bg-white/30 backdrop-blur-md border-y border-black/5 relative">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-[#7A9F87] to-transparent opacity-30"></div>
           <div className="max-w-6xl mx-auto px-6">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
@@ -220,8 +220,8 @@ export default function Landing() {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Smart Mood Matching</h2>
-              <p className="text-lg text-[#6DBE7C] font-mono tracking-widest text-sm uppercase">Adapting perfectly to how you feel</p>
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Smart Mood Matching</h2>
+              <p className="text-lg text-[#7A9F87] font-mono tracking-widest text-sm uppercase">Adapting perfectly to how you feel</p>
             </motion.div>
             
             <MoodCarousel />
@@ -237,8 +237,8 @@ export default function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Smart Takeout Finder</h2>
-              <p className="text-xl text-[#A8C7B3] max-w-3xl mx-auto leading-relaxed mb-16 font-light">
+              <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">Smart Takeout Finder</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-16 font-light">
                 The best options from restaurants near you — found in milliseconds.
               </p>
             </motion.div>
@@ -258,7 +258,7 @@ export default function Landing() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1, delay: 0.4 }}
-              className="text-2xl font-light text-white"
+              className="text-2xl font-light text-gray-900"
             >
               Eat what you love. No compromises.
             </motion.p>
@@ -266,7 +266,7 @@ export default function Landing() {
         </section>
 
         {/* PRODUCT VALUE (WHAT YOU ACTUALLY GET) */}
-        <section className="py-32 bg-[#0E1511] border-y border-white/5">
+        <section className="py-32 bg-white/30 backdrop-blur-md border-y border-black/5">
           <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -274,8 +274,8 @@ export default function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Complete Meals, Not Just Recipes</h2>
-              <p className="text-lg text-[#A8C7B3] leading-relaxed mb-8 font-light">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">Complete Meals, Not Just Recipes</h2>
+              <p className="text-lg text-gray-600 leading-relaxed mb-8 font-light">
                 MoodFull creates everything you need instantly:
               </p>
               <motion.ul 
@@ -283,7 +283,7 @@ export default function Landing() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
-                className="space-y-6 text-gray-300 text-lg font-medium mb-8"
+                className="space-y-6 text-gray-700 text-lg font-medium mb-8"
               >
                 {[
                   "Full nutritional breakdowns",
@@ -296,8 +296,8 @@ export default function Landing() {
                     variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }} 
                     className="flex items-center gap-4"
                   >
-                    <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                      <Sparkles className="w-4 h-4 text-[#6DBE7C]" />
+                    <div className="w-10 h-10 rounded-full bg-white/60 border border-white/80 flex items-center justify-center shrink-0 shadow-sm">
+                      <Sparkles className="w-4 h-4 text-[#7A9F87]" />
                     </div>
                     {item}
                   </motion.li>
@@ -308,9 +308,9 @@ export default function Landing() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8, duration: 1 }}
-                className="text-2xl font-light text-white"
+                className="text-2xl font-light text-gray-900"
               >
-                Created specifically for <span className="font-bold text-[#6DBE7C]">you</span>.
+                Created specifically for <span className="font-bold text-[#7A9F87]">you</span>.
               </motion.p>
             </motion.div>
 
@@ -320,30 +320,30 @@ export default function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 1, type: "spring" }}
               style={{ perspective: 1000 }}
-              className="bg-gradient-to-br from-[#183525] to-[#0A0D10] p-8 rounded-3xl border border-white/10 shadow-2xl h-full min-h-[400px] flex items-center justify-center relative overflow-hidden group"
+              className="bg-white/40 backdrop-blur-xl p-8 rounded-3xl border border-white/60 shadow-xl h-full min-h-[400px] flex items-center justify-center relative overflow-hidden group"
             >
                <motion.div 
                  whileHover={{ scale: 1.05, rotateY: 0 }}
-                 className="bg-[#0E1511] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden z-10 border border-white/10 transition-all duration-500"
+                 className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden z-10 border border-gray-100 transition-all duration-500"
                >
-                  <div className="p-4 border-b border-white/5 bg-white/5 flex items-center gap-3 backdrop-blur-md">
-                    <Brain className="w-5 h-5 text-[#6DBE7C] animate-pulse" />
-                    <span className="font-mono text-sm tracking-widest text-white uppercase">AI Analysis</span>
+                  <div className="p-4 border-b border-gray-100 bg-gray-50 flex items-center gap-3">
+                    <Brain className="w-5 h-5 text-[#7A9F87] animate-pulse" />
+                    <span className="font-mono text-sm tracking-widest text-gray-600 uppercase">AI Analysis</span>
                   </div>
                   <div className="p-6 space-y-5">
                     <div className="flex justify-between items-center">
-                      <div className="font-bold text-lg text-white">Goal: Protein Rich</div>
-                      <div className="text-xs bg-[#183525] text-[#6DBE7C] px-3 py-1 rounded-md font-mono border border-[#3A6B4F]">MATCH 98%</div>
+                      <div className="font-bold text-lg text-gray-800">Goal: Protein Rich</div>
+                      <div className="text-xs bg-[#EAF2EC] text-[#7A9F87] px-3 py-1 rounded-md font-mono border border-[#C5DACD]">MATCH 98%</div>
                     </div>
                     <div className="space-y-3">
-                      <div className="h-2 bg-white/10 rounded-full w-full overflow-hidden">
-                        <div className="h-full bg-[#6DBE7C] w-[98%] rounded-full shadow-[0_0_10px_#6DBE7C]"></div>
+                      <div className="h-2 bg-gray-100 rounded-full w-full overflow-hidden">
+                        <div className="h-full bg-[#7A9F87] w-[98%] rounded-full shadow-[0_0_10px_rgba(122,159,135,0.5)]"></div>
                       </div>
-                      <div className="h-2 bg-white/10 rounded-full w-5/6"></div>
+                      <div className="h-2 bg-gray-100 rounded-full w-5/6"></div>
                     </div>
-                    <div className="pt-5 border-t border-white/5 space-y-2">
-                      <div className="text-xs font-mono text-[#A8C7B3] uppercase tracking-wider">AI Log</div>
-                      <div className="text-sm text-gray-400 font-light">Missing ingredient. Swapped <span className="line-through text-white/40">butter</span> for <span className="text-[#6DBE7C] font-bold">olive oil</span>.</div>
+                    <div className="pt-5 border-t border-gray-100 space-y-2">
+                      <div className="text-xs font-mono text-gray-500 uppercase tracking-wider">AI Log</div>
+                      <div className="text-sm text-gray-600 font-light">Missing ingredient. Swapped <span className="line-through text-gray-400">butter</span> for <span className="text-[#7A9F87] font-bold">olive oil</span>.</div>
                     </div>
                   </div>
                </motion.div>
@@ -358,7 +358,7 @@ export default function Landing() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-3xl md:text-5xl font-bold text-white mb-16 tracking-tight"
+              className="text-3xl md:text-5xl font-bold text-gray-900 mb-16 tracking-tight"
             >
               Everything Works Together
             </motion.h2>
@@ -385,14 +385,14 @@ export default function Landing() {
                 <motion.div 
                   key={i} 
                   variants={{ hidden: { opacity: 0, scale: 0.8, filter: "blur(10px)" }, visible: { opacity: 1, scale: 1, filter: "blur(0px)" } }}
-                  whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.05)", borderColor: "rgba(109,190,124,0.5)" }}
-                  className="bg-white/5 p-8 rounded-3xl border border-white/10 flex flex-col items-center text-center gap-4 transition-all cursor-default backdrop-blur-sm"
+                  whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.8)", borderColor: "rgba(122,159,135,0.3)" }}
+                  className="bg-white/40 p-8 rounded-3xl border border-white/60 shadow-lg flex flex-col items-center text-center gap-4 transition-all cursor-default backdrop-blur-xl"
                 >
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#183525] to-[#0A0D10] border border-[#3A6B4F] rounded-2xl flex items-center justify-center text-[#6DBE7C] shadow-[0_0_15px_rgba(58,107,79,0.5)] shrink-0">
+                  <div className="w-14 h-14 bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center text-[#7A9F87] shadow-sm shrink-0">
                     {feature.icon}
                   </div>
-                  <h3 className="font-bold text-gray-200 tracking-wide text-lg">{feature.title}</h3>
-                  <p className="text-sm text-gray-400 font-light leading-relaxed">{feature.desc}</p>
+                  <h3 className="font-bold text-gray-800 tracking-wide text-lg">{feature.title}</h3>
+                  <p className="text-sm text-gray-500 font-light leading-relaxed">{feature.desc}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -400,7 +400,7 @@ export default function Landing() {
         </section>
 
         {/* ANALYTICS CRYSTAL DASHBOARD */}
-        <section className="py-32 bg-[#0E1511] border-y border-white/5">
+        <section className="py-32 bg-white/30 backdrop-blur-md border-y border-black/5">
           <div className="max-w-6xl mx-auto px-6">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -408,8 +408,8 @@ export default function Landing() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Your Health Dashboard</h2>
-              <p className="text-xl text-[#A8C7B3] max-w-2xl mx-auto font-light">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">Your Health Dashboard</h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
                 Beautiful data visualizations that adapt to your mood and history.
               </p>
             </motion.div>
@@ -419,8 +419,8 @@ export default function Landing() {
         </section>
 
         {/* FINAL CTA (DARK SECTION) */}
-        <section className="py-40 relative overflow-hidden text-center flex flex-col items-center justify-center border-t border-white/10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-[#183525] to-transparent rounded-full mix-blend-screen filter blur-[150px] opacity-40 pointer-events-none"></div>
+        <section className="py-40 relative overflow-hidden text-center flex flex-col items-center justify-center border-t border-black/5">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-[#D4E4E6] to-transparent rounded-full mix-blend-multiply filter blur-[150px] opacity-60 pointer-events-none"></div>
           
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
@@ -429,22 +429,22 @@ export default function Landing() {
             transition={{ duration: 1, type: "spring" }}
             className="max-w-3xl mx-auto px-6 relative z-10"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-sm font-mono mb-8 uppercase tracking-widest">
-              <Brain className="w-4 h-4 text-[#6DBE7C]" /> Intelligence Ready
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-white/80 text-[#7A9F87] shadow-sm text-sm font-mono mb-8 uppercase tracking-widest">
+              <Brain className="w-4 h-4 text-[#A29BE3]" /> Intelligence Ready
             </div>
-            <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight text-white">Stop Guessing</h2>
-            <p className="text-2xl text-[#A8C7B3] font-light mb-12">Let our AI find the perfect meal for you.</p>
+            <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight text-gray-900">Stop Guessing</h2>
+            <p className="text-2xl text-gray-600 font-light mb-12">Let our AI find the perfect meal for you.</p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Button 
                 onClick={handleLogin} 
-                className="bg-white text-[#0A0D10] hover:bg-[#E0EDE4] px-10 py-7 rounded-full text-xl w-full sm:w-auto shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all hover:scale-105 font-bold"
+                className="bg-gradient-to-r from-[#7A9F87] to-[#A29BE3] text-white hover:opacity-90 px-10 py-7 rounded-full text-xl w-full sm:w-auto shadow-[0_8px_32px_rgba(162,155,227,0.3)] transition-all hover:scale-105 font-bold"
               >
                 Start Now
               </Button>
               <Button 
                 onClick={handleLogin} 
                 variant="outline"
-                className="border-white/20 text-white bg-white/5 hover:bg-white/10 px-10 py-7 rounded-full text-xl w-full sm:w-auto transition-all font-medium backdrop-blur-md hover:border-white/40"
+                className="border-gray-200 text-gray-700 bg-white/60 hover:bg-white/90 px-10 py-7 rounded-full text-xl w-full sm:w-auto transition-all font-medium backdrop-blur-md hover:border-gray-300"
               >
                 <Download className="w-5 h-5 mr-3" />
                 Download App
@@ -455,14 +455,14 @@ export default function Landing() {
 
       </main>
 
-      <footer className="bg-[#050709] pt-12 pb-12 text-center text-[#A8C7B3] text-sm flex flex-col items-center border-t border-white/5 relative z-10 font-mono uppercase tracking-widest">
-        <p className="mb-8 font-bold text-white/50 tracking-[0.2em]">MoodFull — Eat Smarter.</p>
+      <footer className="bg-white/40 backdrop-blur-md pt-12 pb-12 text-center text-gray-500 text-sm flex flex-col items-center border-t border-black/5 relative z-10 font-mono uppercase tracking-widest">
+        <p className="mb-8 font-bold text-gray-400 tracking-[0.2em]">MoodFull — Eat Smarter.</p>
         <div className="flex gap-8 mb-12">
-          <a href="/about" className="hover:text-white transition-colors">About</a>
-          <a href="/contact" className="hover:text-white transition-colors">Contact</a>
-          <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
+          <a href="/about" className="hover:text-gray-800 transition-colors">About</a>
+          <a href="/contact" className="hover:text-gray-800 transition-colors">Contact</a>
+          <a href="/privacy" className="hover:text-gray-800 transition-colors">Privacy</a>
         </div>
-        <p className="text-xs text-white/20">© {new Date().getFullYear()} MoodFull Systems. All rights reserved.</p>
+        <p className="text-xs text-gray-400">© {new Date().getFullYear()} MoodFull Systems. All rights reserved.</p>
       </footer>
     </div>
   );
