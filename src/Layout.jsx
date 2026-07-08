@@ -15,24 +15,17 @@ export default function Layout({ children, currentPageName }) {
     <>
       <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#FAFCFB] pointer-events-none">
         {/* Animated Aurora Orbs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#D4E4E6] rounded-full mix-blend-multiply filter blur-[100px] opacity-60 animate-blob"></div>
-        <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[120px] opacity-50 animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[70%] h-[70%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[120px] opacity-60 animate-blob animation-delay-4000"></div>
-        <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#FDF0D5] rounded-full mix-blend-multiply filter blur-[90px] opacity-50 animate-blob animation-delay-6000"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#C1D7D0] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDuration: "25s"}}></div>
+        <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "3s", animationDuration: "30s"}}></div>
+        <div className="absolute bottom-[-20%] left-[20%] w-[70%] h-[70%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDelay: "6s", animationDuration: "28s"}}></div>
+        <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#FCF5E3] rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-blob" style={{animationDelay: "9s", animationDuration: "22s"}}></div>
         
-        {/* Subtle Neural Network SVG Overlay */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="neural-net" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-              <path d="M10 10L90 90M90 10L10 90M50 10L50 90M10 50L90 50" stroke="currentColor" strokeWidth="0.5" fill="none"/>
-              <circle cx="10" cy="10" r="2" fill="currentColor"/>
-              <circle cx="90" cy="90" r="2" fill="currentColor"/>
-              <circle cx="90" cy="10" r="2" fill="currentColor"/>
-              <circle cx="10" cy="90" r="2" fill="currentColor"/>
-              <circle cx="50" cy="50" r="3" fill="currentColor"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#neural-net)"/>
+        {/* Subtle Organic Noise Overlay */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay" xmlns="http://www.w3.org/2000/svg">
+          <filter id="noiseFilterLayout">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noiseFilterLayout)"/>
         </svg>
       </div>
       <style>{`

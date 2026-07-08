@@ -23,24 +23,17 @@ export default function Landing() {
     <div className="min-h-screen bg-[#FAFCFB] text-gray-800 flex flex-col font-sans overflow-x-hidden selection:bg-[#A29BE3] selection:text-white">
       {/* Dynamic Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#D4E4E6] rounded-full mix-blend-multiply filter blur-[100px] opacity-60 animate-blob"></div>
-        <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[120px] opacity-50 animate-blob" style={{animationDelay: "2s"}}></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[70%] h-[70%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[120px] opacity-60 animate-blob" style={{animationDelay: "4s"}}></div>
-        <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#FDF0D5] rounded-full mix-blend-multiply filter blur-[90px] opacity-50 animate-blob" style={{animationDelay: "6s"}}></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#C1D7D0] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDuration: "25s"}}></div>
+        <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "3s", animationDuration: "30s"}}></div>
+        <div className="absolute bottom-[-20%] left-[20%] w-[70%] h-[70%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDelay: "6s", animationDuration: "28s"}}></div>
+        <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#FCF5E3] rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-blob" style={{animationDelay: "9s", animationDuration: "22s"}}></div>
         
-        {/* Subtle Neural Network SVG Overlay */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="neural-net-landing" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-              <path d="M10 10L90 90M90 10L10 90M50 10L50 90M10 50L90 50" stroke="currentColor" strokeWidth="0.5" fill="none"/>
-              <circle cx="10" cy="10" r="2" fill="currentColor"/>
-              <circle cx="90" cy="90" r="2" fill="currentColor"/>
-              <circle cx="90" cy="10" r="2" fill="currentColor"/>
-              <circle cx="10" cy="90" r="2" fill="currentColor"/>
-              <circle cx="50" cy="50" r="3" fill="currentColor"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#neural-net-landing)"/>
+        {/* Subtle Organic Noise Overlay */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay" xmlns="http://www.w3.org/2000/svg">
+          <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
         </svg>
       </div>
 
@@ -124,14 +117,14 @@ export default function Landing() {
                 <div className="w-2 h-2 rounded-full bg-[#A29BE3] animate-pulse" />
                 AI READY
               </div>
-              <h1 className="text-5xl md:text-7xl font-serif text-gray-900 tracking-tight mb-6 leading-[1.1]">
+              <h1 className="text-6xl md:text-[5.5rem] lg:text-8xl font-serif text-gray-900 tracking-tighter mb-6 leading-[1.05]">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A29BE3] to-[#89B6D9] font-sans font-bold italic">AI</span> decides<br/>
                 what you should <span className="text-[#6DBE7C] italic font-serif">eat.</span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed font-light">
-                Personalized picks based on your mood, budget, location & energy.
+              <p className="text-lg md:text-2xl text-gray-600 mb-8 leading-relaxed font-light max-w-xl">
+                Skip the endless scrolling. Personalized restaurant and meal recommendations based on your mood, budget, location, and energy.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 items-center md:justify-start mb-4">
+              <div className="flex flex-col sm:flex-row gap-4 items-center md:justify-start mb-6">
                 <Button 
                   onClick={handleLogin} 
                   className="btn-shimmer bg-gradient-to-r from-[#7A9F87] to-[#A29BE3] text-white px-8 py-6 rounded-full text-lg w-full sm:w-auto shadow-[0_8px_32px_rgba(162,155,227,0.3)] transition-all hover:scale-105 hover:shadow-[0_12px_40px_rgba(162,155,227,0.5)] font-bold"
@@ -146,7 +139,12 @@ export default function Landing() {
                   See How It Works <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-sm text-gray-400 font-mono">ZERO EFFORT. INSTANT RESULTS.</p>
+              <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-500 justify-center md:justify-start">
+                <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-[#7A9F87]"/> Restaurants</span>
+                <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-[#7A9F87]"/> Delivery</span>
+                <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-[#7A9F87]"/> Recipes</span>
+                <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-[#7A9F87]"/> Grocery ideas</span>
+              </div>
             </motion.div>
 
             {/* DECISION WIDGET HERO */}
