@@ -23,18 +23,14 @@ export default function Landing() {
     <div className="min-h-screen bg-[#FAFCFB] text-gray-800 flex flex-col font-sans overflow-x-hidden selection:bg-[#A29BE3] selection:text-white">
       {/* Dynamic Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#C1D7D0] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDuration: "25s"}}></div>
-        <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "3s", animationDuration: "30s"}}></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[70%] h-[70%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDelay: "6s", animationDuration: "28s"}}></div>
-        <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#FCF5E3] rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-blob" style={{animationDelay: "9s", animationDuration: "22s"}}></div>
+        {/* Animated Aurora Orbs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#A3C4B6] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "0s"}}></div>
+        <div className="absolute top-[20%] right-[-10%] w-[70%] h-[70%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "2s"}}></div>
+        <div className="absolute bottom-[-20%] left-[10%] w-[60%] h-[60%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "4s"}}></div>
+        <div className="absolute bottom-[10%] right-[20%] w-[50%] h-[50%] bg-[#FDF0D5] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "6s"}}></div>
         
-        {/* Subtle Organic Noise Overlay */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay" xmlns="http://www.w3.org/2000/svg">
-          <filter id="noiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
-        </svg>
+        {/* Subtle Noise Texture */}
+        <div className="absolute inset-0 w-full h-full opacity-[0.35] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '150px 150px' }}></div>
       </div>
 
       {/* Header */}
@@ -117,11 +113,11 @@ export default function Landing() {
                 <div className="w-2 h-2 rounded-full bg-[#A29BE3] animate-pulse" />
                 AI READY
               </div>
-              <h1 className="text-6xl md:text-[5.5rem] lg:text-8xl font-serif text-gray-900 tracking-tighter mb-6 leading-[1.05]">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A29BE3] to-[#89B6D9] font-sans font-bold italic">AI</span> decides<br/>
-                what you should <span className="text-[#6DBE7C] italic font-serif">eat.</span>
+              <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-bold text-gray-900 tracking-tighter mb-8 leading-[0.9]">
+                <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#7A9F87] via-[#A29BE3] to-[#89B6D9]">AI decides</span><br/>
+                what you should eat.
               </h1>
-              <p className="text-lg md:text-2xl text-gray-600 mb-8 leading-relaxed font-light max-w-xl">
+              <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed font-light max-w-xl">
                 Skip the endless scrolling. Personalized restaurant and meal recommendations based on your mood, budget, location, and energy.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 items-center md:justify-start mb-6">
@@ -139,7 +135,7 @@ export default function Landing() {
                   See How It Works <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
-              <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-500 justify-center md:justify-start">
+              <div className="flex flex-wrap gap-4 text-sm font-medium text-gray-500">
                 <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-[#7A9F87]"/> Restaurants</span>
                 <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-[#7A9F87]"/> Delivery</span>
                 <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-[#7A9F87]"/> Recipes</span>

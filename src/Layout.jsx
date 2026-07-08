@@ -15,18 +15,13 @@ export default function Layout({ children, currentPageName }) {
     <>
       <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#FAFCFB] pointer-events-none">
         {/* Animated Aurora Orbs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#C1D7D0] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDuration: "25s"}}></div>
-        <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob" style={{animationDelay: "3s", animationDuration: "30s"}}></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[70%] h-[70%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[120px] opacity-40 animate-blob" style={{animationDelay: "6s", animationDuration: "28s"}}></div>
-        <div className="absolute bottom-[10%] right-[10%] w-[40%] h-[40%] bg-[#FCF5E3] rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-blob" style={{animationDelay: "9s", animationDuration: "22s"}}></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#A3C4B6] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob animation-delay-0"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[70%] h-[70%] bg-[#E6DDF2] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-[-20%] left-[10%] w-[60%] h-[60%] bg-[#DCEAF5] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-[10%] right-[20%] w-[50%] h-[50%] bg-[#FDF0D5] rounded-full mix-blend-multiply filter blur-[150px] opacity-40 animate-blob animation-delay-6000"></div>
         
-        {/* Subtle Organic Noise Overlay */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay" xmlns="http://www.w3.org/2000/svg">
-          <filter id="noiseFilterLayout">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noiseFilterLayout)"/>
-        </svg>
+        {/* Subtle Noise Texture */}
+        <div className="absolute inset-0 w-full h-full opacity-[0.35] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")', backgroundSize: '150px 150px' }}></div>
       </div>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
