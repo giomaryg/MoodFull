@@ -38,6 +38,30 @@ export default function SmartTakeoutPanel({ isOpen, onClose, contextMoods = [], 
   const [suggestions, setSuggestions] = useState(null);
   const [viewMode, setViewMode] = useState('dominant'); // 'dominant' | 'alternatives'
   const [userLoc, setUserLoc] = useState([40.7128, -74.0060]); // Default to NYC
+  const [nearbyPlaces, setNearbyPlaces] = useState([]);
+
+  useEffect(() => {
+    const fetchNearby = async () => {
+      try {
+        const query = `[out:json];(node["amenity"~"restaurant|fast_food|cafe"](around:1000,${userLoc[0]},${userLoc[1]}););out 15;`;
+        const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        if (data && data.elements) {
+          const places = data.elements.filter(e => e.tags && e.tags.name).map(e => ({
+            restaurant_type: e.tags.name,
+            item_name: e.tags.cuisine ? `${e.tags.cuisine.split(';')[0]} cuisine` : 'Local food',
+            loc: [e.lat, e.lon],
+            isTop: false,
+            isBackground: true
+          }));
+          setNearbyPlaces(places);
+        }
+      } catch (err) {
+        console.error("Failed to fetch nearby places", err);
+      }
+    };
+    fetchNearby();
+  }, [userLoc]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -76,17 +100,21 @@ export default function SmartTakeoutPanel({ isOpen, onClose, contextMoods = [], 
       });
     }
     // Background noise: "all restaurants near user"
-    for (let i = 6; i < 16; i++) {
-       markers.push({
-         restaurant_type: "Local Restaurant",
-         item_name: "Various Menu Items",
-         loc: getMockLocation(userLoc, i),
-         isTop: false,
-         isBackground: true
-       });
+    if (nearbyPlaces.length > 0) {
+      markers.push(...nearbyPlaces);
+    } else {
+      for (let i = 6; i < 16; i++) {
+         markers.push({
+           restaurant_type: "Local Restaurant",
+           item_name: "Various Menu Items",
+           loc: getMockLocation(userLoc, i),
+           isTop: false,
+           isBackground: true
+         });
+      }
     }
     return markers;
-  }, [suggestions, userLoc]);
+  }, [suggestions, userLoc, nearbyPlaces]);
 
   // Pre-fill if there's a recipe context
   useEffect(() => {
@@ -230,15 +258,20 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                   <div className="relative">
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input
-                      placeholder="Enter delivery address (optional)"
+                      placeholder="Enter delivery address & press Enter"
                       className="pl-11 h-12 rounded-xl border-white bg-white text-sm shadow-sm"
-                      onChange={(e) => {
-                        if (e.target.value.length > 3) {
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && e.target.value.length > 3) {
                           fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
                             .then(res => res.json())
                             .then(data => {
-                              if (data && data.length > 0) setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-                            });
+                              if (data && data.length > 0) {
+                                setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+                                toast.success("Location updated!");
+                              } else {
+                                toast.error("Location not found");
+                              }
+                            }).catch(() => toast.error("Error finding location"));
                         }
                       }}
                     />
@@ -274,15 +307,21 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                 <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
-                    placeholder="Address or ZIP code (optional)"
+                    placeholder="Address or ZIP code & press Enter"
                     className="pl-12 h-14 rounded-2xl border-gray-200 focus:border-[#6b9b76] bg-white text-base shadow-sm"
-                    onChange={(e) => {
-                      if (e.target.value.length > 3) {
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && e.target.value.length > 3) {
+                        e.preventDefault();
                         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
                           .then(res => res.json())
                           .then(data => {
-                            if (data && data.length > 0) setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-                          });
+                            if (data && data.length > 0) {
+                              setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+                              toast.success("Location updated!");
+                            } else {
+                              toast.error("Location not found");
+                            }
+                          }).catch(() => toast.error("Error finding location"));
                       }
                     }}
                   />
