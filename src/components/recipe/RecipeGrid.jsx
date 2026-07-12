@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -69,109 +69,111 @@ function RecipeGrid({ recipes, onRecipeClick, onStartOver, onRefresh, searchQuer
 
       {/* Recipe Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-        {recipes.filter(r => r && r.name).map((recipe, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-            className="h-full"
-          >
-            <Card
-              role="button"
-              tabIndex={0}
-              aria-label={`View details for ${recipe.name}`}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
-              onClick={() => onRecipeClick(recipe)}
-              className="group cursor-pointer rounded-[2rem] overflow-hidden glass-panel bg-white/40 backdrop-blur-xl border border-white/60 ai-glow h-full flex flex-col hover:-translate-y-2 transition-all duration-500 ease-out"
+        <AnimatePresence>
+          {recipes.filter(r => r && r.name).map((recipe, index) => (
+            <motion.div
+              key={recipe.id || index}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: "easeInOut" }}
+              className="h-full"
             >
-              <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
-                {recipe._loading ? (
-                   <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
-                     <ChefHat className="w-12 h-12 text-muted-foreground/30" />
-                   </div>
-                 ) : recipe.imageLoading ? (
-                   <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
-                     <ChefHat className="w-12 h-12 text-muted-foreground/50" />
-                   </div>
-                 ) : (recipe.imageUrl || recipe.image_url) ? (
-                  <img src={recipe.imageUrl || recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
-                 ) : (
-                   <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
-                     <ChefHat className="w-12 h-12 text-[#6b9b76]/50" />
-                   </div>
-                 )}
-                 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div className="absolute bottom-5 left-5 right-5 flex justify-between items-end">
-                  <div className="flex-1 pr-3 sm:pr-4">
-                    {recipe._loading ? (
-                      <div className="space-y-2">
-                        <div className="h-6 bg-white/40 rounded w-3/4 animate-pulse"></div>
-                        <div className="h-4 bg-white/40 rounded w-1/2 animate-pulse"></div>
-                      </div>
-                    ) : (
-                      <>
-                        <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
-                          <HighlightedText text={recipe.name} query={searchQuery} />
-                        </h3>
-                        <p className="text-white/80 text-xs sm:text-sm line-clamp-1 mb-1.5">
-                          {recipe.description}
-                        </p>
-                        <div className="flex items-center gap-1.5 text-white/90 text-[10px] sm:text-xs font-medium">
-                          <Clock className="w-3 h-3" />
-                          <span>{recipe.prep_time || '25 min'}</span>
-                          <span className="opacity-50">•</span>
-                          <span>{recipe.difficulty || 'Easy'}</span>
+              <Card
+                role="button"
+                tabIndex={0}
+                aria-label={`View details for ${recipe.name}`}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRecipeClick(recipe); } }}
+                onClick={() => onRecipeClick(recipe)}
+                className="group cursor-pointer rounded-[2rem] overflow-hidden glass-panel bg-white/40 backdrop-blur-xl border border-white/60 ai-glow h-full flex flex-col hover:-translate-y-2 transition-all duration-500 ease-out"
+              >
+                <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100">
+                  {recipe._loading ? (
+                     <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
+                       <ChefHat className="w-12 h-12 text-muted-foreground/30" />
+                     </div>
+                   ) : recipe.imageLoading ? (
+                     <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
+                       <ChefHat className="w-12 h-12 text-muted-foreground/50" />
+                     </div>
+                   ) : (recipe.imageUrl || recipe.image_url) ? (
+                    <img src={recipe.imageUrl || recipe.image_url} alt={recipe.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                   ) : (
+                     <div className="absolute inset-0 flex items-center justify-center bg-[#e8f0ea]/50">
+                       <ChefHat className="w-12 h-12 text-[#6b9b76]/50" />
+                     </div>
+                   )}
+                   
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <div className="absolute bottom-5 left-5 right-5 flex justify-between items-end">
+                    <div className="flex-1 pr-3 sm:pr-4">
+                      {recipe._loading ? (
+                        <div className="space-y-2">
+                          <div className="h-6 bg-white/40 rounded w-3/4 animate-pulse"></div>
+                          <div className="h-4 bg-white/40 rounded w-1/2 animate-pulse"></div>
                         </div>
-                        {recipe.searchReason && (
-                          <div className="mt-2 text-[10px] sm:text-xs bg-black/40 backdrop-blur-md text-white px-2 py-1 rounded-md inline-flex items-center gap-1 border border-white/20">
-                            <Sparkles className="w-3 h-3 text-yellow-300" />
-                            {recipe.searchReason}
+                      ) : (
+                        <>
+                          <h3 className="text-white font-bold text-lg sm:text-xl leading-tight mb-1 line-clamp-2">
+                            <HighlightedText text={recipe.name} query={searchQuery} />
+                          </h3>
+                          <p className="text-white/80 text-xs sm:text-sm line-clamp-1 mb-1.5">
+                            {recipe.description}
+                          </p>
+                          <div className="flex items-center gap-1.5 text-white/90 text-[10px] sm:text-xs font-medium">
+                            <Clock className="w-3 h-3" />
+                            <span>{recipe.prep_time || '25 min'}</span>
+                            <span className="opacity-50">•</span>
+                            <span>{recipe.difficulty || 'Easy'}</span>
                           </div>
-                        )}
-                      </>
-                    )}
+                          {recipe.searchReason && (
+                            <div className="mt-2 text-[10px] sm:text-xs bg-black/40 backdrop-blur-md text-white px-2 py-1 rounded-md inline-flex items-center gap-1 border border-white/20">
+                              <Sparkles className="w-3 h-3 text-yellow-300" />
+                              {recipe.searchReason}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <Button variant="ghost" size="icon" aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white/90 backdrop-blur-sm rounded-full shadow-lg shrink-0 text-red-500 hover:scale-110 transition-transform hover:bg-white hover:text-red-600">
+                      <Heart className="w-5 h-5 fill-current" />
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="icon" aria-label="Like recipe" className="w-11 h-11 min-h-[44px] min-w-[44px] bg-white/90 backdrop-blur-sm rounded-full shadow-lg shrink-0 text-red-500 hover:scale-110 transition-transform hover:bg-white hover:text-red-600">
-                    <Heart className="w-5 h-5 fill-current" />
-                  </Button>
                 </div>
-              </div>
-              
-              <div className="px-6 py-5 flex justify-between items-center bg-transparent mt-auto border-t border-gray-100/30">
-                {recipe._loading ? (
-                  <>
-                    <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
-                    <div className="w-px h-8 bg-border"></div>
-                    <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
-                    <div className="w-px h-8 bg-border"></div>
-                    <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-center">
-                      <p className="font-bold text-lg text-foreground">{recipe.nutrition?.calories || 290}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Calories</p>
-                    </div>
-                    <div className="w-px h-8 bg-border"></div>
-                    <div className="text-center">
-                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Protein</p>
-                    </div>
-                    <div className="w-px h-8 bg-border"></div>
-                    <div className="text-center">
-                      <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Carbs</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </Card>
-          </motion.div>
-        ))}
+                
+                <div className="px-6 py-5 flex justify-between items-center bg-transparent mt-auto border-t border-gray-100/30">
+                  {recipe._loading ? (
+                    <>
+                      <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
+                      <div className="w-px h-8 bg-border"></div>
+                      <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
+                      <div className="w-px h-8 bg-border"></div>
+                      <div className="w-12 h-10 bg-muted animate-pulse rounded"></div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-center">
+                        <p className="font-bold text-lg text-foreground">{recipe.nutrition?.calories || 290}</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Calories</p>
+                      </div>
+                      <div className="w-px h-8 bg-border"></div>
+                      <div className="text-center">
+                        <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.protein) || 16}g</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Protein</p>
+                      </div>
+                      <div className="w-px h-8 bg-border"></div>
+                      <div className="text-center">
+                        <p className="font-bold text-lg text-foreground">{parseMacro(recipe.nutrition?.carbs) || 56}g</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider">Carbs</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {recipes.length === 0 && (

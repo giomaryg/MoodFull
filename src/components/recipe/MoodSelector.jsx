@@ -257,7 +257,9 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
                 {isSelected && (
                   <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-[#7A9F87] via-[#A29BE3] to-[#89B6D9] -z-10" style={{ WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude' }}></div>
                 )}
-                <Icon className={`w-6 h-6 mb-2 ${isSelected ? 'text-[#A29BE3]' : 'text-gray-400'}`} strokeWidth={isSelected ? 2 : 1.5} />
+                <motion.div animate={isSelected ? { scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] } : {}} transition={{ duration: 0.4 }}>
+                  <Icon className={`w-6 h-6 mb-2 ${isSelected ? 'text-[#A29BE3]' : 'text-gray-400'}`} strokeWidth={isSelected ? 2 : 1.5} />
+                </motion.div>
                 <span className={`text-[11px] font-medium ${isSelected ? 'text-gray-800' : 'text-gray-500'}`}>{mood.label}</span>
               </button>
             );
@@ -274,7 +276,15 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
             <div className="text-sm text-gray-500 font-light mb-4">Choose your range</div>
             
             <div className="flex items-end gap-1 mb-4">
-              <span className="text-4xl font-bold text-[#6b9b76] tracking-tight">{budgetCurrency}{budgetAmount}</span>
+              <motion.span 
+                key={budgetAmount}
+                initial={{ scale: 1.1, color: '#A29BE3' }}
+                animate={{ scale: 1, color: '#6b9b76' }}
+                transition={{ duration: 0.3 }}
+                className="text-4xl font-bold tracking-tight"
+              >
+                {budgetCurrency}{budgetAmount}
+              </motion.span>
               <span className="text-gray-400 text-sm mb-1 font-medium">/ person</span>
             </div>
 

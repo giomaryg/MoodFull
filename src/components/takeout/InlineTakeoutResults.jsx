@@ -3,8 +3,20 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin, Share2, ChevronRight, Heart, Brain } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { toast } from 'sonner';
+import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+
+function MapUpdater() {
+  const map = useMap();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [map]);
+  return null;
+}
 
 const getImage = (name) => {
   const n = name.toLowerCase();
@@ -247,6 +259,7 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
           {/* Map View */}
           <div className="h-full min-h-[400px] w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
             <MapContainer center={userLoc} zoom={13} style={{ height: '100%', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
+              <MapUpdater />
               <TileLayer
                 attribution='&copy; OpenStreetMap'
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"

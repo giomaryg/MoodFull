@@ -1743,14 +1743,20 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                         exit={{ opacity: 0, scale: 0.95 }}
                         className="flex flex-col justify-center items-center gap-3 sm:gap-4 w-full">
 
-                    <Button
-                          onClick={generateRecipe}
-                          disabled={isGenerating}
-                          aria-label="Find My Food"
-                          className="btn-shimmer bg-gradient-to-r from-[#DFF5E6] via-[#E6DDF2] to-[#FDF0D5] text-gray-800 shadow-[0_8px_32px_rgba(162,155,227,0.15)] hover:shadow-[0_12px_40px_rgba(162,155,227,0.3)] transition-all duration-300 text-sm px-6 py-2 min-h-[40px] max-w-[200px] w-auto mx-auto rounded-xl font-bold tracking-tight flex items-center justify-center gap-2">
-                      <span className="flex-1 text-center">Find My Food</span>
-                      {isGenerating ? <Loader2 className="w-5 h-5 animate-spin text-[#A29BE3]" /> : <Sparkles className="w-5 h-5 text-[#A29BE3]" />}
-                    </Button>
+                    <motion.div
+                      animate={{ scale: [1, 1.03, 1], boxShadow: ["0 8px 32px rgba(162,155,227,0.15)", "0 12px 40px rgba(162,155,227,0.4)", "0 8px 32px rgba(162,155,227,0.15)"] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      className="rounded-xl overflow-hidden max-w-[200px] mx-auto w-full"
+                    >
+                      <Button
+                            onClick={generateRecipe}
+                            disabled={isGenerating}
+                            aria-label="Find My Food"
+                            className="btn-shimmer bg-gradient-to-r from-[#DFF5E6] via-[#E6DDF2] to-[#FDF0D5] text-gray-800 transition-all duration-300 text-sm px-6 py-2 min-h-[40px] w-full mx-auto rounded-xl font-bold tracking-tight flex items-center justify-center gap-2">
+                        <span className="flex-1 text-center">Find My Food</span>
+                        {isGenerating ? <Loader2 className="w-5 h-5 animate-spin text-[#A29BE3]" /> : <Sparkles className="w-5 h-5 text-[#A29BE3]" />}
+                      </Button>
+                    </motion.div>
 
                     {ENABLE_PANTRY_FEATURE &&
                         <Button
