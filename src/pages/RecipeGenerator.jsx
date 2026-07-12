@@ -754,7 +754,7 @@ ${preg}
 ${locContext}
 ${budgetContext}
 
-Based on this, suggest 1 dominant best order, and 2 alternatives.
+Based on this, suggest 1 dominant best order, and 4 alternatives.
 For each, provide:
 1. The restaurant type or specific restaurant name (e.g. "Sweetgreen", "Chipotle", or a local name if inferred from location)
 2. The specific item name to order
@@ -851,7 +851,7 @@ ${dietaryContext}
 ${pregnancyContext}
 The user has a budget of roughly ${budgetCurrency}${budgetAmount}. Ensure suggestions fit within this price range where possible.
 
-Based on this, suggest 1 dominant best order, and 2 alternatives.
+Based on this, suggest 1 dominant best order, and 4 alternatives.
 For each, provide:
 1. The restaurant type or generic name (e.g. "Fresh Bowl Co." or "Local Mediterranean")
 2. The specific item name to order

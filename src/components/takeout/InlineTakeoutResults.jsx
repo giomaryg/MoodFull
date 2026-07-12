@@ -49,6 +49,9 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
       [0.004, 0.005],
       [-0.003, -0.006],
       [0.007, -0.002],
+      [-0.005, 0.008],
+      [0.002, -0.008],
+      [-0.008, 0.001],
     ];
     const offset = offsets[index % offsets.length];
     return [center[0] + offset[0], center[1] + offset[1]];
@@ -243,7 +246,7 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
         <div>
           {/* Map View */}
           <div className="h-full min-h-[400px] w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
-            <MapContainer center={userLoc} zoom={13} style={{ height: '100%', width: '100%' }} zoomControl={false}>
+            <MapContainer center={userLoc} zoom={13} style={{ height: '100%', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
               <TileLayer
                 attribution='&copy; OpenStreetMap'
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
