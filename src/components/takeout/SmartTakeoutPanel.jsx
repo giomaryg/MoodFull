@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, Sparkles, Utensils, Search, Leaf, ShieldAlert, ArrowRight, ExternalLink, X, Clock, ShieldCheck, Zap, MapPin } from 'lucide-react';
+import { Loader2, Sparkles, Utensils, Search, Leaf, ShieldAlert, ArrowRight, ExternalLink, X, Clock, ShieldCheck, Zap, MapPin, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
@@ -353,9 +353,14 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
           ) : (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-200 shadow-sm">
-                <Button variant="ghost" size="sm" onClick={() => setSuggestions(null)} className="text-gray-500 hover:text-gray-800">
-                  <X className="w-4 h-4 mr-1" /> Start Over
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="sm" onClick={() => setSuggestions(null)} className="text-gray-500 hover:text-gray-800">
+                    <X className="w-4 h-4 mr-1" /> Start Over
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={(e) => handleGenerate(e, false)} disabled={isGenerating} className="text-[#6b9b76] hover:text-[#5a8a65]">
+                    {isGenerating ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />} Refresh
+                  </Button>
+                </div>
                 {viewMode === 'alternatives' && (
                   <Button variant="outline" size="sm" onClick={() => setViewMode('dominant')} className="text-[#6b9b76] border-[#6b9b76]">
                     View Top Pick

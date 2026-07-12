@@ -699,53 +699,30 @@ export default function RecipeGenerator() {
     }
   };
 
-  const generateRecipe = async (ignoreCache = false) => {
-    if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
+  const generateTakeout = () => {
+    setIsGeneratingTakeout(true);
+    setTakeoutSuggestions(null);
+    const diet = userPreferences?.diet_preferences || userPreferences?.allergies ?
+    `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` :
+    '';
+    const preg = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status) ?
+    `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).` :
+    '';
 
-    // Free limit: 3 mood generations per day (resets every 24h)
-    if (false) {
-      const today = new Date().toISOString().slice(0, 10);
-      const lastReset = currentUser?.daily_mood_reset_date;
-      const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
-      if (dailyCount >= 3) {
-        setShowPaywall(true);
-        return;
-      }
-    }
+    const locContext = userLocation ?
+    `\nUSER LOCATION: ${userLocation}. CRITICAL: You MUST include REAL RESTAURANT NAMES (chains or local favorites available in this specific location) and ACTUAL MENU ITEMS from them.` :
+    `\nCRITICAL: INCLUDE REAL RESTAURANT NAMES (prefer widely available chains or known local types if location isn't provided) and ACTUAL MENU ITEMS.`;
 
-    setSavedRecipeId(null);
+    const effortTakeoutContext = effortLevel === 'Fast Takeout' ?
+    'User is explicitly looking for the fastest and easiest takeout option right now.' :
+    effortLevel === 'Involved Cooking' ?
+    'User actually wants to cook, but provide a high-quality restaurant option just in case they decide to order in.' :
+    '';
 
-    const cacheKeyParams = {
-      moods: selectedMoods,
-      meals: selectedMealTypes,
-      query: globalSearchQuery,
-      filters: advancedFilters
-    };
+    const budgetContext = `The user has a budget of roughly ${budgetCurrency}${budgetAmount}. Ensure suggestions fit within this price range where possible.`;
 
-    const triggerTakeoutGeneration = () => {
-      setIsGeneratingTakeout(true);
-      setTakeoutSuggestions(null);
-      const diet = userPreferences?.diet_preferences || userPreferences?.allergies ?
-      `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` :
-      '';
-      const preg = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status) ?
-      `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).` :
-      '';
-
-      const locContext = userLocation ?
-      `\nUSER LOCATION: ${userLocation}. CRITICAL: You MUST include REAL RESTAURANT NAMES (chains or local favorites available in this specific location) and ACTUAL MENU ITEMS from them.` :
-      `\nCRITICAL: INCLUDE REAL RESTAURANT NAMES (prefer widely available chains or known local types if location isn't provided) and ACTUAL MENU ITEMS.`;
-
-      const effortTakeoutContext = effortLevel === 'Fast Takeout' ?
-      'User is explicitly looking for the fastest and easiest takeout option right now.' :
-      effortLevel === 'Involved Cooking' ?
-      'User actually wants to cook, but provide a high-quality restaurant option just in case they decide to order in.' :
-      '';
-
-      const budgetContext = `The user has a budget of roughly ${budgetCurrency}${budgetAmount}. Ensure suggestions fit within this price range where possible.`;
-
-      base44.integrations.Core.InvokeLLM({
-        prompt: `You are MoodFull's Smart Takeout AI. The user wants to order takeout instead of cooking.
+    base44.integrations.Core.InvokeLLM({
+      prompt: `You are MoodFull's Smart Takeout AI. The user wants to order takeout instead of cooking.
 Current mood/vibe: ${selectedMoods.join(', ')}
 ${effortTakeoutContext}
 User clicked "Find My Food" - pick the absolute best option for them right now based on time of day and general healthy habits.
@@ -757,103 +734,6 @@ ${budgetContext}
 Based on this, suggest 1 dominant best order, and 5 alternatives.
 For each, provide:
 1. The restaurant type or specific restaurant name (e.g. "Sweetgreen", "Chipotle", or a local name if inferred from location)
-2. The specific item name to order
-3. What typical unhealthy meal this replaces (Swap Instead of Sacrifice)
-4. Regret Reduction (e.g. "Saves ~400 calories vs typical order" or "High protein keeps you full")
-5. Speed/Urgency (e.g. "Fastest option: ~18 min" or "Ready in ~25 min")
-6. Smart Defaults (2 sides/drinks to complete the meal, e.g. "side of guac", "sparkling water")
-7. Ordering modifications (e.g. "no mayo", "sauce on side")
-
-Also provide a 'personalization_hook' that sounds like a friend talking (e.g. "You've been eating heavy this week—try this lighter option tonight" or "It's late—here's the fastest healthy choice").
-Make it actionable, real, and immediate. Return a structured JSON.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            personalization_hook: { type: "string" },
-            dominant_recommendation: {
-              type: "object",
-              properties: {
-                restaurant_type: { type: "string" },
-                item_name: { type: "string" },
-                replaces: { type: "string" },
-                regret_reduction: { type: "string" },
-                speed_urgency: { type: "string" },
-                smart_defaults: { type: "array", items: { type: "string" } },
-                modifications: { type: "array", items: { type: "string" } }
-              },
-              required: ["restaurant_type", "item_name", "replaces", "regret_reduction", "speed_urgency", "smart_defaults", "modifications"]
-            },
-            alternatives: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  restaurant_type: { type: "string" },
-                  item_name: { type: "string" },
-                  replaces: { type: "string" },
-                  regret_reduction: { type: "string" },
-                  speed_urgency: { type: "string" },
-                  smart_defaults: { type: "array", items: { type: "string" } },
-                  modifications: { type: "array", items: { type: "string" } }
-                }
-              }
-            }
-          },
-          required: ["personalization_hook", "dominant_recommendation", "alternatives"]
-        }
-      }).then((response) => {
-        setTakeoutSuggestions(response);
-      }).catch((error) => {
-        console.error('Failed to generate takeout options:', error);
-      }).finally(() => {
-        setIsGeneratingTakeout(false);
-      });
-    };
-
-    if (!ignoreCache) {
-      const cached = getCachedRecipes('generator', cacheKeyParams);
-      if (cached && cached.length > 0) {
-        setGeneratedRecipes(cached);
-        triggerTakeoutGeneration();
-        return;
-      }
-    }
-
-    const skeletons = Array(6).fill(null).map((_, i) => ({
-      id: `temp-${Date.now()}-${i}`,
-      name: "Crafting your recipe...",
-      description: "Finding the perfect match for your mood and preferences...",
-      mood: selectedMoods.join(', ') || 'AI Generated',
-      _loading: true,
-      imageLoading: true
-    }));
-
-    setGeneratedRecipes(skeletons);
-    // Setting isGenerating to false gives an instant response feel 
-    setIsGenerating(false);
-    triggerTakeoutGeneration();
-
-    // Run Takeout generation simultaneously
-    setIsGeneratingTakeout(true);
-    setTakeoutSuggestions(null);
-    const dietaryContext = userPreferences?.diet_preferences || userPreferences?.allergies ?
-    `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` :
-    '';
-    const pregnancyContext = userPreferences?.pregnancy_status && ['pregnant', 'trying'].includes(userPreferences.pregnancy_status) ?
-    `\nCRITICAL CONTEXT: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions are pregnancy-safe (avoid raw/undercooked animal products, unpasteurized dairy, high-mercury fish, alcohol, etc).` :
-    '';
-
-    base44.integrations.Core.InvokeLLM({
-      prompt: `You are MoodFull's Smart Takeout AI. The user wants to order takeout instead of cooking.
-Current mood/vibe: ${selectedMoods.join(', ')}
-User clicked "Find My Food" - pick the absolute best option for them right now based on time of day and general healthy habits.
-${dietaryContext}
-${pregnancyContext}
-The user has a budget of roughly ${budgetCurrency}${budgetAmount}. Ensure suggestions fit within this price range where possible.
-
-Based on this, suggest 1 dominant best order, and 5 alternatives.
-For each, provide:
-1. The restaurant type or generic name (e.g. "Fresh Bowl Co." or "Local Mediterranean")
 2. The specific item name to order
 3. What typical unhealthy meal this replaces (Swap Instead of Sacrifice)
 4. Regret Reduction (e.g. "Saves ~400 calories vs typical order" or "High protein keeps you full")
@@ -905,6 +785,53 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
     }).finally(() => {
       setIsGeneratingTakeout(false);
     });
+  };
+
+  const generateRecipe = async (ignoreCache = false) => {
+    if (!selectedMoods.length && !selectedMealTypes.length && !globalSearchQuery) return;
+
+    // Free limit: 3 mood generations per day (resets every 24h)
+    if (false) {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastReset = currentUser?.daily_mood_reset_date;
+      const dailyCount = lastReset === today ? currentUser?.daily_mood_count || 0 : 0;
+      if (dailyCount >= 3) {
+        setShowPaywall(true);
+        return;
+      }
+    }
+
+    setSavedRecipeId(null);
+
+    const cacheKeyParams = {
+      moods: selectedMoods,
+      meals: selectedMealTypes,
+      query: globalSearchQuery,
+      filters: advancedFilters
+    };
+
+    if (!ignoreCache) {
+      const cached = getCachedRecipes('generator', cacheKeyParams);
+      if (cached && cached.length > 0) {
+        setGeneratedRecipes(cached);
+        generateTakeout();
+        return;
+      }
+    }
+
+    const skeletons = Array(6).fill(null).map((_, i) => ({
+      id: `temp-${Date.now()}-${i}`,
+      name: "Crafting your recipe...",
+      description: "Finding the perfect match for your mood and preferences...",
+      mood: selectedMoods.join(', ') || 'AI Generated',
+      _loading: true,
+      imageLoading: true
+    }));
+
+    setGeneratedRecipes(skeletons);
+    // Setting isGenerating to false gives an instant response feel 
+    setIsGenerating(false);
+    generateTakeout();
 
     const moodDescriptions = {
       happy: "light, fun, colorful dishes",
@@ -1814,7 +1741,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                       
                       <div className="w-full">
                         {(isGeneratingTakeout || takeoutSuggestions) &&
-                            <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} userLocationStr={userLocation} />
+                            <InlineTakeoutResults suggestions={takeoutSuggestions} isGenerating={isGeneratingTakeout} userLocationStr={userLocation} onRefresh={generateTakeout} />
                             }
                       </div>
                     </div>

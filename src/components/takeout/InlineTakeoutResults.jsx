@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin, Share2, ChevronRight, Heart, Brain } from 'lucide-react';
+import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin, Share2, ChevronRight, Heart, Brain, RefreshCw } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { toast } from 'sonner';
 import { useMap } from 'react-leaflet';
@@ -29,7 +29,7 @@ const getImage = (name) => {
   return 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
 };
 
-export default function InlineTakeoutResults({ suggestions, isGenerating, userLocationStr }) {
+export default function InlineTakeoutResults({ suggestions, isGenerating, userLocationStr, onRefresh }) {
   const [viewMode, setViewMode] = useState('dominant'); // 'dominant' | 'alternatives'
   const [userLoc, setUserLoc] = useState([40.7128, -74.0060]);
   const [nearbyPlaces, setNearbyPlaces] = useState([]);
@@ -159,8 +159,15 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-2">
+          {onRefresh && (
+            <Button variant="outline" size="sm" onClick={onRefresh} disabled={isGenerating} className="text-[#6b9b76] border-[#6b9b76] bg-white">
+              {isGenerating ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />} Refresh Options
+            </Button>
+          )}
+        </div>
         {viewMode === 'alternatives' && (
-          <Button variant="outline" size="sm" onClick={() => setViewMode('dominant')} className="text-[#6b9b76] border-[#6b9b76]">
+          <Button variant="outline" size="sm" onClick={() => setViewMode('dominant')} className="text-[#6b9b76] border-[#6b9b76] bg-white">
             View Top Pick
           </Button>
         )}
