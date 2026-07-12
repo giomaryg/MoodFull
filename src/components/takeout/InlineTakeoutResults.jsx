@@ -257,8 +257,8 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
         
         <div>
           {/* Map View */}
-          <div className="h-full min-h-[400px] w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
-            <MapContainer center={userLoc} zoom={13} style={{ height: '100%', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
+          <div className="h-[400px] w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
+            <MapContainer center={userLoc} zoom={13} style={{ height: '400px', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
               <MapUpdater />
               <TileLayer
                 attribution='&copy; OpenStreetMap'

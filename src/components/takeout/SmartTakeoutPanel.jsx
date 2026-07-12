@@ -281,7 +281,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
 
               {/* Map View */}
               <div className="h-56 w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
-                <MapContainer center={userLoc} zoom={13} style={{ height: '100%', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
+                <MapContainer center={userLoc} zoom={13} style={{ height: '224px', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
                   <MapUpdater />
                   <TileLayer
                     attribution='&copy; OpenStreetMap'
