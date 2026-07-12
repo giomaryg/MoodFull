@@ -57,13 +57,14 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
   }, [userLocationStr]);
 
   const getMockLocation = (center, index) => {
+    // A broader set of offsets to simulate "all restaurants near user"
     const offsets = [
-      [0.004, 0.005],
-      [-0.003, -0.006],
-      [0.007, -0.002],
-      [-0.005, 0.008],
-      [0.002, -0.008],
-      [-0.008, 0.001],
+      [0.004, 0.005], [-0.003, -0.006], [0.007, -0.002],
+      [-0.005, 0.008], [0.002, -0.008], [-0.008, 0.001],
+      [0.012, 0.003], [-0.011, -0.004], [0.009, -0.010],
+      [-0.007, 0.012], [0.015, -0.005], [-0.013, 0.007],
+      [0.001, 0.014], [-0.002, -0.015], [0.006, 0.009],
+      [-0.009, -0.007]
     ];
     const offset = offsets[index % offsets.length];
     return [center[0] + offset[0], center[1] + offset[1]];
@@ -72,13 +73,25 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
   const mapMarkers = React.useMemo(() => {
     if (!suggestions) return [];
     const markers = [];
+    // The top pick
     if (suggestions.dominant_recommendation) {
       markers.push({ ...suggestions.dominant_recommendation, loc: getMockLocation(userLoc, 0), isTop: true });
     }
+    // The 5 alternatives
     if (suggestions.alternatives) {
       suggestions.alternatives.forEach((alt, i) => {
         markers.push({ ...alt, loc: getMockLocation(userLoc, i + 1), isTop: false });
       });
+    }
+    // Background noise: "all restaurants near user"
+    for (let i = 6; i < 16; i++) {
+       markers.push({
+         restaurant_type: "Local Restaurant",
+         item_name: "Various Menu Items",
+         loc: getMockLocation(userLoc, i),
+         isTop: false,
+         isBackground: true
+       });
     }
     return markers;
   }, [suggestions, userLoc]);
@@ -255,7 +268,25 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
             )}
         </div>
         
-        <div>
+        <div className="space-y-4">
+          <div className="relative">
+            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Enter delivery address (optional)"
+              className="w-full pl-11 h-12 rounded-xl border border-gray-200 focus:border-[#6b9b76] focus:ring-1 focus:ring-[#6b9b76] focus:outline-none bg-white text-sm shadow-sm transition-all"
+              onChange={(e) => {
+                if (e.target.value.length > 3) {
+                  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                      if (data && data.length > 0) setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+                    });
+                }
+              }}
+            />
+          </div>
+
           {/* Map View */}
           <div className="h-[400px] w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
             <MapContainer center={userLoc} zoom={13} style={{ height: '400px', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
@@ -269,19 +300,25 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
                   key={idx} 
                   position={m.loc}
                   icon={new L.Icon({
-                    iconUrl: m.isTop ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' : 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                    iconUrl: m.isTop 
+                      ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' 
+                      : m.isBackground 
+                        ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png' 
+                        : 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
                     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
+                    iconSize: m.isBackground ? [18, 30] : [25, 41],
+                    iconAnchor: m.isBackground ? [9, 30] : [12, 41],
                     popupAnchor: [1, -34],
-                    shadowSize: [41, 41]
+                    shadowSize: m.isBackground ? [30, 30] : [41, 41]
                   })}
                 >
                   <Popup className="rounded-xl">
                     <div className="text-center p-1 min-w-[120px]">
                       <p className="font-bold text-[#3d5244] text-[13px] leading-tight mb-1">{m.restaurant_type}</p>
                       <p className="text-[11px] text-gray-600 mb-2 leading-tight">{m.item_name}</p>
-                      <Button size="sm" className="h-7 text-[10px] w-full bg-[#6b9b76] hover:bg-[#5a8a65]" onClick={() => openDeliveryPlatform('ubereats', m.item_name)}>Order Here</Button>
+                      {!m.isBackground && (
+                        <Button size="sm" className="h-7 text-[10px] w-full bg-[#6b9b76] hover:bg-[#5a8a65]" onClick={() => openDeliveryPlatform('ubereats', m.item_name)}>Order Here</Button>
+                      )}
                     </div>
                   </Popup>
                 </Marker>

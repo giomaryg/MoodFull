@@ -49,13 +49,14 @@ export default function SmartTakeoutPanel({ isOpen, onClose, contextMoods = [], 
   }, []);
 
   const getMockLocation = (center, index) => {
+    // A broader set of offsets to simulate "all restaurants near user"
     const offsets = [
-      [0.004, 0.005],
-      [-0.003, -0.006],
-      [0.007, -0.002],
-      [-0.005, 0.008],
-      [0.002, -0.008],
-      [-0.008, 0.001],
+      [0.004, 0.005], [-0.003, -0.006], [0.007, -0.002],
+      [-0.005, 0.008], [0.002, -0.008], [-0.008, 0.001],
+      [0.012, 0.003], [-0.011, -0.004], [0.009, -0.010],
+      [-0.007, 0.012], [0.015, -0.005], [-0.013, 0.007],
+      [0.001, 0.014], [-0.002, -0.015], [0.006, 0.009],
+      [-0.009, -0.007]
     ];
     const offset = offsets[index % offsets.length];
     return [center[0] + offset[0], center[1] + offset[1]];
@@ -64,13 +65,25 @@ export default function SmartTakeoutPanel({ isOpen, onClose, contextMoods = [], 
   const mapMarkers = React.useMemo(() => {
     if (!suggestions) return [];
     const markers = [];
+    // The top pick
     if (suggestions.dominant_recommendation) {
       markers.push({ ...suggestions.dominant_recommendation, loc: getMockLocation(userLoc, 0), isTop: true });
     }
+    // The 5 alternatives
     if (suggestions.alternatives) {
       suggestions.alternatives.forEach((alt, i) => {
         markers.push({ ...alt, loc: getMockLocation(userLoc, i + 1), isTop: false });
       });
+    }
+    // Background noise: "all restaurants near user"
+    for (let i = 6; i < 16; i++) {
+       markers.push({
+         restaurant_type: "Local Restaurant",
+         item_name: "Various Menu Items",
+         loc: getMockLocation(userLoc, i),
+         isTop: false,
+         isBackground: true
+       });
     }
     return markers;
   }, [suggestions, userLoc]);
@@ -118,7 +131,7 @@ ${isLazyMode ? 'User clicked "I dont want to cook" - just pick the absolute best
 ${dietaryContext}
 ${pregnancyContext}
 
-Based on this, suggest 1 dominant best order, and 4 alternatives.
+Based on this, suggest 1 dominant best order, and 5 alternatives.
 For each, provide:
 1. The restaurant type or generic name (e.g. "Fresh Bowl Co." or "Local Mediterranean")
 2. The specific item name to order
@@ -212,6 +225,26 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                 <h3 className="font-bold text-[#3d5244] text-xl mb-2">I don't want to cook</h3>
                 <p className="text-sm text-[#5a8a65] mb-6">Let us pick the absolute best order for you right now based on time & habits.</p>
+                
+                <div className="mb-4">
+                  <div className="relative">
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Input
+                      placeholder="Enter delivery address (optional)"
+                      className="pl-11 h-12 rounded-xl border-white bg-white text-sm shadow-sm"
+                      onChange={(e) => {
+                        if (e.target.value.length > 3) {
+                          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                              if (data && data.length > 0) setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+                            });
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
                 <Button 
                   onClick={(e) => handleGenerate(e, true)} 
                   disabled={isGenerating}
@@ -235,6 +268,23 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                     onChange={(e) => setCraving(e.target.value)}
                     placeholder="e.g., Spicy fried chicken, creamy pasta..."
                     className="pl-12 h-14 rounded-2xl border-gray-200 focus:border-[#6b9b76] bg-white text-base shadow-sm"
+                  />
+                </div>
+
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Input
+                    placeholder="Address or ZIP code (optional)"
+                    className="pl-12 h-14 rounded-2xl border-gray-200 focus:border-[#6b9b76] bg-white text-base shadow-sm"
+                    onChange={(e) => {
+                      if (e.target.value.length > 3) {
+                        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
+                          .then(res => res.json())
+                          .then(data => {
+                            if (data && data.length > 0) setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
+                          });
+                      }
+                    }}
                   />
                 </div>
                 
@@ -292,19 +342,25 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                       key={idx} 
                       position={m.loc}
                       icon={new L.Icon({
-                        iconUrl: m.isTop ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' : 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                        iconUrl: m.isTop 
+                          ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' 
+                          : m.isBackground 
+                            ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png' 
+                            : 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
                         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
+                        iconSize: m.isBackground ? [18, 30] : [25, 41],
+                        iconAnchor: m.isBackground ? [9, 30] : [12, 41],
                         popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
+                        shadowSize: m.isBackground ? [30, 30] : [41, 41]
                       })}
                     >
                       <Popup className="rounded-xl">
                         <div className="text-center p-1 min-w-[120px]">
                           <p className="font-bold text-[#3d5244] text-[13px] leading-tight mb-1">{m.restaurant_type}</p>
                           <p className="text-[11px] text-gray-600 mb-2 leading-tight">{m.item_name}</p>
-                          <Button size="sm" className="h-7 text-[10px] w-full bg-[#6b9b76] hover:bg-[#5a8a65]" onClick={() => openDeliveryPlatform('ubereats', m.item_name)}>Order Here</Button>
+                          {!m.isBackground && (
+                            <Button size="sm" className="h-7 text-[10px] w-full bg-[#6b9b76] hover:bg-[#5a8a65]" onClick={() => openDeliveryPlatform('ubereats', m.item_name)}>Order Here</Button>
+                          )}
                         </div>
                       </Popup>
                     </Marker>
