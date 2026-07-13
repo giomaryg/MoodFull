@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, ChefHat, Sparkles, TrendingUp, Leaf, Target, X, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function AICoach({ isOpen, onClose, userPreferences, mealPlans, inventory, onSuggestRecipe }) {
+export default function AICoach({ isOpen, onClose, userPreferences, mealPlans, inventory, savedRecipes, onSuggestRecipe }) {
   const [insights, setInsights] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,11 +32,14 @@ export default function AICoach({ isOpen, onClose, userPreferences, mealPlans, i
         ? `\nCRITICAL: The user is ${userPreferences.pregnancy_status === 'pregnant' ? 'pregnant' : 'trying to conceive'}. Ensure all suggestions and advice are pregnancy-safe. Do not give medical advice.`
         : '';
 
+      const savedMealsStr = savedRecipes?.slice(0, 15).map(r => r.name).join(', ');
+      
       const prompt = `You are a personalized AI Culinary & Nutrition Coach.
 User Info:
 - Diet: ${userPreferences?.diet_preferences || 'None'}
 - Goals: ${goals}
 - Skill: ${userPreferences?.cooking_skill || 'Intermediate'}
+- Saved Favorite Meals & Takeout/Restaurant Patterns: ${savedMealsStr || 'None yet'}
 - Recent Meals: ${recentMeals || 'None yet'}
 - Expiring Soon: ${expiringItems || 'None'}${pregnancyContext}
 
@@ -45,9 +48,9 @@ Provide:
 2. A tip to improve their cooking skills based on their level.
 3. A tip on reducing food waste (especially utilizing expiring items if any).
 4. A tip on achieving their dietary goals.
-5. THREE specific, creative recipe suggestions that fit their profile:
-   - "Fastest": Quickest option for tonight.
-   - "Nutritional": Best fit for their dietary goals.
+5. THREE specific, customized suggestions that fit their profile and evolve based on their specific saved meal and restaurant preferences:
+   - "Fastest": Quickest option for tonight (can be an ultra-fast recipe or a specific healthy takeout/restaurant order).
+   - "Nutritional": Best fit for their dietary goals based on their eating patterns.
    - "Resourceful": Best utilization of their expiring inventory or pantry staples.`;
 
       const response = await base44.integrations.Core.InvokeLLM({

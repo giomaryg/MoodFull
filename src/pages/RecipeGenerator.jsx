@@ -1575,16 +1575,25 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                           
                   </div>
 
-                  {/* Update Preferences Button */}
+                  {/* Update Preferences Button & AI Coach */}
                   {userPreferences?.survey_completed &&
-                        <Button
-                          onClick={() => setShowSurvey(true)}
-                          variant="outline"
-                          aria-label="Update Preferences"
-                          className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
-                      Update Preferences
-                    </Button>
-                        }
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => setShowAICoach(true)}
+                        variant="outline"
+                        aria-label="AI Coach"
+                        className="border-2 border-indigo-400 hover:border-indigo-500 hover:bg-indigo-50 text-indigo-500 text-sm sm:text-base whitespace-nowrap font-bold shadow-sm">
+                        <Brain className="w-4 h-4 mr-2" /> AI Coach
+                      </Button>
+                      <Button
+                        onClick={() => setShowSurvey(true)}
+                        variant="outline"
+                        aria-label="Update Preferences"
+                        className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
+                        Update Preferences
+                      </Button>
+                    </div>
+                  }
                   </div>
 
                   {/* Advanced Filters */}
@@ -2055,8 +2064,21 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
             onClose={() => setShowTakeoutPanel(false)}
             contextMoods={selectedMoods}
             userPreferences={userPreferences} />
-
-          }
+        }
+        {showAICoach &&
+          <AICoach
+            isOpen={showAICoach}
+            onClose={() => setShowAICoach(false)}
+            userPreferences={userPreferences}
+            mealPlans={mealPlans}
+            inventory={inventory}
+            savedRecipes={savedRecipes}
+            onSuggestRecipe={(recipeName) => {
+              setGlobalSearchQuery(recipeName);
+              generateRecipe();
+            }}
+          />
+        }
       </Suspense>
 
 
