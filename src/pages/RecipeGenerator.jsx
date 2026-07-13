@@ -155,6 +155,18 @@ export default function RecipeGenerator() {
   const [budgetAmount, setBudgetAmount] = useState(15);
   const [budgetCurrency, setBudgetCurrency] = useState('$');
 
+  const prevMoodsRef = useRef(selectedMoods.join(','));
+  useEffect(() => {
+    const currentMoodsStr = selectedMoods.join(',');
+    if (selectedMoods.length > 0 && currentMoodsStr !== prevMoodsRef.current) {
+      prevMoodsRef.current = currentMoodsStr;
+      const timer = setTimeout(() => {
+        generateRecipe();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedMoods]);
+
   const handleDetectLocation = () => {
     if (navigator.geolocation) {
       toast.loading("Detecting location...");

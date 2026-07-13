@@ -27,6 +27,86 @@ import { toast } from 'sonner';
 import ApplianceSelector from './ApplianceSelector';
 import RecipeAssistantSheet from './RecipeAssistantSheet';
 import InteractivePairingSheet from './InteractivePairingSheet';
+import { MapPin } from 'lucide-react';
+
+const ClosestRestaurant = ({ recipe }) => {
+  const [restaurant, setRestaurant] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    if (!recipe.cuisine_type && !recipe.name) {
+      setLoading(false);
+      return;
+    }
+    
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        
+        const cuisine = recipe.cuisine_type ? recipe.cuisine_type.toLowerCase().split(' ')[0] : 'restaurant';
+        const query = `[out:json];(node["amenity"~"restaurant|fast_food|cafe"]["cuisine"~"${cuisine}"](around:5000,${lat},${lon}); node["amenity"~"restaurant|fast_food|cafe"](around:2000,${lat},${lon}););out 15;`;
+        
+        try {
+          const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          if (data && data.elements && data.elements.length > 0) {
+             let closestPlace = null;
+             let minDistance = Infinity;
+             
+             for (const place of data.elements) {
+               if (!place.tags || !place.tags.name) continue;
+               const dist = (2 * 3958.8 * Math.asin(Math.sqrt(Math.sin((place.lat - lat)*(Math.PI/180)/2)**2 + Math.cos(lat*Math.PI/180)*Math.cos(place.lat*Math.PI/180)*Math.sin((place.lon - lon)*(Math.PI/180)/2)**2)));
+               if (dist < minDistance) {
+                 minDistance = dist;
+                 closestPlace = place;
+               }
+             }
+
+             if (closestPlace) {
+               setRestaurant({
+                 name: closestPlace.tags.name,
+                 distance: minDistance.toFixed(1),
+                 lat: closestPlace.lat,
+                 lon: closestPlace.lon
+               });
+             }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        setLoading(false);
+      }, () => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, [recipe]);
+
+  if (loading) return null;
+  if (!restaurant) return null;
+
+  return (
+    <div className="bg-[#f0f9f2] p-4 rounded-xl border border-[#c5d9c9] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+       <div className="flex items-center gap-3">
+         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0 border border-[#c5d9c9]">
+           <MapPin className="text-[#6b9b76] w-5 h-5" />
+         </div>
+         <div>
+           <h4 className="font-bold text-gray-900 text-sm">Don't want to cook?</h4>
+           <p className="text-xs sm:text-sm text-gray-600">
+             Closest restaurant with a similar dish: <strong>{restaurant.name}</strong> ({restaurant.distance} mi away)
+           </p>
+         </div>
+       </div>
+       <Button 
+         onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${restaurant.lat},${restaurant.lon}`, '_blank')}
+         className="bg-[#6b9b76] hover:bg-[#5a8a65] text-white w-full sm:w-auto text-xs h-9"
+       >
+         Get Directions
+       </Button>
+    </div>
+  );
+};
 
 function RecipeDisplay({ recipe: incomingRecipe, onSave, isSaved, onSimilarRecipeClick, onUpdate, onBack }) {
   const recipe = incomingRecipe || {};
@@ -574,6 +654,8 @@ function RecipeDisplay({ recipe: incomingRecipe, onSave, isSaved, onSimilarRecip
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
+        <ClosestRestaurant recipe={displayRecipe} />
 
         <div className="flex flex-wrap gap-2 sm:gap-3 mb-8">
           {displayRecipe.prep_time && displayRecipe.prep_time !== '-' ? (
