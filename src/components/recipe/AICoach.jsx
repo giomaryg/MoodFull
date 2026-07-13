@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChefHat, Sparkles, TrendingUp, Leaf, Target, X, ChevronRight } from 'lucide-react';
+import { Loader2, ChefHat, Sparkles, TrendingUp, Leaf, Target, X, ChevronRight, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AICoach({ isOpen, onClose, userPreferences, mealPlans, inventory, savedRecipes, onSuggestRecipe }) {
   const [insights, setInsights] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (isOpen && !insights && !isLoading) {
@@ -111,8 +112,48 @@ Provide:
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 md:p-8 bg-[#FAFCFB]">
+              <div className="mb-8 bg-white p-6 rounded-2xl shadow-sm border border-[#e0ede4]">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl">
+                    <Sparkles className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                      What are you craving?
+                    </h3>
+                  </div>
+                </div>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchQuery) {
+                    onSuggestRecipe(searchQuery);
+                    onClose();
+                  }
+                }}>
+                  <div className="relative mb-4">
+                    <input
+                      autoFocus
+                      type="text"
+                      placeholder="e.g. Something spicy with chicken, under 30 mins..."
+                      className="w-full pl-5 pr-14 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all text-lg shadow-sm placeholder:text-gray-400"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)} />
+                    <Search className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-6" />
+                  </div>
+                  <Button type="submit" className="w-full h-12 rounded-xl bg-gradient-to-r from-[#6b9b76] to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all btn-shimmer border-0">
+                    Find My Food
+                  </Button>
+                </form>
+              </div>
+
+              <div className="flex items-center gap-4 mb-6 opacity-60">
+                <div className="h-px bg-gray-300 flex-1"></div>
+                <span className="text-sm font-bold tracking-widest uppercase text-gray-500">Or check your insights</span>
+                <div className="h-px bg-gray-300 flex-1"></div>
+              </div>
+
               {isLoading ? (
-                <div className="flex flex-col items-center justify-center h-[50vh] text-[#6b9b76] space-y-4">
+                <div className="flex flex-col items-center justify-center h-[40vh] text-[#6b9b76] space-y-4">
                   <Loader2 className="w-10 h-10 animate-spin" />
                   <p className="font-medium animate-pulse text-lg">Analyzing your habits & inventory...</p>
                 </div>
