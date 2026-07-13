@@ -2078,53 +2078,70 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
 
       {/* Chat Modal */}
       {showChatModal &&
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-md p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl relative">
+            className="w-full max-w-lg bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.1)] relative overflow-hidden">
             
-            <Button variant="ghost" size="icon" className="absolute top-4 right-4 rounded-full" onClick={() => setShowChatModal(false)}>
-              <X className="w-5 h-5 text-gray-500" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -mr-20 -mt-20"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -ml-20 -mb-20"></div>
+
+            <Button variant="ghost" size="icon" className="absolute top-4 right-4 rounded-full bg-white/50 hover:bg-white shadow-sm z-10" onClick={() => setShowChatModal(false)}>
+              <X className="w-5 h-5 text-gray-600" />
             </Button>
             
-            <h3 className="text-xl font-bold text-gray-800 mb-2">What are you craving?</h3>
-            <p className="text-sm text-gray-500 mb-6">Type anything you're in the mood for, and our AI will find or generate the perfect recipe.</p>
-            
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              setShowChatModal(false);
-              if (globalSearchQuery) {
-                if (activeTab !== 'home') handleTabChange('home');
-                generateRecipe();
-              }
-            }}>
-              <input
-                autoFocus
-                type="text"
-                placeholder="e.g. Something spicy with chicken, under 30 mins..."
-                className="w-full p-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6b9b76] focus:border-transparent transition-all mb-4"
-                value={globalSearchQuery}
-                onChange={(e) => setGlobalSearchQuery(e.target.value)} />
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl">
+                  <Sparkles className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-black bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                  What are you craving?
+                </h3>
+              </div>
+              <p className="text-base text-gray-500 mb-8 ml-1">
+                Type anything you're in the mood for, and our AI will find or generate the perfect recipe.
+              </p>
               
-              <Button type="submit" className="w-full h-12 rounded-xl bg-[#6b9b76] hover:bg-[#5a8a65] text-white font-medium text-lg mb-4">
-                Find My Food
-              </Button>
-            </form>
-            
-            <div className="pt-4 border-t border-gray-100 flex flex-col items-center">
-              <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">Or get personalized ideas</p>
-              <Button
-                onClick={() => {
-                  setShowChatModal(false);
-                  setShowAICoach(true);
-                }}
-                variant="outline"
-                className="w-full h-12 border-2 border-indigo-400 hover:border-indigo-500 hover:bg-indigo-50 text-indigo-500 text-base rounded-xl font-bold shadow-sm">
-                <Brain className="w-5 h-5 mr-2" />
-                Ask your AI Coach
-              </Button>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                setShowChatModal(false);
+                if (globalSearchQuery) {
+                  if (activeTab !== 'home') handleTabChange('home');
+                  generateRecipe();
+                }
+              }}>
+                <div className="relative mb-6">
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="e.g. Something spicy with chicken, under 30 mins..."
+                    className="w-full pl-5 pr-12 py-5 rounded-2xl bg-white border border-gray-200 focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 transition-all text-lg shadow-sm placeholder:text-gray-400"
+                    value={globalSearchQuery}
+                    onChange={(e) => setGlobalSearchQuery(e.target.value)} />
+                  <Search className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-6" />
+                </div>
+                
+                <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-[#6b9b76] to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all mb-8 btn-shimmer border-0">
+                  Find My Food
+                </Button>
+              </form>
+              
+              <div className="pt-6 border-t border-gray-200/60 flex flex-col items-center">
+                <p className="text-xs text-gray-400 mb-4 uppercase tracking-widest font-bold">Or get personalized ideas</p>
+                <Button
+                  onClick={() => {
+                    setShowChatModal(false);
+                    setShowAICoach(true);
+                  }}
+                  variant="outline"
+                  className="w-full h-14 border-2 border-indigo-100 bg-indigo-50/50 hover:bg-indigo-100 hover:border-indigo-200 text-indigo-600 text-lg rounded-2xl font-bold shadow-sm transition-all group">
+                  <Brain className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform text-indigo-500" />
+                  Ask your AI Coach
+                </Button>
+              </div>
             </div>
           </motion.div>
         </div>
