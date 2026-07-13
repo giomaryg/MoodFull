@@ -1575,24 +1575,15 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                           
                   </div>
 
-                  {/* Update Preferences Button & AI Coach */}
+                  {/* Update Preferences Button */}
                   {userPreferences?.survey_completed &&
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => setShowAICoach(true)}
-                        variant="outline"
-                        aria-label="AI Coach"
-                        className="border-2 border-indigo-400 hover:border-indigo-500 hover:bg-indigo-50 text-indigo-500 text-sm sm:text-base whitespace-nowrap font-bold shadow-sm">
-                        <Brain className="w-4 h-4 mr-2" /> AI Coach
-                      </Button>
-                      <Button
-                        onClick={() => setShowSurvey(true)}
-                        variant="outline"
-                        aria-label="Update Preferences"
-                        className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
-                        Update Preferences
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={() => setShowSurvey(true)}
+                      variant="outline"
+                      aria-label="Update Preferences"
+                      className="border-2 border-[#6b9b76] hover:border-[#5a8a65] hover:bg-[#f5e8e8] text-[#6b9b76] text-sm sm:text-base whitespace-nowrap">
+                      Update Preferences
+                    </Button>
                   }
                   </div>
 
@@ -2117,10 +2108,24 @@ Make it actionable, real, and immediate. Return a structured JSON.`,
                 value={globalSearchQuery}
                 onChange={(e) => setGlobalSearchQuery(e.target.value)} />
               
-              <Button type="submit" className="w-full h-12 rounded-xl bg-[#6b9b76] hover:bg-[#5a8a65] text-white font-medium text-lg">
+              <Button type="submit" className="w-full h-12 rounded-xl bg-[#6b9b76] hover:bg-[#5a8a65] text-white font-medium text-lg mb-4">
                 Find My Food
               </Button>
             </form>
+            
+            <div className="pt-4 border-t border-gray-100 flex flex-col items-center">
+              <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">Or get personalized ideas</p>
+              <Button
+                onClick={() => {
+                  setShowChatModal(false);
+                  setShowAICoach(true);
+                }}
+                variant="outline"
+                className="w-full h-12 border-2 border-indigo-400 hover:border-indigo-500 hover:bg-indigo-50 text-indigo-500 text-base rounded-xl font-bold shadow-sm">
+                <Brain className="w-5 h-5 mr-2" />
+                Ask your AI Coach
+              </Button>
+            </div>
           </motion.div>
         </div>
         }
