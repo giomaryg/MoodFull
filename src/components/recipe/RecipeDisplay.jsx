@@ -51,24 +51,25 @@ const ClosestRestaurant = ({ recipe }) => {
           const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
           const data = await res.json();
           if (data && data.elements && data.elements.length > 0) {
-             let closestPlace = null;
-             let minDistance = Infinity;
-             
-             for (const place of data.elements) {
-               if (!place.tags || !place.tags.name) continue;
-               const dist = (2 * 3958.8 * Math.asin(Math.sqrt(Math.sin((place.lat - lat)*(Math.PI/180)/2)**2 + Math.cos(lat*Math.PI/180)*Math.cos(place.lat*Math.PI/180)*Math.sin((place.lon - lon)*(Math.PI/180)/2)**2)));
-               if (dist < minDistance) {
-                 minDistance = dist;
-                 closestPlace = place;
-               }
-             }
+             const sortedPlaces = data.elements
+               .filter(p => p.tags && p.tags.name)
+               .map(place => {
+                 return {
+                   place,
+                   dist: (2 * 3958.8 * Math.asin(Math.sqrt(Math.sin((place.lat - lat)*(Math.PI/180)/2)**2 + Math.cos(lat*Math.PI/180)*Math.cos(place.lat*Math.PI/180)*Math.sin((place.lon - lon)*(Math.PI/180)/2)**2)))
+                 };
+               })
+               .sort((a,b) => a.dist - b.dist)
+               .slice(0, 4);
 
-             if (closestPlace) {
+             if (sortedPlaces.length > 0) {
+               // pick random from top 4 to avoid repetition and keep things interesting
+               const randomPick = sortedPlaces[Math.floor(Math.random() * sortedPlaces.length)];
                setRestaurant({
-                 name: closestPlace.tags.name,
-                 distance: minDistance.toFixed(1),
-                 lat: closestPlace.lat,
-                 lon: closestPlace.lon
+                 name: randomPick.place.tags.name,
+                 distance: randomPick.dist.toFixed(1),
+                 lat: randomPick.place.lat,
+                 lon: randomPick.place.lon
                });
              }
           }

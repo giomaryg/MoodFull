@@ -148,8 +148,9 @@ export default function SmartTakeoutPanel({ isOpen, onClose, contextMoods = [], 
 
     try {
       const moodContext = contextMoods.length > 0 ? `Current mood/vibe: ${contextMoods.join(', ')}` : '';
-      const recipeContext = contextRecipe ? `User was looking at: ${contextRecipe.name} (${contextRecipe.description})` : '';
+      const recipeContext = contextRecipe ? `CRITICAL: The user was looking at the recipe "${contextRecipe.name}" (Cuisine: ${contextRecipe.cuisine_type || 'any'}, Description: ${contextRecipe.description}). You MUST ensure the takeout options are HIGHLY RELEVANT and exactly match the cuisine or main dish of this recipe.` : '';
       const cravingContext = craving.trim() ? `User is specifically craving: ${craving.trim()}` : '';
+      const randomness = `To keep things interesting and avoid repetition, please provide varied and unique suggestions. Random seed: ${Math.floor(Math.random() * 10000)}. Do not repeat the same generic restaurants as previous sessions.`;
       
       const dietaryContext = userPreferences?.diet_preferences || userPreferences?.allergies 
         ? `Diet: ${userPreferences.diet_preferences || 'None'}, Allergies: ${userPreferences.allergies || 'None'}` 
@@ -162,11 +163,12 @@ export default function SmartTakeoutPanel({ isOpen, onClose, contextMoods = [], 
       const prompt = `You are MoodFull's Smart Takeout AI. The user wants to order takeout instead of cooking.
 ${moodContext}
 ${recipeContext}
-${isLazyMode ? 'User clicked "I dont want to cook" - just pick the absolute best option for them right now based on time of day and general healthy habits.' : cravingContext}
+${isLazyMode ? 'User clicked "I dont want to cook" - pick the best option. If there is a recipe they were looking at, the option MUST heavily match that recipe.' : cravingContext}
 ${dietaryContext}
 ${pregnancyContext}
+${randomness}
 
-Based on this, suggest 1 dominant best order, and 5 alternatives.
+Based on this, suggest 1 dominant best order, and 5 diverse alternatives.
 For each, provide:
 1. The restaurant type or generic name (e.g. "Fresh Bowl Co." or "Local Mediterranean")
 2. The specific item name to order
