@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
+import LocationAutocomplete from '@/components/ui/LocationAutocomplete';
 import { Loader2, Sparkles, Utensils, ShieldAlert, ArrowRight, ExternalLink, Clock, ShieldCheck, MapPin, Share2, ChevronRight, Heart, Brain, RefreshCw } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { toast } from 'sonner';
@@ -7,8 +8,14 @@ import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-function MapUpdater() {
+function MapUpdater({ center }) {
   const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.flyTo(center, map.getZoom(), { duration: 1.5 });
+    }
+  }, [center, map]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       map.invalidateSize();
@@ -304,33 +311,21 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
         </div>
         
         <div className="space-y-4">
-          <div className="relative">
-            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Enter delivery address & press Enter"
-              className="w-full pl-11 h-12 rounded-xl border border-gray-200 focus:border-[#6b9b76] focus:ring-1 focus:ring-[#6b9b76] focus:outline-none bg-white text-sm shadow-sm transition-all"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && e.target.value.length > 3) {
-                  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                      if (data && data.length > 0) {
-                        setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-                        toast.success("Location updated!");
-                      } else {
-                        toast.error("Location not found");
-                      }
-                    }).catch(() => toast.error("Error finding location"));
-                }
-              }}
+          <div className="relative z-[500]">
+            <LocationAutocomplete 
+               placeholder="Enter delivery address & press Enter"
+               className="h-12 rounded-xl border border-gray-200 focus:border-[#6b9b76] focus:ring-1 focus:ring-[#6b9b76] focus:outline-none bg-white text-sm shadow-sm transition-all"
+               onLocationSelect={(lat, lon, label) => {
+                  setUserLoc([lat, lon]);
+                  toast.success("Location updated!");
+               }}
             />
           </div>
 
           {/* Map View */}
           <div className="h-[400px] w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
             <MapContainer center={userLoc} zoom={13} style={{ height: '400px', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
-              <MapUpdater />
+              <MapUpdater center={userLoc} />
               <TileLayer
                 attribution='&copy; OpenStreetMap'
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"

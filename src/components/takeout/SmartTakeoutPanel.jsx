@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LocationAutocomplete from '@/components/ui/LocationAutocomplete';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,8 +11,14 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-function MapUpdater() {
+function MapUpdater({ center }) {
   const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.flyTo(center, map.getZoom(), { duration: 1.5 });
+    }
+  }, [center, map]);
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       map.invalidateSize();
@@ -255,24 +262,13 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                 <p className="text-sm text-[#5a8a65] mb-6">Let us pick the absolute best order for you right now based on time & habits.</p>
                 
                 <div className="mb-4">
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <Input
+                  <div className="relative z-[500]">
+                    <LocationAutocomplete 
                       placeholder="Enter delivery address & press Enter"
-                      className="pl-11 h-12 rounded-xl border-white bg-white text-sm shadow-sm"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && e.target.value.length > 3) {
-                          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
-                            .then(res => res.json())
-                            .then(data => {
-                              if (data && data.length > 0) {
-                                setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-                                toast.success("Location updated!");
-                              } else {
-                                toast.error("Location not found");
-                              }
-                            }).catch(() => toast.error("Error finding location"));
-                        }
+                      className="h-12 rounded-xl border-white bg-white text-sm shadow-sm"
+                      onLocationSelect={(lat, lon, label) => {
+                        setUserLoc([lat, lon]);
+                        toast.success("Location updated!");
                       }}
                     />
                   </div>
@@ -304,27 +300,15 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                   />
                 </div>
 
-                <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    placeholder="Address or ZIP code & press Enter"
-                    className="pl-12 h-14 rounded-2xl border-gray-200 focus:border-[#6b9b76] bg-white text-base shadow-sm"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && e.target.value.length > 3) {
-                        e.preventDefault();
-                        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(e.target.value)}`)
-                          .then(res => res.json())
-                          .then(data => {
-                            if (data && data.length > 0) {
-                              setUserLoc([parseFloat(data[0].lat), parseFloat(data[0].lon)]);
-                              toast.success("Location updated!");
-                            } else {
-                              toast.error("Location not found");
-                            }
-                          }).catch(() => toast.error("Error finding location"));
-                      }
-                    }}
-                  />
+                <div className="relative z-[500]">
+                   <LocationAutocomplete 
+                      placeholder="Address or ZIP code & press Enter"
+                      className="h-14 rounded-2xl border-gray-200 focus:border-[#6b9b76] bg-white text-base shadow-sm"
+                      onLocationSelect={(lat, lon, label) => {
+                        setUserLoc([lat, lon]);
+                        toast.success("Location updated!");
+                      }}
+                    />
                 </div>
                 
                 <Button 
@@ -376,7 +360,7 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
               {/* Map View */}
               <div className="h-56 w-full rounded-2xl overflow-hidden border border-[#c5d9c9] shadow-sm relative z-0">
                 <MapContainer center={userLoc} zoom={13} style={{ height: '224px', width: '100%' }} zoomControl={false} dragging={false} scrollWheelZoom={false} doubleClickZoom={false} touchZoom={false} keyboard={false}>
-                  <MapUpdater />
+                  <MapUpdater center={userLoc} />
                   <TileLayer
                     attribution='&copy; OpenStreetMap'
                     url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
