@@ -52,23 +52,34 @@ Deno.serve(async (req) => {
           };
         });
 
+        const escapeHtml = (unsafe) => {
+            return (unsafe || '').toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+
         const prompt = `Based on these upcoming scheduled meals for the week:
 ${JSON.stringify(upcomingData)}
 
 And the user's current pantry inventory:
 ${JSON.stringify(userInventory.map(i => ({name: i.name, quantity: i.quantity, unit: i.unit})))}
 
-Please generate a beautifully formatted shopping list of the ingredients the user is missing and needs to buy for their upcoming meals. Include quantities. Group them by category (e.g., Produce, Meat, Pantry). If they have everything they need, let them know. Be concise, friendly, and return just the text of the email body (html is preferred).`;
+Please generate a formatted shopping list of the ingredients the user is missing and needs to buy for their upcoming meals. Include quantities. Group them by category (e.g., Produce, Meat, Pantry). If they have everything they need, let them know. Be concise, friendly, and return just the PLAIN TEXT of the email body (do NOT use markdown or html).`;
 
         try {
             const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
               prompt: prompt
             });
             
+            const htmlBody = escapeHtml(response).replace(/\n/g, "<br/>");
+            
             await base44.asServiceRole.integrations.Core.SendEmail({
                 to: u.email,
                 subject: "Your Weekly MoodFull Shopping List 🛒",
-                body: response
+                body: htmlBody
             });
             
             emailsSent.push(u.email);

@@ -36,15 +36,16 @@ Deno.serve(async (req) => {
                 const plans = userMeals[u.email] || [];
                 let mealContent = "";
 
+                const escapeHtml = (unsafe) => {
+                    return (unsafe || '').toString()
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                };
+
                 if (plans.length > 0) {
-                    const escapeHtml = (unsafe) => {
-                        return (unsafe || '').toString()
-                            .replace(/&/g, "&amp;")
-                            .replace(/</g, "&lt;")
-                            .replace(/>/g, "&gt;")
-                            .replace(/"/g, "&quot;")
-                            .replace(/'/g, "&#039;");
-                    };
                     const mealListHtml = plans.map(p => `<li><strong>${escapeHtml(p.meal_type).charAt(0).toUpperCase() + escapeHtml(p.meal_type).slice(1)}:</strong> ${escapeHtml(p.recipe_name)}</li>`).join('');
                     mealContent = `
                         <p>Here is what you have planned for today:</p>
@@ -60,7 +61,7 @@ Deno.serve(async (req) => {
 
                 const body = `
                     <h2>Time to plan your evening! 🌙</h2>
-                    <p>Hi ${u.display_name || u.full_name || 'there'},</p>
+                    <p>Hi ${escapeHtml(u.display_name || u.full_name || 'there')},</p>
                     ${mealContent}
                     <br/>
                     <a href="https://app.moodfull.com">Open MoodFull</a>
