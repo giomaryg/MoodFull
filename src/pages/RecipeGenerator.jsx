@@ -531,36 +531,9 @@ export default function RecipeGenerator() {
   const filteredGeneratedRecipes = useMemo(() => {
     let filtered = generatedRecipes.filter((r) => r && r.name);
 
-    // Apply Smart Search Results if available
-    if (globalSearchQuery.trim() && smartResults !== null) {
-      if (smartResults.length === 0) return []; // No results found by AI
-
-      // Filter by the IDs returned by the AI, and attach the reason
-      const resultIds = new Set(smartResults.map((r) => r.id));
-      filtered = filtered.filter((recipe) => resultIds.has(recipe.id));
-
-      // Inject the reason into the recipe object for display
-      filtered = filtered.map((recipe) => {
-        const match = smartResults.find((r) => r.id === recipe.id);
-        return { ...recipe, searchReason: match?.reason };
-      });
-
-      // Sort by AI score
-      filtered.sort((a, b) => {
-        const scoreA = smartResults.find((r) => r.id === a.id)?.score || 0;
-        const scoreB = smartResults.find((r) => r.id === b.id)?.score || 0;
-        return scoreB - scoreA;
-      });
-    } else if (globalSearchQuery.trim()) {
-      // Fallback basic text search
-      const query = globalSearchQuery.toLowerCase();
-      filtered = filtered.filter((recipe) =>
-      recipe.name.toLowerCase().includes(query) ||
-      recipe.description?.toLowerCase().includes(query) ||
-      recipe.mood?.toLowerCase().includes(query) ||
-      recipe.ingredients?.some((ing) => ing.toLowerCase().includes(query))
-      );
-    }
+    // We skip text/smart filtering for generated recipes based on the global search query, 
+    // because the AI *just generated* these recipes based on that exact query. 
+    // Local filtering would hide valid AI responses if they don't exactly match the search string.
 
     // Apply advanced filters
     if (advancedFilters.cuisine) {
