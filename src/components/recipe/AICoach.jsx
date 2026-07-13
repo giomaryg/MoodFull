@@ -45,7 +45,10 @@ Provide:
 2. A tip to improve their cooking skills based on their level.
 3. A tip on reducing food waste (especially utilizing expiring items if any).
 4. A tip on achieving their dietary goals.
-5. ONE specific, creative recipe suggestion that fits their profile and uses their inventory.`;
+5. THREE specific, creative recipe suggestions that fit their profile:
+   - "Fastest": Quickest option for tonight.
+   - "Nutritional": Best fit for their dietary goals.
+   - "Resourceful": Best utilization of their expiring inventory or pantry staples.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -56,11 +59,15 @@ Provide:
             skill_tip: { type: "string" },
             waste_tip: { type: "string" },
             goal_tip: { type: "string" },
-            recipe_suggestion: { 
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                reason: { type: "string" }
+            recipe_suggestions: { 
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  type: { type: "string", description: "e.g., Fastest, Nutritional, Resourceful" },
+                  name: { type: "string" },
+                  reason: { type: "string" }
+                }
               }
             }
           }
@@ -74,104 +81,124 @@ Provide:
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/20 backdrop-blur-sm">
-      <motion.div 
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
-        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col border-l border-[#c5d9c9]"
-      >
-        <div className="p-6 bg-gradient-to-br from-[#6b9b76] to-[#4a7a55] text-white flex justify-between items-center shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-xl">
-              <ChefHat className="w-6 h-6 text-white" />
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-md">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="w-full max-w-5xl bg-white/95 backdrop-blur-xl shadow-2xl rounded-3xl overflow-hidden flex flex-col max-h-[90vh] border border-white/40"
+          >
+            <div className="p-6 bg-gradient-to-br from-[#6b9b76] to-[#4a7a55] text-white flex justify-between items-center shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-xl">
+                  <ChefHat className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-xl sm:text-2xl">AI Recipe Coach</h2>
+                  <p className="text-white/90 text-sm">Personalized insights & tailored suggestions</p>
+                </div>
+              </div>
+              <button onClick={onClose} className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <div>
-              <h2 className="font-bold text-xl">AI Recipe Coach</h2>
-              <p className="text-white/80 text-sm">Personalized insights</p>
+
+            <div className="flex-1 overflow-y-auto p-6 md:p-8 bg-[#FAFCFB]">
+              {isLoading ? (
+                <div className="flex flex-col items-center justify-center h-[50vh] text-[#6b9b76] space-y-4">
+                  <Loader2 className="w-10 h-10 animate-spin" />
+                  <p className="font-medium animate-pulse text-lg">Analyzing your habits & inventory...</p>
+                </div>
+              ) : insights ? (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
+                  {/* Left Column: Quick Tips */}
+                  <div className="lg:col-span-5 space-y-6">
+                    <div className="bg-white p-5 rounded-2xl shadow-sm border border-[#e0ede4]">
+                      <p className="text-gray-800 font-medium leading-relaxed text-lg">
+                        <Sparkles className="w-5 h-5 inline mr-2 text-yellow-500" />
+                        {insights.greeting}
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex gap-4 p-5 bg-white rounded-2xl shadow-sm border border-[#e0ede4] hover:shadow-md transition-shadow">
+                        <div className="shrink-0 mt-1 p-2 bg-blue-50 rounded-xl h-fit">
+                          <TrendingUp className="w-6 h-6 text-blue-500" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-800 mb-1 text-base">Skill Building</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">{insights.skill_tip}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 p-5 bg-white rounded-2xl shadow-sm border border-[#e0ede4] hover:shadow-md transition-shadow">
+                        <div className="shrink-0 mt-1 p-2 bg-green-50 rounded-xl h-fit">
+                          <Leaf className="w-6 h-6 text-green-500" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-800 mb-1 text-base">Reduce Waste</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">{insights.waste_tip}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 p-5 bg-white rounded-2xl shadow-sm border border-[#e0ede4] hover:shadow-md transition-shadow">
+                        <div className="shrink-0 mt-1 p-2 bg-purple-50 rounded-xl h-fit">
+                          <Target className="w-6 h-6 text-purple-500" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-800 mb-1 text-base">Dietary Goals</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">{insights.goal_tip}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Recipe Suggestions */}
+                  <div className="lg:col-span-7 flex flex-col">
+                    <h3 className="font-bold text-xl text-gray-800 mb-4 flex items-center gap-2">
+                      <ChefHat className="w-6 h-6 text-[#6b9b76]" /> 
+                      Curated For You
+                    </h3>
+                    <div className="space-y-4 flex-1">
+                      {insights.recipe_suggestions?.map((suggestion, idx) => (
+                        <div key={idx} className="bg-gradient-to-br from-[#f0f9f2] to-[#e8f0ea] p-5 rounded-2xl border-2 border-[#6b9b76]/20 hover:border-[#6b9b76]/50 transition-colors flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center shadow-sm">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs font-bold uppercase tracking-wider text-[#6b9b76] bg-white px-2 py-1 rounded-md shadow-sm border border-[#6b9b76]/20">
+                                {suggestion.type}
+                              </span>
+                            </div>
+                            <h4 className="font-bold text-lg text-gray-800 mb-1">{suggestion.name}</h4>
+                            <p className="text-sm text-gray-600">{suggestion.reason}</p>
+                          </div>
+                          <Button 
+                            onClick={() => {
+                              onClose();
+                              onSuggestRecipe(suggestion.name);
+                            }}
+                            className="w-full sm:w-auto bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl shadow-md shrink-0"
+                          >
+                            Generate <ChevronRight className="w-4 h-4 ml-1" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center text-gray-500 mt-10">
+                  <p>Could not load insights.</p>
+                  <Button onClick={generateInsights} variant="outline" className="mt-4">Try Again</Button>
+                </div>
+              )}
             </div>
-          </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-full transition-colors">
-            <X className="w-5 h-5" />
-          </button>
+          </motion.div>
         </div>
-
-        <div className="flex-1 overflow-y-auto p-6 bg-[#f8faf8]">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center h-full text-[#6b9b76] space-y-4">
-              <Loader2 className="w-8 h-8 animate-spin" />
-              <p className="font-medium animate-pulse">Analyzing your habits...</p>
-            </div>
-          ) : insights ? (
-            <div className="space-y-6">
-              <div className="bg-white p-4 rounded-2xl shadow-sm border border-[#e0ede4]">
-                <p className="text-gray-800 font-medium leading-relaxed">
-                  <Sparkles className="w-4 h-4 inline mr-2 text-yellow-500" />
-                  {insights.greeting}
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-[#e0ede4]">
-                  <div className="shrink-0 mt-1">
-                    <TrendingUp className="w-5 h-5 text-blue-500" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 mb-1">Skill Building</h4>
-                    <p className="text-sm text-gray-600 leading-relaxed">{insights.skill_tip}</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-[#e0ede4]">
-                  <div className="shrink-0 mt-1">
-                    <Leaf className="w-5 h-5 text-green-500" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 mb-1">Reduce Waste</h4>
-                    <p className="text-sm text-gray-600 leading-relaxed">{insights.waste_tip}</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-[#e0ede4]">
-                  <div className="shrink-0 mt-1">
-                    <Target className="w-5 h-5 text-purple-500" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-800 mb-1">Dietary Goals</h4>
-                    <p className="text-sm text-gray-600 leading-relaxed">{insights.goal_tip}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-[#f0f9f2] to-[#e8f0ea] p-5 rounded-2xl border-2 border-[#6b9b76]/30">
-                <h4 className="font-bold text-[#5a6f60] mb-2 flex items-center gap-2">
-                  <ChefHat className="w-5 h-5 text-[#6b9b76]" /> Try This Next
-                </h4>
-                <p className="font-bold text-lg text-[#6b9b76] mb-1">{insights.recipe_suggestion.name}</p>
-                <p className="text-sm text-gray-600 mb-4">{insights.recipe_suggestion.reason}</p>
-                <Button 
-                  onClick={() => {
-                    onClose();
-                    onSuggestRecipe(insights.recipe_suggestion.name);
-                  }}
-                  className="w-full bg-[#6b9b76] hover:bg-[#5a8a65] text-white rounded-xl"
-                >
-                  Generate Recipe <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center text-gray-500 mt-10">
-              <p>Could not load insights.</p>
-              <Button onClick={generateInsights} variant="outline" className="mt-4">Try Again</Button>
-            </div>
-          )}
-        </div>
-      </motion.div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }
