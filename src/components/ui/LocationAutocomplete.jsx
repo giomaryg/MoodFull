@@ -37,11 +37,23 @@ export default function LocationAutocomplete({
         const formatted = [];
         for (const item of data) {
           const addr = item.address || {};
-          const city = addr.city || addr.town || addr.village || addr.municipality || item.name;
+          const houseNumber = addr.house_number;
+          const road = addr.road;
+          const streetPart = [houseNumber, road].filter(Boolean).join(' ');
+          
+          const city = addr.city || addr.town || addr.village || addr.municipality;
           const state = addr.state;
+          const zip = addr.postcode;
           const country = addr.country;
-          const parts = [city, state, country].filter(Boolean);
-          const label = parts.join(', ');
+
+          let firstPart = streetPart;
+          if (!firstPart && item.name && item.name !== city && item.name !== state && item.name !== country) {
+              firstPart = item.name;
+          }
+
+          const parts = [firstPart, city, state, zip, country].filter(Boolean);
+          const uniqueParts = [...new Set(parts)];
+          const label = uniqueParts.join(', ');
           
           if (!uniqueSet.has(label)) {
             uniqueSet.add(label);
