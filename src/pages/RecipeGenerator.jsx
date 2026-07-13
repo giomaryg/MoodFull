@@ -741,12 +741,13 @@ ${diet}
 ${preg}
 ${locContext}
 ${budgetContext}
+Random seed: ${Math.floor(Math.random() * 10000)}. Do not repeat the same generic restaurants as previous sessions.
 
 Based on this, suggest 1 dominant best order, and 5 alternatives.
 For each, provide:
 1. The restaurant type or specific restaurant name (e.g. "Sweetgreen", "Chipotle", or a local name if inferred from location)
 2. The specific item name to order
-3. What typical unhealthy meal this replaces (Swap Instead of Sacrifice)
+3. "replaces": EXACTLY what the user originally wanted to cook or eat. If they were looking at a specific recipe or entered a craving, state that exact craving. DO NOT invent a random unhealthy meal if they already provided a specific healthy recipe or craving.
 4. Regret Reduction (e.g. "Saves ~400 calories vs typical order" or "High protein keeps you full")
 5. Speed/Urgency (e.g. "Fastest option: ~18 min" or "Ready in ~25 min")
 6. Smart Defaults (2 sides/drinks to complete the meal, e.g. "side of guac", "sparkling water")

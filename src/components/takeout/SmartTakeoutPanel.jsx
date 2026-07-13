@@ -172,8 +172,8 @@ Based on this, suggest 1 dominant best order, and 5 diverse alternatives.
 For each, provide:
 1. The restaurant type or generic name (e.g. "Fresh Bowl Co." or "Local Mediterranean")
 2. The specific item name to order
-3. What typical unhealthy meal this replaces (Swap Instead of Sacrifice)
-4. Regret Reduction (e.g. "Saves ~400 calories vs typical order" or "High protein keeps you full")
+3. "replaces": EXACTLY what the user originally wanted to cook or eat. If they were looking at a specific recipe (e.g., "${contextRecipe?.name || 'A recipe'}"), you MUST state that EXACT recipe name here. If they entered a craving, state that exact craving. DO NOT invent a random unhealthy meal if they already provided a specific healthy recipe or craving.
+4. Regret Reduction (e.g. "Saves ~400 calories vs typical order", "High protein keeps you full", or "Just as healthy as cooking it yourself")
 5. Speed/Urgency (e.g. "Fastest option: ~18 min" or "Ready in ~25 min")
 6. Smart Defaults (2 sides/drinks to complete the meal, e.g. "side of guac", "sparkling water")
 7. Ordering modifications (e.g. "no mayo", "sauce on side")
