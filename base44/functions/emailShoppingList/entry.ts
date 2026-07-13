@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import DOMPurify from 'npm:isomorphic-dompurify@1.3.0';
 
 Deno.serve(async (req) => {
   try {
@@ -52,15 +53,6 @@ Deno.serve(async (req) => {
           };
         });
 
-        const escapeHtml = (unsafe) => {
-            return (unsafe || '').toString()
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        };
-
         const prompt = `Based on these upcoming scheduled meals for the week:
 ${JSON.stringify(upcomingData)}
 
@@ -74,12 +66,13 @@ Please generate a formatted shopping list of the ingredients the user is missing
               prompt: prompt
             });
             
-            const htmlBody = escapeHtml(response).replace(/\n/g, "<br/>");
+            const rawHtml = response.replace(/\n/g, "<br/>");
+            const sanitizedBody = DOMPurify.sanitize(rawHtml);
             
             await base44.asServiceRole.integrations.Core.SendEmail({
                 to: u.email,
                 subject: "Your Weekly MoodFull Shopping List 🛒",
-                body: htmlBody
+                body: sanitizedBody
             });
             
             emailsSent.push(u.email);

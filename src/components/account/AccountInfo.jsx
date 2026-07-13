@@ -22,6 +22,10 @@ export default function AccountInfo({ user, onUpdatePreferences, recipeCount, on
 
   const handleInvite = async () => {
     if (!inviteEmail) return;
+    if (user?.role !== 'admin') {
+      toast.error('Only admins can invite new users.');
+      return;
+    }
     setIsInviting(true);
     try {
       await base44.users.inviteUser(inviteEmail, "user");

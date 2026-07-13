@@ -18,6 +18,10 @@ export default function SharedRecipe() {
     const fetchRecipe = async () => {
       try {
         const data = await base44.entities.Recipe.get(id);
+        const currentUser = await base44.auth.me();
+        if (!data.is_public && data.created_by !== currentUser?.email && data.created_by_id !== currentUser?.id) {
+          throw new Error('Private recipe');
+        }
         setRecipe(data);
       } catch (e) {
         setError('Recipe not found or you do not have permission to view it.');

@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import DOMPurify from 'npm:isomorphic-dompurify@1.3.0';
 
 Deno.serve(async (req) => {
     try {
@@ -69,10 +70,12 @@ Deno.serve(async (req) => {
                     <p><small>You can change your notification settings in your Account info page.</small></p>
                 `;
 
+                const sanitizedBody = DOMPurify.sanitize(body);
+
                 await base44.asServiceRole.integrations.Core.SendEmail({
                     to: u.email,
                     subject: "Your Daily MoodFull Reminder",
-                    body: body
+                    body: sanitizedBody
                 });
                 emailsSent.push(u.email);
             }
