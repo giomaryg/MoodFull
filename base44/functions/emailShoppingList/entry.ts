@@ -1,5 +1,4 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
-import DOMPurify from 'npm:isomorphic-dompurify@1.3.0';
 
 Deno.serve(async (req) => {
   try {
@@ -66,13 +65,17 @@ Please generate a formatted shopping list of the ingredients the user is missing
               prompt: prompt
             });
             
-            const rawHtml = response.replace(/\n/g, "<br/>");
-            const sanitizedBody = DOMPurify.sanitize(rawHtml);
+            // LLM generates plain text, basic sanitization
+            const safeText = response
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
+            const htmlBody = safeText.replace(/\n/g, "<br/>");
             
             await base44.asServiceRole.integrations.Core.SendEmail({
                 to: u.email,
                 subject: "Your Weekly MoodFull Shopping List 🛒",
-                body: sanitizedBody
+                body: htmlBody
             });
             
             emailsSent.push(u.email);
