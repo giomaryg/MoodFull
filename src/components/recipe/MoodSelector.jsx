@@ -264,7 +264,31 @@ export default function MoodSelector({ selectedMoods, onMoodSelect, selectedMeal
               </button>
             );
           })}
+          
+          {selectedMoods.filter(id => !['stressed', 'tired', 'happy', 'lazy', 'hangover', 'healthy', 'cozy', 'romantic'].includes(id)).map(customMood => (
+             <button
+                key={customMood}
+                onClick={() => handleMoodToggle(customMood)}
+                className="col-span-2 flex flex-col items-center justify-center py-4 px-2 rounded-2xl transition-all glass-panel bg-white/60 shadow-[0_4px_20px_rgba(0,0,0,0.08)] scale-[1.02] relative border border-white/80"
+             >
+                <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-[#7A9F87] via-[#A29BE3] to-[#89B6D9] -z-10" style={{ WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMaskComposite: 'xor', maskComposite: 'exclude' }}></div>
+                <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }} transition={{ duration: 0.4 }}>
+                  <Smile className="w-6 h-6 mb-2 text-[#A29BE3]" strokeWidth={2} />
+                </motion.div>
+                <span className="text-[11px] font-medium text-gray-800 capitalize truncate max-w-full px-2">{customMood}</span>
+             </button>
+          ))}
         </div>
+        
+        <form onSubmit={handleAddCustomMood} className="mt-4 flex gap-2">
+          <Input 
+            value={customMoodInput}
+            onChange={(e) => setCustomMoodInput(e.target.value)}
+            placeholder="Or type how you feel..."
+            className="flex-1 bg-white/50 border-white/60 h-12 rounded-2xl focus-visible:ring-[#A29BE3]/30"
+          />
+          <Button type="submit" variant="secondary" className="shrink-0 bg-white shadow-sm border border-gray-100 hover:bg-gray-50 h-12 rounded-2xl px-6 font-medium text-gray-700">Add</Button>
+        </form>
       </div>
 
       {/* 2. Budget Pillar */}

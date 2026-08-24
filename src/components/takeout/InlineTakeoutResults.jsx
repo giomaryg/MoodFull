@@ -8,6 +8,28 @@ import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+const RestaurantLogo = ({ name }) => {
+  const [error, setError] = useState(false);
+  const domain = `${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
+  
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gray-50 text-[10px] font-bold text-gray-800 uppercase text-center leading-tight p-1">
+        {name.split(' ').map(w => w[0]).join('').substring(0, 4)}
+      </div>
+    );
+  }
+  
+  return (
+    <img 
+      src={`https://logo.clearbit.com/${domain}`}
+      onError={() => setError(true)}
+      className="w-full h-full object-contain p-2"
+      alt={name}
+    />
+  );
+};
+
 function MapUpdater({ center }) {
   const map = useMap();
   useEffect(() => {
@@ -40,6 +62,7 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
   const [viewMode, setViewMode] = useState('dominant'); // 'dominant' | 'alternatives'
   const [userLoc, setUserLoc] = useState([40.7128, -74.0060]);
   const [nearbyPlaces, setNearbyPlaces] = useState([]);
+  const [showMoreAlternatives, setShowMoreAlternatives] = useState(false);
 
   useEffect(() => {
     const fetchNearby = async () => {
@@ -273,10 +296,11 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
             {viewMode === 'alternatives' && (
               <div className="space-y-4">
                 <h3 className="font-bold text-[#3d5244] text-lg px-1">Alternative Options</h3>
-                {suggestions.alternatives?.map((sug, idx) => (
+                
+                {suggestions.alternatives?.slice(0, showMoreAlternatives ? undefined : 2).map((sug, idx) => (
                   <div key={idx} className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 group cursor-pointer hover:bg-gray-50/50 rounded-xl px-2 transition-colors">
-                    <div className="w-12 h-12 rounded-full border border-gray-100 bg-white flex items-center justify-center text-[10px] font-bold text-center leading-tight shrink-0 shadow-sm text-gray-800 uppercase overflow-hidden">
-                      {sug.restaurant_type.split(' ').map(w => w[0]).join('').substring(0, 4)}
+                    <div className="w-12 h-12 rounded-full border border-gray-100 bg-white flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                      <RestaurantLogo name={sug.restaurant_type} />
                     </div>
                     <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-sm">
                       <img src={getImage(sug.item_name)} alt={sug.item_name} className="w-full h-full object-cover" />
@@ -295,10 +319,33 @@ export default function InlineTakeoutResults({ suggestions, isGenerating, userLo
                     </Button>
                   </div>
                 ))}
+
+                {showMoreAlternatives && nearbyPlaces.slice(0, 5).map((place, idx) => (
+                  <div key={`nearby-${idx}`} className="flex items-center gap-4 py-3 border-b border-gray-100 last:border-0 group cursor-pointer hover:bg-gray-50/50 rounded-xl px-2 transition-colors">
+                    <div className="w-12 h-12 rounded-full border border-gray-100 bg-white flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                      <RestaurantLogo name={place.restaurant_type} />
+                    </div>
+                    <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 shadow-sm bg-gray-100 flex items-center justify-center">
+                      <Utensils className="w-5 h-5 text-gray-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-gray-900 text-sm truncate">{place.restaurant_type}</h4>
+                      <p className="text-sm text-gray-600 truncate">{place.item_name}</p>
+                      <div className="flex items-center gap-3 text-xs text-gray-400 mt-1 font-medium">
+                        <div className="flex items-center gap-1"><MapPin className="w-3 h-3" /> Nearby</div>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon" className="text-gray-300 hover:text-[#6b9b76] shrink-0 h-8 w-8" onClick={() => openDeliveryPlatform('ubereats', place.restaurant_type)}>
+                      <ExternalLink className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
                 
-                <Button variant="ghost" className="w-full mt-2 text-gray-500 hover:text-gray-800 font-medium justify-between group">
-                  See more options <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                {!showMoreAlternatives && (
+                  <Button variant="ghost" onClick={() => setShowMoreAlternatives(true)} className="w-full mt-2 text-gray-500 hover:text-gray-800 font-medium justify-between group">
+                    See more options <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                )}
                 
                 <div className="mt-12 text-center pb-8">
                   <p className="text-lg font-serif italic text-gray-800 leading-relaxed max-w-[200px] mx-auto">

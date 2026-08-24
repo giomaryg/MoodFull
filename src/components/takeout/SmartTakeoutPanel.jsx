@@ -11,6 +11,28 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+const RestaurantLogo = ({ name }) => {
+  const [error, setError] = useState(false);
+  const domain = `${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
+  
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gray-50 text-[10px] font-bold text-gray-800 uppercase text-center leading-tight p-1">
+        {name.split(' ').map(w => w[0]).join('').substring(0, 4)}
+      </div>
+    );
+  }
+  
+  return (
+    <img 
+      src={`https://logo.clearbit.com/${domain}`}
+      onError={() => setError(true)}
+      className="w-full h-full object-contain p-2"
+      alt={name}
+    />
+  );
+};
+
 function MapUpdater({ center }) {
   const map = useMap();
   useEffect(() => {
@@ -491,9 +513,14 @@ Make it actionable, real, and immediate. Return a structured JSON.`;
                       <div className="h-32 relative">
                         <img src={getImage(sug.item_name)} alt={sug.item_name} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/40"></div>
-                        <div className="absolute bottom-3 left-4 right-4 text-white">
-                          <h4 className="text-xl font-bold leading-tight drop-shadow-md">{sug.item_name}</h4>
-                          <p className="text-xs font-bold text-white/90 uppercase">{sug.restaurant_type}</p>
+                        <div className="absolute bottom-3 left-4 right-4 text-white flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full border border-white/20 bg-white shadow-sm overflow-hidden shrink-0 hidden sm:block">
+                            <RestaurantLogo name={sug.restaurant_type} />
+                          </div>
+                          <div>
+                            <h4 className="text-xl font-bold leading-tight drop-shadow-md">{sug.item_name}</h4>
+                            <p className="text-xs font-bold text-white/90 uppercase">{sug.restaurant_type}</p>
+                          </div>
                         </div>
                         <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
                           <Clock className="w-3 h-3" /> {sug.speed_urgency}
